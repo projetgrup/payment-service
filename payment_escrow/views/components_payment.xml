@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_select_holder_diff" name="Payment Select Holder Different">
+        <div class="selectCartType">
+            <div class="switch -small">
+                <input type="checkbox" name="checkPoint" class="switchControl" id="checkPoint" field="payment.different.holder"/>
+                <label for="checkPoint"></label>
+            </div>
+            <div class="selectCartType__title">
+                <strong>Credit Card Holder and Recipient Information Different</strong>
+                <p>Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and recipient information are different.</p>
+            </div>
+        </div>
+    </template>
+    <template id="payment_partial_price" name="Payment Partial Price">
+        <div class="partialPrice">
+            <form id="partialPriceForm">
+                <div class="priceBox">
+                    <div class="form__group">
+                        <label class="form__label" for="paymentAmount">Payment Amount</label>
+                        <input class="form__control" field="amount" name="paymentAmount" id="paymentAmount" type="text" placeholder="Payment Amount"/>
+                    </div>
+                </div>
+                <p>Remaining Balance: <strong id="remainingBalance">1.900.000 TL</strong>
+                </p>
+            </form>
+        </div>
+    </template>
+</odoo>

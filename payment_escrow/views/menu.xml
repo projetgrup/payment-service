@@ -6,6 +6,7 @@
     <menuitem id="menu_customer" action="action_customer" parent="menu_main" sequence="2"/>
     <menuitem id="menu_broker" action="action_broker" parent="menu_main" sequence="3"/>
     <menuitem id="menu_owner" action="action_owner" parent="menu_main" sequence="4"/>
+    <menuitem id="menu_platform_owner" action="action_platform_owner" parent="menu_main" sequence="4"/>
     <menuitem id="menu_sale" action="action_sale" name="Sales" parent="menu_main" sequence="5"/>
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="6"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="7"/>
@@ -16,7 +17,8 @@
 
     <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="99" groups="group_escrow_manager"/>
 
-    <!-- Car Configuration -->
+    <menuitem id="menu_infrastructure_provider" action="action_infrastructure_provider" parent="menu_main" sequence="100"/>
+
     <menuitem id="menu_cars" name="Car Configuration" parent="menu_conf" sequence="0"/>
     <menuitem id="menu_car_brand" action="action_escrow_car_brand" name="Car Brands" parent="menu_cars" sequence="1"/>
     <menuitem id="menu_car_model" action="action_escrow_car_model" name="Car Models" parent="menu_cars" sequence="2"/>
@@ -40,6 +42,7 @@
 
     <menuitem id="menu_agreements" name="Agreement Settings" parent="menu_conf" sequence="4" groups="payment_system_agreement.group_agreement,base.group_system"/>
     <menuitem id="menu_agreement" action="payment_system_agreement.action_agreement" name="Agreements" parent="menu_agreements" sequence="1" groups="payment_system_agreement.group_agreement,base.group_system"/>
+    <menuitem id="menu_transaction_agreement" action="payment_system_agreement.action_transaction_agreement" name="Agreements" parent="menu_agreements" sequence="4" groups="payment_system_agreement.group_agreement,base.group_system"/>
 
     <menuitem id="menu_products" name="Product Settings" parent="menu_conf" sequence="4" groups="payment_system_product.group_product"/>
     <menuitem id="menu_product_attribute" action="payment_system_product.action_product_attribute" name="Attributes" parent="menu_products" sequence="1" groups="payment_system_product.group_product"/>

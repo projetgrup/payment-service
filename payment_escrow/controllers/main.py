@@ -5,7 +5,8 @@ from odoo.http import route, request
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.tools.float_utils import float_round
 from odoo.addons.portal.controllers import portal
-from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
+# Inherit the agreement-aware controller so agreements are prepared and tx values include them
+from odoo.addons.payment_system_agreement.controllers.main import PayloxAgreementController as Controller
 import werkzeug
 
 _logger = logging.getLogger(__name__)
@@ -24,15 +25,27 @@ class CustomerPortal(portal.CustomerPortal):
 class PayloxSystemEscrowController(Controller):
 
     def _get_tx_values(self, **kwargs):
-        return {
-            'paylox_description': kwargs.get('description', False),
-            'jetcheckout_payment_ok': kwargs.get('payment_ok', True),
-        }
-
-    def _get_tx_values(self, **kwargs):
         res = super()._get_tx_values(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'escrow':
+            items = kwargs.get('items', [])
+            ids = [i for i, null in items]
+            item = {
+                item.id: {
+                    'ref': item.ref,
+                    'date': item.date,
+                    'desc': item.description,
+                    'advance': item.advance,
+                } for item in request.env['payment.item'].sudo().browse(ids)
+            }
+            res['paylox_transaction_item_ids'] = [(0, 0, {
+                'item_id': id,
+                'amount': amount,
+                'ref': item[id]['ref'],
+                'date': item[id]['date'],
+                'desc': item[id]['desc'],
+                'advance': item[id]['advance'],
+            }) for id, amount in items]
             res.update({
                 'jetcheckout_approval_ok': True,
             })
@@ -41,20 +54,80 @@ class PayloxSystemEscrowController(Controller):
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
-            partner = request.env['res.partner'].sudo().browse(16444) #transaction.paylox_product_ids[0]['product_id']['owner_id'] 
-            reference = partner.bank_ids and partner.bank_ids[0]['api_ref']
-            if not reference:
+            product = transaction.paylox_product_ids[0]
+            customer_basket = []
+
+            partner = request.env['res.partner'].sudo().browse(16444)
+            reference_seller = partner.bank_ids and partner.bank_ids[0]['api_ref']
+            if not reference_seller:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
 
-            if transaction.company_id.payment_page_token_wo_commission:
-                amount = float_round(transaction.amount * (1 - (transaction.jetcheckout_commission_rate / 100)), 4)
-            else:
-                amount = float(kwargs['amount'])
+            platform_owner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'platform_owner')], limit=1)
+            infrastructure_provider = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'infrastructure_provider')], limit=1)
+
+            def find_rate(rec, inst):
+                if rec and rec.installment_rate_ids:
+                    for r in rec.installment_rate_ids:
+                        if int(r.installment_count) == inst:
+                            return float(r.rate)
+                return 0.0
+
+            installment_count = int(transaction.jetcheckout_installment_count or 1)
+            seller_net = float(transaction.jetcheckout_payment_amount or 0.0)
+            seller_commission = float(transaction.jetcheckout_customer_amount or 0.0)
+
+            platform_rate = find_rate(platform_owner, installment_count)
+            infra_rate = find_rate(infrastructure_provider, installment_count)
+
+            total_rate_on_charged = (platform_rate + infra_rate) / 100.0
+            charged = seller_commission
+
+            platform_commission = float_round(charged * (1 - (platform_rate / 100)), 4) if platform_rate else 0.0
+            infra_commission = float_round(charged * (1 - (infra_rate / 100)), 4) if infra_rate else 0.0
+
+            customer_basket.append({
+                "id": product['product_id']['id'],
+                "name": product['product_id']['name'],
+                "description": product['name'],
+                "qty": 1,
+                "amount": seller_net,
+                "category": product['product_id']['categ_id']['name'],
+                "is_physical": product['product_id']['type'] == 'product',
+                "submerchant_external_id": reference_seller,
+                "submerchant_price": seller_net
+            })
+
+            if platform_commission > 0:
+                ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref']) or reference_seller
+                customer_basket.append({
+                    "id": product['product_id']['id'],
+                    "name": f"{product['product_id']['name']} - Platform Komisyonu",
+                    "description": f"Platform Komisyonu (%{platform_rate})",
+                    "qty": 1,
+                    "amount": platform_commission,
+                    "category": "Komisyon",
+                    "is_physical": False,
+                    "submerchant_external_id": ref_platform,
+                    "submerchant_price": platform_commission
+                })
+
+            if infra_commission > 0:
+                ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref']) or reference_seller
+                customer_basket.append({
+                    "id": product['product_id']['id'],
+                    "name": f"{product['product_id']['name']} - Altyapı Komisyonu",
+                    "description": f"Altyapı Komisyonu (%{infra_rate})",
+                    "qty": 1,
+                    "amount": infra_commission,
+                    "category": "Komisyon",
+                    "is_physical": False,
+                    "submerchant_external_id": ref_infra,
+                    "submerchant_price": infra_commission
+                })
 
             values.update({
-                'is_submerchant_payment': True,
-                'submerchant_external_id': reference,
-                'submerchant_price': amount,
+                'submerchant_external_id': reference_seller,
+                'customer_basket': customer_basket
             })
         return values
 
@@ -72,6 +145,7 @@ class PayloxSystemEscrowController(Controller):
             'partner': partner,
             'company': company,
             'currency': company.currency_id,
+            'agreements': self._get_agreements(),
         }
         return request.render('payment_escrow.page_ads', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
@@ -85,6 +159,7 @@ class PayloxSystemEscrowController(Controller):
 
     @route(['/my/ad/save'], type='json', auth='user', website=True)
     def page_my_ad_save(self, **kwargs):
+        company = request.env.company
         user = request.env.user
         partner = user.partner_id
         values = {}
@@ -118,7 +193,6 @@ class PayloxSystemEscrowController(Controller):
             if year:
                 name_parts.append(str(year))
             return " / ".join(name_parts) if name_parts else "Araç İlanı"
-        
         if kwargs.get('id'):
             product = request.env['product.product'].sudo().with_context(system='escrow').search([
                 ('id', '=', kwargs['id']),
@@ -131,7 +205,17 @@ class PayloxSystemEscrowController(Controller):
             values.update({'system': 'escrow', 'broker_id': partner.id, **kwargs})
             
             values['name'] = generate_product_name()
-            
+            item = request.env['payment.item'].sudo().search([('product_id', '=', product.id)])
+            if item:
+                values['escrow_payment_item_id'] = item.id
+            else:
+                values['escrow_payment_item_id'] = item.create({
+                    'parent_id': product.escrow_owner_id.id,
+                    'product_id': product.id,
+                    'amount': kwargs.get('price'),
+                    'currency_id': company.currency_id.id,
+                })
+
             if values:
                 product.write(values)
         else:
@@ -144,9 +228,17 @@ class PayloxSystemEscrowController(Controller):
             values['name'] = generate_product_name()
 
             product = request.env['product.product'].sudo().create(values)
-
+            item = request.env['payment.item'].sudo().create({
+                'parent_id': product.escrow_owner_id.id,
+                'product_id': product.id,
+                'amount': kwargs.get('price'),
+                'currency_id': company.currency_id.id,
+            })
+            product.escrow_payment_item_id = item.id
+                
         return {
             'id': product.id,
+            'item_id': item.id
         }
 
     @route(['/my/ad/delete'], type='json', auth='user', website=True)

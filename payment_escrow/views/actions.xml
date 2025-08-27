@@ -80,6 +80,46 @@
     ]"/>
     </record>
 
+    <record id="action_platform_owner" model="ir.actions.act_window">
+    <field name="name">Platform Owners</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system', '=', 'escrow'), ('paylox_escrow_type', '=', 'platform_owner'), ('partner_share', '!=', False)]</field>
+    <field name="context">{'active_system': 'escrow', 'active_escrow_type': 'platform_owner', 'default_system': 'escrow', 'default_paylox_escrow_type': 'platform_owner', 'default_is_company': True}</field>
+    <field name="search_view_id" ref="search_platform_owner"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a platform owner
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('kanban_platform_owner')}),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('tree_platform_owner')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('form_platform_owner')}),
+    ]"/>
+    </record>
+
+    <record id="action_infrastructure_provider" model="ir.actions.act_window">
+    <field name="name">Infrastructure Providers</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_mode">tree,kanban,form,activity</field>
+    <field name="domain">[('system', '=', 'escrow'), ('paylox_escrow_type', '=', 'infrastructure_provider'), ('partner_share', '!=', False)]</field>
+    <field name="context">{'active_system': 'escrow', 'active_escrow_type': 'infrastructure_provider', 'default_system': 'escrow', 'default_paylox_escrow_type': 'infrastructure_provider', 'default_is_company': True}</field>
+    <field name="search_view_id" ref="search_infrastructure_provider"/>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create an infrastructure provider
+        </p>
+    </field>
+    <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('kanban_infrastructure_provider')}),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('tree_infrastructure_provider')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('form_infrastructure_provider')}),
+    ]"/>
+    </record>
+
     <record id="action_sale" model="ir.actions.act_window">
     <field name="name">Sales</field>
     <field name="res_model">sale.order</field>

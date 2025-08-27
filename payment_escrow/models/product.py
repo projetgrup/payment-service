@@ -24,6 +24,7 @@ class ProductProduct(models.Model):
     escrow_owner_id = fields.Many2one('res.partner', string='Owner', domain=[('system', '=', 'escrow')])
     escrow_customer_id = fields.Many2one('res.partner', string='Customer', domain=[('paylox_escrow_type', '=', 'customer')])
     escrow_partner_id = fields.Many2one('res.partner', string='Partner', domain=[('system', '=', 'escrow')])
+    escrow_payment_item_id = fields.Many2one('payment.item', string='Payment Items')
 
     # No numeric constraint needed since Year is a record now
 

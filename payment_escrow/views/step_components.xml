@@ -56,4 +56,380 @@
             </t>
         </div>
     </template>
+    <template id="step_1_content" name="Step 1 Content">
+        <div class="section">
+            <div class="panel">
+                <div class="panel__header">
+                    <h3>Seller Information</h3>
+                </div>
+                <form action="#" id="sellerInfo" class="form">
+                    <div class="radioTabSelector mb-3">
+                        <div class="radioTab">
+                            <label class="radioTab__label">
+                                <input type="radio" class="radioTab__control" name="userType" value="individual" data-type="individual" checked="checked"/>
+                                <span>Individual</span>
+                            </label>
+                            <label class="radioTab__label">
+                                <input type="radio" class="radioTab__control" name="userType" value="corporate" data-type="corporate"/>
+                                <span>Corporate</span>
+                            </label>
+                            <div class="radioTab__slider"></div>
+                        </div>
+                    </div>
+                    <div id="corporate" class="wizard-section wizard-section-corporate d-none">
+                        <div class="form__group">
+                            <label class="form__label" for="corporate_title">Company Title</label>
+                            <input class="form__control -letter" id="corporate_title" name="corporatetitle" type="text" placeholder="Company Title" field="seller.input.corporate_title"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="wizard_tax">Tax Number</label>
+                            <input class="form__control -letter" id="wizard_tax" name="taxnumber" type="text" placeholder="Tax Number" field="seller.input.tax_number"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label -between" for="wizard_iban_corp">
+                                <span>Transfer IBAN</span>
+                                <span class="form__loading d-none">
+                                    <svg fill="hsl(228, 97%, 42%)" width="12" height="12" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z">
+                                            <animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/>
+                                        </path>
+                                    </svg>
+                                    Verifying..
+                                </span>
+                            </label>
+                            <input class="form__control -letter" id="wizard_iban_corp" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_corporate"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="ibanaccountname_corporate">Transfer Account Name</label>
+                            <input class="form__control -letter" id="ibanaccountname_corporate" name="ibanaccountname" type="text" placeholder="Transfer Account Name" field="seller.input.iban_name_corporate"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="corporate_person">Authorized Person</label>
+                            <input class="form__control -letter" id="corporate_person" name="person" type="text" placeholder="Authorized Person" field="seller.input.corporate_person"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="phone_corporate">Authorized Mobile Phone</label>
+                            <input class="form__control -letter" id="phone_corporate" name="phone" type="text" placeholder="e.g: 532 123 3456" field="seller.input.phone_corporate"/>
+                        </div>
+                        <div class="form__group -mb-0">
+                            <label class="form__label" for="email_corporate">Authorized Email</label>
+                            <input class="form__control -letter" id="email_corporate" name="email" type="email" placeholder="example@mail.com" field="seller.input.email_corporate"/>
+                        </div>
+                    </div>
+                    <div id="individual" class="wizard-section wizard-section-individual">
+                        <div class="form__group">
+                            <label class="form__label" for="namesurname">Name Surname</label>
+                            <input class="form__control -letter" id="namesurname" name="namesurname" type="text" placeholder="Name Surname" field="seller.input.name"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="wizard_tckn">T.C. Identity Number</label>
+                            <input class="form__control -letter" id="wizard_tckn" name="idendity" type="text" placeholder="T.C. Identity Number" field="seller.input.tc"/>
+                            <div class="form__error d-none">Please enter a valid TCKN.</div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="phone_individual">Mobile Phone</label>
+                            <input class="form__control -letter" id="phone_individual" name="phone" type="text" placeholder="E.g.: 532 123 3456" field="seller.input.phone_individual"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="email_individual">E-Mail</label>
+                            <input class="form__control -letter" id="email_individual" name="email" type="email" placeholder="ornek@mail.com" field="seller.input.email_individual"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label -between" for="wizard_iban">
+                                <span>Transfer IBAN</span>
+                                <span class="form__loading d-none">
+                                    <svg fill="hsl(228, 97%, 42%)" width="12" height="12" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z">
+                                            <animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/>
+                                        </path>
+                                    </svg>
+                                    Checked...
+                                </span>
+                            </label>
+                            <input class="form__control -letter" id="wizard_iban" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_individual"/>
+                            <div class="form__error d-none">Please enter a valid IBAN.</div>
+                        </div>
+                        <div class="form__group -mb-0">
+                            <label class="form__label" for="ibanaccountname_individual">Transferring account name</label>
+                            <input class="form__control -letter" id="ibanaccountname_individual" name="ibanaccountname" type="text" placeholder="Transfer Account Name" field="seller.input.iban_name_individual"/>
+                        </div>
+                    </div>
+                    <div class="form__group mt-3">
+                        <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                            Devam Et
+                            <i class="fa fa-chevron-right ml-2"/>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+    <template id="step_2_content" name="Step 2 Content">
+        <div class="section">
+            <form action="#" id="productInfo" class="form">
+                <div class="form__group -mt-lg">
+                    <label class="form__label" for="wizard_category">Sale Category</label>
+                    <select id="wizard_category" class="form__control" name="category" field="escrow.input.category">
+                        <option value="">Select</option>
+                        <t t-foreach="company.env['product.category'].sudo().with_context(system='escrow').search([('company_id', '=', company.id)])" t-as="categ">
+                            <option t-att-value="categ.id" t-esc="categ.name"/>
+                        </t>
+                    </select>
+                </div>
+                <div class="form__group -mb-0">
+                    <label class="form__label" for="wizard_price">Sale Price</label>
+                    <input id="wizard_price" class="form__control" type="text" name="price" placeholder="1.000.000,00" field="escrow.input.price"/>
+                </div>
+                <div class="panel mt-3">
+                    <div class="panel__header">
+                        <h3>License Information</h3>
+                    </div>
+                    <div class="panel__body">
+                        <div id="carInfo">
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_vin">Chassis Number</label>
+                                <input id="wizard_vin" class="form__control" type="text" name="vin" maxlength="17" placeholder="Chassis Number (17 characters)" field="escrow.input.vin"/>
+                                <i class="fa fa-check text-success state-check d-none"></i>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_plate">License Plate</label>
+                                <input id="wizard_plate" class="form__control" type="text" name="numberplate" placeholder="License Plate (e.g., 34 ABC 123)" field="escrow.input.plate"/>
+                                <i class="fa fa-check text-success state-check d-none"></i>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_brand">Brand</label>
+                                <select id="wizard_brand" class="form__control" name="brand" field="escrow.input.brand">
+                                    <option value="">Select</option>
+                                    <t t-foreach="company.env['escrow.car.brand'].sudo().search([])" t-as="brand">
+                                        <option t-att-value="brand.id" t-esc="brand.name"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_model">Model</label>
+                                <select id="wizard_model" class="form__control" name="model" field="escrow.input.model">
+                                    <option value="">Select</option>
+                                    <t t-foreach="company.env['escrow.car.model'].sudo().search([])" t-as="model">
+                                        <option t-att-value="model.id" t-att-data-brand="model.brand_id.id" t-esc="model.name"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_year">Yıl</label>
+                                <input id="wizard_year" class="form__control" type="text" name="year" placeholder="Model Yılı" field="escrow.input.year"/>
+                            </div>
+                            <div class="form__group -mb-0">
+                                <div class="form__label">Upload License Photo</div>
+                                <div class="upload">
+                                    <input type="file" id="wizard_file_input" name="license_photo" multiple="multiple"/>
+                                    <label for="wizard_file_input">
+                                        <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                                            <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                                            <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                                        </svg>
+                                        <span>Select Image or Take New</span>
+                                        <div id="wizard_num_of_files">No Image Selected</div>
+                                    </label>
+                                    <ul id="wizard_files_list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form__group mt-3 d-flex justify-content-between">
+                    <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                        Devam Et
+                        <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
+                            <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </template>
+    <template id="step_3_content" name="Step 3 Content">
+        <div class="section">
+            <div class="panel">
+                <div class="panel__header">
+                    <h3>Recipient Information</h3>
+                </div>
+                <div class="panel__body">
+                    <form action="#" id="recipientInfo" class="form">
+                        <div class="radioTabSelector">
+                            <div class="radioTab">
+                                <div class="radioTab__slider"></div>
+                                <label class="radioTab__label">
+                                    <input type="radio" class="radioTab__control" name="customerType" value="individual" checked="checked"/>
+                                    <span>Bireysel</span>
+                                </label>
+                                <label class="radioTab__label">
+                                    <input type="radio" class="radioTab__control" name="customerType" value="corporate"/>
+                                    <span>Kurumsal</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="recipientCorporate" style="display: none;">
+                            <t t-call="payment_escrow.recipient_corporate"/>
+                        </div>
+                        <div id="recipientIndividual">
+                            <t t-call="payment_escrow.recipient_individual"/>
+                        </div>
+                        <div class="form__group mt-3 d-flex justify-content-between">
+                            <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                                Devam Et
+                                <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
+                                    <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="step_4_content" name="Step 4 Content">
+        <div class="section">
+            <t t-call="payment_escrow.payment_select_holder_diff"/>
+            <div id="payment_type" class="payment-type d-none">
+                <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtual_pos"/>
+            </div>
+            <t t-call="payment_escrow.payment_partial_price"/>
+            <div class="creditCard">
+                <h3>Credit Card Information</h3>
+                <div class="form" id="payment_card">
+                    <div class="form__group">
+                        <label for="card_holder_name" class="form__label">Adınız Soyadınız</label>
+                        <input type="text" field="card.holder" name="card_holder_name" id="card_holder_name" class="form__control -letter" placeholder="ADINIZ SOYADINIZ"/>
+                    </div>
+                    <div class="creditCard__logoContent">
+                        <div class="form__group">
+                            <label for="card_number" class="form__label">Credit Card Number</label>
+                            <input type="text" field="card.number" name="card_number" id="card_number" class="form__control -letter" maxlength="19" placeholder="---- ---- ---- ----"/>
+                        </div>
+                        <div class="creditCard__paymentLogoType">
+                            <svg width="33" height="11" viewBox="0 0 43 14" fill="#111" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21.2913 0.247712L18.4179 13.7883H14.9435L17.8173 0.247712H21.2913ZM35.9096 8.99091L37.7388 3.90596L38.7914 8.99091H35.9096ZM39.7862 13.7883H43L40.1955 0.247712H37.2291C36.5625 0.247712 36.0001 0.638565 35.7497 1.24113L30.537 13.7883H34.1857L34.9101 11.7663H39.3679L39.7862 13.7883ZM30.7181 9.36719C30.733 5.79337 25.8157 5.59666 25.8497 4.00025C25.8599 3.51382 26.3195 2.99783 27.3232 2.8654C27.8218 2.79983 29.1928 2.74969 30.7496 3.47182L31.3592 0.600423C30.523 0.294426 29.447 0 28.1088 0C24.6747 0 22.2575 1.8407 22.2371 4.47638C22.2155 6.42551 23.9627 7.51321 25.2792 8.1612C26.6328 8.82505 27.0877 9.25019 27.0817 9.84376C27.0728 10.7527 26.0019 11.153 25.0029 11.1689C23.2557 11.1967 22.2418 10.6936 21.4337 10.3139L20.8041 13.2809C21.6156 13.6567 23.1141 13.9833 24.6688 14C28.3184 14 30.7062 12.182 30.7181 9.36719ZM16.3264 0.247712L10.6971 13.7883H7.02369L4.25366 2.98197C4.08532 2.31641 3.93908 2.07298 3.42767 1.79227C2.59318 1.33584 1.21369 0.906848 0 0.641136L0.0828966 0.247712H5.99492C6.74822 0.247712 7.42627 0.753421 7.59716 1.62813L9.0604 9.46405L12.676 0.247712H16.3264Z" fill="#1434CB"/>
+                            </svg>
+                            <svg width="23" height="13" viewBox="0 0 29 18" fill="#111" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.3312 1.89868H10.5277V15.8625H18.3312V1.89868Z" fill="#FF5F00"/>
+                                <path d="M11.0233 8.8806C11.022 7.53578 11.3281 6.2083 11.9182 4.99867C12.5083 3.78904 13.3671 2.72896 14.4295 1.89868C13.1139 0.86893 11.5338 0.228547 9.87 0.0507195C8.20616 -0.127108 6.52564 0.16479 5.02052 0.893062C3.51541 1.62133 2.24642 2.75659 1.35861 4.16908C0.470804 5.58155 0 7.21427 0 8.8806C0 10.5469 0.470804 12.1796 1.35861 13.5921C2.24642 15.0046 3.51541 16.1399 5.02052 16.8681C6.52564 17.5964 8.20616 17.8883 9.87 17.7105C11.5338 17.5326 13.1139 16.8923 14.4295 15.8625C13.3671 15.0322 12.5083 13.9721 11.9182 12.7625C11.3281 11.5529 11.022 10.2254 11.0233 8.8806Z" fill="#EB001B"/>
+                                <path d="M28.8586 8.8806C28.8586 10.5469 28.3879 12.1796 27.5001 13.5921C26.6124 15.0046 25.3434 16.1398 23.8383 16.8681C22.3332 17.5964 20.6527 17.8883 18.9889 17.7105C17.3251 17.5326 15.7451 16.8923 14.4295 15.8625C15.491 15.0314 16.3491 13.9711 16.9391 12.7617C17.5292 11.5523 17.8357 10.2252 17.8357 8.8806C17.8357 7.53599 17.5292 6.20893 16.9391 4.99949C16.3491 3.79005 15.491 2.7298 14.4295 1.89868C15.7451 0.868928 17.3251 0.228542 18.9889 0.0507172C20.6527 -0.127108 22.3332 0.164803 23.8383 0.893082C25.3434 1.62136 26.6124 2.75662 27.5001 4.1691C28.3879 5.58158 28.8586 7.21429 28.8586 8.8806Z" fill="#F79E1B"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__col">
+                            <div class="form__group">
+                                <label for="card_expiry" class="form__label">Expiry Date</label>
+                                <input type="text" field="card.date" name="card_expiry" id="card_expiry" class="form__control -letter" placeholder="AA/YY"/>
+                            </div>
+                        </div>
+                        <div class="form__col -relative">
+                            <div class="form__group">
+                                <label for="cvv" class="form__label">Security Code</label>
+                                <input type="text" field="card.code" name="cvv" id="cvv" class="form__control -letter" placeholder="CVC"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="form__col">
+                            <div class="card-info-notice">
+                                <div class="info-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="12" cy="12" r="10" stroke="#6B7280" stroke-width="2"/>
+                                        <path d="m9 12 2 2 4-4" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <span class="info-text">When you enter your credit card information, applicable installment options will be displayed</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form__row" id="installmentOptionsContainer" style="display: none;">
+                        <div class="form__col">
+                            <div class="form__group">
+                                <div class="form__label">Installment Options</div>
+                                <div class="installment-table">
+                                    <div class="payment-gradient border card p-3 installment-rows">
+                                        <div>
+                                            <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
+                                                <t t-call="payment_jetcheckout.payment_installment_header"/>
+                                            </div>
+                                            <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
+                                        </div>
+                                        <div class="d-none installment-row overflow-auto flex-fill" data-type="i" field="installment.row"/>
+                                        <div class="text-muted small h-100 w-75 text-center mt72 mx-auto flex-fill" field="installment.rowempty">
+                                            <i class="fa fa-info-circle mb-3" t-translation="off"></i>
+                                            <br/>
+                                            Appliable installment options will be displayed here after you enter your credit card number
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form__group d-none" field="assignment.form.section">
+                        <div class="form__label">Assignment Form Information</div>
+                        <p class="form__infoText">You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature.</p>
+                        <div class="download">
+                            <svg width="30" height="30" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                                <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                                <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                            </svg>
+                            <a href="#" class="download__link" field="assignment.form.download">Temlikname Formunu İndir</a>
+                        </div>
+                        <div class="form__label">Upload Assignment Form</div>
+                        <div class="upload">
+                            <input type="file" id="assignment-file-input" field="assignment.form.upload" accept=".pdf,.jpg,.jpeg,.png" multiple="multiple"/>
+                            <label for="assignment-file-input">
+                                <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                                    <path d="M14.7498 32.3737C15.1968 32.3737 15.6439 32.2014 15.9884 31.861L19.9998 27.8497L24.0111 31.861C24.6919 32.5459 25.8035 32.5459 26.4843 31.861C27.1693 31.176 27.1693 30.0686 26.4843 29.3877L21.2343 24.1377C20.5535 23.4528 19.4419 23.4528 18.7611 24.1377L13.5111 29.3877C12.8261 30.0727 12.8261 31.1801 13.5111 31.861C13.8556 32.2055 14.3027 32.3737 14.7498 32.3737Z" fill="#2414D8"/>
+                                    <path d="M20.9996 39.375C21.9676 39.375 22.751 38.5916 22.751 37.6236V25.3764C22.751 24.4084 21.9676 23.625 20.9996 23.625C20.0316 23.625 19.2482 24.4084 19.2482 25.3764V37.6277C19.2482 38.5916 20.0316 39.375 20.9996 39.375Z" fill="#2414D8"/>
+                                </svg>
+                                <span>Upload Assignment Form</span>
+                            </label>
+                        </div>
+                        <div class="upload-info" field="assignment.form.info">
+                            <small class="text-muted">Accepted formats: PDF, JPG, PNG. Maximum size: 10MB</small>
+                        </div>
+                        <div class="upload-status" field="assignment.form.upload.status"></div>
+                    </div>
+                    <div class="form__buttons">
+                        <div t-if="agreements" class="field-container field-agreement fade show" field="agreements">
+                            <t t-foreach="agreements" t-as="agreement">
+                                <div class="btn btn-payment-agreement" t-att-data-id="agreement.id" field="agreement">
+                                    <label class="switch">
+                                        <input type="checkbox" class="d-none" t-att-checked="agreement.checked and 'checked' or None" t-att-required="agreement.required and 'required' or None" t-att-data-options="agreement.get_options()"/>
+                                        <span class="slider round fa"/>
+                                    </label>
+                                    <label t-raw="agreement.text"/>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="form__group d-flex justify-content-between mt-3">
+                            <div class="form__group mt-3">
+                                <button type="button" class="button button__dark button__medium" field="payment.button" data-wizard-action="next">
+                                    Continue
+                                    <i class="fa fa-chevron-right ml-2"/>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="primaryButton d-none" id="btn_pay_now">
+                            <div class="summary__priceBtn">
+                                <span>Payable Amount</span>
+                                <strong>2.400.000 TL</strong>
+                            </div>
+                            <span>Pay Now
+                                <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 </odoo>

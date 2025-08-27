@@ -11,9 +11,16 @@ class Partner(models.Model):
         ('customer', 'Customer'),
         ('broker', 'Broker'),
         ('owner', 'Owner'),
+        ('platform_owner', 'Platform Owner'),
+        ('infrastructure_provider', 'Infrastructure Provider'),
     ], string='Paylox Escrow Type')
 
-    # Smart Button Computed Fields
+    installment_rate_ids = fields.One2many(
+        'escrow.installment.rate', 
+        'partner_id', 
+        string='Installment Rates',
+        domain=[('active', '=', True)]
+    )
     escrow_owner_ad_count = fields.Integer(
         string='Owner Ads Count',
         compute='_compute_escrow_counts'
@@ -142,10 +149,16 @@ class Partner(models.Model):
         elif view_type in ('form', 'tree', 'kanban'):
             system = self.env.context.get('active_system') or self.env.context.get('system')
             if system == 'escrow':
-                type = self.env.context.get('active_escrow_type', '')
+                type = self.env.context.get('active_escrow_type', 'owner')  # Varsayılan olarak 'owner' kullan
                 try:
                     view_id = self.env.ref('payment_escrow.%s_%s' % (view_type, type)).id
+                    self = self.with_context(skip_view_mapping=True)
                 except:
-                    raise UserError(_('View cannot be found'))
-                self = self.with_context(skip_view_mapping=True)
+                    # View bulunamazsa varsayılan owner view'ını dene
+                    try:
+                        view_id = self.env.ref('payment_escrow.%s_owner' % view_type).id
+                        self = self.with_context(skip_view_mapping=True)
+                    except:
+                        # Hiçbiri bulunamazsa default view'ı kullan
+                        pass
         return super(Partner, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)

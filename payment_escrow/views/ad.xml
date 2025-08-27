@@ -28,7 +28,7 @@
                             </div>
                             <div name="product_owner" class="mt-1">
                                 <strong>Owner:</strong>
-                                <field name="owner_id"/>
+                                <field name="escrow_owner_id"/>
                             </div>
                             <div name="product_lst_price" class="mt-1" attrs="{'invisible': [('price', '&lt;=', 1.0)]}">
                                 <strong>Price:</strong>
@@ -100,6 +100,7 @@
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="1"/>
                         <field name="escrow_owner_id" string="Owner"/>
                         <field name="escrow_customer_id" string="Customer"/>
+                        <field name="escrow_payment_item_id" string="Payment Item"/>
                     </group>
                 </group>
                 <notebook>

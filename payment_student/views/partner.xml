@@ -127,6 +127,7 @@
         </xpath>
         <xpath expr="//field[@name='mobile']" position="before">
             <field name="school_ids" widget="many2many_tags"/>
+            <field name="parent_id" options="{'no_open': True}" required="1" domain="[('company_id','=',company_id)]"/>
         </xpath>
         <xpath expr="//page[@name='siblings']" position="replace"/>
         <xpath expr="//field[@name='child_ids']" position="attributes">

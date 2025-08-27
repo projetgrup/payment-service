@@ -81,7 +81,7 @@ class ProductTemplate(models.Model):
             product.payment_price_flow = product.payment_price_flow_option == 'dynamic'
 
     system = fields.Selection(selection=[], readonly=True)
-    owner_id = fields.Many2one('res.partner', string='Owner')
+    escrow_owner_id = fields.Many2one('res.partner', string='Owner')
     payment_page_ok = fields.Boolean()
     payment_color_foreground = fields.Char()
     payment_color_background = fields.Char()
@@ -201,7 +201,7 @@ class ProductProduct(models.Model):
                 product.payment_price_method_result = 0
 
     uid = fields.Char('Unique ID', readonly=True, copy=False, default=lambda self: str(uuid.uuid4()))
-    owner_id = fields.Many2one('res.partner', string='Owner')
+    escrow_owner_id = fields.Many2one('res.partner', string='Owner')
     price_dynamic = fields.Float('Price Dynamic', digits='Product Price')
     payment_name = fields.Char()
     payment_pid = fields.Integer()
