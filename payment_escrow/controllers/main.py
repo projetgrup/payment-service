@@ -128,6 +128,7 @@ class PayloxSystemEscrowController(Controller):
                 'submerchant_external_id': reference_seller,
                 'customer_basket': customer_basket
             })
+            raise Exception(customer_basket)
         return values
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
