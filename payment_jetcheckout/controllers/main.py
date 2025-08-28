@@ -1427,6 +1427,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_card_family': 'family' in kwargs['card'] and kwargs['card']['family'].capitalize() or False,
                 'jetcheckout_payment_amount': amount,
                 'jetcheckout_installment_count': installment['count'],
+                'jetcheckout_additional_rate': installment['additional_rate'] * -1,
                 'jetcheckout_installment_plus': installment['plus'],
                 'jetcheckout_installment_description': installment['idesc'],
                 'jetcheckout_installment_amount': amount / installment['count'] if installment['count'] > 0 else amount,

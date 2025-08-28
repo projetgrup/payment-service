@@ -17,6 +17,7 @@ class PaymentTransaction(models.Model):
 
     paylox_notif_mail_state = fields.Boolean('Paylox Email Notification State', readonly=True)
     paylox_notif_sms_state = fields.Boolean('Paylox SMS Notification State', readonly=True)
+    jetcheckout_additional_rate = fields.Float('JetCheckout Additional Rate', digits=(12,4), readonly=True, copy=False)
 
     def _generate_access_token(self):
         """Generate a secure access token for escrow payment URLs"""
