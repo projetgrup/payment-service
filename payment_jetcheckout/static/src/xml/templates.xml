@@ -82,7 +82,7 @@
                                     <div class="col-md-4 p-2">
                                         <div class="border bg-white text-700">
                                             <table class="w-100">
-                                                <colgroup t-if="show_monthly != False">
+                                                <colgroup t-if="show_monthly">
                                                     <col width="20%"/>
                                                     <col width="40%"/>
                                                     <col width="40%"/>
@@ -101,7 +101,7 @@
                                                     </tr>
                                                     <tr class="font-weight-bold bottom-border">
                                                         <td></td>
-                                                        <td t-if="show_monthly != False" class="text-center">Monthly Payment</td>
+                                                        <td t-if="show_monthly" class="text-center">Monthly Payment</td>
                                                         <td class="text-center">Total Payment</td>
                                                     </tr>
                                                 </thead>
@@ -115,7 +115,7 @@
                                                                     <span t-if="line.plus" t-esc="'+' + line.plus" class="badge badge-danger badge-pill p-1 ml4 position-absolute" t-att-title="line.pdesc"/>
                                                                 </span>
                                                             </td>
-                                                            <td t-if="show_monthly != False" class="text-center side-border">
+                                                            <td t-if="show_monthly" class="text-center side-border">
                                                                 <span t-esc="format.currency(val/line.count, position, symbol, decimal)"/>
                                                             </td>
                                                             <td class="text-center">
@@ -184,7 +184,7 @@
                             <span t-if="row.plus" t-esc="'+' + row.plus" class="badge badge-danger badge-pill p-1 ml4 position-absolute" t-att-title="row.pdesc"/>
                         </span>
                     </div>
-                    <div class="text-center side-border">
+                    <div t-if="show_monthly != False" class="text-center side-border">
                         <span t-esc="format.currency(val/row.count, position, symbol, decimal)"/>
                     </div>
                     <div class="text-center">
@@ -214,7 +214,7 @@
                     <div t-if="!s2s" class="text-center side-border">
                         <span t-esc="format.percentage(row.crate)"/>
                     </div>
-                    <div class="text-center side-border">
+                    <div t-if="show_monthly != False" class="text-center side-border">
                         <span t-esc="format.currency(val/row.count, position, symbol, decimal)"/>
                     </div>
                     <div class="text-center">
