@@ -392,33 +392,31 @@ class PayloxSystemEscrowController(Controller):
 
             
             partner_field = company._get_payment_partner_unique_field()
-            partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field])])
+            partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'owner')])
             if not partner:
                 partner = request.env['res.partner'].sudo().create(partner_data)
             
             if kwargs.get('seller_iban'):
                 iban_raw = kwargs.get('seller_iban', '')
                 iban_sanitized = sanitize_account_number(iban_raw)
-                Bank = request.env['res.partner.bank'].sudo()
-                existing = Bank.search([
+                bank = request.env['res.partner.bank'].sudo()
+                bank_vals = {
+                    'partner_id': partner.id,
+                    'acc_number': iban_raw.replace(' ', ''),
+                    'api_merchant': kwargs.get('seller_iban_name', ''),
+                    'currency_id': request.env.company.currency_id.id,
+                    'acc_holder_name': kwargs.get('seller_iban_name', ''),
+                }
+                existing = bank.search([
                     ('sanitized_acc_number', '=', iban_sanitized),
                     ('company_id', '=', request.env.company.id),
                 ], limit=1)
 
                 if not existing:
-                    bank_vals = {
-                        'partner_id': partner.id,
-                        'acc_number': iban_raw.replace(' ', ''),
-                        'api_merchant': kwargs.get('seller_iban_name', ''),
-                        'currency_id': request.env.company.currency_id.id,
-                        'acc_holder_name': kwargs.get('seller_iban_name', ''),
-                    }
-                    try:
-                        Bank.create(bank_vals)
-                    except ValidationError as e:
-                        if 'unique' not in str(e).lower():
-                            raise
-            
+                    bank.create(bank_vals)
+                else:
+                    existing.write(bank_vals)
+
             return {
                 'success': True,
                 'partner_id': partner.id,
@@ -462,7 +460,7 @@ class PayloxSystemEscrowController(Controller):
                     'is_company': False,
                 })
             partner_field = company._get_payment_partner_unique_field()
-            partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field])])
+            partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'customer')])
             if not partner:
                 partner = request.env['res.partner'].sudo().create(partner_data)
 
