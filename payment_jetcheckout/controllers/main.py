@@ -673,6 +673,7 @@ class PayloxController(http.Controller):
                                     'min': installment['min_amount'],
                                     'max': installment['max_amount'],
                                     'plus': installment['plus_installment'],
+                                    'additional_rate': installment['additional_rate'],
                                     'pdesc': installment['plus_installment_description'],
                                     'idesc': self._get_installment_description(installment),
                                     'count': installment['installment_count'] + installment['plus_installment'],'irate': -rate if rate > 0 and installment['installment_count'] == 1 else 0.0,
