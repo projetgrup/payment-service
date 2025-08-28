@@ -395,7 +395,9 @@ class PayloxSystemEscrowController(Controller):
             partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'owner')])
             if not partner:
                 partner = request.env['res.partner'].sudo().create(partner_data)
-            
+            else:
+                partner.write(partner_data)
+
             if kwargs.get('seller_iban'):
                 iban_raw = kwargs.get('seller_iban', '')
                 iban_sanitized = sanitize_account_number(iban_raw)
@@ -463,6 +465,8 @@ class PayloxSystemEscrowController(Controller):
             partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'customer')])
             if not partner:
                 partner = request.env['res.partner'].sudo().create(partner_data)
+            else:
+                partner.write(partner_data)
 
             product_id = kwargs.get('product_id')
             if product_id:
