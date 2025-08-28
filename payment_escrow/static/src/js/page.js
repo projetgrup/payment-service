@@ -2503,8 +2503,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         };
 
         const weights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
-        let sum = 0;
+        vin = vin.toUpperCase();
 
+        if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(vin)) {
+            return false;
+        }
+
+        const region = vin[0];
+        const checkDigit = vin[8];
+        const looksLikeChecksum = /^[0-9X]$/.test(checkDigit);
+        const requiresChecksum = '12345'.includes(region) || looksLikeChecksum;
+
+        if (!requiresChecksum) {
+            return true;
+        }
+
+        let sum = 0;
         for (let i = 0; i < vin.length; i++) {
             const c = vin[i];
             const val = map[c];
@@ -2512,7 +2526,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             sum += val * weights[i];
         }
 
-        const checkDigit = vin[8];
         const remainder = sum % 11;
         const expected = remainder === 10 ? 'X' : remainder.toString();
 
