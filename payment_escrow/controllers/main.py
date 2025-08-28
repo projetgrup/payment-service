@@ -514,7 +514,7 @@ class PayloxSystemEscrowController(Controller):
                 bank_accounts.append({
                     'id': bank.id,
                     'acc_number': bank.acc_number,
-                    'api_merchant': bank.api_merchant,
+                    'api_merchant': bank.acc_holder_name,
                     'bank_name': bank.bank_id.name if bank.bank_id else '',
                 })
             
