@@ -87,6 +87,7 @@
         </xpath>
         <xpath expr='//field[@name="mobile"]' position="before">
             <field name="phone" widget="phone"/>
+            <field name="paylox_escrow_type"/>
         </xpath>
         <xpath expr='//field[@name="acquirer_branch_id"]' position="replace"/>
         <xpath expr='//group[@name="communication"]' position="replace"/>
