@@ -42,7 +42,6 @@
 
     <menuitem id="menu_agreements" name="Agreement Settings" parent="menu_conf" sequence="4" groups="payment_system_agreement.group_agreement,base.group_system"/>
     <menuitem id="menu_agreement" action="payment_system_agreement.action_agreement" name="Agreements" parent="menu_agreements" sequence="1" groups="payment_system_agreement.group_agreement,base.group_system"/>
-    <menuitem id="menu_transaction_agreement" action="payment_system_agreement.action_transaction_agreement" name="Agreements" parent="menu_agreements" sequence="4" groups="payment_system_agreement.group_agreement,base.group_system"/>
 
     <menuitem id="menu_products" name="Product Settings" parent="menu_conf" sequence="4" groups="payment_system_product.group_product"/>
     <menuitem id="menu_product_attribute" action="payment_system_product.action_product_attribute" name="Attributes" parent="menu_products" sequence="1" groups="payment_system_product.group_product"/>

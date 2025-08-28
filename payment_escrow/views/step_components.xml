@@ -318,14 +318,14 @@
                             </svg>
                         </div>
                     </div>
-                    <div class="form__row">
-                        <div class="form__col">
+                    <div class="form__row d-flex">
+                        <div class="form__col p-1">
                             <div class="form__group">
                                 <label for="card_expiry" class="form__label">Expiry Date</label>
                                 <input type="text" field="card.date" name="card_expiry" id="card_expiry" class="form__control -letter" placeholder="AA/YY"/>
                             </div>
                         </div>
-                        <div class="form__col -relative">
+                        <div class="form__col -relative p-1">
                             <div class="form__group">
                                 <label for="cvv" class="form__label">Security Code</label>
                                 <input type="text" field="card.code" name="cvv" id="cvv" class="form__control -letter" placeholder="CVC"/>

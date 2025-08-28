@@ -57,7 +57,7 @@ class PayloxSystemEscrowController(Controller):
             product = transaction.paylox_product_ids[0]
             customer_basket = []
 
-            partner = request.env['res.partner'].sudo().browse(16444)
+            partner = transaction.paylox_product_ids[0]['product_id']['escrow_owner_id']
             reference_seller = partner.bank_ids and partner.bank_ids[0]['api_ref']
             if not reference_seller:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
