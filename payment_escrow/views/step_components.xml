@@ -302,21 +302,12 @@
                         <label for="card_holder_name" class="form__label">Adınız Soyadınız</label>
                         <input type="text" field="card.holder" name="card_holder_name" id="card_holder_name" class="form__control -letter" placeholder="ADINIZ SOYADINIZ"/>
                     </div>
-                    <div class="creditCard__logoContent">
-                        <div class="form__group">
-                            <label for="card_number" class="form__label">Credit Card Number</label>
-                            <input type="text" field="card.number" name="card_number" id="card_number" class="form__control -letter" maxlength="19" placeholder="---- ---- ---- ----"/>
-                        </div>
-                        <div class="creditCard__paymentLogoType">
-                            <svg width="33" height="11" viewBox="0 0 43 14" fill="#111" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M21.2913 0.247712L18.4179 13.7883H14.9435L17.8173 0.247712H21.2913ZM35.9096 8.99091L37.7388 3.90596L38.7914 8.99091H35.9096ZM39.7862 13.7883H43L40.1955 0.247712H37.2291C36.5625 0.247712 36.0001 0.638565 35.7497 1.24113L30.537 13.7883H34.1857L34.9101 11.7663H39.3679L39.7862 13.7883ZM30.7181 9.36719C30.733 5.79337 25.8157 5.59666 25.8497 4.00025C25.8599 3.51382 26.3195 2.99783 27.3232 2.8654C27.8218 2.79983 29.1928 2.74969 30.7496 3.47182L31.3592 0.600423C30.523 0.294426 29.447 0 28.1088 0C24.6747 0 22.2575 1.8407 22.2371 4.47638C22.2155 6.42551 23.9627 7.51321 25.2792 8.1612C26.6328 8.82505 27.0877 9.25019 27.0817 9.84376C27.0728 10.7527 26.0019 11.153 25.0029 11.1689C23.2557 11.1967 22.2418 10.6936 21.4337 10.3139L20.8041 13.2809C21.6156 13.6567 23.1141 13.9833 24.6688 14C28.3184 14 30.7062 12.182 30.7181 9.36719ZM16.3264 0.247712L10.6971 13.7883H7.02369L4.25366 2.98197C4.08532 2.31641 3.93908 2.07298 3.42767 1.79227C2.59318 1.33584 1.21369 0.906848 0 0.641136L0.0828966 0.247712H5.99492C6.74822 0.247712 7.42627 0.753421 7.59716 1.62813L9.0604 9.46405L12.676 0.247712H16.3264Z" fill="#1434CB"/>
-                            </svg>
-                            <svg width="23" height="13" viewBox="0 0 29 18" fill="#111" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18.3312 1.89868H10.5277V15.8625H18.3312V1.89868Z" fill="#FF5F00"/>
-                                <path d="M11.0233 8.8806C11.022 7.53578 11.3281 6.2083 11.9182 4.99867C12.5083 3.78904 13.3671 2.72896 14.4295 1.89868C13.1139 0.86893 11.5338 0.228547 9.87 0.0507195C8.20616 -0.127108 6.52564 0.16479 5.02052 0.893062C3.51541 1.62133 2.24642 2.75659 1.35861 4.16908C0.470804 5.58155 0 7.21427 0 8.8806C0 10.5469 0.470804 12.1796 1.35861 13.5921C2.24642 15.0046 3.51541 16.1399 5.02052 16.8681C6.52564 17.5964 8.20616 17.8883 9.87 17.7105C11.5338 17.5326 13.1139 16.8923 14.4295 15.8625C13.3671 15.0322 12.5083 13.9721 11.9182 12.7625C11.3281 11.5529 11.022 10.2254 11.0233 8.8806Z" fill="#EB001B"/>
-                                <path d="M28.8586 8.8806C28.8586 10.5469 28.3879 12.1796 27.5001 13.5921C26.6124 15.0046 25.3434 16.1398 23.8383 16.8681C22.3332 17.5964 20.6527 17.8883 18.9889 17.7105C17.3251 17.5326 15.7451 16.8923 14.4295 15.8625C15.491 15.0314 16.3491 13.9711 16.9391 12.7617C17.5292 11.5523 17.8357 10.2252 17.8357 8.8806C17.8357 7.53599 17.5292 6.20893 16.9391 4.99949C16.3491 3.79005 15.491 2.7298 14.4295 1.89868C15.7451 0.868928 17.3251 0.228542 18.9889 0.0507172C20.6527 -0.127108 22.3332 0.164803 23.8383 0.893082C25.3434 1.62136 26.6124 2.75662 27.5001 4.1691C28.3879 5.58158 28.8586 7.21429 28.8586 8.8806Z" fill="#F79E1B"/>
-                            </svg>
-                        </div>
+                    <div class="field-container field-number fade show">
+                        <input id="card_number" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
+                        <span class="bar-container"/>
+                        <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row justify-content-center'}" field="card.logo"/>
+                        <div t-attf-class="#{'d-none' if no_card_family else 'ccicon overflow-hidden fade card flex-row justify-content-center'}" field="card.icon"/>
+                        <label for="card_number"><span>Card Number</span></label>
                     </div>
                     <div class="form__row d-flex">
                         <div class="form__col p-1">

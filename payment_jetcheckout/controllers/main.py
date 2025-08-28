@@ -606,7 +606,11 @@ class PayloxController(http.Controller):
                 "campaign_name": campaign or self._get_campaign() or acquirer._get_campaign_name(int(partner))
             })
 
-        values = {'type': type}
+        show_monthly = request.env['ir.config_parameter'].sudo().get_param('paylox.installment.show_monthly', '1')
+        values = {
+            'type': type,
+            'show_monthly': show_monthly not in (False, 'False', '0', 0, None),
+        }
         if loggable:
             log = {
                 'partner': client and client.id or None,

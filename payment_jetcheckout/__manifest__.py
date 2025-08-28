@@ -18,6 +18,7 @@
         'views/transaction.xml',
         'views/partner.xml',
         'views/product.xml',
+        'views/res_config_settings.xml',
         'views/report.xml',
         'views/log.xml',
         'views/templates.xml',

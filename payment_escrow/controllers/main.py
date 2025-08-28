@@ -75,16 +75,12 @@ class PayloxSystemEscrowController(Controller):
 
             installment_count = int(transaction.jetcheckout_installment_count or 1)
             seller_net = float(transaction.jetcheckout_payment_amount or 0.0)
-            seller_commission = float(transaction.jetcheckout_customer_amount or 0.0)
+            seller_commission = 26.79
+            provider_commission = 24.79
+            paid = 1365933.62
 
             platform_rate = find_rate(platform_owner, installment_count)
             infra_rate = find_rate(infrastructure_provider, installment_count)
-
-            total_rate_on_charged = (platform_rate + infra_rate) / 100.0
-            charged = seller_commission
-
-            platform_commission = float_round(charged * (1 - (platform_rate / 100)), 4) if platform_rate else 0.0
-            infra_commission = float_round(charged * (1 - (infra_rate / 100)), 4) if infra_rate else 0.0
 
             customer_basket.append({
                 "id": product['product_id']['id'],
@@ -98,6 +94,24 @@ class PayloxSystemEscrowController(Controller):
                 "submerchant_price": seller_net
             })
 
+            #infra_commission = float_round(charged * (1 - (infra_rate / 100)), 4) if infra_rate else 0.0
+            #platform_commission = float_round(charged * (1 - (platform_rate / 100)), 4) if platform_rate else 0.0
+            infra_commission = paid * infra_rate
+            if infra_commission > 0:
+                ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref']) or reference_seller
+                customer_basket.append({
+                    "id": product['product_id']['id'],
+                    "name": f"{product['product_id']['name']} - Altyapı Komisyonu",
+                    "description": f"Altyapı Komisyonu (%{infra_rate})",
+                    "qty": 1,
+                    "amount": infra_commission,
+                    "category": "Komisyon",
+                    "is_physical": False,
+                    "submerchant_external_id": ref_infra,
+                    "submerchant_price": infra_commission
+                })
+            commission_rate = seller_commission - provider_commission
+            platform_commission = (paid * commission_rate / 100) - infra_commission
             if platform_commission > 0:
                 ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref']) or reference_seller
                 customer_basket.append({
@@ -112,24 +126,11 @@ class PayloxSystemEscrowController(Controller):
                     "submerchant_price": platform_commission
                 })
 
-            if infra_commission > 0:
-                ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref']) or reference_seller
-                customer_basket.append({
-                    "id": product['product_id']['id'],
-                    "name": f"{product['product_id']['name']} - Altyapı Komisyonu",
-                    "description": f"Altyapı Komisyonu (%{infra_rate})",
-                    "qty": 1,
-                    "amount": infra_commission,
-                    "category": "Komisyon",
-                    "is_physical": False,
-                    "submerchant_external_id": ref_infra,
-                    "submerchant_price": infra_commission
-                })
-
             values.update({
                 'submerchant_external_id': reference_seller,
                 'customer_basket': customer_basket
             })
+            raise Exception(customer_basket)
         return values
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
@@ -338,6 +339,7 @@ class PayloxSystemEscrowController(Controller):
 
     @route(['/my/seller/save'], type='json', auth='user', methods=['POST'], website=True)
     def save_seller_info(self, **kwargs):
+        company = request.env.company
         try:
             partner_data = {
                 'paylox_escrow_type': 'owner',
@@ -387,8 +389,12 @@ class PayloxSystemEscrowController(Controller):
                     partner_data['comment'] += f"\n{iban_info}"
                 else:
                     partner_data['comment'] = iban_info
+
             
-            partner = request.env['res.partner'].sudo().create(partner_data)
+            partner_field = company._get_payment_partner_unique_field()
+            partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field])])
+            if not partner:
+                partner = request.env['res.partner'].sudo().create(partner_data)
             
             if kwargs.get('seller_iban'):
                 iban_raw = kwargs.get('seller_iban', '')
@@ -405,6 +411,7 @@ class PayloxSystemEscrowController(Controller):
                         'acc_number': iban_raw.replace(' ', ''),
                         'api_merchant': kwargs.get('seller_iban_name', ''),
                         'currency_id': request.env.company.currency_id.id,
+                        'acc_holder_name': kwargs.get('seller_iban_name', ''),
                     }
                     try:
                         Bank.create(bank_vals)
@@ -427,6 +434,7 @@ class PayloxSystemEscrowController(Controller):
 
     @route('/my/customer/save', type='json', auth='public', methods=['POST'], csrf=False)
     def save_customer_info(self, **kwargs):
+        company = request.env.company
         try:
             # Common fields for both individual and corporate
             partner_data = {
@@ -453,9 +461,11 @@ class PayloxSystemEscrowController(Controller):
                     'street': kwargs.get('customer_address', ''),
                     'is_company': False,
                 })
-            
-            partner = request.env['res.partner'].sudo().create(partner_data)
-            
+            partner_field = company._get_payment_partner_unique_field()
+            partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field])])
+            if not partner:
+                partner = request.env['res.partner'].sudo().create(partner_data)
+
             product_id = kwargs.get('product_id')
             if product_id:
                 try:

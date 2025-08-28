@@ -663,19 +663,6 @@
                 <button type="action" class="btn-link" name="%(base.action_res_partner_bank_account_form)d" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id, 'form_view_ref': 'account.view_company_partner_bank_form'}" string="View accounts detail" colspan="2"/>
                 <field name="payment_item_bank_token_ok" invisible="1"/>
             </group>
-            <group name="installment_rates" attrs="{'invisible': [('paylox_escrow_type', '!=', 'platform_owner')]}">
-                <group string="Installment Rates" colspan="4">
-                    <field name="installment_rate_ids" nolabel="1">
-                        <tree editable="bottom">
-                            <field name="installment_count"/>
-                            <field name="rate"/>
-                            <field name="active"/>
-                            <field name="company_id" invisible="1"/>
-                            <field name="partner_id" invisible="1"/>
-                        </tree>
-                    </field>
-                </group>
-            </group>
         </xpath>
         <xpath expr='//field[@name="parent_id"]' position="attributes">
             <attribute name="invisible">1</attribute>

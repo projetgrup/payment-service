@@ -1925,17 +1925,56 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         $(document).on('click', '.steps__content a[data-step]', function (ev) {
             ev.preventDefault();
-            const step = parseInt($(this).data('step'));
-            self._navigateToStep(step);
+            const targetStep = parseInt($(this).data('step'));
+            const current = self.wizard.currentStep;
+
+            if (targetStep <= current) {
+                self._navigateToStep(targetStep);
+                return;
+            }
+            const $targetItem = $(`.steps__item:nth-child(${targetStep})`);
+            if ($targetItem.hasClass('-completed')) {
+                self._navigateToStep(targetStep);
+                return;
+            }
+            if (targetStep === current + 1) {
+                if (self._validateCurrentStep()) {
+                    self._navigateToStep(targetStep);
+                } else {
+                    self.displayNotification({
+                        type: 'warning',
+                        title: 'Uyarı',
+                        message: 'Please fill in the current step before proceeding to the next step.',
+                    });
+                }
+            }
         });
 
         $(document).on('click', '.steps__item:not(.-active)', function (ev) {
             ev.preventDefault();
             const $stepItem = $(this);
-            const stepNumber = $stepItem.index() + 1;
-            
-            if ($stepItem.hasClass('-completed') || stepNumber === self.wizard.currentStep + 1) {
-                self._navigateToStep(stepNumber);
+            const targetStep = $stepItem.index() + 1;
+            const current = self.wizard.currentStep;
+
+            if (targetStep <= current) {
+                self._navigateToStep(targetStep);
+                return;
+            }
+
+            if ($stepItem.hasClass('-completed')) {
+                self._navigateToStep(targetStep);
+                return;
+            }
+            if (targetStep === current + 1) {
+                if (self._validateCurrentStep()) {
+                    self._navigateToStep(targetStep);
+                } else {
+                    self.displayNotification({
+                        type: 'warning',
+                        title: 'Uyarı',
+                        message: 'Please fill in the current step before proceeding to the next step.',
+                    });
+                }
             }
         });
 

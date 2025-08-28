@@ -795,6 +795,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 $content: qweb.render('paylox.installment.grid', {
                     value: this.amount.value,
                     format: {...format, type: this._getCardType},
+                    show_monthly: this.installment.grid?.show_monthly,
                     ...this.currency,
                     ...this.installment.grid,
                 }),
@@ -1048,6 +1049,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                     type: result.type,
                                     cols: result.cols,
                                     s2s: self.payment.s2s.value,
+                                    show_monthly: result.show_monthly,
                                 });
                             }
                             self.installment.cols = result.cols;
@@ -1061,6 +1063,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 value: self.amount.value,
                                 s2s: self.payment.s2s.value,
                                 format: format,
+                                show_monthly: result.show_monthly,
                                 ...self.currency,
                             });
 

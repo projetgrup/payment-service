@@ -17,3 +17,9 @@ class ResConfigSettings(models.TransientModel):
     ], string='Enable Logging for Paylox Requests', config_parameter='paylox.log')
     payment_log_ok = fields.Boolean(related='company_id.payment_log_ok', readonly=False)
     payment_log_opt = fields.Boolean(string='Optional Logging for Payment Requests', compute='_compute_payment_log_opt', compute_sudo=True)
+
+    installment_show_monthly = fields.Boolean(
+        string='Show Monthly Price Column on Installments',
+        config_parameter='paylox.installment.show_monthly',
+        default=True,
+    )
