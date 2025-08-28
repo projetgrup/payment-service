@@ -260,11 +260,11 @@
                             <div class="radioTab">
                                 <div class="radioTab__slider"></div>
                                 <label class="radioTab__label">
-                                    <input type="radio" class="radioTab__control" name="customerType" value="individual" checked="checked"/>
+                                    <input type="radio" class="radioTab__control" name="userType" value="individual" checked="checked"/>
                                     <span>Bireysel</span>
                                 </label>
                                 <label class="radioTab__label">
-                                    <input type="radio" class="radioTab__control" name="customerType" value="corporate"/>
+                                    <input type="radio" class="radioTab__control" name="userType" value="corporate"/>
                                     <span>Kurumsal</span>
                                 </label>
                             </div>

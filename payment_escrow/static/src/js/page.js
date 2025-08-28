@@ -736,7 +736,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 if (customerData.success) {
                     const customer = customerData.partner;
                     if (customer.is_company) {
-                        $wiz.find('input[name="customerType"][value="corporate"]').prop('checked', true);
+                        $('#recipientInfo input[name="userType"][value="corporate"]').prop('checked', true);
+                        this._bindRecipientToggle();
                         $wiz.find('#recipient_corporate_title').val(customer.name || '');
                         $wiz.find('#recipient_tax_number').val(customer.vat || '');
                         $wiz.find('#recipient_tax_office').val(customer.commercial_partner_id?.name || '');
@@ -745,8 +746,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         $wiz.find('#recipient_email_corporate').val(customer.email || '');
                         $wiz.find('#recipient_address_corporate').val(customer.street || '');
                     } else {
-                        $wiz.find('input[name="customerType"][value="individual"]').prop('checked', true);
-
+                        $('#recipientInfo input[name="userType"][value="individual"]').prop('checked', true);
+                        this._bindRecipientToggle();
                         $wiz.find('#recipient_name_surname').val(customer.name || '');
                         $wiz.find('#recipient_identity').val(customer.vat || '');
                         $wiz.find('#recipient_phone_individual').val(customer.phone || '');
@@ -1583,7 +1584,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const rules = this.validationRules[selector] || [];
             
             if (selector.includes('#recipient_')) {
-                const recipientType = $('input[name="customerType"]:checked').val();
+                const recipientType = $('input[name="userType"]:checked').val();
                 const isIndividualField = selector.includes('_individual') || 
                     ['#recipient_name_surname', '#recipient_identity'].includes(selector);
                 const isCorporateField = selector.includes('_corporate') || 
@@ -1878,7 +1879,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         this.validateWizardStep3 = () => {
             let isValid = true;
-            const recipientType = $('input[name="customerType"]:checked').val();
+            const recipientType = $('input[name="userType"]:checked').val();
 
             let fieldsToValidate;
             if (recipientType === 'individual') {
@@ -2336,8 +2337,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (!$wiz.length) return;
         const $btnInd = $wiz.find('[data-type="individual"]').parent();
         const $btnCor = $wiz.find('[data-type="corporate"]').parent();
-        const $radioInd = $wiz.find('.radioTab__control[value="individual"]');
-        const $radioCor = $wiz.find('.radioTab__control[value="corporate"]');
+        // Prefer generic selector to avoid class-coupling; fallback to specific class if present
+        let $radioInd = $wiz.find('input[name="userType"][value="individual"]');
+        let $radioCor = $wiz.find('input[name="userType"][value="corporate"]');
+        if (!$radioInd.length || !$radioCor.length) {
+            $radioInd = $wiz.find('.radioTab__control[value="individual"]');
+            $radioCor = $wiz.find('.radioTab__control[value="corporate"]');
+        }
         const $secInd = $wiz.find('.wizard-section-individual');
         const $secCor = $wiz.find('.wizard-section-corporate');
         const $slider = $wiz.find('.radioTab__slider');
@@ -2349,22 +2355,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $secCor.toggleClass('d-none', isInd);
             
             if ($radioInd.length && $radioCor.length) {
-                $radioInd.off('change');
-                $radioCor.off('change');
-                
                 $radioInd.prop('checked', isInd);
                 $radioCor.prop('checked', !isInd);
-                
-                $radioInd.on('change', () => {
-                    if ($radioInd.is(':checked')) {
-                        setMode('individual');
-                    }
-                });
-                $radioCor.on('change', () => {
-                    if ($radioCor.is(':checked')) {
-                        setMode('corporate');
-                    }
-                });
             } else {
                 $btnInd.toggleClass('btn-dark active', isInd).toggleClass('btn-outline-dark', !isInd);
                 $btnCor.toggleClass('btn-outline-dark', isInd).toggleClass('btn-dark active', !isInd);
@@ -2381,21 +2373,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         }
 
+        // Prevent duplicate bindings if this function is called multiple times
+        $btnInd.off('click');
+        $btnCor.off('click');
+        $radioInd.off('change');
+        $radioCor.off('change');
+
         $btnInd.on('click', (e) => { e.preventDefault(); setMode('individual'); });
         $btnCor.on('click', (e) => { e.preventDefault(); setMode('corporate'); });
-        
-        $radioInd.on('change', () => {
-            if ($radioInd.is(':checked')) {
-                setMode('individual');
-            }
-        });
-        $radioCor.on('change', () => {
-            if ($radioCor.is(':checked')) {
-                setMode('corporate');
-            }
-        });
-        
-        setMode('individual');
+
+        $radioInd.on('change', () => { if ($radioInd.is(':checked')) setMode('individual'); });
+        $radioCor.on('change', () => { if ($radioCor.is(':checked')) setMode('corporate'); });
+
+        // Initialize based on current selection; default to individual
+        const selected = ($wiz.find('input[name="userType"]:checked').val()) || ($radioCor.is(':checked') ? 'corporate' : 'individual');
+        setMode(selected === 'corporate' ? 'corporate' : 'individual');
     },
 
     _saveSellerInfo: function () {
@@ -2489,10 +2481,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _saveCustomerInfo: function() {
-        const customerType = $('input[name="customerType"]:checked').val();
+        const userType = $('input[name="userType"]:checked').val();
 
         const data = {
-            customer_type: customerType,
+            customer_type: userType,
         };
 
         if (this.wizard && this.wizard.editingAdId) {
@@ -2501,7 +2493,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             data.product_id = this.wizard.savedProductId;
         }
 
-        if (customerType === 'individual') {
+        if (userType === 'individual') {
             data.customer_name_surname = this.customer.input.name_surname.$.val();
             data.customer_identity = this.customer.input.identity.$.val();
             data.customer_phone = this.customer.input.phone_individual.$.val();
@@ -2523,35 +2515,35 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _bindRecipientToggle: function() {
-        const self = this;
         const $form = $('#recipientInfo');
+        if (!$form.length) return;
         const $radioTab = $form.find('.radioTab');
         const $slider = $radioTab.find('.radioTab__slider');
         const $individual = $('#recipientIndividual');
         const $corporate = $('#recipientCorporate');
-        
+
         function setRecipientMode(mode) {
-            $form.find('input[name="customerType"]').off('change.recipientToggle');
-            
             if (mode === 'individual') {
-                $form.find('input[name="customerType"][value="individual"]').prop('checked', true);
+                $form.find('input[name="userType"][value="individual"]').prop('checked', true);
                 $individual.show();
                 $corporate.hide();
                 $slider.css('transform', 'translateX(0)');
             } else {
-                $form.find('input[name="customerType"][value="corporate"]').prop('checked', true);
+                $form.find('input[name="userType"][value="corporate"]').prop('checked', true);
                 $individual.hide();
                 $corporate.show();
                 $slider.css('transform', 'translateX(100%)');
             }
-
-            $form.find('input[name="customerType"]').on('change.recipientToggle', function() {
-                if ($(this).is(':checked')) {
-                    setRecipientMode($(this).val());
-                }
-            });
         }
-        setRecipientMode('individual');
+
+        $form.find('input[name="userType"]').off('change.recipientToggle');
+        $form.find('input[name="userType"]').on('change.recipientToggle', function() {
+            if ($(this).is(':checked')) {
+                setRecipientMode($(this).val());
+            }
+        });
+        const selected = $form.find('input[name="userType"]:checked').val() || 'individual';
+        setRecipientMode(selected);
     },
 
     _checkStep5Parameter: function() {
