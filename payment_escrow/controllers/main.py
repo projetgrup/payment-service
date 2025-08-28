@@ -75,9 +75,8 @@ class PayloxSystemEscrowController(Controller):
 
             installment_count = int(transaction.jetcheckout_installment_count or 1)
             seller_net = float(transaction.jetcheckout_payment_amount or 0.0)
-            seller_commission = 26.79
-            provider_commission = 24.79
-            paid = 1365933.62
+            paid = transaction.jetcheckout_payment_paid
+            additional_rate = transaction.jetcheckout_additional_rate
 
             platform_rate = find_rate(platform_owner, installment_count)
             infra_rate = find_rate(infrastructure_provider, installment_count)
@@ -110,8 +109,7 @@ class PayloxSystemEscrowController(Controller):
                     "submerchant_external_id": ref_infra,
                     "submerchant_price": infra_commission
                 })
-            commission_rate = seller_commission - provider_commission
-            platform_commission = (paid * commission_rate / 100) - infra_commission
+            platform_commission = (paid * additional_rate / 100) - infra_commission
             if platform_commission > 0:
                 ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref']) or reference_seller
                 customer_basket.append({
