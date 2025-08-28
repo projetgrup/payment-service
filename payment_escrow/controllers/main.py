@@ -7,6 +7,7 @@ from odoo.tools.float_utils import float_round
 from odoo.addons.portal.controllers import portal
 # Inherit the agreement-aware controller so agreements are prepared and tx values include them
 from odoo.addons.payment_system_agreement.controllers.main import PayloxAgreementController as Controller
+from odoo.addons.base.models.res_bank import sanitize_account_number
 import werkzeug
 
 _logger = logging.getLogger(__name__)
@@ -390,13 +391,26 @@ class PayloxSystemEscrowController(Controller):
             partner = request.env['res.partner'].sudo().create(partner_data)
             
             if kwargs.get('seller_iban'):
-                bank_data = {
-                    'partner_id': partner.id,
-                    'acc_number': kwargs.get('seller_iban', '').replace(' ', ''),
-                    'api_merchant': kwargs.get('seller_iban_name', ''),
-                    'currency_id': request.env.company.currency_id.id,
-                }
-                request.env['res.partner.bank'].sudo().create(bank_data)
+                iban_raw = kwargs.get('seller_iban', '')
+                iban_sanitized = sanitize_account_number(iban_raw)
+                Bank = request.env['res.partner.bank'].sudo()
+                existing = Bank.search([
+                    ('sanitized_acc_number', '=', iban_sanitized),
+                    ('company_id', '=', request.env.company.id),
+                ], limit=1)
+
+                if not existing:
+                    bank_vals = {
+                        'partner_id': partner.id,
+                        'acc_number': iban_raw.replace(' ', ''),
+                        'api_merchant': kwargs.get('seller_iban_name', ''),
+                        'currency_id': request.env.company.currency_id.id,
+                    }
+                    try:
+                        Bank.create(bank_vals)
+                    except ValidationError as e:
+                        if 'unique' not in str(e).lower():
+                            raise
             
             return {
                 'success': True,
@@ -496,7 +510,7 @@ class PayloxSystemEscrowController(Controller):
                 'id': partner.id,
                 'name': partner.name,
                 'email': partner.email,
-                'phone': partner.phone,
+                'phone': partner.mobile,
                 'mobile': partner.mobile,
                 'street': partner.street,
                 'street2': partner.street2,

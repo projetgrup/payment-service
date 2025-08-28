@@ -259,7 +259,9 @@ class PaymentStudentImport(models.TransientModel):
                     'parent_id': parent.id,
                 })
             if student:
-                student.with_context(skip_student_vat_check=False).write(values)
+                values.pop('parent_id', None)
+                student.with_context(skip_student_vat_check=True).write(values)
+                # student.with_context(skip_student_vat_check=True).write(values)
             else:
                 student = students.create(values)
 
