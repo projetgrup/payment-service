@@ -210,7 +210,7 @@ class PayloxSystemEscrowController(Controller):
                 "surname": fullname[-1],
                 "email": customer.email,
                 "id": str(customer.id),
-                "identity_number": customer.identity_number,
+                "identity_number": customer.vat,
                 "phone": customer.phone,
                 "ip_address": transaction.jetcheckout_ip_address or request.httprequest.remote_addr,
                 "postal_code": customer.zip,
