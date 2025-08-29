@@ -149,7 +149,7 @@ class PayloxSystemEscrowController(Controller):
             infra_rate = find_rate(infrastructure_provider, installment_count)
 
             customer_basket.append({
-                "id": product['product_id']['id'],
+                "id": 24,
                 "name": product['product_id']['name'],
                 "description": product['name'],
                 "qty": 1,
@@ -166,7 +166,7 @@ class PayloxSystemEscrowController(Controller):
             if infra_commission > 0:
                 ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref']) or reference_seller
                 customer_basket.append({
-                    "id": product['product_id']['id'],
+                    "id": 25,
                     "name": f"{product['product_id']['name']} - Altyapı Komisyonu",
                     "description": f"Altyapı Komisyonu (%{infra_rate})",
                     "qty": 1,
@@ -180,7 +180,7 @@ class PayloxSystemEscrowController(Controller):
             if platform_commission > 0:
                 ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref']) or reference_seller
                 customer_basket.append({
-                    "id": product['product_id']['id'],
+                    "id": 26,
                     "name": f"{product['product_id']['name']} - Platform Komisyonu",
                     "description": f"Platform Komisyonu (%{platform_rate})",
                     "qty": 1,
