@@ -60,35 +60,17 @@ class PayloxSystemEscrowController(Controller):
 
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
-        # Check system from kwargs, transaction, or company
         system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
-        _logger.error(f"=== ESCROW PAYMENT PROCESSING ===")
-        _logger.error(f"System: {system}")
-        _logger.error(f"Original URL from parent: {url}")
-        
         if system == 'escrow' and tx:
-            _logger.error(f"Processing escrow payment - Transaction: {tx.reference}, State: {tx.state}")
-            
             if tx.state == 'done':
-                # Check if payment items are fully paid
                 payment_items_paid = True
                 if tx.paylox_transaction_item_ids:
-                    _logger.error(f"Found {len(tx.paylox_transaction_item_ids)} payment transaction items")
                     for item_line in tx.paylox_transaction_item_ids:
                         payment_item = item_line.item_id
                         if payment_item:
-                            _logger.error(f"Payment item {payment_item.id}: paid={payment_item.paid}")
                             if not payment_item.paid:
                                 payment_items_paid = False
                                 break
-                        else:
-                            _logger.error(f"Transaction item {item_line.id} has no payment item")
-                else:
-                    _logger.error("No payment transaction items found")
-                
-                _logger.error(f"All payment items paid: {payment_items_paid}")
-                
-                # Get first payment item ID for URL parameter
                 item_id = None
                 if tx.paylox_transaction_item_ids:
                     first_item_line = tx.paylox_transaction_item_ids[0]
@@ -96,26 +78,17 @@ class PayloxSystemEscrowController(Controller):
                         item_id = first_item_line.item_id.id
                 
                 if payment_items_paid:
-                    # All payment items are fully paid - proceed to step 5
                     url = f'/my/ads?step=5'
                     if item_id:
                         url += f'&item_id={item_id}'
-                    _logger.error(f"Setting URL to step 5: {url}")
                 else:
-                    # Payment successful but items not fully paid - show step 4 completed
-                    url = f'/my/ads?step=4&status=completed'
+                    url = f'/my/ads?step=4&status=completed&item_id={item_id}'
                     if item_id:
                         url += f'&item_id={item_id}'
-                    _logger.error(f"Setting URL to step 4 completed: {url}")
             elif tx.state in ['error', 'cancel']:
                 url = '/my/ads?step=error'
-                _logger.error(f"Setting URL to error: {url}")
             else:
                 url = '/my/ads?step=result'
-                _logger.error(f"Setting URL to result (other state): {url}")
-        
-        _logger.error(f"Final URL being returned: {url}")
-        _logger.error(f"=== END ESCROW PAYMENT PROCESSING ===")
         return url, tx, status
 
     def _get_tx_values(self, **kwargs):
