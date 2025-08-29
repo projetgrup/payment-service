@@ -1596,7 +1596,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _open3DSecurePopup: function(url, transactionId, productId) {
         const self = this;
-
         
         // Create modal with iframe
         const modalHtml = `
@@ -1647,71 +1646,32 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     clearInterval(statusCheckInterval);
                     $('#payment3DModal').modal('hide');
                     
-                    // Success notification and redirect
+                    // Success notification - backend will handle redirect
                     self.displayNotification({
                         type: 'success',
                         title: _t('Payment Successful'),
                         message: _t('Your payment has been processed successfully.'),
                     });
                     
-                    setTimeout(() => {
-                        window.location.assign('/my/ads?step=5');
-                    }, 1500);
+                    // Let the payment gateway handle the redirect through _process chain
+                    window.location.reload();
+                } else if (result.status === 'error' || result.status === 'cancel') {
+                    clearInterval(statusCheckInterval);
+                    $('#payment3DModal').modal('hide');
+                    
+                    self.displayNotification({
+                        type: 'danger',
+                        title: _t('Payment Failed'),
+                        message: _t('Your payment could not be processed.'),
+                    });
+                    
+                    // Let the payment gateway handle the redirect through _process chain
+                    window.location.reload();
                 }
             }).guardedCatch(() => {
                 // Silent fail for status checks
             });
         }, 3000); // Check every 3 seconds
-        
-        // Handle checkbox change
-        $('#paymentCompleted').on('change', function() {
-            if ($(this).is(':checked')) {
-                clearInterval(statusCheckInterval);
-                $('#payment3DModal').modal('hide');
-                
-                // Check payment status one final time
-                rpc.query({
-                    route: '/payment/status/' + transactionId,
-                    params: {
-                        product_id: productId
-                    }
-                }).then((result) => {
-                    if (result.status === 'done') {
-                        self.displayNotification({
-                            type: 'success',
-                            title: _t('Payment Successful'),
-                            message: _t('Your payment has been processed successfully.'),
-                        });
-                        setTimeout(() => {
-                            window.location.assign('/my/ads?step=5');
-                        }, 1500);
-                    } else if (result.status === 'error' || result.status === 'cancel') {
-                        framework.hideLoading();
-                        self.displayNotification({
-                            type: 'danger',
-                            title: _t('Payment Failed'),
-                            message: _t('Your payment could not be processed. Please try again.'),
-                        });
-                    } else {
-                        self.displayNotification({
-                            type: 'warning',
-                            title: _t('Payment Pending'),
-                            message: _t('Payment status is being verified. Please wait...'),
-                        });
-                        setTimeout(() => {
-                            window.location.reload();
-                        }, 3000);
-                    }
-                }).guardedCatch(() => {
-                    framework.hideLoading();
-                    self.displayNotification({
-                        type: 'danger',
-                        title: _t('Error'),
-                        message: _t('An error occurred while checking payment status.'),
-                    });
-                });
-            }
-        });
         
         // Handle modal close
         $('#payment3DModal').on('hidden.bs.modal', function() {

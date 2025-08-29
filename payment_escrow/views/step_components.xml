@@ -308,6 +308,8 @@
                         <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row justify-content-center'}" field="card.logo"/>
                         <div t-attf-class="#{'d-none' if no_card_family else 'ccicon overflow-hidden fade card flex-row justify-content-center'}" field="card.icon"/>
                         <label for="card_number"><span>Card Number</span></label>
+                        <input type="hidden" t-value="/my/ads?step=5" field="payment.successurl"/>
+                        <input type="hidden" t-value="/my/ads?step=error" field="payment.failurl"/>
                     </div>
                     <div class="form__row d-flex">
                         <div class="form__col p-1">

@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
+from urllib.parse import urlparse
 from odoo import _
 from odoo.http import route, request
-from odoo.exceptions import ValidationError, AccessError, UserError
+from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.addons.portal.controllers import portal
-# Inherit the agreement-aware controller so agreements are prepared and tx values include them
 from odoo.addons.payment_system_agreement.controllers.main import PayloxAgreementController as Controller
 from odoo.addons.base.models.res_bank import sanitize_account_number
-import werkzeug
 
 _logger = logging.getLogger(__name__)
 
@@ -24,6 +23,23 @@ class CustomerPortal(portal.CustomerPortal):
 
 
 class PayloxSystemEscrowController(Controller):
+
+    def _process(self, **kwargs):
+        url, tx, status = super()._process(**kwargs)
+        # Hem kwargs'dan hem de transaction'dan system kontrolü
+        system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
+        _logger.error('Payment system error: %s', system)
+        if system == 'escrow' and tx:
+            if tx.state == 'done':
+                _logger.error('Payment transaction completed successfully: %s', url)
+                url = '/my/ads?step=5'
+            elif tx.state in ['error', 'cancel']:
+                url = '/my/ads?step=error'
+            else:
+                _logger.error('Payment transaction pending or in unknown state: %s', tx.state)
+                url = '/my/ads?step=result'
+        _logger.error('Final redirect URL: %s', url)
+        return url, tx, status
 
     def _get_tx_values(self, **kwargs):
         res = super()._get_tx_values(**kwargs)
