@@ -2355,7 +2355,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _initializePaymentForm: function () {
         this._setupFileUpload();
+        $('#remainingBalance').text(this._getRemainingBalance());
         this._setupCreditCardInstallments();
+    },
+
+    _getRemainingBalance: function() {
+        return $('[field="remaining.payment.amount"]').text();
     },
 
     _setupCreditCardInstallments: function() {

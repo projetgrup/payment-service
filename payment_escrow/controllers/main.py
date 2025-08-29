@@ -125,6 +125,7 @@ class PayloxSystemEscrowController(Controller):
             customer_basket = []
 
             partner = transaction.paylox_product_ids[0]['product_id']['escrow_owner_id']
+            customer = transaction.paylox_product_ids[0]['product_id']['escrow_customer_id']
             reference_seller = partner.bank_ids and partner.bank_ids[0]['api_ref']
             if not reference_seller:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
@@ -191,9 +192,33 @@ class PayloxSystemEscrowController(Controller):
                 })
 
             values.update({
+                'is_submerchant_payment': True,
                 'submerchant_external_id': reference_seller,
                 'customer_basket': customer_basket
             })
+            fullname = customer.name.split(' ', 1)
+            address = []
+            if customer.city:
+                address.append(customer.city)
+            if customer.state_id:
+                address.append(customer.state_id.name)
+            if customer.country_id:
+                address.append(customer.country_id.name)
+
+            values['customer'] = {
+                "name": fullname[0],
+                "surname": fullname[-1],
+                "email": customer.email,
+                "id": str(customer.id),
+                "identity_number": customer.identity_number,
+                "phone": customer.phone,
+                "ip_address": transaction.jetcheckout_ip_address or request.httprequest.remote_addr,
+                "postal_code": customer.zip,
+                "company": customer.parent_id and customer.parent_id.name or "",
+                "address": "%s %s" % (customer.address, "/".join(address)),
+                "city": customer.state_id and customer.state_id.name or "",
+                "country": customer.country_id and customer.country_id.name or "",
+            }
         return values
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
