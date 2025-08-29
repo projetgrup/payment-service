@@ -82,7 +82,7 @@ class PayloxSystemEscrowController(Controller):
                     if item_id:
                         url += f'&item_id={item_id}'
                 else:
-                    url = f'/my/ads?step=4&status=completed&item_id={item_id}'
+                    url = f'/my/ads?step=4&status=completed'
                     if item_id:
                         url += f'&item_id={item_id}'
             elif tx.state in ['error', 'cancel']:
