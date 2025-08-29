@@ -2401,3 +2401,69 @@
         }
     }
 }
+
+/* Remaining Payment Info Styles */
+.remaining-payment-info {
+    .payment-summary-card {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 20px;
+        
+        .payment-details {
+            .amount-breakdown {
+                font-size: 14px;
+                
+                .text-success {
+                    color: #28a745 !important;
+                }
+                
+                .text-primary {
+                    color: #007bff !important;
+                    font-size: 16px;
+                }
+            }
+        }
+        
+        .payment-progress {
+            .circular-progress {
+                position: relative;
+                display: inline-block;
+                
+                .progress-ring {
+                    transform: rotate(-90deg);
+                    
+                    .progress-ring-bg {
+                        stroke: #e9ecef;
+                    }
+                    
+                    .progress-ring-fill {
+                        stroke: #007bff;
+                        stroke-linecap: round;
+                        transition: stroke-dashoffset 0.5s ease-in-out;
+                    }
+                }
+                
+                .progress-text {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    font-weight: bold;
+                    font-size: 14px;
+                    color: #007bff;
+                }
+            }
+        }
+    }
+    
+    .panel__header {
+        h4 {
+            color: #007bff;
+            
+            .fa {
+                color: #ffc107;
+            }
+        }
+    }
+}

@@ -20,6 +20,68 @@
         </div>
     </template>
 
+    <template id="step_5_content" name="Step 5 Content">
+        <div class="section">
+            <div class="panel">
+                <div class="panel__header">
+                    <h3>Payment Completed</h3>
+                </div>
+                <div class="completion-content">
+                    <div class="success-icon-container text-center mb-4">
+                        <div class="success-icon">
+                            <i class="fa fa-check-circle text-success" style="font-size: 4rem;"/>
+                        </div>
+                    </div>
+                    
+                    <div class="completion-message text-center">
+                        <h4 class="text-success mb-3">Payment Successfully Completed!</h4>
+                        <p class="text-muted mb-4">
+                            Your escrow payment has been processed successfully. 
+                            The transaction is now secure and the funds have been transferred to the escrow account.
+                        </p>
+                    </div>
+                    
+                    <div class="transaction-summary mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="card-title">Transaction Summary</h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Transaction ID:</small>
+                                        <div field="transaction.reference">#TXN-12345</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Amount:</small>
+                                        <div field="transaction.amount">2.400.000 TL</div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <small class="text-muted">Status:</small>
+                                        <div class="text-success">Completed</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">Date:</small>
+                                        <div field="transaction.date">Aug 29, 2025</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="completion-actions text-center">
+                        <button type="button" class="btn btn-primary mr-2" onclick="window.open('/my/transactions', '_blank')">
+                            View Transactions
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/my/ads'">
+                            Back to My Ads
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
     <!-- Steps Container Template -->
     <template id="steps_container_template" name="Steps Container Template">
         <div t-att-class="'steps ' + (container_class or '')" t-att-id="container_id or ''">
@@ -53,6 +115,14 @@
                 <t t-set="step_title" t-value="'Payment Information'"/>
                 <t t-set="step_class" t-value="step_4_class or ''"/>
                 <t t-set="show_edit_link" t-value="step_4_edit or False"/>
+            </t>
+
+            <!-- Step 5: Completion -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="5"/>
+                <t t-set="step_title" t-value="'Completed'"/>
+                <t t-set="step_class" t-value="step_5_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_5_edit or False"/>
             </t>
         </div>
     </template>
@@ -290,136 +360,203 @@
     </template>
     <template id="step_4_content" name="Step 4 Content">
         <div class="section">
-            <t t-call="payment_escrow.payment_select_holder_diff"/>
-            <div id="payment_type" class="payment-type d-none">
-                <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtual_pos"/>
-            </div>
-            <t t-call="payment_escrow.payment_partial_price"/>
-            <div class="creditCard">
-                <h3>Credit Card Information</h3>
-                <div class="form" id="payment_card">
-                    <div class="form__group">
-                        <label for="card_holder_name" class="form__label">Adınız Soyadınız</label>
-                        <input type="text" field="card.holder" name="card_holder_name" id="card_holder_name" class="form__control -letter" placeholder="ADINIZ SOYADINIZ"/>
-                    </div>
-                    <div class="field-container field-number fade show">
-                        <input id="card_number" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
-                        <span class="bar-container"/>
-                        <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row justify-content-center'}" field="card.logo"/>
-                        <div t-attf-class="#{'d-none' if no_card_family else 'ccicon overflow-hidden fade card flex-row justify-content-center'}" field="card.icon"/>
-                        <label for="card_number"><span>Card Number</span></label>
-                        <input type="hidden" t-value="/my/ads?step=5" field="payment.successurl"/>
-                        <input type="hidden" t-value="/my/ads?step=error" field="payment.failurl"/>
-                    </div>
-                    <div class="form__row d-flex">
-                        <div class="form__col p-1">
-                            <div class="form__group">
-                                <label for="card_expiry" class="form__label">Expiry Date</label>
-                                <input type="text" field="card.date" name="card_expiry" id="card_expiry" class="form__control -letter" placeholder="AA/YY"/>
-                            </div>
-                        </div>
-                        <div class="form__col -relative p-1">
-                            <div class="form__group">
-                                <label for="cvv" class="form__label">Security Code</label>
-                                <input type="text" field="card.code" name="cvv" id="cvv" class="form__control -letter" placeholder="CVC"/>
-                            </div>
+            <!-- Remaining Payment Info Section -->
+            <div class="remaining-payment-info mb-4 d-none" field="remaining.payment.info">
+                <div class="payment-success-card text-center p-4" style="border-radius: 12px; border: 1px solid #dee2e6;">
+                    <!-- Success Icon -->
+                    <div class="success-icon mb-3">
+                        <div style="width: 80px; height: 80px; background: #28a745; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
+                            <svg width="40" height="30" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white" stroke="white" stroke-width="1"/>
+                            </svg>
                         </div>
                     </div>
-                    <div class="form__row">
-                        <div class="form__col">
-                            <div class="card-info-notice">
-                                <div class="info-icon">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="12" cy="12" r="10" stroke="#6B7280" stroke-width="2"/>
-                                        <path d="m9 12 2 2 4-4" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
+                    
+                    <!-- Success Title -->
+                    <h3 class="text-success font-weight-bold mb-2">Payment Successful</h3>
+
+                    <!-- Payment Details -->
+                    <p class="text-muted mb-3">Your payment has been successfully completed. The remaining amount to finalize your transaction is indicated below.</p>
+
+                    <!-- Order Code -->
+                    <div class="order-code mb-4">
+                        <span class="text-muted">Order Code: </span>
+                        <strong field="transaction.reference" t-esc="transaction and transaction.reference or 'PLX394433'"/>
+                    </div>
+                    
+                    <!-- Payment Summary -->
+                    <div class="payment-summary bg-white p-3 rounded" style="border: 1px solid #e9ecef;">
+                        <div class="row text-left">
+                            <div class="col-6">
+                                <div class="payment-item mb-2">
+                                    <small class="text-muted d-block">Payment Summary</small>
                                 </div>
-                                <span class="info-text">When you enter your credit card information, applicable installment options will be displayed</span>
+                                <div class="payment-item mb-2">
+                                    <span class="text-muted">Amount Received:</span>
+                                </div>
+                                <div class="payment-item mb-2">
+                                    <span class="text-muted">Remaining Amount:</span>
+                                </div>
+                            </div>
+                            <div class="col-6 text-right">
+                                <div class="payment-item mb-2">
+                                    <small class="text-muted d-block"></small>
+                                </div>
+                                <div class="payment-item mb-2">
+                                    <span class="text-success font-weight-bold" field="previous.payment.amount">0.0 TL</span>
+                                </div>
+                                <div class="payment-item mb-2">
+                                    <span class="text-primary font-weight-bold" field="remaining.payment.amount">0.0 TL</span>
+                                </div>
                             </div>
                         </div>
+                        <hr class="my-2"/>
+                        <div class="d-flex justify-content-between">
+                            <span class="font-weight-bold">Total Transaction:</span>
+                            <span class="font-weight-bold" field="total.payment.amount">0.0 TL</span>
+                        </div>
                     </div>
-                    <div class="form__row" id="installmentOptionsContainer" style="display: none;">
-                        <div class="form__col">
-                            <div class="form__group">
-                                <div class="form__label">Installment Options</div>
-                                <div class="installment-table">
-                                    <div class="payment-gradient border card p-3 installment-rows">
-                                        <div>
-                                            <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
-                                                <t t-call="payment_jetcheckout.payment_installment_header"/>
+                    
+                    <!-- Return to Payment Button -->
+                    <div class="mt-4 text-center">
+                        <button type="button" class="btn btn-outline-primary btn-lg px-4" id="returnToPaymentBtn" onclick="returnToPayment()">
+                            <i class="fa fa-arrow-left mr-2"></i>
+                            Ödeme Adımına Geri Dön
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="payment-panel">
+                <t t-call="payment_escrow.payment_select_holder_diff"/>
+                <div id="payment_type" class="payment-type d-none">
+                    <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtual_pos"/>
+                </div>
+                <t t-call="payment_escrow.payment_partial_price"/>
+                <div class="creditCard">
+                    <h3>Credit Card Information</h3>
+                    <div class="form" id="payment_card">
+                        <div class="form__group">
+                            <label for="card_holder_name" class="form__label">Name Surname</label>
+                            <input type="text" field="card.holder" name="card_holder_name" id="card_holder_name" class="form__control -letter" placeholder="Name Surname"/>
+                        </div>
+                        <div class="field-container field-number fade show">
+                            <input id="card_number" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
+                            <span class="bar-container"/>
+                            <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row justify-content-center'}" field="card.logo"/>
+                            <div t-attf-class="#{'d-none' if no_card_family else 'ccicon overflow-hidden fade card flex-row justify-content-center'}" field="card.icon"/>
+                            <label for="card_number"><span>Card Number</span></label>
+                        </div>
+                        <div class="form__row d-flex">
+                            <div class="form__col p-1">
+                                <div class="form__group">
+                                    <label for="card_expiry" class="form__label">Expiry Date</label>
+                                    <input type="text" field="card.date" name="card_expiry" id="card_expiry" class="form__control -letter" placeholder="AA/YY"/>
+                                </div>
+                            </div>
+                            <div class="form__col -relative p-1">
+                                <div class="form__group">
+                                    <label for="cvv" class="form__label">Security Code</label>
+                                    <input type="text" field="card.code" name="cvv" id="cvv" class="form__control -letter" placeholder="CVC"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form__row">
+                            <div class="form__col">
+                                <div class="card-info-notice">
+                                    <div class="info-icon">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="12" cy="12" r="10" stroke="#6B7280" stroke-width="2"/>
+                                            <path d="m9 12 2 2 4-4" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <span class="info-text">When you enter your credit card information, applicable installment options will be displayed</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form__row" id="installmentOptionsContainer" style="display: none;">
+                            <div class="form__col">
+                                <div class="form__group">
+                                    <div class="form__label">Installment Options</div>
+                                    <div class="installment-table">
+                                        <div class="payment-gradient border card p-3 installment-rows">
+                                            <div>
+                                                <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
+                                                    <t t-call="payment_jetcheckout.payment_installment_header"/>
+                                                </div>
+                                                <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
                                             </div>
-                                            <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
-                                        </div>
-                                        <div class="d-none installment-row overflow-auto flex-fill" data-type="i" field="installment.row"/>
-                                        <div class="text-muted small h-100 w-75 text-center mt72 mx-auto flex-fill" field="installment.rowempty">
-                                            <i class="fa fa-info-circle mb-3" t-translation="off"></i>
-                                            <br/>
-                                            Appliable installment options will be displayed here after you enter your credit card number
+                                            <div class="d-none installment-row overflow-auto flex-fill" data-type="i" field="installment.row"/>
+                                            <div class="text-muted small h-100 w-75 text-center mt72 mx-auto flex-fill" field="installment.rowempty">
+                                                <i class="fa fa-info-circle mb-3" t-translation="off"></i>
+                                                <br/>
+                                                Appliable installment options will be displayed here after you enter your credit card number
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form__group d-none" field="assignment.form.section">
-                        <div class="form__label">Assignment Form Information</div>
-                        <p class="form__infoText">You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature.</p>
-                        <div class="download">
-                            <svg width="30" height="30" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
-                                <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
-                                <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
-                            </svg>
-                            <a href="#" class="download__link" field="assignment.form.download">Temlikname Formunu İndir</a>
-                        </div>
-                        <div class="form__label">Upload Assignment Form</div>
-                        <div class="upload">
-                            <input type="file" id="assignment-file-input" field="assignment.form.upload" accept=".pdf,.jpg,.jpeg,.png" multiple="multiple"/>
-                            <label for="assignment-file-input">
-                                <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div class="form__group d-none" field="assignment.form.section">
+                            <div class="form__label">Assignment Form Information</div>
+                            <p class="form__infoText">You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature.</p>
+                            <div class="download">
+                                <svg width="30" height="30" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
-                                    <path d="M14.7498 32.3737C15.1968 32.3737 15.6439 32.2014 15.9884 31.861L19.9998 27.8497L24.0111 31.861C24.6919 32.5459 25.8035 32.5459 26.4843 31.861C27.1693 31.176 27.1693 30.0686 26.4843 29.3877L21.2343 24.1377C20.5535 23.4528 19.4419 23.4528 18.7611 24.1377L13.5111 29.3877C12.8261 30.0727 12.8261 31.1801 13.5111 31.861C13.8556 32.2055 14.3027 32.3737 14.7498 32.3737Z" fill="#2414D8"/>
-                                    <path d="M20.9996 39.375C21.9676 39.375 22.751 38.5916 22.751 37.6236V25.3764C22.751 24.4084 21.9676 23.625 20.9996 23.625C20.0316 23.625 19.2482 24.4084 19.2482 25.3764V37.6277C19.2482 38.5916 20.0316 39.375 20.9996 39.375Z" fill="#2414D8"/>
+                                    <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                                    <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
                                 </svg>
-                                <span>Upload Assignment Form</span>
-                            </label>
+                                <a href="#" class="download__link" field="assignment.form.download">Temlikname Formunu İndir</a>
+                            </div>
+                            <div class="form__label">Upload Assignment Form</div>
+                            <div class="upload">
+                                <input type="file" id="assignment-file-input" field="assignment.form.upload" accept=".pdf,.jpg,.jpeg,.png" multiple="multiple"/>
+                                <label for="assignment-file-input">
+                                    <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                                        <path d="M14.7498 32.3737C15.1968 32.3737 15.6439 32.2014 15.9884 31.861L19.9998 27.8497L24.0111 31.861C24.6919 32.5459 25.8035 32.5459 26.4843 31.861C27.1693 31.176 27.1693 30.0686 26.4843 29.3877L21.2343 24.1377C20.5535 23.4528 19.4419 23.4528 18.7611 24.1377L13.5111 29.3877C12.8261 30.0727 12.8261 31.1801 13.5111 31.861C13.8556 32.2055 14.3027 32.3737 14.7498 32.3737Z" fill="#2414D8"/>
+                                        <path d="M20.9996 39.375C21.9676 39.375 22.751 38.5916 22.751 37.6236V25.3764C22.751 24.4084 21.9676 23.625 20.9996 23.625C20.0316 23.625 19.2482 24.4084 19.2482 25.3764V37.6277C19.2482 38.5916 20.0316 39.375 20.9996 39.375Z" fill="#2414D8"/>
+                                    </svg>
+                                    <span>Upload Assignment Form</span>
+                                </label>
+                            </div>
+                            <div class="upload-info" field="assignment.form.info">
+                                <small class="text-muted">Accepted formats: PDF, JPG, PNG. Maximum size: 10MB</small>
+                            </div>
+                            <div class="upload-status" field="assignment.form.upload.status"></div>
                         </div>
-                        <div class="upload-info" field="assignment.form.info">
-                            <small class="text-muted">Accepted formats: PDF, JPG, PNG. Maximum size: 10MB</small>
-                        </div>
-                        <div class="upload-status" field="assignment.form.upload.status"></div>
-                    </div>
-                    <div class="form__buttons">
-                        <div t-if="agreements" class="field-container field-agreement fade show" field="agreements">
-                            <t t-foreach="agreements" t-as="agreement">
-                                <div class="btn btn-payment-agreement" t-att-data-id="agreement.id" field="agreement">
-                                    <label class="switch">
-                                        <input type="checkbox" class="d-none" t-att-checked="agreement.checked and 'checked' or None" t-att-required="agreement.required and 'required' or None" t-att-data-options="agreement.get_options()"/>
-                                        <span class="slider round fa"/>
-                                    </label>
-                                    <label t-raw="agreement.text"/>
+                        <div class="form__buttons">
+                            <div t-if="agreements" class="field-container field-agreement fade show" field="agreements">
+                                <t t-foreach="agreements" t-as="agreement">
+                                    <div class="btn btn-payment-agreement" t-att-data-id="agreement.id" field="agreement">
+                                        <label class="switch">
+                                            <input type="checkbox" class="d-none" t-att-checked="agreement.checked and 'checked' or None" t-att-required="agreement.required and 'required' or None" t-att-data-options="agreement.get_options()"/>
+                                            <span class="slider round fa"/>
+                                        </label>
+                                        <label t-raw="agreement.text"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="form__group d-flex justify-content-between mt-3">
+                                <div class="form__group mt-3">
+                                    <button type="button" class="button button__dark button__medium" field="payment.button" data-wizard-action="next">
+                                        Continue
+                                        <i class="fa fa-chevron-right ml-2"/>
+                                    </button>
                                 </div>
-                            </t>
-                        </div>
-                        <div class="form__group d-flex justify-content-between mt-3">
-                            <div class="form__group mt-3">
-                                <button type="button" class="button button__dark button__medium" field="payment.button" data-wizard-action="next">
-                                    Continue
-                                    <i class="fa fa-chevron-right ml-2"/>
-                                </button>
                             </div>
+                            <button type="submit" class="primaryButton d-none" id="btn_pay_now">
+                                <div class="summary__priceBtn">
+                                    <span>Payable Amount</span>
+                                    <strong>2.400.000 TL</strong>
+                                </div>
+                                <span>Pay Now
+                                    <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                                    </svg>
+                                </span>
+                            </button>
                         </div>
-                        <button type="submit" class="primaryButton d-none" id="btn_pay_now">
-                            <div class="summary__priceBtn">
-                                <span>Payable Amount</span>
-                                <strong>2.400.000 TL</strong>
-                            </div>
-                            <span>Pay Now
-                                <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
-                                </svg>
-                            </span>
-                        </button>
                     </div>
                 </div>
             </div>

@@ -203,6 +203,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(this);
             payloxPage.prototype._start.apply(this);
             this._parseAds();
+            this._setInitialState();
             this._bindWizardValidation();
             this._bindWizardToggle();
             this._bindWizardSteps();
@@ -211,6 +212,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._checkStep5Parameter();
             framework.hideLoading();
         });
+    },
+
+    _setInitialState: function() {
+        const $escrowItem = $('.escrow-ad-list-item[data-id], .escrow-item[data-id]').first();
+        if ($escrowItem.length) {
+            this.state.id = parseInt($escrowItem.data('id'), 10);
+            return;
+        }
     },
 
     _bindInfoCardEvents: function() {
@@ -595,7 +604,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         
         this._updateStepStates();
         this._showStepContent(1);
-        this._updateNavigationButtons(1);
         this._navigateToStep(2);
         
         this.seller.wizard.$.removeClass('d-none').hide().fadeIn(200);
@@ -1095,7 +1103,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         
         this._updateStepStates();
         this._showStepContent(1);
-        this._updateNavigationButtons(1);
     },
 
     _completeWizard: function() {
@@ -1943,7 +1950,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 } else {
                     self.displayNotification({
                         type: 'warning',
-                        title: 'Uyarı',
+                        title: 'Error',
                         message: 'Please fill in the current step before proceeding to the next step.',
                     });
                 }
@@ -1983,11 +1990,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             self._nextStep();
         });
 
-        $(document).on('click', '[data-wizard-action="prev"]', function (ev) {
-            ev.preventDefault();
-            self._previousStep();
-        });
-
         $(document).on('click', '[data-wizard-action="submit"]', function (ev) {
             ev.preventDefault();
             if (!self._validateAllSteps()) {
@@ -1998,7 +2000,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 });
                 return false;
             }
-            
             self._completeWizard();
         });
     },
@@ -2009,23 +2010,99 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return step ? parseInt(step) : null;
     },
 
-    _navigateToStep: function (stepNumber) {
+    _onChangeStep: function(stepNumber, options = {}) {
         if (stepNumber < 1 || stepNumber > 5) {
+            console.error('Invalid step number:', stepNumber);
             return;
         }
 
         this.wizard.previousStep = this.wizard.currentStep;
         this.wizard.currentStep = stepNumber;
         
-        this._updateURL(stepNumber);
-        
-        this._updateStepStates();
-        
+        this._ensureWizardVisible();
+        this._updateStepHeaders(stepNumber, options);
         this._showStepContent(stepNumber);
+        this._handleStepSpecificActions(stepNumber, options);
         
-        this._updateNavigationButtons(stepNumber);
+        if (!options.skipUrlUpdate) {
+            this._updateURL(stepNumber);
+        }
+    },
+
+    _ensureWizardVisible: function() {
+        $('.escrow-ad-read').addClass('d-none');
+        $('.escrow-wizard').removeClass('d-none');
+    },
+
+    _updateStepHeaders: function(stepNumber, options) {
+        const $steps = $('.steps__item');
         
-        this._performStepActions(stepNumber);
+        $steps.each(function(index) {
+            const $step = $(this);
+            const currentStepNum = index + 1;
+            
+            $step.removeClass('-active -completed completed active');
+            
+            if (currentStepNum < stepNumber) {
+                $step.addClass('-completed completed');
+            } else if (currentStepNum === stepNumber) {
+                $step.addClass('-active active');
+                if (options.markAsCompleted) {
+                    $step.addClass('-completed completed');
+                }
+            }
+        });
+    },
+
+    _showStepContent: function(stepNumber) {
+        $('.wizard-step').addClass('d-none');
+        $(`.wizard-step-${stepNumber}`).removeClass('d-none');
+    },
+
+    _handleStepSpecificActions: function(stepNumber, options) {
+        switch(stepNumber) {
+            case 1:
+                this._initializeSellerInfoForm();
+                break;
+                
+            case 2:
+                this._initializeProductInfoForm();
+                break;
+                
+            case 3:
+                this._initializeCustomerInfoForm();
+                break;
+                
+            case 4:
+                this._initializePaymentForm();
+                if (options.paymentCompleted) {
+                    $('.payment-panel').addClass('d-none');
+                    $('#payment_type').addClass('d-none');
+                    this._showRemainingPaymentInfo();
+                    
+                    if (options.itemId) {
+                        this._updatePaymentAmounts(options.itemId);
+                    }
+                }
+                break;
+                
+            case 5:
+                this._showCompletionStep();
+                break;
+        }
+    },
+
+    _showCompletionStep: function() {
+        this.displayNotification({
+            type: 'success',
+            title: 'Payment Completed',
+            message: 'Your escrow payment has been completed successfully.',
+            sticky: false
+        });
+    },
+
+    _navigateToStep: function(stepNumber) {
+        this._onChangeStep(stepNumber);
     },
 
     _updateURL: function (stepNumber) {
@@ -2050,60 +2127,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    _showStepContent: function (stepNumber) {
-        $('.wizard-step').addClass('d-none');
-        
-        $(`.wizard-step-${stepNumber}`).removeClass('d-none');
-    },
-
-    _updateNavigationButtons: function (currentStep) {
-        const $prevBtn = $('[data-wizard-action="prev"]');
-        const $nextBtn = $('[data-wizard-action="next"]');
-        const $submitBtn = $('[data-wizard-action="submit"]');
-        
-        $prevBtn.toggle(currentStep > 1);
-        
-        if (currentStep === 5) {
-            $nextBtn.hide();
-            $submitBtn.show();
-        } else {
-            $nextBtn.show();
-            $submitBtn.hide();
-        }
-    },
-
-    _performStepActions: function (currentStep) {
-        switch (currentStep) {
-            case 1:
-                this._initializeSellerInfoForm();
-                break;
-            case 2:
-                this._initializeProductInfoForm();
-                break;
-            case 3:
-                this._bindRecipientToggle();
-                break;
-            case 4:
-                this._initializePaymentForm();
-                break;
-            case 5:
-                this._showCompletionPage();
-                break;
-        }
-    },
-
     _nextStep: function () {
         const self = this;
-        
-    if (!this._validateCurrentStep()) {
-            this.displayNotification({
-        type: 'warning',
-        title: 'Warning',
-        message: 'Please fill in all required fields correctly.',
-            });
-            return false;
-        }
-
         if (this.wizard.currentStep === 1) {
             this._saveSellerInfo().then(function(result) {
                 if (result.success) {
@@ -2212,7 +2237,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             case 1:
                 return this.validateWizardStep1();
             case 2:
-                return this._validateProductInfo();
+                return this.validateWizardStep2();
             case 3:
                 return this.validateWizardStep3();
             case 4:
@@ -2227,10 +2252,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                this._validateProductInfo() && 
                this.validateWizardStep3() &&
                this._validatePaymentInfo();
-    },
-
-    _validateProductInfo: function () {
-        return this.validateWizardStep2();
     },
 
     _validatePaymentInfo: function () {
@@ -2303,10 +2324,33 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _initializeSellerInfoForm: function () {
         this._setupFileUpload();
+        this._bindWizardToggle();
+        
+        // Get current ad data if available
+        const currentAdId = this.state.id || this.wizard?.editingAdId;
+        if (currentAdId && this.values.ads && this.values.ads[currentAdId]) {
+            const adData = this.values.ads[currentAdId];
+            this._prefillSellerFromAd(adData);
+        }
     },
 
     _initializeProductInfoForm: function () {
         this._setupFileUpload();
+        const currentAdId = this.state.id || this.wizard?.editingAdId;
+        if (currentAdId && this.values.ads && this.values.ads[currentAdId]) {
+            const adData = this.values.ads[currentAdId];
+            this._prefillProductFromAd(adData);
+        }
+    },
+
+    _initializeCustomerInfoForm: function () {
+        this._bindRecipientToggle();
+        
+        const currentAdId = this.state.id || this.wizard?.editingAdId;
+        if (currentAdId && this.values.ads && this.values.ads[currentAdId]) {
+            const adData = this.values.ads[currentAdId];
+            this._prefillRecipientFromAd(adData);
+        }
     },
 
     _initializePaymentForm: function () {
@@ -2361,7 +2405,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _showCompletionPage: function () {
-        console.log('Wizard completed');
     },
 
     _markStepCompleted: function (stepNumber) {
@@ -2465,7 +2508,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }).then((result) => {
             if (result.success && result.partner_id) {
                 self.wizard.sellerId = result.partner_id;
-                console.log('Seller saved with ID:', result.partner_id);
             }
             return result;
         });
@@ -2601,48 +2643,63 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _checkStep5Parameter: function() {
         const urlParams = new URLSearchParams(window.location.search);
         const step = urlParams.get('step');
+        const status = urlParams.get('status');
+        const itemId = urlParams.get('item_id');
         
-        if (step === '5') {
-            this._showStep5CompletionModal();
-            this._removeStepParameter();
-        }
-    },
-
-    _showStep5CompletionModal: function() {
-        const $modal = $('#step5CompletionModal');
-        if ($modal.length) {
-            $modal.removeClass('d-none');
-            
-            $(document).on('click.step5Modal', (e) => {
-                if ($(e.target).is('#step5CompletionModal .step5-modal-overlay')) {
-                    this._closeStep5Modal();
-                }
+        if (step === '4' && status === 'completed') {
+            // Payment completed - go to step 4 with payment completed options
+            this._onChangeStep(4, {
+                paymentCompleted: true,
+                markAsCompleted: true,
+                itemId: itemId,
+                skipUrlUpdate: true
             });
-            
-            $(document).on('keydown.step5Modal', (e) => {
-                if (e.key === 'Escape') {
-                    this._closeStep5Modal();
-                }
+        } else if (step === '5') {
+            // Payment fully completed - go to step 5
+            this._onChangeStep(5, {
+                skipUrlUpdate: true
             });
-            
-            setTimeout(() => {
-                this._closeStep5Modal();
-            }, 30000);
         }
     },
 
-    _closeStep5Modal: function() {
-        const $modal = $('#step5CompletionModal');
-        if ($modal.length && !$modal.hasClass('d-none')) {
-            $modal.addClass('d-none');
-            
-            $(document).off('click.step5Modal keydown.step5Modal');
+    _showRemainingPaymentInfo: function() {
+        const $remainingPaymentInfo = $('.remaining-payment-info[field="remaining.payment.info"]');
+        if ($remainingPaymentInfo.length) {
+            $remainingPaymentInfo.removeClass('d-none');
         }
     },
 
-    _removeStepParameter: function() {
+    _updatePaymentAmounts: function(itemId) {
+        rpc.query({
+            route: '/payment/escrow/transaction-data',
+            params: { item_id: itemId }
+        }).then(data => {
+            if (data && !data.error) {
+                $('[field="previous.payment.amount"]').text(this._formatCurrency(data.previous_amount));
+                $('[field="remaining.payment.amount"]').text(this._formatCurrency(data.remaining_amount));
+                $('[field="total.payment.amount"]').text(this._formatCurrency(data.total_amount));
+                $('[field="transaction.reference"]').text(data.transaction_reference);
+                
+                const percentage = Math.round((data.previous_amount / data.total_amount) * 100);
+                $('.progress-text').text(percentage + '%');
+                const circumference = 219.8;
+                const offset = circumference - (percentage / 100) * circumference;
+                $('.progress-ring-fill').css('stroke-dashoffset', offset);
+            }
+        }).catch(error => {
+            console.error('Error fetching payment data:', error);
+        });
+    },
+
+    _formatCurrency: function(amount) {
+        if (!amount) return '0 TL';
+        return new Intl.NumberFormat('tr-TR').format(amount) + ' TL';
+    },
+
+    _removeStepParameters: function() {
         const url = new URL(window.location);
         url.searchParams.delete('step');
+        url.searchParams.delete('status');
         window.history.replaceState({}, '', url);
     },
 
@@ -2732,6 +2789,18 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
 });
+
+window.returnToPayment = function() {
+    const remainingSection = document.querySelector('.remaining-payment-info[field="remaining.payment.info"]');
+    if (remainingSection) {
+        remainingSection.classList.add('d-none');
+    }
+    
+    const paymentPanel = document.querySelector('.payment-panel');
+    if (paymentPanel) {
+        paymentPanel.classList.remove('d-none');
+    }
+};
 
 window.closeStep5Modal = function() {
     const widget = $('.payment-escrow #wrapwrap').data('publicWidget');

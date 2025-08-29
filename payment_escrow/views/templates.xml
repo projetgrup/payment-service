@@ -272,6 +272,10 @@
                                 <div class="wizard-step wizard-step-4 d-none">
                                     <t t-call="payment_escrow.step_4_content"/>
                                 </div>
+
+                                <div class="wizard-step wizard-step-5 d-none">
+                                    <t t-call="payment_escrow.step_5_content"/>
+                                </div>
                             </div>
                         </div>
                     </div>

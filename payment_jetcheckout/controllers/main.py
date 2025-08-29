@@ -1620,6 +1620,7 @@ class PayloxController(http.Controller):
                     return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)
+                    _logger.error('JetCheckout payment processing error: %s', url)
                     #company = tx.company_id.root_id
                     #if company.payment_page_init_redirect_extra:
                     #    url = '/payment/redirect?=%s' % quote_plus(url)
