@@ -215,7 +215,7 @@ class PayloxSystemEscrowController(Controller):
                 "ip_address": transaction.jetcheckout_ip_address or request.httprequest.remote_addr,
                 "postal_code": customer.zip,
                 "company": customer.parent_id and customer.parent_id.name or "",
-                "address": "%s %s" % (customer.address, "/".join(address)),
+                "address": ", ".join(address) if address else customer.street or "",
                 "city": customer.state_id and customer.state_id.name or "",
                 "country": customer.country_id and customer.country_id.name or "",
             }
