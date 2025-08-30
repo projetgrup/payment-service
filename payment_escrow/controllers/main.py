@@ -364,58 +364,51 @@ class PayloxSystemEscrowController(Controller):
                     'success': False,
                     'message': 'Invalid IBAN format'
                 }
-            
+
             company = request.env.company
-            
-            # Check if syncOPS is available and IBAN check is enabled
-            # if hasattr(company, 'syncops_check_iban') and company.syncops_check_iban:
-            #     user = request.env.user
-            #     if user.has_group('payment_syncops.group_check_iban'):
-            #         # Check if IBAN was already validated
-            #         cached_iban = request.env['syncops.partner.iban'].sudo().search([('name', '=', iban)])
-            #         if cached_iban:
-            #             return {
-            #                 'success': True,
-            #                 'message': 'IBAN doğrulandı (önbellekten)'
-            #             }
+            if hasattr(company, 'syncops_check_iban') and company.syncops_check_iban:
+                user = request.env.user
+                if user.has_group('payment_syncops.group_check_iban'):
+                    cached_iban = request.env['syncops.partner.iban'].sudo().search([('name', '=', iban)])
+                    if cached_iban:
+                        return {
+                            'success': True,
+                            'message': 'IBAN doğrulandı (önbellekten)'
+                        }
                     
-            #         # Use syncOPS to validate IBAN
-            #         try:
-            #             result, message = request.env['syncops.connector'].sudo()._execute(
-            #                 'other_get_ozan_iban', 
-            #                 reference=str(user.partner_id.id), 
-            #                 params={
-            #                     'vat': vat,
-            #                     'iban': iban,
-            #                 }, 
-            #                 company=company, 
-            #                 message=True
-            #             )
+                    try:
+                        result, message = request.env['syncops.connector'].sudo()._execute(
+                            'other_get_ozan_iban', 
+                            reference=str(user.partner_id.id), 
+                            params={
+                                'vat': vat,
+                                'iban': iban,
+                            }, 
+                            company=company, 
+                            message=True
+                        )
                         
-            #             if result is None:
-            #                 return {
-            #                     'success': False,
-            #                     'message': message or 'IBAN doğrulama servisi kullanılamıyor'
-            #                 }
-            #             elif not result[0]['ok']:
-            #                 return {
-            #                     'success': False,
-            #                     'message': result[0]['message'] or 'IBAN doğrulanamadı'
-            #                 }
-            #             else:
-            #                 # Cache the validated IBAN
-            #                 request.env['syncops.partner.iban'].sudo().create({'name': iban})
-            #                 return {
-            #                     'success': True,
-            #                     'message': 'IBAN başarıyla doğrulandı'
-            #                 }
-            #         except Exception as e:
-            #             return {
-            #                 'success': False,
-            #                 'message': 'IBAN doğrulama hatası: ' + str(e)
-            #             }
-            
-            # If syncOPS is not available, do basic validation only
+                        if result is None:
+                            return {
+                                'success': False,
+                                'message': message or 'IBAN doğrulama servisi kullanılamıyor'
+                            }
+                        elif not result[0]['ok']:
+                            return {
+                                'success': False,
+                                'message': result[0]['message'] or 'IBAN doğrulanamadı'
+                            }
+                        else:
+                            request.env['syncops.partner.iban'].sudo().create({'name': iban})
+                            return {
+                                'success': True,
+                                'message': 'IBAN başarıyla doğrulandı'
+                            }
+                    except Exception as e:
+                        return {
+                            'success': False,
+                            'message': 'IBAN doğrulama hatası: ' + str(e)
+                        }
             return {
                 'success': True,
                 'message': 'IBAN formatı geçerli (temel doğrulama)'
