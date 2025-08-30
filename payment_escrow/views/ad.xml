@@ -68,7 +68,14 @@
             <sheet>
                 <field name="is_product_variant" invisible="1"/>
                 <field name="type" invisible="1"/>
-                <div class="oe_button_box" name="button_box"/>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_full_image"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-external-link"
+                            attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('image_1920', '=', False)]}"
+                            string="Büyük Gör"/>
+                </div>
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="id" invisible="1"/>
                 <field name="active" invisible="1"/>

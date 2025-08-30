@@ -148,21 +148,25 @@ class PayloxSystemEscrowController(Controller):
             platform_rate = find_rate(platform_owner, installment_count)
             infra_rate = find_rate(infrastructure_provider, installment_count)
 
+            infra_commission = paid * infra_rate
+            platform_commission = (paid * additional_rate / 100) - infra_commission
+            total_paid = seller_net + infra_commission + platform_commission
+
+            customer_amount = paid * seller_net / total_paid
             customer_basket.append({
                 "id": 24,
                 "name": product['product_id']['name'],
                 "description": product['name'],
                 "qty": 1,
-                "amount": seller_net,
+                "amount": customer_amount,
                 "category": product['product_id']['categ_id']['name'],
                 "is_physical": product['product_id']['type'] == 'product',
                 "submerchant_external_id": reference_seller,
                 "submerchant_price": seller_net
             })
-
+            infra_amount = paid * infra_commission / total_paid
             #infra_commission = float_round(charged * (1 - (infra_rate / 100)), 4) if infra_rate else 0.0
             #platform_commission = float_round(charged * (1 - (platform_rate / 100)), 4) if platform_rate else 0.0
-            infra_commission = paid * infra_rate
             if infra_commission > 0:
                 ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref']) or reference_seller
                 customer_basket.append({
@@ -170,13 +174,13 @@ class PayloxSystemEscrowController(Controller):
                     "name": f"{product['product_id']['name']} - Altyapı Komisyonu",
                     "description": f"Altyapı Komisyonu (%{infra_rate})",
                     "qty": 1,
-                    "amount": infra_commission,
+                    "amount": infra_amount,
                     "category": "Komisyon",
                     "is_physical": False,
                     "submerchant_external_id": ref_infra,
                     "submerchant_price": infra_commission
                 })
-            platform_commission = (paid * additional_rate / 100) - infra_commission
+            platform_amount = paid * platform_commission / total_paid
             if platform_commission > 0:
                 ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref']) or reference_seller
                 customer_basket.append({
@@ -184,18 +188,12 @@ class PayloxSystemEscrowController(Controller):
                     "name": f"{product['product_id']['name']} - Platform Komisyonu",
                     "description": f"Platform Komisyonu (%{platform_rate})",
                     "qty": 1,
-                    "amount": platform_commission,
+                    "amount": platform_amount,
                     "category": "Komisyon",
                     "is_physical": False,
                     "submerchant_external_id": ref_platform,
                     "submerchant_price": platform_commission
                 })
-
-            values.update({
-                'is_submerchant_payment': True,
-                'submerchant_external_id': reference_seller,
-                'customer_basket': customer_basket
-            })
             fullname = customer.name.split(' ', 1)
             address = []
             if customer.city:
@@ -204,21 +202,25 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.state_id.name)
             if customer.country_id:
                 address.append(customer.country_id.name)
-
-            values['customer'] = {
-                "name": fullname[0],
-                "surname": fullname[-1],
-                "email": customer.email,
-                "id": str(customer.id),
-                "identity_number": customer.vat,
-                "phone": customer.phone,
-                "ip_address": transaction.jetcheckout_ip_address or request.httprequest.remote_addr,
-                "postal_code": customer.zip,
-                "company": customer.parent_id and customer.parent_id.name or "",
-                "address": ", ".join(address) if address else customer.street or "",
-                "city": customer.state_id and customer.state_id.name or "",
-                "country": customer.country_id and customer.country_id.name or "",
-            }
+            values.update({
+                'submerchant_external_id': reference_seller,
+                'is_submerchant_payment': True,
+                'customer_basket': customer_basket,
+                'customer':{
+                    "name": fullname[0],
+                    "surname": fullname[-1],
+                    "email": customer.email,
+                    "id": str(customer.id),
+                    "identity_number": customer.vat,
+                    "phone": customer.phone,
+                    "ip_address": transaction.jetcheckout_ip_address or request.httprequest.remote_addr,
+                    "postal_code": customer.zip,
+                    "company": customer.parent_id and customer.parent_id.name or "",
+                    "address": ", ".join(address) if address else customer.street or "",
+                    "city": customer.state_id and customer.state_id.name or "",
+                    "country": customer.country_id and customer.country_id.name or "",
+                }
+            })
         return values
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)

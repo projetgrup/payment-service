@@ -143,13 +143,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 img: new fields.file({
                     allowMultiple: true,
                     accept: 'image/*',
-                    maxFileSize: '5MB',
+                    maxFileSize: '15MB',
                     maxFiles: 10,
                     labelIdle: 'Drag & drop images or <span class="filepond--label-action">Browse</span><br><small>Up to 10 images, max 5MB</small>',
                     imagePreviewHeight: 170,
-                    imageCropAspectRatio: '1:1',
-                    imageResizeTargetWidth: 800,
-                    imageResizeTargetHeight: 600,
+                    // Preserve original aspect; avoid client-side downscaling
+                    // imageCropAspectRatio: undefined,
+                    imageResizeTargetWidth: 1920,
+                    imageResizeUpscale: false,
+                    imageTransformOutputQuality: 0.95,
                     stylePanelLayout: 'compact circle',
                     styleLoadIndicatorPosition: 'center bottom',
                     styleProgressIndicatorPosition: 'right bottom',
@@ -2060,6 +2062,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _handleStepSpecificActions: function(stepNumber, options) {
+        console.log(stepNumber)
         switch(stepNumber) {
             case 1:
                 this._initializeSellerInfoForm();
@@ -2076,6 +2079,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             case 4:
                 this._initializePaymentForm();
                 if (options.paymentCompleted) {
+                    console.log('test')
                     $('.payment-panel').addClass('d-none');
                     $('#payment_type').addClass('d-none');
                     this._showRemainingPaymentInfo();
@@ -2087,6 +2091,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 break;
                 
             case 5:
+                this._updatePaymentAmounts(options.itemId);
                 this._showCompletionStep();
                 break;
         }
@@ -2360,7 +2365,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _getRemainingBalance: function() {
-        return $('[field="remaining.payment.amount"]').text();
+        if ($('[field="remaining.payment.amount"]').text() > 0) {
+            return $('[field="remaining.payment.amount"]').text();
+        }
+        return 0;
     },
 
     _setupCreditCardInstallments: function() {
@@ -2662,7 +2670,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         } else if (step === '5') {
             // Payment fully completed - go to step 5
             this._onChangeStep(5, {
-                skipUrlUpdate: true
+                skipUrlUpdate: true,
+                itemId: itemId
             });
         }
     },

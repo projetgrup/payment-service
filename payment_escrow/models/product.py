@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError
 from datetime import date
 
 
@@ -34,6 +34,19 @@ class ProductProduct(models.Model):
         if system == 'escrow':
             self = self.with_context(skip_view_mapping=True)
         return super(ProductProduct, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+    # Open full-size image in a new tab (backend)
+    def action_view_full_image(self):
+        self.ensure_one()
+        if not self.image_1920:
+            raise UserError('Resim bulunamadı.')
+        url = '/web/image/%s/%s/%s' % (self._name, self.id, 'image_1920')
+        return {
+            'type': 'ir.actions.act_url',
+            'url': url,
+            'target': 'new',
+        }
+
 
 
 class ProductCategory(models.Model):

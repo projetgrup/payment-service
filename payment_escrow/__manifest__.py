@@ -28,7 +28,6 @@
         'views/actions.xml',
         'views/menu.xml',
         'views/step_components.xml',
-        'views/transaction.xml',
         'views/templates.xml',
         'views/settings.xml',
     ],
