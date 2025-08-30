@@ -457,7 +457,37 @@
         <xpath expr='//field[@name="parent_id"]' position="attributes">
             <attribute name="invisible">1</attribute>
         </xpath>
-        <xpath expr='//notebook' position="replace"/>
+        <xpath expr='//notebook' position="replace">
+            <notebook>
+                <page string="Card Holders" name="card_holders">
+                    <field name="card_holder_ids" context="{'default_escrow_customer_id': id, 'default_paylox_escrow_type': 'card_holder', 'default_system': 'escrow'}">
+                        <tree string="Card Holders" editable="bottom">
+                            <field name="name" string="Full Name"/>
+                            <field name="vat" string="Identity No"/>
+                            <field name="mobile" string="Phone"/>
+                            <field name="email" string="Email"/>
+                            <field name="street" string="Address"/>
+                        </tree>
+                        <form string="Card Holder">
+                            <group>
+                                <group>
+                                    <field name="name" string="Full Name"/>
+                                    <field name="vat" string="Identity No"/>
+                                    <field name="mobile" string="Phone"/>
+                                    <field name="email" string="Email"/>
+                                </group>
+                                <group>
+                                    <field name="street" string="Address"/>
+                                    <field name="paylox_escrow_type" invisible="1"/>
+                                    <field name="escrow_customer_id" invisible="1"/>
+                                    <field name="system" invisible="1"/>
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </notebook>
+        </xpath>
     </field>
     </record>
 
@@ -564,7 +594,17 @@
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
         <!-- Mirror broker form adjustments; platform owner is a company partner -->
-        <xpath expr='//div[@name="button_box"]' position="replace"/>
+        <xpath expr='//div[@name="button_box"]' position="replace">
+            <div class="oe_button_box" name="button_box">
+                <button name="action_view_pending_approval_ads"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-hourglass-half"
+                        attrs="{'invisible': [('escrow_pending_ad_count', '=', 0)]}">
+                    <field name="escrow_pending_ad_count" widget="statinfo" string="Pending Ads"/>
+                </button>
+            </div>
+        </xpath>
         <xpath expr='//button[@name="action_share_payment_link"]' position="replace"/>
         <xpath expr='//button[@name="action_share_payment_page"]' position="replace"/>
         <xpath expr='//button[@name="action_send"]' position="replace"/>

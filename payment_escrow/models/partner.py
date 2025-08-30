@@ -13,30 +13,18 @@ class Partner(models.Model):
         ('owner', 'Owner'),
         ('platform_owner', 'Platform Owner'),
         ('infrastructure_provider', 'Infrastructure Provider'),
+        ('card_holder', 'Card Holder'),
     ], string='Paylox Escrow Type')
 
-    installment_rate_ids = fields.One2many(
-        'escrow.installment.rate', 
-        'partner_id', 
-        string='Installment Rates',
-        domain=[('active', '=', True)]
-    )
-    escrow_owner_ad_count = fields.Integer(
-        string='Owner Ads Count',
-        compute='_compute_escrow_counts'
-    )
-    escrow_customer_ad_count = fields.Integer(
-        string='Customer Ads Count',
-        compute='_compute_escrow_counts'
-    )
-    escrow_successful_payment_count = fields.Integer(
-        string='Successful Payments Count',
-        compute='_compute_escrow_counts'
-    )
-    escrow_failed_payment_count = fields.Integer(
-        string='Failed Payments Count',
-        compute='_compute_escrow_counts'
-    )
+    installment_rate_ids = fields.One2many('escrow.installment.rate', 'partner_id', string='Installment Rates', domain=[('active', '=', True)])
+    escrow_owner_ad_count = fields.Integer(string='Owner Ads Count', compute='_compute_escrow_counts')
+    escrow_customer_ad_count = fields.Integer(string='Customer Ads Count', compute='_compute_escrow_counts')
+    escrow_successful_payment_count = fields.Integer(string='Successful Payments Count', compute='_compute_escrow_counts')
+    escrow_failed_payment_count = fields.Integer(string='Failed Payments Count', compute='_compute_escrow_counts')
+    escrow_pending_ad_count = fields.Integer(string='Ads Pending Approval', compute='_compute_escrow_counts')
+    is_escrow_customer = fields.Boolean(string='Is Escrow Customer')
+    card_holder_ids = fields.One2many('res.partner', 'escrow_customer_id', string='Card Holders', domain=[('paylox_escrow_type', '=', 'card_holder')])
+    escrow_customer_id = fields.Many2one('res.partner', string='Related Customer')
 
     @api.depends()
     def _compute_escrow_counts(self):
@@ -47,7 +35,7 @@ class Partner(models.Model):
             ])
             
             partner.escrow_customer_ad_count = self.env['product.product'].search_count([
-                ('escrow_customer_id', '=', partner.id),
+                ('escrow_customer_ids', '=', partner.id),
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
             
@@ -62,6 +50,14 @@ class Partner(models.Model):
                 ('state', 'in', ['error', 'cancel']),
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
+
+            # Pending approval ads for platform owner users
+            partner.escrow_pending_ad_count = self.env['product.product'].search_count([
+                ('company_id', '=', partner.company_id.id or self.env.company.id),
+                ('system', '=', 'escrow'),
+                ('escrow_ad_approval', '=', False),
+                ('escrow_payment_paid', '=', True),
+            ]) if partner.paylox_escrow_type == 'platform_owner' else 0
 
     def action_view_owner_ads(self):
         return {
@@ -92,9 +88,9 @@ class Partner(models.Model):
                 (self.env.ref('payment_escrow.kanban_ad').id, 'kanban'),
                 (self.env.ref('payment_escrow.form_ad').id, 'form'),
             ],
-            'domain': [('escrow_customer_id', '=', self.id)],
+            'domain': [('escrow_customer_ids', '=', self.id)],
             'context': {
-                'default_escrow_customer_id': self.id,
+                'default_escrow_customer_ids': self.id,
                 'create': False,
             }
         }
@@ -127,6 +123,29 @@ class Partner(models.Model):
             ],
             'context': {
                 'default_partner_id': self.id,
+                'create': False,
+            }
+        }
+
+    def action_view_pending_approval_ads(self):
+        self.ensure_one()
+        return {
+            'name': _('Ads Pending Approval'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.product',
+            'view_mode': 'tree,kanban,form',
+            'views': [
+                (self.env.ref('payment_escrow.tree_ad').id, 'tree'),
+                (self.env.ref('payment_escrow.kanban_ad').id, 'kanban'),
+                (self.env.ref('payment_escrow.form_ad').id, 'form'),
+            ],
+            'domain': [
+                ('company_id', '=', self.company_id.id or self.env.company.id),
+                ('system', '=', 'escrow'),
+                ('escrow_ad_approval', '=', False),
+                ('escrow_payment_paid', '=', True),
+            ],
+            'context': {
                 'create': False,
             }
         }

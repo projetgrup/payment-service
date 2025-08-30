@@ -48,7 +48,7 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <small class="text-muted">Transaction ID:</small>
-                                        <div field="transaction.reference">#TXN-12345</div>
+                                        <div field="payment.transaction.reference">#TXN-12345</div>
                                     </div>
                                     <div class="col-6">
                                         <small class="text-muted">Amount:</small>
@@ -239,7 +239,7 @@
             <form action="#" id="productInfo" class="form">
                 <div class="form__group -mt-lg">
                     <label class="form__label" for="wizard_category">Sale Category</label>
-                    <select id="wizard_category" class="form__control" name="category" field="escrow.input.category">
+                    <select id="wizard_category" class="form__control" name="category" field="ad.input.category">
                         <option value="">Select</option>
                         <t t-foreach="company.env['product.category'].sudo().with_context(system='escrow').search([('company_id', '=', company.id)])" t-as="categ">
                             <option t-att-value="categ.id" t-esc="categ.name"/>
@@ -248,7 +248,7 @@
                 </div>
                 <div class="form__group -mb-0">
                     <label class="form__label" for="wizard_price">Sale Price</label>
-                    <input id="wizard_price" class="form__control" type="text" name="price" placeholder="1.000.000,00" field="escrow.input.price"/>
+                    <input id="wizard_price" class="form__control" type="text" name="price" placeholder="1.000.000,00" field="ad.input.price"/>
                 </div>
                 <div class="panel mt-3">
                     <div class="panel__header">
@@ -258,17 +258,17 @@
                         <div id="carInfo">
                             <div class="form__group">
                                 <label class="form__label" for="wizard_vin">Chassis Number</label>
-                                <input id="wizard_vin" class="form__control" type="text" name="vin" maxlength="17" placeholder="Chassis Number (17 characters)" field="escrow.input.vin"/>
+                                <input id="wizard_vin" class="form__control" type="text" name="vin" maxlength="17" placeholder="Chassis Number (17 characters)" field="ad.input.vin"/>
                                 <i class="fa fa-check text-success state-check d-none"></i>
                             </div>
                             <div class="form__group">
                                 <label class="form__label" for="wizard_plate">License Plate</label>
-                                <input id="wizard_plate" class="form__control" type="text" name="numberplate" placeholder="License Plate (e.g., 34 ABC 123)" field="escrow.input.plate"/>
+                                <input id="wizard_plate" class="form__control" type="text" name="numberplate" placeholder="License Plate (e.g., 34 ABC 123)" field="ad.input.plate"/>
                                 <i class="fa fa-check text-success state-check d-none"></i>
                             </div>
                             <div class="form__group">
                                 <label class="form__label" for="wizard_brand">Brand</label>
-                                <select id="wizard_brand" class="form__control" name="brand" field="escrow.input.brand">
+                                <select id="wizard_brand" class="form__control" name="brand" field="ad.input.brand">
                                     <option value="">Select</option>
                                     <t t-foreach="company.env['escrow.car.brand'].sudo().search([])" t-as="brand">
                                         <option t-att-value="brand.id" t-esc="brand.name"/>
@@ -277,7 +277,7 @@
                             </div>
                             <div class="form__group">
                                 <label class="form__label" for="wizard_model">Model</label>
-                                <select id="wizard_model" class="form__control" name="model" field="escrow.input.model">
+                                <select id="wizard_model" class="form__control" name="model" field="ad.input.model">
                                     <option value="">Select</option>
                                     <t t-foreach="company.env['escrow.car.model'].sudo().search([])" t-as="model">
                                         <option t-att-value="model.id" t-att-data-brand="model.brand_id.id" t-esc="model.name"/>
@@ -286,7 +286,7 @@
                             </div>
                             <div class="form__group">
                                 <label class="form__label" for="wizard_year">Yıl</label>
-                                <input id="wizard_year" class="form__control" type="text" name="year" placeholder="Model Yılı" field="escrow.input.year"/>
+                                <input id="wizard_year" class="form__control" type="text" name="year" placeholder="Model Yılı" field="ad.input.year"/>
                             </div>
                             <div class="form__group -mb-0">
                                 <div class="form__label">Upload License Photo</div>
@@ -381,7 +381,7 @@
                     <!-- Order Code -->
                     <div class="order-code mb-4">
                         <span class="text-muted">Order Code: </span>
-                        <strong field="transaction.reference" t-esc="transaction and transaction.reference or 'PLX394433'"/>
+                        <strong field="payment.transaction.reference" t-esc="transaction and transaction.reference or 'PLX394433'"/>
                     </div>
                     
                     <!-- Payment Summary -->
@@ -403,23 +403,23 @@
                                     <small class="text-muted d-block"></small>
                                 </div>
                                 <div class="payment-item mb-2">
-                                    <span class="text-success font-weight-bold" field="previous.payment.amount">0.0 TL</span>
+                                    <span class="text-success font-weight-bold" field="payment.amount.previous">0.0 TL</span>
                                 </div>
                                 <div class="payment-item mb-2">
-                                    <span class="text-primary font-weight-bold" field="remaining.payment.amount">0.0 TL</span>
+                                    <span class="text-primary font-weight-bold" field="payment.amount.remaining">0.0 TL</span>
                                 </div>
                             </div>
                         </div>
                         <hr class="my-2"/>
                         <div class="d-flex justify-content-between">
                             <span class="font-weight-bold">Total Transaction:</span>
-                            <span class="font-weight-bold" field="total.payment.amount">0.0 TL</span>
+                            <span class="font-weight-bold" field="payment.amount.total">0.0 TL</span>
                         </div>
                     </div>
                     
                     <!-- Return to Payment Button -->
                     <div class="mt-4 text-center">
-                        <button type="button" class="btn btn-outline-primary btn-lg px-4" id="returnToPaymentBtn" onclick="returnToPayment()">
+                        <button type="button" class="btn btn-outline-primary btn-lg px-4" field="payment.button.return">
                             <i class="fa fa-arrow-left mr-2"></i>
                             Ödeme Adımına Geri Dön
                         </button>

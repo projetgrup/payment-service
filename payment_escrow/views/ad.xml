@@ -64,22 +64,37 @@
     <field name="name">product.product.escrow.ad.form</field>
     <field name="model">product.product</field>
     <field name="arch" type="xml">
-    <form>
+        <form>
             <sheet>
-                <field name="is_product_variant" invisible="1"/>
-                <field name="type" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
                     <button name="action_view_full_image"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-external-link"
-                            attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('image_1920', '=', False)]}"
-                            string="Büyük Gör"/>
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-external-link"
+                        attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('image_1920', '=', False)]}"
+                        string="Büyük Gör"/>
+                    <button name="action_approve_ad"
+                        type="object"
+                        string="Approve"
+                        class="oe_stat_button"
+                        icon="fa-check"
+                        attrs="{'invisible': ['|','|', ('system','!=','escrow'), ('escrow_ad_approval','=',True), ('escrow_payment_paid','=',False)]}"/>
+                    <button name="action_get_customer"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-user"
+                        attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('escrow_customer_ids', '=', False)]}">
+                        <field name="escrow_customer_count" widget="statinfo" string="Get Customer"/>
+                    </button>
                 </div>
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <field name="is_product_variant" invisible="1"/>
+                <field name="escrow_ad_approval" invisible="1"/>
+                <field name="type" invisible="1"/>
                 <field name="id" invisible="1"/>
                 <field name="active" invisible="1"/>
                 <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                <field name="escrow_payment_paid" invisible="1"/>
                 <div class="oe_title">
                     <label for="name" string="Ad Name"/>
                     <h1>
@@ -106,7 +121,7 @@
                         <field name="product_variant_id" invisible="1"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="1"/>
                         <field name="escrow_owner_id" string="Owner"/>
-                        <field name="escrow_customer_id" string="Customer"/>
+                        <field name="escrow_customer_ids" string="Customers" widget="many2many_tags"/>
                         <field name="escrow_payment_item_id" string="Payment Item"/>
                     </group>
                 </group>
@@ -124,12 +139,22 @@
                             </group>
                         </group>
                     </page>
+                    <page name="sale_image" string="Sale Image">
+                        <group>
+                            <group colspan="4">
+                                <label for="escrow_ad_sale_img" string="Sale Image"/>
+                                <div class="o_row" style="justify-content:center;">
+                                    <field name="escrow_ad_sale_img" widget="image" class="oe_avatar" options="{'preview_image': false}"/>
+                                </div>
+                            </group>
+                        </group>
+                    </page>
                     <page name="description" string="Description">
                         <field name="description"/>
                     </page>
                 </notebook>
             </sheet>
-        </form>
+            </form>
     </field>
     </record>
 

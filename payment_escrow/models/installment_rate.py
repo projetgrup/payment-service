@@ -10,11 +10,22 @@ class EscrowInstallmentRate(models.Model):
 
     installment_count = fields.Selection([
         ('1', '1 Installment'),
+        ('2', '2 Installment'),
         ('3', '3 Installments'),
+        ('4', '4 Installments'),
+        ('5', '5 Installments'),
         ('6', '6 Installments'),
+        ('7', '7 Installments'),
+        ('8', '8 Installments'),
         ('9', '9 Installments'),
+        ('10', '10 Installments'),
+        ('11', '11 Installments'),
         ('12', '12 Installments'),
+        ('13', '13 Installments'),
+        ('14', '14 Installments'),
         ('15', '15 Installments'),
+        ('16', '16 Installments'),
+        ('17', '17 Installments'),
         ('18', '18 Installments'),
     ], string='Installment Count', required=True, default='1')
     rate = fields.Float(string='Rate (%)', required=True, digits=(16, 6))

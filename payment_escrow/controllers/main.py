@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from urllib.parse import urlparse
-from odoo import _
+from odoo import _, fields
 from odoo import http
 from odoo.http import route, request
 from odoo.exceptions import ValidationError
@@ -52,7 +52,8 @@ class PayloxSystemEscrowController(Controller):
                 'previous_amount': paid_amount,
                 'remaining_amount': remaining_amount,
                 'transaction_reference': transaction_reference,
-                'currency': 'TL'
+                'currency': 'TL',
+                'paid': payment_item.paid,
             }
             
         except Exception as e:
@@ -125,7 +126,8 @@ class PayloxSystemEscrowController(Controller):
             customer_basket = []
 
             partner = transaction.paylox_product_ids[0]['product_id']['escrow_owner_id']
-            customer = transaction.paylox_product_ids[0]['product_id']['escrow_customer_id']
+            customers = transaction.paylox_product_ids[0]['product_id']['escrow_customer_ids']
+            customer = [customer for customer in customers if customer.is_escrow_customer]
             reference_seller = partner.bank_ids and partner.bank_ids[0]['api_ref']
             if not reference_seller:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
@@ -222,6 +224,54 @@ class PayloxSystemEscrowController(Controller):
                 }
             })
         return values
+
+    @route('/my/otp/start', type='json', auth='user', methods=['POST'], website=True)
+    def start_otp(self, partner_id=None, **kwargs):
+        try:
+            if not partner_id:
+                return {'success': False, 'message': 'Missing partner_id'}
+
+            partner = request.env['res.partner'].sudo().browse(int(partner_id))
+            if not partner.exists():
+                return {'success': False, 'message': 'Partner not found'}
+
+            try:
+                otp = request.env['res.partner.otp'].sudo().create({
+                    'partner_id': partner.id,
+                    'company_id': request.env.company.id,
+                    'lang': request.env.lang or 'tr_TR',
+                })
+                return {
+                    'success': True,
+                    'otp_id': otp.id,
+                    'expires_in': 120,
+                    'message': _('A verification code was sent to your phone')
+                }
+            except Exception as e:
+                return {'success': False, 'message': 'OTP service unavailable: %s' % str(e)}
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+    @route('/my/otp/verify', type='json', auth='user', methods=['POST'], website=True)
+    def verify_otp(self, otp_id=None, code=None, **kwargs):
+        try:
+            if not otp_id or not code:
+                return {'success': False, 'message': 'Missing parameters'}
+
+            otp = request.env['res.partner.otp'].sudo().browse(int(otp_id))
+            if not otp.exists():
+                return {'success': False, 'message': _('Verification request not found or expired')}
+
+            if otp.date and otp.date < fields.Datetime.now():
+                return {'success': False, 'message': _('Verification code has expired')}
+
+            if str(otp.code) != str(code):
+                return {'success': False, 'message': _('Invalid verification code')}
+
+            otp.unlink()
+            return {'success': True}
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_my_ads(self, **kwargs):
@@ -366,54 +416,53 @@ class PayloxSystemEscrowController(Controller):
                 }
 
             company = request.env.company
-            if hasattr(company, 'syncops_check_iban') and company.syncops_check_iban:
-                user = request.env.user
-                if user.has_group('payment_syncops.group_check_iban'):
-                    cached_iban = request.env['syncops.partner.iban'].sudo().search([('name', '=', iban)])
-                    if cached_iban:
-                        return {
-                            'success': True,
-                            'message': 'IBAN doğrulandı (önbellekten)'
-                        }
+            # if hasattr(company, 'syncops_check_iban') and company.syncops_check_iban:
+            #     user = request.env.user
+            #     if user.has_group('payment_syncops.group_check_iban'):
+            #         cached_iban = request.env['syncops.partner.iban'].sudo().search([('name', '=', iban)])
+            #         if cached_iban:
+            #             return {
+            #                 'success': True,
+            #                 'message': 'IBAN doğrulandı (önbellekten)'
+            #             }
                     
-                    try:
-                        not_tr_iban = iban[2:] if iban.startswith('TR') else iban
-                        result, message = request.env['syncops.connector'].sudo()._execute(
-                            'other_get_ozan_iban', 
-                            reference=str(user.partner_id.id), 
-                            params={
-                                'vat': vat,
-                                'iban': not_tr_iban,
-                            }, 
-                            company=company, 
-                            message=True
-                        )
+            #         try:
+            #             result, message = request.env['syncops.connector'].sudo()._execute(
+            #                 'other_get_ozan_iban', 
+            #                 reference=str(user.partner_id.id), 
+            #                 params={
+            #                     'vat': vat,
+            #                     'iban': iban,
+            #                 }, 
+            #                 company=company, 
+            #                 message=True
+            #             )
                         
-                        if result is None:
-                            return {
-                                'success': False,
-                                'message': message or 'IBAN doğrulama servisi kullanılamıyor'
-                            }
-                        elif not result[0]['ok']:
-                            return {
-                                'success': False,
-                                'message': result[0]['message'] or 'IBAN doğrulanamadı'
-                            }
-                        else:
-                            request.env['syncops.partner.iban'].sudo().create({'name': iban})
-                            return {
-                                'success': True,
-                                'message': 'IBAN başarıyla doğrulandı'
-                            }
-                    except Exception as e:
-                        return {
-                            'success': False,
-                            'message': 'IBAN doğrulama hatası: ' + str(e)
-                        }
-                return {
-                    'success': True,
-                    'message': 'IBAN formatı geçerli (temel doğrulama)'
-                }
+            #             if result is None:
+            #                 return {
+            #                     'success': False,
+            #                     'message': message or 'IBAN doğrulama servisi kullanılamıyor'
+            #                 }
+            #             elif not result[0]['ok']:
+            #                 return {
+            #                     'success': False,
+            #                     'message': result[0]['message'] or 'IBAN doğrulanamadı'
+            #                 }
+            #             else:
+            #                 request.env['syncops.partner.iban'].sudo().create({'name': iban})
+            #                 return {
+            #                     'success': True,
+            #                     'message': 'IBAN başarıyla doğrulandı'
+            #                 }
+            #         except Exception as e:
+            #             return {
+            #                 'success': False,
+            #                 'message': 'IBAN doğrulama hatası: ' + str(e)
+            #             }
+            return {
+                'success': True,
+                'message': 'IBAN formatı geçerli (temel doğrulama)'
+            }
             
         except Exception as e:
             return {
@@ -516,11 +565,75 @@ class PayloxSystemEscrowController(Controller):
                 'message': 'Seller information could not be saved.'
             }
 
+    @route('/my/customer/lookup', type='json', auth='public', methods=['POST'], csrf=False)
+    def lookup_customer_by_identity(self, **kwargs):
+        """Look up customer information by identity number"""
+        try:
+            identity = kwargs.get('identity', '').strip()
+            customer_type = kwargs.get('customer_type', 'individual')
+            
+            if not identity:
+                return {'success': False, 'message': 'Identity number is required'}
+            
+            company = request.env.company
+            search_field = 'vat'
+            partner = request.env['res.partner'].sudo().search([
+                (search_field, '=', identity),
+                ('company_id', '=', company.id),
+                ('paylox_escrow_type', '=', 'customer'),
+                ('is_company', '=', customer_type == 'corporate')
+            ], limit=1)
+            
+            if partner:
+                return {
+                    'success': True,
+                    'found': True,
+                    'customer_data': {
+                        'name': partner.name,
+                        'email': partner.email,
+                        'phone': partner.mobile or partner.phone,
+                        'address': partner.street or '',
+                        'tax_office': getattr(partner, 'paylox_tax_office', '') if customer_type == 'corporate' else '',
+                        'contact_person': getattr(partner, 'contact_person', '') if customer_type == 'corporate' else '',
+                    }
+                }
+            else:
+                return {
+                    'success': True,
+                    'found': False,
+                    'message': 'No existing customer found with this identity number'
+                }
+                
+        except Exception as e:
+            return {
+                'success': False,
+                'message': f'Error looking up customer: {str(e)}'
+            }
+
     @route('/my/customer/save', type='json', auth='public', methods=['POST'], csrf=False)
     def save_customer_info(self, **kwargs):
         company = request.env.company
+        is_card_holder_different = kwargs.get('is_card_holder_different', False)
+        escrow_customer_id = kwargs.get('escrow_customer_id')
+        if is_card_holder_different:
+            card_holder_data = {
+                'name': kwargs.get('customer_name_surname', ''),
+                'email': kwargs.get('customer_email', ''),
+                'mobile': kwargs.get('customer_phone', ''),
+                'vat': kwargs.get('customer_identity', ''),
+                'street': kwargs.get('customer_address', ''),
+                'is_company': False,
+                'escrow_customer_id': escrow_customer_id,
+                'paylox_escrow_type': 'card_holder',
+                'system': 'escrow'
+            }
+            card_holder_partner = request.env['res.partner'].sudo().create(card_holder_data)
+            return {
+                'success': True,
+                'partner_id': card_holder_partner.id,
+                'message': 'Card holder information has been successfully saved.'
+            }
         try:
-            # Common fields for both individual and corporate
             partner_data = {
                 'paylox_escrow_type': 'customer',
                 'is_company': kwargs.get('customer_type') == 'corporate',
@@ -547,6 +660,9 @@ class PayloxSystemEscrowController(Controller):
                 })
             partner_field = company._get_payment_partner_unique_field()
             partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'customer')])
+            partner_data.update({
+                'is_escrow_customer': True
+            })
             if not partner:
                 partner = request.env['res.partner'].sudo().create(partner_data)
             else:
@@ -557,7 +673,10 @@ class PayloxSystemEscrowController(Controller):
                 try:
                     product = request.env['product.product'].sudo().browse(int(product_id))
                     if product.exists():
-                        product.write({'escrow_customer_id': partner.id})
+                        for customer in product.escrow_customer_ids:
+                            if not customer.id == partner.id:
+                                customer.write({'is_escrow_customer': False})
+                        product.write({'escrow_customer_ids': [(4, partner.id)]})
                 except:
                     pass 
             
@@ -614,6 +733,7 @@ class PayloxSystemEscrowController(Controller):
                 'zip': partner.zip,
                 'vat': partner.vat,
                 'is_company': partner.is_company,
+                'is_escrow_customer': partner.is_escrow_customer,
                 'commercial_partner_id': {
                     'id': partner.commercial_partner_id.id,
                     'name': partner.commercial_partner_id.name
