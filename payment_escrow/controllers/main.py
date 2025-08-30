@@ -377,12 +377,13 @@ class PayloxSystemEscrowController(Controller):
                         }
                     
                     try:
+                        not_tr_iban = iban[2:] if iban.startswith('TR') else iban
                         result, message = request.env['syncops.connector'].sudo()._execute(
                             'other_get_ozan_iban', 
                             reference=str(user.partner_id.id), 
                             params={
                                 'vat': vat,
-                                'iban': iban,
+                                'iban': not_tr_iban,
                             }, 
                             company=company, 
                             message=True
@@ -409,10 +410,10 @@ class PayloxSystemEscrowController(Controller):
                             'success': False,
                             'message': 'IBAN doğrulama hatası: ' + str(e)
                         }
-            return {
-                'success': True,
-                'message': 'IBAN formatı geçerli (temel doğrulama)'
-            }
+                return {
+                    'success': True,
+                    'message': 'IBAN formatı geçerli (temel doğrulama)'
+                }
             
         except Exception as e:
             return {
