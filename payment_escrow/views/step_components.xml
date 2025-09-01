@@ -225,7 +225,7 @@
                         </div>
                     </div>
                     <div class="form__group mt-3">
-                        <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                        <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
                             Devam Et
                             <i class="fa fa-chevron-right ml-2"/>
                         </button>
@@ -248,7 +248,7 @@
                 </div>
                 <div class="form__group -mb-0">
                     <label class="form__label" for="wizard_price">Sale Price</label>
-                    <input id="wizard_price" class="form__control" type="text" name="price" inputmode="decimal" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" field="ad.input.price"/>
+                    <input id="wizard_price" class="form__control" type="text" name="price" field="ad.input.price"/>
                 </div>
                 <div class="panel mt-3">
                     <div class="panel__header">
@@ -308,7 +308,7 @@
                     </div>
                 </div>
                 <div class="form__group mt-3 d-flex justify-content-between">
-                    <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                    <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
                         Devam Et
                         <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
                             <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
@@ -346,7 +346,7 @@
                             <t t-call="payment_escrow.recipient_individual"/>
                         </div>
                         <div class="form__group mt-3 d-flex justify-content-between">
-                            <button type="button" class="button button__dark button__medium" data-wizard-action="next">
+                            <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
                                 Devam Et
                                 <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
                                     <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>

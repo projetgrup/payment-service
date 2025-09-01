@@ -23,6 +23,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.values = {
             ads: {},
         };
+
+        this.wizard = {
+            button: {
+                next: new fields.element({
+                    events: [['click', this._nextStep]]
+                }),
+                previous: new fields.element({
+                    events: [['click', this._onClickWizardPrevious]]
+                }),
+                close: new fields.element({
+                    events: [['click', this._onClickWizardClose]]
+                }),
+            }
+        };
+
         this.state = {
             id: 0,
             item_id: 0,
@@ -143,6 +158,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 price: new fields.float({
                     mask: payloxPage.prototype._maskAmount.bind(this),
                     default: 0,
+                    events: [
+                        ['update', this._onUpdateAmount],
+                    ],
                 }),
                 id: new fields.integer(),
                 category: new fields.selection(),
@@ -234,9 +252,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             return;
         }
     },
+    
+    _onUpdateAmount: function () {
+        this.amount._.updateValue();
+        this.amount.$.data('value', this.amount.value);
+    },
 
     _onToggleVehicleHolder: function() {
         const id = this.state.id;
+        this.state.item_id = this.values.ads[id].item_id;
         if (id) {
             this._openSellerEditForCard(id, 'vehicle');
         }
@@ -320,9 +344,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _openSellerEditForCard: function(id, section) {
         this._closeSidebar();
         if (section === 'seller') {
-            this._navigateToStep(1, id);
+            this._navigateToStep(1);
         } else if (section === 'vehicle') {
-            this._navigateToStep(2, id);
+            this._navigateToStep(2);
         }
     },
 
@@ -335,7 +359,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
                 categ: categ.data('id'),
-                price: this._parsePrice($this.find('.escrow-ad-item-price').data('value')),
+                price: $this.find('.escrow-ad-item-price').data('value'),
                 state: $this.find('.escrow-ad-item-state').html().trim(),
                 owner_id: $this.data('owner-id'),
                 customer_id: $this.data('customer-id'),
@@ -560,17 +584,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onClickButtonCreate: function (ev) {
         this._prepareAd();
-        this._openSellerSheet();
+        this._openWizard();
     },
-    //TODOOOOOOO
-    // _onClickButtonEdit: function (ev) {
-    //     const adId = $(ev.currentTarget).data('id');
-    //     this._prepareAd(adId);
-        
-    //     this._closeSidebar();
-        
-    //     this._openSellerWizardForEdit(adId);
-    // },
 
     _closeSidebar: function() {
         $('.escrow-ad-wrapper').removeClass('blur');
@@ -656,7 +671,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _prefillProductFromAd: function(adData) {
-        if (adData.price) this.ad.input.price.$.val(adData.price);
+        if (adData.price) this.ad.input.price.$.val(format.currency(adData.price, this.currency.decimal));
         if (adData.categ) {
             this.ad.input.category.$.val(adData.categ);
             this.ad.input.category.$.trigger('change');
@@ -758,13 +773,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _saveAdData: function(useWizardForm = false) {
         const isEditMode = this.state.id > 0;
         let params;
-        console.log(this.ad.input.plate.$.val())
-        
         if (useWizardForm) {
             params = {
                 id: isEditMode ? this.state.id : null,
                 categ_id: parseInt(this.ad.input.category.$.val(), 10) || null,
-                price: this._parsePrice($('#wizard_price').val()),
+                price: $('#wizard_price').val(),
                 escrow_car_vin: this.ad.input.vin.$.val(),
                 escrow_car_plate: this.ad.input.plate.$.val(),
                 escrow_car_brand_id: parseInt(this.ad.input.brand.$.val(), 10) || null,
@@ -780,7 +793,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             params = {
                 id: this.state.id,
                 categ: [this.ad.input.categ.value, this.ad.input.categ.text],
-                price: this._parsePrice(this.ad.input.price.value),
+                price: this.ad.input.price.value,
                 img: this.ad.input.img.value,
             };
         }
@@ -850,7 +863,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             });
             return;
         }
-        this._openSellerSheet(id);
+        this._openWizard(id);
     },
 
     _onClickAd: function (ev) {
@@ -974,7 +987,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _openSellerSheet: function (id) {
+    _openWizard: function (id) {
         if (this.ad.sidebar.$.hasClass('show')) {
             this._onClickButtonSidebarToggle();
         }
@@ -1256,25 +1269,25 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Please select a sales category'
                 }
             ],
-            '#wizard_price': [
-                { rule: 'required', errorMessage: 'Sales price is required' },
-                {
-                    rule: 'custom',
-                    validator: (val) => {
-                        const cleanVal = val.replace(/[^\d.,]/g, '');
-                        return /^\d+([.,]\d{1,3})*([,]\d{2})?$/.test(cleanVal) && cleanVal.length > 0;
-                    },
-                    errorMessage: 'Please enter a valid price (e.g., 1.000.000,00)'
-                },
-                {
-                    rule: 'custom',
-                    validator: (val) => {
-                        const numericValue = parseFloat(val.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
-                        return numericValue > 0;
-                    },
-                    errorMessage: 'Price must be greater than zero'
-                }
-            ],
+            // '#wizard_price': [
+            //     { rule: 'required', errorMessage: 'Sales price is required' },
+            //     {
+            //         rule: 'custom',
+            //         validator: (val) => {
+            //             const cleanVal = val.replace(/[^\d.,]/g, '');
+            //             return /^\d+([.,]\d{1,3})*([,]\d{2})?$/.test(cleanVal) && cleanVal.length > 0;
+            //         },
+            //         errorMessage: 'Please enter a valid price (e.g., 1.000.000,00)'
+            //     },
+            //     {
+            //         rule: 'custom',
+            //         validator: (val) => {
+            //             const numericValue = parseFloat(val.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+            //             return numericValue > 0;
+            //         },
+            //         errorMessage: 'Price must be greater than zero'
+            //     }
+            // ],
             '#wizard_vin': [
                 { rule: 'required', errorMessage: 'VIN is required' },
                 {
@@ -1752,7 +1765,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         };
         this.validateWizardStep2 = () => {
             let isValid = true;
-            const fields = ['#wizard_category', '#wizard_price', '#wizard_vin', '#wizard_plate', '#wizard_brand', '#wizard_model', '#wizard_year', '#wizard_file_input'];
+            const fields = ['#wizard_category', '#wizard_vin', '#wizard_plate', '#wizard_brand', '#wizard_model', '#wizard_year', '#wizard_file_input'];
             
             fields.forEach(selector => {
                 if (!validateField(selector)) {
@@ -1815,17 +1828,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const current = self.wizard.currentStep;
 
             if (targetStep <= current) {
-                self._navigateToStep(targetStep, self.state.id);
+                self._navigateToStep(targetStep);
                 return;
             }
             const $targetItem = $(`.steps__item:nth-child(${targetStep})`);
             if ($targetItem.hasClass('-completed')) {
-                self._navigateToStep(targetStep, self.state.id);
+                self._navigateToStep(targetStep);
                 return;
             }
             if (targetStep === current + 1) {
                 if (self._validateCurrentStep()) {
-                    self._navigateToStep(targetStep, self.state.id);
+                    self._navigateToStep(targetStep);
                 } else {
                     self.displayNotification({
                         type: 'warning',
@@ -1843,17 +1856,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const current = self.wizard.currentStep;
 
             if (targetStep <= current) {
-                self._navigateToStep(targetStep, self.state.id);
+                self._navigateToStep(targetStep);
                 return;
             }
 
             if ($stepItem.hasClass('-completed')) {
-                self._navigateToStep(targetStep, self.state.id);
+                self._navigateToStep(targetStep);
                 return;
             }
             if (targetStep === current + 1) {
                 if (self._validateCurrentStep()) {
-                    self._navigateToStep(targetStep, self.state.id);
+                    self._navigateToStep(targetStep);
                 } else {
                     self.displayNotification({
                         type: 'warning',
@@ -1862,11 +1875,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     });
                 }
             }
-        });
-
-        $(document).on('click', '[data-wizard-action="next"]', function (ev) {
-            ev.preventDefault();
-            self._nextStep();
         });
     },
 
@@ -1968,11 +1976,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    _navigateToStep: function(stepNumber, stateId) {
-
-        this.state.item_id = this.values.ads[stateId]?.item_id || null;
+    _navigateToStep: function(stepNumber) {
         this._updatePaymentAmounts(this.state.item_id);
-        this._onChangeStep(stepNumber, {}, stateId);
+        this._onChangeStep(stepNumber, {});
     },
 
     _getItemDetails: function(itemId) {
@@ -2004,14 +2010,30 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _nextStep: function () {
         const self = this;
+        if (!self._validateCurrentStep()){
+            self.displayNotification({ type: 'warning', title: 'Step Invalid', message: 'Please fill in all required fields.' });
+            return;
+        }
         if (this.wizard.currentStep === 1) {
             this._saveSellerInfo().then(function(result) {
                 if (result.success) {
-                    // Do not navigate here; OTP modal will handle moving to next step on success
                     self.displayNotification({
                         type: 'success',
                         title: 'Success',
                         message: 'Seller information saved',
+                    });
+                    return self._startOtp(result.partner_id).then((otpRes) => {
+                        if (otpRes && otpRes.success) {
+                            self.wizard.otpId = otpRes.otp_id;
+                            self._showOtpModal(otpRes.expires_in || 120);
+                        } else if (otpRes && otpRes.is_otp_verified) {
+                            self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
+                            self._markStepCompleted(self.wizard.currentStep);
+                            self._navigateToStep(self.wizard.currentStep + 1);
+                        } else {
+                            self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
+                        }
+                        return result;
                     });
                 } else {
                     self.displayNotification({
@@ -2026,6 +2048,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     title: 'Error',
                     message: 'Connection error occurred.',
                 });
+                console.error('Error saving seller info:', error);
             });
             return false;
         }
@@ -2033,12 +2056,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (this.wizard.currentStep === 2) {
             this._saveProductInfo().then(function(result) {
                 if (result.success || result.id) {
-                    if (result.id && !self.wizard.editMode) {
+                    if (result.id) {
                         self.wizard.savedProductId = result.id;
+                        self.state.item_id = result.item_id;
                     }
                     
                     self._markStepCompleted(self.wizard.currentStep);
-                    self._navigateToStep(self.wizard.currentStep + 1, self.state.id);
+                    self._navigateToStep(self.wizard.currentStep + 1);
 
                     self.displayNotification({
                         type: 'success',
@@ -2077,7 +2101,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         } else if (otpRes && otpRes.is_otp_verified) {
                             self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
                             self._markStepCompleted(self.wizard.currentStep);
-                            self._navigateToStep(self.wizard.currentStep + 1, self.state.id);
+                            self._navigateToStep(self.wizard.currentStep + 1);
                         } else {
                             self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
                         }
@@ -2103,14 +2127,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         if (this.wizard.currentStep < 5) {
             this._markStepCompleted(this.wizard.currentStep);
-            this._navigateToStep(this.wizard.currentStep + 1, this.state.id);
+            this._navigateToStep(this.wizard.currentStep + 1);
         }
         return true;
     },
 
     _previousStep: function () {
         if (this.wizard.currentStep > 1) {
-            this._navigateToStep(this.wizard.currentStep - 1, this.state.id);
+            this._navigateToStep(this.wizard.currentStep - 1);
         }
     },
 
@@ -2202,14 +2226,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _initializeSellerInfoForm: function (stateId) {
         this._setupFileUpload();
         this._bindWizardToggle();
-        
-        this._prefillSellerFromAd(this.values.ads[stateId]);
+        this._prefillSellerFromAd(this.values.ads[this.state.id]);
     },
 
     _initializeProductInfoForm: function (stateId) {
         this._setupFileUpload();
-        this._getProductData(stateId);
-        this._prefillProductFromAd(this.values.ads[stateId]);
+        this._getProductData();
+        this._prefillProductFromAd(this.values.ads[this.state.id]);
     },
 
     _initializeCustomerInfoForm: function (stateId) {
@@ -2221,11 +2244,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._setupCreditCardInstallments(this.values.ads[stateId]);
     },
 
-    _getProductData: function(stateId) {
+    _getProductData: function() {
         const self = this;
         this._rpc({
             route: '/get/ad',
-            params: { ad_id: stateId },
+            params: { ad_id: self.state.id },
         }).then((product) => {
             if (product && product.success) {
                 self.values.ads[product.ad.id] = {
@@ -2251,7 +2274,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 };
             }
         });
-        console.log(this.values.ads);
     },
 
     _setupCreditCardInstallments: function() {
@@ -2407,20 +2429,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }).then((result) => {
             if (result.success && result.partner_id) {
                 self.wizard.sellerId = result.partner_id;
-                return self._startOtp(result.partner_id).then((otpRes) => {
-                    if (otpRes && otpRes.success) {
-                        self.wizard.otpId = otpRes.otp_id;
-                        self._showOtpModal(otpRes.expires_in || 120);
-                    } else if (otpRes && otpRes.is_otp_verified) {
-                        self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
-                        self._markStepCompleted(self.wizard.currentStep);
-                        self._navigateToStep(self.wizard.currentStep + 1, self.state.id);
-                        return result;
-                    } else {
-                        self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
-                    }
-                    return result;
-                });
             }
             return result;
         });
@@ -2498,7 +2506,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 if (res && res.success) {
                     closeModal();
                     self._markStepCompleted(self.wizard.currentStep);
-                    self._navigateToStep(self.wizard.currentStep + 1, self.state.id);
+                    self._navigateToStep(self.wizard.currentStep + 1);
                 } else {
                     self.displayNotification({ type:'danger', title:'OTP', message: (res && res.message) || 'Doğrulama başarısız' });
                 }
@@ -2559,7 +2567,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _saveCustomerInfo: function() {
         const self = this;
         const userType = $('input[name="userType"]:checked').val();
-        const isCardHolderDifferent = $('#checkPoint').is(':checked'); // payment.different.holder toggle
+        const isCardHolderDifferent = $('#checkPoint').is(':checked');
 
         const data = {
             customer_type: userType,
@@ -2687,7 +2695,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 $(this).addClass('d-none');
             });
         }
-        this._navigateToStep(3, this.state.id);
+        this._navigateToStep(3);
         this._clearCustomerInputs();
     },
 
@@ -2722,7 +2730,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onClickReturnToPayment: function(event) {
         event.preventDefault();
-        this._navigateToStep(4, this.state.id);
+        this._navigateToStep(4);
     },
 
     _onDownloadAssignmentForm: function(event) {

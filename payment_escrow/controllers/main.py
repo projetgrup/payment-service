@@ -235,8 +235,8 @@ class PayloxSystemEscrowController(Controller):
                 return {'success': False, 'message': 'Missing partner_id'}
 
             partner = request.env['res.partner'].sudo().browse(int(partner_id))
-            if partner.is_otp_verified:
-                return {'is_otp_verified': True, 'message': 'OTP already verified'}
+            # if partner.is_otp_verified:
+            #     return {'is_otp_verified': True, 'message': 'OTP already verified'}
             if not partner.exists():
                 return {'success': False, 'message': 'Partner not found'}
 
@@ -275,7 +275,7 @@ class PayloxSystemEscrowController(Controller):
                 return {'success': False, 'message': _('Invalid verification code')}
 
             otp.unlink()
-            partner.write({'is_otp_verified': True})
+            # partner.write({'is_otp_verified': True})
             return {'success': True}
         except Exception as e:
             return {'success': False, 'message': str(e)}
