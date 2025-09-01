@@ -795,7 +795,6 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 $content: qweb.render('paylox.installment.grid', {
                     value: this.amount.value,
                     format: {...format, type: this._getCardType},
-                    show_monthly: this.installment.grid?.show_monthly,
                     ...this.currency,
                     ...this.installment.grid,
                 }),
@@ -1049,7 +1048,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                     type: result.type,
                                     cols: result.cols,
                                     s2s: self.payment.s2s.value,
-                                    show_monthly: result.show_monthly,
+                                    //hideRate: self.payment.hideRate.value,
                                 });
                             }
                             self.installment.cols = result.cols;
@@ -1062,8 +1061,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 rows: result.rows,
                                 value: self.amount.value,
                                 s2s: self.payment.s2s.value,
+                                //hideRate: self.payment.hideRate.value,
                                 format: format,
-                                show_monthly: result.show_monthly,
                                 ...self.currency,
                             });
 
@@ -1563,8 +1562,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             }).then((result) => {
                 if ('url' in result) {
                     if (result.popup) {
-                        // Open 3D Secure in popup for escrow transactions
-                        this._open3DSecurePopup(result.url, result.id);
+                        this._openInitPopup(result.url, result.id);
                     } else {
                         window.location.assign(result.url);
                     }
@@ -1594,7 +1592,66 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         return false;
     },
 
-    _open3DSecurePopup: function(url, transactionId, productId) {
+    _openInitWindow: function(url, transactionId) {
+        const self = this;
+        
+        const popup = window.open(
+            url,
+            '3DSecurePopup',
+            'width=600,height=500,scrollbars=yes,resizable=yes,status=yes,location=yes'
+        );
+        
+        if (!popup) {
+            window.location.assign(url);
+            return;
+        }
+        const checkPopup = setInterval(() => {
+            if (popup.closed) {
+                clearInterval(checkPopup);
+                rpc.query({
+                    route: '/payment/status/' + transactionId,
+                    params: {}
+                }).then((result) => {
+                    if (result.status === 'done') {
+                        window.location.assign('/my/ads?step=5');
+                    } else if (result.status === 'error' || result.status === 'cancel') {
+                        framework.hideLoading();
+                        self.displayNotification({
+                            type: 'danger',
+                            title: _t('Payment Failed'),
+                            message: _t('Your payment could not be processed. Please try again.'),
+                        });
+                    } else {
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                }).guardedCatch(() => {
+                    framework.hideLoading();
+                    self.displayNotification({
+                        type: 'danger',
+                        title: _t('Error'),
+                        message: _t('An error occurred while checking payment status.'),
+                    });
+                });
+            }
+        }, 1000);
+        
+        setTimeout(() => {
+            if (!popup.closed) {
+                popup.close();
+                clearInterval(checkPopup);
+                framework.hideLoading();
+                self.displayNotification({
+                    type: 'warning',
+                    title: _t('Timeout'),
+                    message: _t('Payment process timed out. Please try again.'),
+                });
+            }
+        }, 600000);
+    },
+
+    _openInitPopup: function(url, transactionId, productId) {
         const self = this;
         
         // Create modal with iframe
@@ -1635,7 +1692,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             backdrop: 'static',
             keyboard: false
         });
-        
+
         // Periodic payment status check
         let statusCheckInterval = setInterval(() => {
             rpc.query({

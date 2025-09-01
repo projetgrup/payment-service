@@ -606,10 +606,8 @@ class PayloxController(http.Controller):
                 "campaign_name": campaign or self._get_campaign() or acquirer._get_campaign_name(int(partner))
             })
 
-        show_monthly = request.env['ir.config_parameter'].sudo().get_param('paylox.installment.show_monthly', '1')
         values = {
             'type': type,
-            'show_monthly': show_monthly not in (False, 'False', '0', 0, None),
         }
         if loggable:
             log = {
@@ -1614,10 +1612,10 @@ class PayloxController(http.Controller):
                     if isinstance(result.get('virtual_pos_name'), str):
                         values.update({'jetcheckout_vpos_name': result['virtual_pos_name']})
                     tx.write(values)
-                    if hasattr(tx, 'system') and tx.system and 'escrow' in tx.system.lower():
-                        # For escrow transactions, return popup parameter for 3D secure
-                        return {'ok': True, 'popup': True, 'url': '%s/%s' % (rurl, txid), 'id': tx.id}
-                    return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
+                    res = {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
+                    if tx.company_id.payment_page_init_popup_ok:
+                        res.update({'popup': True})
+                    return res
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)
                     _logger.error('JetCheckout payment processing error: %s', url)
