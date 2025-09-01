@@ -45,7 +45,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.seller = {
             wizard: new fields.element(),
             button: {
-                close: new fields.element({ events: [['click', this._onClickSellerClose]] }),
+                close: new fields.element({ events: [['click', this._onClickWizardClose]] }),
             },
             input: {
                 name: new fields.string(),
@@ -66,8 +66,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 iban_name_corporate: new fields.string(),
             }
         };
-        this.escrow = {
-        }
         this.customer = {
             input: {
                 name_surname: new fields.string(),
@@ -1017,47 +1015,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._updateStepStates();
     },
 
-    _onClickSellerClose: function () {
-        const wasEditMode = this.wizard && this.wizard.editMode;
-        
-        if (this.wizard) {
-            this.wizard.editMode = false;
-            this.wizard.editingAdId = null;
-        }
-
+    _onClickWizardClose: function () {
         this.seller.wizard.$.fadeOut(200, () => {
             this.seller.wizard.$.addClass('d-none');
-            
-            if (wasEditMode) {
-                $('.escrow-ad-read').removeClass('d-none').fadeIn(200);
-            } else {
-                $('.escrow-ad-read').fadeIn(200);
-            }
-            
-            this._clearWizardForm();
+            $('.escrow-ad-read').removeClass('d-none').fadeIn(200);
         });
-    },
-
-    _clearWizardForm: function() {
-        const $wiz = $('.escrow-wizard');
-        
-        $wiz.find('input[type="text"], input[type="email"], textarea').val('');
-        $wiz.find('select').prop('selectedIndex', 0);
-        
-        $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
-
-    // Reset inline image preview in dashed upload area
-    this._clearImagePreview();
-
-        this.wizard = {
-            currentStep: 1,
-            previousStep: 1,
-            editMode: false,
-            editingAdId: null
-        };
-        
-        this._updateStepStates();
-        this._showStepContent(1);
     },
 
     _saveSellerData: function() {
@@ -1934,7 +1896,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _ensureWizardVisible: function() {
         $('.escrow-ad-read').addClass('d-none');
-        $('.escrow-wizard').removeClass('d-none');
+        this.seller.wizard.$.removeClass('d-none');
     },
 
     _updateStepHeaders: function(stepNumber, options) {
@@ -2452,6 +2414,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
                         self._markStepCompleted(self.wizard.currentStep);
                         self._navigateToStep(self.wizard.currentStep + 1, self.state.id);
+                        return result;
                     } else {
                         self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
                     }
