@@ -777,7 +777,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             params = {
                 id: isEditMode ? this.state.id : null,
                 categ_id: parseInt(this.ad.input.category.$.val(), 10) || null,
-                price: $('#wizard_price').val(),
+                price: this._parsePrice($('#wizard_price').val()),
                 escrow_car_vin: this.ad.input.vin.$.val(),
                 escrow_car_plate: this.ad.input.plate.$.val(),
                 escrow_car_brand_id: parseInt(this.ad.input.brand.$.val(), 10) || null,
@@ -793,7 +793,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             params = {
                 id: this.state.id,
                 categ: [this.ad.input.categ.value, this.ad.input.categ.text],
-                price: this.ad.input.price.value,
+                price: this._parsePrice(this.ad.input.price.value),
                 img: this.ad.input.img.value,
             };
         }
