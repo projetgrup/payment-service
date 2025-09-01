@@ -451,6 +451,38 @@
                 }
             }
 
+            &:has(.o_payment_init_popup) {
+                background: none !important;
+                border: none !important;
+
+                header {
+                    background: none !important;
+                    border: none !important;
+                    position: relative !important;
+
+                    h4 {
+                        display: none !important;
+                    }
+
+                    button {
+                        position: absolute !important;
+                        top: calc(100% + 10px) !important;
+                        right: 16px !important;
+                        z-index: 999999 !important;
+                    }
+                }
+                iframe {
+                    width: 100% !important;
+                    height: 80vh !important;
+                    border: 1px solid #555555 !important;
+                    border-radius: 10px !important;
+                    background: #fff !important;
+                    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.25) !important;
+                }
+                footer {
+                    display: none !important;
+                }
+            }
         }
     }
 

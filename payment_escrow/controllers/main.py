@@ -801,18 +801,3 @@ class PayloxSystemEscrowController(Controller):
                 'error': str(e),
                 'message': 'An error occurred while retrieving partner information.'
             }
-
-
-class EscrowPaymentController(Controller):
-    
-    @route(['/payment/status/<int:tx_id>'], type='json', auth='public', methods=['POST'], sitemap=False, csrf=False)
-    def payment_status(self, tx_id, **kwargs):
-        """Check payment transaction status"""
-        try:
-            tx = request.env['payment.transaction'].sudo().browse(tx_id)
-            if tx.exists():
-                return {'status': tx.state}
-            return {'status': 'not_found'}
-        except Exception as e:
-            _logger.error("Error checking payment status: %s", e)
-            return {'status': 'error'}

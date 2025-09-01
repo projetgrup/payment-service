@@ -426,4 +426,8 @@
             </div>
         </main>
     </t>
+
+    <t t-name="paylox.init.popup">
+        <iframe t-att-src="url"/>
+    </t>
 </templates>

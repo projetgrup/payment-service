@@ -1207,7 +1207,6 @@ class PayloxController(http.Controller):
                     tx.message_post(body='\n'.join(map(str, messages)))
             except Exception as e:
                 _logger.error('An error occured when informing transaction %s: %s' % (tx.reference, e))
-
         return url, tx, False
 
     @http.route('/payment/acquirer', type='json', auth='user', website=True)
@@ -1618,7 +1617,6 @@ class PayloxController(http.Controller):
                     return res
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)
-                    _logger.error('JetCheckout payment processing error: %s', url)
                     #company = tx.company_id.root_id
                     #if company.payment_page_init_redirect_extra:
                     #    url = '/payment/redirect?=%s' % quote_plus(url)
@@ -2437,7 +2435,13 @@ class PayloxController(http.Controller):
         url, tx, status = self._process(**kwargs)
         if not status and tx.jetcheckout_order_id:
             url += '?=%s' % tx.jetcheckout_order_id
+        if tx.company_id.payment_page_init_popup_ok:
+            return werkzeug.utils.redirect('/payment/popup/result?=%s' % quote_plus(url))
         return werkzeug.utils.redirect(url)
+
+    @http.route(['/payment/popup/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
+    def popup_result(self, **kwargs):
+        return request.render('payment_jetcheckout.page_popup_result', {})
 
     @http.route(['/payment/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
     def result(self, **kwargs):
@@ -2523,6 +2527,8 @@ class PayloxController(http.Controller):
         url, tx, status = self._process(**kwargs)
         if not status and tx.jetcheckout_order_id:
             url += '?=%s' % tx.jetcheckout_order_id
+        if tx.company_id.payment_page_init_popup_ok:
+            return werkzeug.utils.redirect('/payment/popup/result?=%s' % quote_plus(url))
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/custom/<int:record>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)

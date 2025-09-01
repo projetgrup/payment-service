@@ -1651,104 +1651,13 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
         }, 600000);
     },
 
-    _openInitPopup: function(url, transactionId, productId) {
-        const self = this;
-        
-        // Create modal with iframe
-        const modalHtml = `
-            <div class="modal fade" id="payment3DModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">
-                                <i class="fa fa-credit-card mr-2"></i>
-                                3D Secure Doğrulama
-                            </h5>
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span>&times;</span>
-                            </button>
-                        </div>
-                        <div>
-                            <div id="iframe-loading" class="text-center p-4">
-                                <i class="fa fa-spinner fa-spin fa-2x mb-3"></i>
-                                <div>Ödeme sayfası yükleniyor...</div>
-                            </div>
-                            <iframe id="payment3DIframe" src="${url}" 
-                                style="width: 100%; height: 500px; border: none; display: none;"
-                                allow="payment"
-                                onload="document.getElementById('iframe-loading').style.display='none'; this.style.display='block';">
-                            </iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        // Add modal to body
-        $('body').append(modalHtml);
-        
-        // Show modal
-        $('#payment3DModal').modal({
-            backdrop: 'static',
-            keyboard: false
+    _openInitPopup: function(url, txid) {
+        const popup = new dialog(this, {
+            $content: qweb.render('paylox.init.popup', { url }),
+            dialogClass: 'o_payment_init_popup',
+            technical: false,
         });
-
-        // Periodic payment status check
-        let statusCheckInterval = setInterval(() => {
-            rpc.query({
-                route: '/payment/status/' + transactionId,
-                params: {}
-            }).then((result) => {
-                if (result.status === 'done') {
-                    clearInterval(statusCheckInterval);
-                    $('#payment3DModal').modal('hide');
-                    
-                    // Success notification - backend will handle redirect
-                    self.displayNotification({
-                        type: 'success',
-                        title: _t('Payment Successful'),
-                        message: _t('Your payment has been processed successfully.'),
-                    });
-                    
-                    // Let the payment gateway handle the redirect through _process chain
-                    window.location.reload();
-                } else if (result.status === 'error' || result.status === 'cancel') {
-                    clearInterval(statusCheckInterval);
-                    $('#payment3DModal').modal('hide');
-                    
-                    self.displayNotification({
-                        type: 'danger',
-                        title: _t('Payment Failed'),
-                        message: _t('Your payment could not be processed.'),
-                    });
-                    
-                    // Let the payment gateway handle the redirect through _process chain
-                    window.location.reload();
-                }
-            }).guardedCatch(() => {
-                // Silent fail for status checks
-            });
-        }, 3000); // Check every 3 seconds
-        
-        // Handle modal close
-        $('#payment3DModal').on('hidden.bs.modal', function() {
-            clearInterval(statusCheckInterval);
-            $(this).remove();
-            framework.hideLoading();
-        });
-        
-        // Auto timeout after 10 minutes
-        setTimeout(() => {
-            if ($('#payment3DModal').length) {
-                clearInterval(statusCheckInterval);
-                $('#payment3DModal').modal('hide');
-                self.displayNotification({
-                    type: 'warning',
-                    title: _t('Timeout'),
-                    message: _t('Payment process timed out. Please try again.'),
-                });
-            }
-        }, 600000);
+        popup.open();
     },
 
     _onClickPaymentContactless: function() {
