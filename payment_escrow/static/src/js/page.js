@@ -1969,7 +1969,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _navigateToStep: function(stepNumber, stateId) {
-        this.state.item_id = this.values.ads[stateId]['item_id'] || null;
+
+        this.state.item_id = this.values.ads[stateId]?.item_id || null;
         this._updatePaymentAmounts(this.state.item_id);
         this._onChangeStep(stepNumber, {}, stateId);
     },
