@@ -151,10 +151,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 brand: new fields.selection(),
                 model: new fields.selection(),
                 year: new fields.selection(),
-                price: new fields.float({
-                    mask: payloxPage.prototype._maskAmount.bind(this),
-                    default: 0,
-                }),
                 vin: new fields.string(),
                 plate: new fields.string(),
             },
@@ -341,7 +337,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
                 categ: categ.data('id'),
-                price: parseFloat($this.find('.escrow-ad-item-price').data('value')),
+                price: this._parsePrice($this.find('.escrow-ad-item-price').data('value')),
                 state: $this.find('.escrow-ad-item-state').html().trim(),
                 owner_id: $this.data('owner-id'),
                 customer_id: $this.data('customer-id'),
@@ -662,12 +658,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _prefillProductFromAd: function(adData) {
-        console.log(adData);
         if (adData.price) this.ad.input.price.$.val(adData.price);
         if (adData.categ) {
             this.ad.input.category.$.val(adData.categ);
             this.ad.input.category.$.trigger('change');
-            console.log('test')
         }
         
         if (adData.vin) this.ad.input.vin.$.val(adData.vin);
@@ -685,18 +679,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.year.$.val(adData.year);
         }
 
-        // If there is an existing image on the ad, reflect it in the dashed upload area
         if (adData.img) {
             let src = adData.img;
-            // If backend sends only base64, normalize to data URL for preview
             if (typeof src === 'string' && !src.startsWith('data:image/')) {
                 src = 'data:image/png;base64,' + src;
             }
-            // Keep the image value so validation passes for edit mode
             if (this.ad && this.ad.input && this.ad.input.img) {
                 this.ad.input.img.value = src;
             }
-            // Render full-size preview inside dashed label
             this._showImagePreview(src);
         }
     },
@@ -761,19 +751,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (!priceStr) return 0;
         const str = String(priceStr);
         const cleaned = str.replace(/\./g, '').replace(',', '.');
+        console.log(cleaned)
         const parsed = parseFloat(cleaned);
+        console.log(parsed)
         return isNaN(parsed) ? 0 : parsed;
     },
 
     _saveAdData: function(useWizardForm = false) {
         const isEditMode = this.state.id > 0;
         let params;
+        console.log(this.ad.input.plate.$.val())
         
         if (useWizardForm) {
             params = {
                 id: isEditMode ? this.state.id : null,
                 categ_id: parseInt(this.ad.input.category.$.val(), 10) || null,
-                price: this._parsePrice(this.ad.input.price.$.val()),
+                price: this._parsePrice($('#wizard_price').val()),
                 escrow_car_vin: this.ad.input.vin.$.val(),
                 escrow_car_plate: this.ad.input.plate.$.val(),
                 escrow_car_brand_id: parseInt(this.ad.input.brand.$.val(), 10) || null,
@@ -2055,7 +2048,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     self.displayNotification({
                         type: 'success',
                         title: 'Success',
-                        message: 'Seller information saved. A verification code has been sent.',
+                        message: 'Seller information saved',
                     });
                 } else {
                     self.displayNotification({
@@ -2118,6 +2111,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                 title: 'Success',
                                 message: result.message || 'Customer information saved. A verification code has been sent.',
                             });
+                        } else if (otpRes && otpRes.is_otp_verified) {
+                            self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
+                            self._markStepCompleted(self.wizard.currentStep);
+                            self._navigateToStep(self.wizard.currentStep + 1, self.state.id);
                         } else {
                             self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
                         }
@@ -2243,14 +2240,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._setupFileUpload();
         this._bindWizardToggle();
         
-        const adData = this.values.ads[stateId];
-        this._prefillSellerFromAd(adData);
+        this._prefillSellerFromAd(this.values.ads[stateId]);
     },
 
     _initializeProductInfoForm: function (stateId) {
         this._setupFileUpload();
-        const adData = this.values.ads[stateId];
-        this._prefillProductFromAd(adData);
+        this._getProductData(stateId);
+        this._prefillProductFromAd(this.values.ads[stateId]);
     },
 
     _initializeCustomerInfoForm: function (stateId) {
@@ -2259,8 +2255,40 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _initializePaymentForm: function (stateId) {
         this._setupFileUpload();
-        const adData = this.values.ads[stateId];
-        this._setupCreditCardInstallments(adData);
+        this._setupCreditCardInstallments(this.values.ads[stateId]);
+    },
+
+    _getProductData: function(stateId) {
+        const self = this;
+        this._rpc({
+            route: '/get/ad',
+            params: { ad_id: stateId },
+        }).then((product) => {
+            if (product && product.success) {
+                self.values.ads[product.ad.id] = {
+                    id: product.ad.id,
+                    img: product.ad.image,
+                    name: product.ad.name,
+                    categ: product.ad.categ,
+                    price: product.ad.price,
+                    state: product.ad.state,
+                    owner_id: product.ad.owner_id,
+                    customer_id: product.ad.customer_id,
+                    vin: product.ad.vin,
+                    plate: product.ad.plate,
+                    brand_id: product.ad.brand_id,
+                    brand_name: product.ad.brand_name,
+                    model_id: product.ad.model_id,
+                    model_name: product.ad.model_name,
+                    year: product.ad.year,
+                    item_id: product.ad.item_id,
+                    amount: product.ad.amount,
+                    residual_amount: product.ad.residual_amount,
+                    paid_amount: product.ad.paid_amount,
+                };
+            }
+        });
+        console.log(this.values.ads);
     },
 
     _setupCreditCardInstallments: function() {
@@ -2420,6 +2448,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     if (otpRes && otpRes.success) {
                         self.wizard.otpId = otpRes.otp_id;
                         self._showOtpModal(otpRes.expires_in || 120);
+                    } else if (otpRes && otpRes.is_otp_verified) {
+                        self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
+                        self._markStepCompleted(self.wizard.currentStep);
+                        self._navigateToStep(self.wizard.currentStep + 1, self.state.id);
                     } else {
                         self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
                     }

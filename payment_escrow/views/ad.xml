@@ -144,7 +144,7 @@
                             <group colspan="4">
                                 <label for="escrow_ad_sale_img" string="Sale Image"/>
                                 <div class="o_row" style="justify-content:center;">
-                                    <field name="escrow_ad_sale_img" widget="image" class="oe_avatar" options="{'preview_image': false}"/>
+                                    <field name="escrow_ad_sale_img" widget="image" options="{'preview_image': false}"/>
                                 </div>
                             </group>
                         </group>

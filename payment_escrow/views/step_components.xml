@@ -52,7 +52,7 @@
                                     </div>
                                     <div class="col-6">
                                         <small class="text-muted">Amount:</small>
-                                        <div field="transaction.amount">2.400.000 TL</div>
+                                        <div field="payment.transaction.amount">2.400.000 TL</div>
                                     </div>
                                 </div>
                                 <div class="row mt-2">
@@ -248,7 +248,7 @@
                 </div>
                 <div class="form__group -mb-0">
                     <label class="form__label" for="wizard_price">Sale Price</label>
-                    <input id="wizard_price" class="form__control" type="text" name="price" placeholder="1.000.000,00" field="ad.input.price"/>
+                    <input id="wizard_price" class="form__control" type="text" name="price" inputmode="decimal" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" field="ad.input.price"/>
                 </div>
                 <div class="panel mt-3">
                     <div class="panel__header">
@@ -331,11 +331,11 @@
                                 <div class="radioTab__slider"></div>
                                 <label class="radioTab__label">
                                     <input type="radio" class="radioTab__control" name="userType" value="individual" checked="checked"/>
-                                    <span>Bireysel</span>
+                                    <span>Individual</span>
                                 </label>
                                 <label class="radioTab__label">
                                     <input type="radio" class="radioTab__control" name="userType" value="corporate"/>
-                                    <span>Kurumsal</span>
+                                    <span>Corporate</span>
                                 </label>
                             </div>
                         </div>

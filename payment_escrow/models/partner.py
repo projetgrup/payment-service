@@ -25,6 +25,7 @@ class Partner(models.Model):
     is_escrow_customer = fields.Boolean(string='Is Escrow Customer')
     card_holder_ids = fields.One2many('res.partner', 'escrow_customer_id', string='Card Holders', domain=[('paylox_escrow_type', '=', 'card_holder')])
     escrow_customer_id = fields.Many2one('res.partner', string='Related Customer')
+    is_otp_verified = fields.Boolean(string='Is OTP Verified')
 
     @api.depends()
     def _compute_escrow_counts(self):

@@ -127,7 +127,11 @@ class PayloxSystemEscrowController(Controller):
 
             partner = transaction.paylox_product_ids[0]['product_id']['escrow_owner_id']
             customers = transaction.paylox_product_ids[0]['product_id']['escrow_customer_ids']
-            customer = [customer for customer in customers if customer.is_escrow_customer]
+            customer = next((customer for customer in customers if customer.is_escrow_customer), None)
+            
+            if not customer:
+                raise ValidationError(_('No active escrow customer found for this transaction.'))
+                
             reference_seller = partner.bank_ids and partner.bank_ids[0]['api_ref']
             if not reference_seller:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
@@ -232,6 +236,8 @@ class PayloxSystemEscrowController(Controller):
                 return {'success': False, 'message': 'Missing partner_id'}
 
             partner = request.env['res.partner'].sudo().browse(int(partner_id))
+            if partner.is_otp_verified:
+                return {'is_otp_verified': True, 'message': 'OTP already verified'}
             if not partner.exists():
                 return {'success': False, 'message': 'Partner not found'}
 
@@ -259,6 +265,7 @@ class PayloxSystemEscrowController(Controller):
                 return {'success': False, 'message': 'Missing parameters'}
 
             otp = request.env['res.partner.otp'].sudo().browse(int(otp_id))
+            partner = request.env['res.partner'].sudo().browse(int(otp.partner_id))
             if not otp.exists():
                 return {'success': False, 'message': _('Verification request not found or expired')}
 
@@ -269,9 +276,42 @@ class PayloxSystemEscrowController(Controller):
                 return {'success': False, 'message': _('Invalid verification code')}
 
             otp.unlink()
+            partner.write({'is_otp_verified': True})
             return {'success': True}
         except Exception as e:
             return {'success': False, 'message': str(e)}
+        
+    @route('/get/ad', type='json', auth='user', methods=['POST'], website=True)
+    def get_ad(self, ad_id=None, **kwargs):
+        company = request.env.company
+        if not ad_id:
+            return {'success': False, 'message': 'Missing ad_id'}
+        domain = [('company_id', '=', company.id), ('id', '=', ad_id)]
+        ad = request.env['product.product'].sudo().with_context(system='escrow').search(domain, limit=1)
+        if not ad.exists():
+            return {'success': False, 'message': 'Ad not found'}
+
+        return {
+            'success': True,
+            'ad': {
+                'id': ad.id,
+                'name': ad.name,
+                'description': ad.description,
+                'price': ad.list_price,
+                'image': ad.image_1920,
+                'categ_id': ad.categ_id and {'id': ad.categ_id.id, 'name': ad.categ_id.name} or None,
+                'brand_id': ad.escrow_car_brand_id.id,
+                'model_id': ad.escrow_car_model_id.id,
+                'year': ad.escrow_car_model_year,
+                'vin': ad.escrow_car_vin,
+                'plate': ad.escrow_car_plate,
+                'owner_id': ad.escrow_owner_id.id,
+                'customer_id': ad.escrow_customer_ids and [{'id': customer.id, 'name': customer.name} for customer in ad.escrow_customer_ids if customer.is_escrow_customer] or None,
+                'broker_id': ad.broker_id.id,
+                'item_id': ad.escrow_payment_item_id and ad.escrow_payment_item_id.id or None,
+                'paid_amount': ad.escrow_payment_item_id.paid_amount or 0.0
+            }
+        }
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_my_ads(self, **kwargs):
@@ -349,6 +389,7 @@ class PayloxSystemEscrowController(Controller):
             values['name'] = generate_product_name()
             item = request.env['payment.item'].sudo().search([('product_id', '=', product.id)])
             if item:
+                item.write({'amount': kwargs.get('price')})
                 values['escrow_payment_item_id'] = item.id
             else:
                 values['escrow_payment_item_id'] = item.create({
