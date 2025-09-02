@@ -1255,8 +1255,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const input = $wiz.find('#wizard_file_input')[0];
                         const hasNewFiles = input && input.files && input.files.length > 0;
                         const hasExistingImage = self.ad.input.img.value && self.ad.input.img.value.length > 0;
-                        const isEditMode = self.wizard && self.wizard.editMode;
-                        return hasNewFiles || (isEditMode && hasExistingImage);
+                        return hasNewFiles ||  hasExistingImage;
                     },
                     errorMessage: 'At least one file must be selected'
                 }
