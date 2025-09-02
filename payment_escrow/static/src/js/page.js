@@ -2520,7 +2520,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const step = urlParams.get('step');
         const status = urlParams.get('status');
         const itemId = urlParams.get('item_id');
-        
+        this.state.item_id = itemId;
+
         if (step === '4' && status === 'completed') {
             this._onChangeStep(4, {
                 paymentCompleted: true,
