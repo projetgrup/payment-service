@@ -25,6 +25,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         };
 
         this.wizard = {
+            lookup: false,
             button: {
                 next: new fields.element({
                     events: [['click', this._nextStep]]
@@ -58,48 +59,206 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             default: 0,
         });
         this.seller = {
+            rules: {
+                namesurname: [
+                    { type: 'required', errorMessage: _t("Name is required"), isValid: false, mod: 'individual' },
+                ],
+                tc: [
+                    { errorMessage: _t("Tax ID is required"), type: 'tckn', isValid: false, mod: 'individual' },
+                ],
+                email: [
+                    { errorMessage: _t("Email is required"), type: 'email', isValid: false, mod: 'individual' },
+                ],
+                phone: [
+                    { errorMessage: _t("Phone is required"), type: 'phone', isValid: false, mod: 'individual' },
+                ],
+                iban: [
+                    { type: 'iban', errorMessage: _t("IBAN is required"), isValid: false, mod: 'individual' },
+                ],
+                address: [
+                    { type: 'required', errorMessage: _t("Address is required"), isValid: false, mod: 'corporate' },
+                ],
+                ibanaccountname: [
+                    { type: 'required', errorMessage: _t("IBAN Name is required"), isValid: false, mod: 'corporate' },
+                ],
+                corporate_title: [
+                    { type: 'required', errorMessage: _t("Corporate Title is required"), isValid: false, mod: 'corporate' },
+                ],
+                tax_number: [
+                    { type: 'required', errorMessage: _t("Tax Number is required"), isValid: false, mod: 'corporate' },
+                ],
+                tax_office: [
+                    { type: 'required', errorMessage: _t("Tax Office is required"), isValid: false, mod: 'corporate' },
+                ],
+                iban_corporate: [
+                    { type: 'required', errorMessage: _t("IBAN is required"), isValid: false, mod: 'corporate' },
+                ],
+                iban_name_corporate: [
+                    { type: 'required', errorMessage: _t("IBAN Name is required"), isValid: false, mod: 'corporate' },
+                ],
+            },
             wizard: new fields.element(),
             button: {
                 close: new fields.element({ events: [['click', this._onClickWizardClose]] }),
             },
             input: {
-                name: new fields.string(),
-                tc: new fields.string(),
-                phone_individual: new fields.string(),
-                email_individual: new fields.string(),
-                address_individual: new fields.string(),
-                iban_individual: new fields.string(),
-                iban_name_individual: new fields.string(),
-                corporate_title: new fields.string(),
-                tax_number: new fields.string(),
-                tax_office: new fields.string(),
-                corporate_person: new fields.string(),
-                phone_corporate: new fields.string(),
-                email_corporate: new fields.string(),
-                address_corporate: new fields.string(),
-                iban_corporate: new fields.string(),
-                iban_name_corporate: new fields.string(),
+                name: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                tc: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                phone_individual: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                email_individual: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                address_individual: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                iban_individual: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                iban_name_individual: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                corporate_title: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                tax_number: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                tax_office: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                corporate_person: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                phone_corporate: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                email_corporate: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                address_corporate: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                iban_corporate: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                iban_name_corporate: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
             }
         };
 
         this.customer = {
+            rules: {
+                customer_name_surname: [
+                    { type: 'required', errorMessage: _t("Name is required"), isValid: false, mod: 'individual' },
+                ],
+                customer_identity: [
+                    { type: 'tckn', errorMessage: _t("Identity is required"), isValid: false, mod: 'individual' },
+                ],
+                customer_phone: [
+                    { type: 'phone', errorMessage: _t("Phone is required"), isValid: false, mod: 'individual' },
+                ],
+                customer_email: [
+                    { type: 'email', errorMessage: _t("Email is required"), isValid: false, mod: 'individual' },
+                ],
+                customer_address: [
+                    { type: 'required', errorMessage: _t("Address is required"), isValid: false, mod: 'individual' },
+                ],
+                corporate_title: [
+                    { type: 'required', errorMessage: _t("Corporate Title is required"), isValid: false, mod: 'corporate' },
+                ],
+                tax_number: [
+                    { type: 'required', errorMessage: _t("Tax Number is required"), isValid: false, mod: 'corporate' },
+                ],
+                tax_office: [
+                    { type: 'required', errorMessage: _t("Tax Office is required"), isValid: false, mod: 'corporate' },
+                ],
+                person: [
+                    { type: 'required', errorMessage: _t("Person is required"), isValid: false, mod: 'corporate' },
+                ],
+                phone_corporate: [
+                    { type: 'phone', errorMessage: _t("Phone is required"), isValid: false, mod: 'corporate' },
+                ],
+                email_corporate: [
+                    { type: 'email', errorMessage: _t("Email is required"), isValid: false, mod: 'corporate' },
+                ],
+                address_corporate: [
+                    { type: 'required', errorMessage: _t("Address is required"), isValid: false, mod: 'corporate' },
+                ],
+            },
             input: {
-                name_surname: new fields.string(),
-                identity: new fields.string(),
-                phone_individual: new fields.string(),
-                email_individual: new fields.string(),
-                address_individual: new fields.string(),
-                corporate_title: new fields.string(),
-                tax_number: new fields.string(),
-                tax_office: new fields.string(),
-                person: new fields.string(),
-                phone_corporate: new fields.string(),
-                email_corporate: new fields.string(),
-                address_corporate: new fields.string(),
+                name_surname: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                identity: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                phone_individual: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                email_individual: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                address_individual: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                corporate_title: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                tax_number: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                tax_office: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                person: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                phone_corporate: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                email_corporate: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
+                address_corporate: new fields.string({
+                    events: [['input', this._onInputRequired]]
+                }),
             }
         }
 
         this.ad = {
+            rules: {
+                name: [
+                    { type: 'required', errorMessage: _t("Product name is required") },
+                ],
+                category: [
+                    { type: 'required', errorMessage: _t("Category is required") },
+                ],
+                price: [
+                    { type: 'required', errorMessage: _t("Price is required") },
+                ],
+                vin: [
+                    { type: 'required', errorMessage: _t("VIN is required") },
+                ],
+                plate: [
+                    { type: 'required', errorMessage: _t("Plate is required") },
+                ],
+                brand: [
+                    { type: 'required', errorMessage: _t("Brand is required") },
+                ],
+                model: [
+                    { type: 'required', errorMessage: _t("Model is required") },
+                ],
+                year: [
+                    { type: 'required', errorMessage: _t("Year is required") },
+                ],
+            },
             sidebar: new fields.element(),
             sideback: new fields.element({
                 events: [['click', this._onClickSideback]],
@@ -240,13 +399,199 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             payloxPage.prototype._start.apply(this);
             this._parseAds();
             this._setInitialState();
-            this._bindWizardValidation();
             this._bindWizardToggle();
             this._bindWizardSteps();
             this._bindImageUpload();
             this._checkStep5Parameter();
             framework.hideLoading();
         });
+    },
+
+    _onInputRequired: function(ev){
+        const $field = $(ev.currentTarget);
+        const $group = $field.closest('.form__group');
+        let value = $field.val();
+        const fieldName = $field.attr('name');
+        
+        let rules = [];
+        if (this.seller.rules[fieldName]) {
+            rules = this.seller.rules[fieldName];
+        } else if (this.customer.rules[fieldName]) {
+            rules = this.customer.rules[fieldName];
+        } else if (this.ad.rules[fieldName]) {
+            rules = this.ad.rules[fieldName];
+        } else if (this.payment && this.payment.rules && this.payment.rules[fieldName]) {
+            rules = this.payment.rules[fieldName];
+        }
+        
+        const numericFieldLimits = {
+            'tc': 11,                    
+            'tax_number': 10,
+            'phone': 10,
+            'phone_individual': 10,
+            'phone_corporate': 10,
+            'identity': 11,
+        };
+        
+        const isIbanField = fieldName.includes('iban') && !fieldName.includes('name');
+        
+        if (isIbanField) {
+            let cleanValue = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
+            
+            if (cleanValue.length > 0 && !cleanValue.startsWith('TR')) {
+                cleanValue = 'TR' + cleanValue;
+            }
+            
+            if (cleanValue.length > 26) {
+                cleanValue = cleanValue.substring(0, 26);
+            }
+            
+            let formattedValue = '';
+            if (cleanValue.length >= 4) {
+                formattedValue = cleanValue.substring(0, 4);
+                
+                for (let i = 4; i < cleanValue.length; i += 4) {
+                    formattedValue += ' ' + cleanValue.substring(i, i + 4);
+                }
+            } else {
+                formattedValue = cleanValue;
+            }
+            if (value !== formattedValue) {
+                $field.val(formattedValue);
+                value = cleanValue; 
+            }
+        } else {
+            const fieldLimit = Object.keys(numericFieldLimits).find(field => fieldName.includes(field));
+            if (fieldLimit) {
+                let numericValue = value.replace(/[^\d]/g, '');
+                const maxLength = numericFieldLimits[fieldLimit];
+                if (numericValue.length > maxLength) {
+                    numericValue = numericValue.substring(0, maxLength);
+                }
+                
+                // if (!this.wizard.lookup) {
+                //     if (fieldLimit.includes('identity') && numericValue.length === 11) {
+                //         this._lookupCustomerByIdentity(numericValue, 'individual');
+                //         this.wizard.lookup = true;
+                //     }
+                // }
+                
+                if (fieldLimit.includes('phone') && numericValue.length > 0) {
+                    let formattedValue = '';
+                    if (numericValue.length <= 3) {
+                        formattedValue = numericValue;
+                    } else if (numericValue.length <= 6) {
+                        formattedValue = numericValue.substring(0, 3) + ' ' + numericValue.substring(3);
+                    } else {
+                        formattedValue = numericValue.substring(0, 3) + ' ' + 
+                                       numericValue.substring(3, 6) + ' ' + 
+                                       numericValue.substring(6);
+                    }
+
+                    if (value !== formattedValue) {
+                        $field.val(formattedValue);
+                        value = numericValue;
+                    }
+                } else if (value !== numericValue) {
+                    $field.val(numericValue);
+                    value = numericValue;
+                }
+            }
+        }
+
+        $field.removeClass('is-invalid -error just-validate-error-field is-valid');
+        $group.find('.form__error-label, .just-validate-error-label').remove();
+
+        for (const rule of rules) {
+            let isValid = true;
+            let errorMessage = rule.errorMessage;
+
+            if (rule.type === 'required') {
+                isValid = value.trim() !== '';
+            } else if (rule.type === 'custom' && rule.validator) {
+                isValid = rule.validator(value);
+            } else if (rule.type === 'email') {
+                isValid = this._formatEmail(value);
+            } else if (rule.type === 'tckn') {
+                isValid = this._formatTckn(value);
+            } else if (rule.type === 'phone') {
+                isValid = this._formatPhoneNumber(value);
+            }
+
+            if (isValid){
+                $field.addClass('is-valid');
+                rule.isValid = true;
+            } else {
+                $field.addClass('is-invalid -error just-validate-error-field');
+                const $errorDiv = $(`<div class="form__error-label just-validate-error-label">${errorMessage}</div>`);
+                $group.append($errorDiv);
+                rule.isValid = false;
+                return false;
+            }
+        }
+        return true;
+    },
+
+    _formatIbanDisplay: function(iban) {
+        if (!iban) return '';
+        const cleanIban = iban.replace(/\s/g, '').toUpperCase();
+        
+        if (cleanIban.length >= 4) {
+            let formatted = cleanIban.substring(0, 4);
+            for (let i = 4; i < cleanIban.length; i += 4) {
+                formatted += ' ' + cleanIban.substring(i, i + 4);
+            }
+            return formatted;
+        }
+        return cleanIban;
+    },
+
+    _formatTckn: function(value){
+        if (!/^\d{11}$/.test(value)) {
+            return false;
+        }
+        
+        if (value[0] === '0') {
+            return false;
+        }
+        
+        const digits = value.split('').map(Number);
+        
+        let sum1 = 0, sum2 = 0;
+        for (let i = 0; i < 9; i++) {
+            if (i % 2 === 0) {
+                sum1 += digits[i];
+            } else {
+                sum2 += digits[i];
+            }
+        }
+        
+        const check1 = ((sum1 * 7) - sum2) % 10;
+        if (check1 !== digits[9]) {
+            return false;
+        }
+        
+        const totalSum = digits.slice(0, 10).reduce((a, b) => a + b, 0);
+        const check2 = totalSum % 10;
+        if (check2 !== digits[10]) {
+            return false;
+        }
+        
+        return true;
+    },
+
+    _formatPhoneNumber: function(value){
+        const cleaned = value.replace(/[^\d+]/g, '');
+        if (cleaned.startsWith('+')) {
+            return /^\+\d{10,15}$/.test(cleaned);
+        } else {
+            return /^5\d{9}$/.test(cleaned);
+        }
+    },
+
+    _formatEmail: function(value) {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(value);
     },
 
     _setInitialState: function() {
@@ -612,36 +957,53 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     if (owner.is_company) {
                         $wiz.find('input[name="userType"][value="corporate"]').prop('checked', true);
                         this._bindWizardToggle();
-                        
-                        $wiz.find('#corporate_title').val(owner.name || '');
-                        $wiz.find('#wizard_tax').val(owner.vat || '');
-                        $wiz.find('#taxoffice').val(owner.commercial_partner_id?.name || '');
-                        $wiz.find('#corporate_person').val(owner.name || '');
-                        $wiz.find('#phone_corporate').val(owner.phone || '');
-                        $wiz.find('#email_corporate').val(owner.email || '');
-                        $wiz.find('#address_corporate').val(this._formatAddress(owner));
+                        this.seller.input.corporate_title.$.val(owner.name || '');
+                        this.seller.input.tax_number.$.val(owner.vat || '');
+                        this.seller.input.tax_office.$.val(owner.commercial_partner_id?.name || '');
+                        this.seller.input.wizard_address.$.val(this._formatAddress(owner));
+                        this.seller.input.corporate_person.$.val(owner.name || '');
+                        this.seller.input.phone_corporate.$.val(owner.phone || '');
+                        this.seller.input.email_corporate.$.val(owner.email || '');
+                        this.seller.input.address_corporate.$.val(this._formatAddress(owner));
                     } else {
                         $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
                         this._bindWizardToggle();
-                        
-                        $wiz.find('#namesurname').val(owner.name || '');
-                        $wiz.find('#wizard_tckn').val(owner.vat || '');
-                        $wiz.find('#phone_individual').val(owner.phone || '');
-                        $wiz.find('#email_individual').val(owner.email || '');
-                        $wiz.find('#address_individual').val(this._formatAddress(owner));
+                        this.seller.input.name.$.val(owner.name || '');
+                        this.seller.input.tc.$.val(owner.vat || '');
+                        this.seller.input.phone_individual.$.val(owner.phone || '');
+                        this.seller.input.email_individual.$.val(owner.email || '');
+                        this.seller.input.address_individual.$.val(this._formatAddress(owner));
                     }
                     
                     if (owner.bank_ids && owner.bank_ids.length > 0) {
                         const bankAccount = owner.bank_ids[0];
-                        $wiz.find('#wizard_iban, #wizard_iban_corp').val(this._formatIban(bankAccount.acc_number));
-                        $wiz.find('#ibanaccountname_individual, #ibanaccountname_corporate').val(bankAccount.api_merchant || owner.name);
+                        this.seller.input.iban_corporate.$.val(this._formatIbanDisplay(bankAccount.acc_number));
+                        this.seller.input.iban_individual.$.val(this._formatIbanDisplay(bankAccount.acc_number));
+                        this.seller.input.iban_name_individual.$.val(bankAccount.api_merchant || owner.name);
+                        this.seller.input.iban_name_corporate.$.val(bankAccount.api_merchant || owner.name);
                     }
+                    
                 }
+                this._checkRules();
                 return Promise.resolve();
             }).catch(() => {
                 console.warn('Could not load owner data for prefill');
             });
         }
+    },
+
+    _checkRules: function() {
+        const $wiz = $('.escrow-wizard');
+        $wiz.find('input[type="text"], input[type="email"], textarea').each((index, element) => {
+            const $field = $(element);
+            const value = $field.val();
+            if (value && value.trim() !== '' && $field.is(':visible')) {
+                const fakeEvent = {
+                    currentTarget: element
+                };
+                this._onInputRequired(fakeEvent);
+            }
+        });
     },
 
     _loadSellerInfoForSidebar: function(adId, ownerId) {
@@ -659,7 +1021,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
                 if (owner.bank_ids && owner.bank_ids.length > 0) {
                     const bankAccount = owner.bank_ids[0];
-                    self.values.ads[adId].seller_iban = self._formatIban(bankAccount.acc_number) || 'Not Specified';
+                    self.values.ads[adId].seller_iban = self._formatIbanDisplay(bankAccount.acc_number) || 'Not Specified';
                 } else {
                     self.values.ads[adId].seller_iban = 'Not Specified';
                 }
@@ -720,29 +1082,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return parts.join(', ');
     },
 
-    _formatIban: function(iban) {
-        if (!iban) return '';
-        const cleanIban = iban.replace(/\s/g, '');
-        if (cleanIban.length >= 26) {
-            return cleanIban.substring(0, 4) + ' ' +
-                   cleanIban.substring(4, 8) + ' ' +
-                   cleanIban.substring(8, 12) + ' ' +
-                   cleanIban.substring(12, 16) + ' ' +
-                   cleanIban.substring(16, 20) + ' ' +
-                   cleanIban.substring(20, 24) + ' ' +
-                   cleanIban.substring(24);
-        }
-        return cleanIban;
-    },
-
     _parsePrice: function(priceStr) {
         if (!priceStr) return 0;
         const str = String(priceStr);
-        console.log('first', str)
         const cleaned = str.replace(/\./g, '').replace(',', '.');
-        console.log('second', cleaned)
         const parsed = parseFloat(cleaned);
-        console.log('third', parsed)
         return isNaN(parsed) ? 0 : parsed;
     },
 
@@ -1265,7 +1609,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'At least one file must be selected'
                 }
             ],
-            '#recipient_name_surname': [
+            '#customer_name_surname': [
                 { rule: 'required', errorMessage: 'Name Surname is required' },
                 {
                     rule: 'custom',
@@ -1273,7 +1617,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Please enter at least 2 characters'
                 }
             ],
-            '#recipient_identity': [
+            '#customer_identity': [
                 { rule: 'required', errorMessage: 'T.C. Identity No is required' },
                 {
                     rule: 'custom',
@@ -1281,7 +1625,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: '11 digit valid T.C. No required'
                 }
             ],
-            '#recipient_phone_individual': [
+            '#customer_phone_individual': [
                 { rule: 'required', errorMessage: 'Phone is required' },
                 {
                     rule: 'custom',
@@ -1289,7 +1633,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Please enter a valid phone number'
                 }
             ],
-            '#recipient_email_individual': [
+            '#customer_email_individual': [
                 { rule: 'required', errorMessage: 'E-mail is required' },
                 {
                     rule: 'custom',
@@ -1297,7 +1641,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Please enter a valid e-mail address (format, domain, and TLD check)'
                 }
             ],
-            '#recipient_address_individual': [
+            '#customer_address_individual': [
                 { rule: 'required', errorMessage: 'Address is required' },
                 {
                     rule: 'custom',
@@ -1305,10 +1649,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Address is too short (at least 10 characters)'
                 }
             ],
-            '#recipient_corporate_title': [
+            '#customer_corporate_title': [
                 { rule: 'required', errorMessage: 'Company title is required' }
             ],
-            '#recipient_tax_number': [
+            '#customer_tax_number': [
                 { rule: 'required', errorMessage: 'Tax number is required' },
                 {
                     rule: 'custom',
@@ -1316,7 +1660,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Please enter a valid 10-digit tax number'
                 }
             ],
-            '#recipient_tax_office': [
+            '#customer_tax_office': [
                 { rule: 'required', errorMessage: 'Tax office is required' },
                 {
                     rule: 'custom',
@@ -1324,10 +1668,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Please enter at least 2 characters'
                 }
             ],
-            '#recipient_person': [
+            '#customer_person': [
                 { rule: 'required', errorMessage: 'Authorized person name is required' }
             ],
-            '#recipient_phone_corporate': [
+            '#customer_phone_corporate': [
                 { rule: 'required', errorMessage: 'Phone is required' },
                 {
                     rule: 'custom',
@@ -1335,7 +1679,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Please enter a valid phone number'
                 }
             ],
-            '#recipient_email_corporate': [
+            '#customer_email_corporate': [
                 { rule: 'required', errorMessage: 'E-mail is required' },
                 {
                     rule: 'custom',
@@ -1343,7 +1687,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     errorMessage: 'Please enter a valid e-mail address (format, domain, and TLD check)'
                 }
             ],
-            '#recipient_address_corporate': [
+            '#customer_address_corporate': [
                 { rule: 'required', errorMessage: 'Address is required' },
                 {
                     rule: 'custom',
@@ -1360,15 +1704,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const value = $field.val() || '';
             const rules = this.validationRules[selector] || [];
             
-            if (selector.includes('#recipient_')) {
-                const recipientType = $('input[name="userType"]:checked').val();
+            if (selector.includes('#customer_')) {
+                const customerType = $('input[name="userType"]:checked').val();
                 const isIndividualField = selector.includes('_individual') || 
-                    ['#recipient_name_surname', '#recipient_identity'].includes(selector);
+                    ['#customer_name_surname', '#customer_identity'].includes(selector);
                 const isCorporateField = selector.includes('_corporate') || 
-                    ['#recipient_corporate_title', '#recipient_tax_number', '#recipient_tax_office', '#recipient_person'].includes(selector);
+                    ['#customer_corporate_title', '#customer_tax_number', '#customer_tax_office', '#customer_person'].includes(selector);
                 
-                if ((recipientType === 'individual' && isCorporateField) || 
-                    (recipientType === 'corporate' && isIndividualField)) {
+                if ((customerType === 'individual' && isCorporateField) || 
+                    (customerType === 'corporate' && isIndividualField)) {
                     return true;
                 }
             }
@@ -1433,7 +1777,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         });
 
-        const emailFields = ['#email_individual', '#email_corporate', '#recipient_email_individual', '#recipient_email_corporate'];
+        const emailFields = ['#email_individual', '#email_corporate', '#customer_email_individual', '#customer_email_corporate'];
         emailFields.forEach(selector => {
             const $emailField = $wiz.find(selector);
             if ($emailField.length) {
@@ -1606,11 +1950,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         });
 
-        $wiz.find('#recipient_corporate_title').on('input', function() {
+        $wiz.find('#customer_corporate_title').on('input', function() {
             this.value = this.value.toUpperCase();
         });
 
-        $wiz.find('#recipient_phone_individual, #recipient_phone_corporate').on('input', function() {
+        $wiz.find('#customer_phone_individual, #customer_phone_corporate').on('input', function() {
             let value = this.value.replace(/\D/g, '');
             if (value.length > 3 && value.length <= 6) {
                 value = value.slice(0, 3) + ' ' + value.slice(3);
@@ -1630,22 +1974,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.value = value;
         });
 
-        $wiz.find('#recipient_tax_number').on('input', function() {
+        $wiz.find('#customer_tax_number').on('input', function() {
             this.value = this.value.replace(/\D/g, '').slice(0, 10);
         });
 
-        $wiz.find('#recipient_identity').on('input', function() {
+        $wiz.find('#customer_identity').on('input', function() {
             this.value = this.value.replace(/\D/g, '').slice(0, 11);
         });
 
-        $wiz.find('#recipient_identity').on('change', function() {
+        $wiz.find('#customer_identity').on('change', function() {
             const identity = this.value.trim();
             if (identity.length === 11) {
                 self._lookupCustomerByIdentity(identity, 'individual');
             }
         });
 
-        $wiz.find('#recipient_tax_number').on('change', function() {
+        $wiz.find('#customer_tax_number').on('change', function() {
             const taxNumber = this.value.trim();
             if (taxNumber.length === 10) {
                 self._lookupCustomerByIdentity(taxNumber, 'corporate');
@@ -1689,26 +2033,26 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         this.validateWizardStep3 = () => {
             let isValid = true;
-            const recipientType = $('input[name="userType"]:checked').val();
+            const customerType = $('input[name="userType"]:checked').val();
 
             let fieldsToValidate;
-            if (recipientType === 'individual') {
+            if (customerType === 'individual') {
                 fieldsToValidate = [
-                    '#recipient_name_surname',
-                    '#recipient_identity', 
-                    '#recipient_phone_individual',
-                    '#recipient_email_individual',
-                    '#recipient_address_individual'
+                    '#customer_name_surname',
+                    '#customer_identity', 
+                    '#customer_phone_individual',
+                    '#customer_email_individual',
+                    '#customer_address_individual'
                 ];
             } else {
                 fieldsToValidate = [
-                    '#recipient_corporate_title',
-                    '#recipient_tax_number',
-                    '#recipient_tax_office',
-                    '#recipient_address_corporate',
-                    '#recipient_person',
-                    '#recipient_phone_corporate',
-                    '#recipient_email_corporate'
+                    '#customer_corporate_title',
+                    '#customer_tax_number',
+                    '#customer_tax_office',
+                    '#customer_address_corporate',
+                    '#customer_person',
+                    '#customer_phone_corporate',
+                    '#customer_email_corporate'
                 ];
             }
             
@@ -1918,13 +2262,70 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
+    _validateCurrentStepRules: function() {
+        $('.form__error-label, .just-validate-error-label').remove();
+        $('.form__control').removeClass('is-invalid -error just-validate-error-field');
+        
+        let hasValidationErrors = false;
+        let currentRules = {};
+
+        switch(this.wizard.currentStep) {
+            case 1:
+                currentRules = this.seller.rules;
+                break;
+            case 2:
+                currentRules = this.ad.rules || {};
+                break;
+            case 3:
+                currentRules = this.customer.rules || {};
+                break;
+            case 4:
+                currentRules = this.payment.rules || {};
+                break;
+            default:
+                return { isValid: true };
+        }
+
+        const getCurrentMode = () => {
+            const $checkedRadio = $('input[name="userType"]:checked');
+            return $checkedRadio.length ? $checkedRadio.val() : 'individual';
+        };
+        
+        const currentMode = getCurrentMode();
+        
+        Object.keys(currentRules).forEach(fieldName => {
+            const rule = currentRules[fieldName];
+            if (!rule[0]?.isValid && rule[0]?.mod === currentMode) {
+                const errorMessage = rule[0]?.errorMessage;
+                const $field = $(`[name="${fieldName}"]`);
+                const $group = $field.closest('.form__group');
+                
+                if (!$group.find('.form__error-label, .just-validate-error-label').length) {
+                    $field.addClass('is-invalid -error just-validate-error-field');
+                    const $errorDiv = $(`<div class="form__error-label just-validate-error-label">${errorMessage}</div>`);
+                    $group.append($errorDiv);
+                }
+                
+                hasValidationErrors = true;
+            }
+        });
+        
+        return { isValid: !hasValidationErrors };
+    },
+
     _nextStep: function () {
         const self = this;
-        if (!self._validateCurrentStep()){
-            self.displayNotification({ type: 'warning', title: 'Step Invalid', message: 'Please fill in all required fields.' });
-            return;
+        
+        const validationResult = this._validateCurrentStepRules();
+        if (!validationResult.isValid) {
+            this.displayNotification({
+                type: 'warning',
+                title: 'Validation Error',
+                message: 'Please fix the errors before proceeding.',
+            });
+            return false;
         }
-        console.log('Current Step:', this.wizard.currentStep);
+        
         if (this.wizard.currentStep === 1) {
             this._saveSellerInfo().then(function(result) {
                 if (result.success && result.partner_id) {
@@ -2299,10 +2700,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _bindRecipientToggle: function() {
         this._bindUserTypeToggle({
-            root: $('#recipientInfo'),
+            root: $('#customerInfo'),
             radioName: 'userType',
-            individualSelector: '#recipientIndividual',
-            corporateSelector: '#recipientCorporate',
+            individualSelector: '#customerIndividual',
+            corporateSelector: '#customerCorporate',
             sliderSelector: '.radioTab__slider',
         });
     },
@@ -2522,7 +2923,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const step = urlParams.get('step');
         const status = urlParams.get('status');
         const itemId = urlParams.get('item_id');
+        const productId = urlParams.get('product_id');
+        this.state.id = productId;
         this.state.item_id = itemId;
+        console.log(this.state);
 
         if (step === '4' && status === 'completed') {
             this._onChangeStep(4, {
@@ -2604,19 +3008,19 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _clearCustomerInputs: function() {
         const $wiz = $('.escrow-wizard');
-        $wiz.find('#recipient_name_surname').val('');
-        $wiz.find('#recipient_identity').val('');
-        $wiz.find('#recipient_phone_individual').val('');
-        $wiz.find('#recipient_email_individual').val('');
-        $wiz.find('#recipient_address_individual').val('');
+        $wiz.find('#customer_name_surname').val('');
+        $wiz.find('#customer_identity').val('');
+        $wiz.find('#customer_phone_individual').val('');
+        $wiz.find('#customer_email_individual').val('');
+        $wiz.find('#customer_address_individual').val('');
         
-        $wiz.find('#recipient_corporate_title').val('');
-        $wiz.find('#recipient_tax_number').val('');
-        $wiz.find('#recipient_tax_office').val('');
-        $wiz.find('#recipient_person').val('');
-        $wiz.find('#recipient_phone_corporate').val('');
-        $wiz.find('#recipient_email_corporate').val('');
-        $wiz.find('#recipient_address_corporate').val('');
+        $wiz.find('#customer_corporate_title').val('');
+        $wiz.find('#customer_tax_number').val('');
+        $wiz.find('#customer_tax_office').val('');
+        $wiz.find('#customer_person').val('');
+        $wiz.find('#customer_phone_corporate').val('');
+        $wiz.find('#customer_email_corporate').val('');
+        $wiz.find('#customer_address_corporate').val('');
         
         $wiz.find('.form__control').removeClass('is-invalid -error just-validate-error-field');
         $wiz.find('.form__error-label, .just-validate-error-label').remove();
@@ -2727,17 +3131,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 const $wiz = $('.escrow-wizard');
                 
                 if (customerType === 'individual') {
-                    $wiz.find('#recipient_name_surname').val(data.name || '');
-                    $wiz.find('#recipient_phone_individual').val(data.phone || '');
-                    $wiz.find('#recipient_email_individual').val(data.email || '');
-                    $wiz.find('#recipient_address_individual').val(data.address || '');
+                    $wiz.find('#customer_name_surname').val(data.name || '');
+                    $wiz.find('#customer_phone_individual').val(data.phone || '');
+                    $wiz.find('#customer_email_individual').val(data.email || '');
+                    $wiz.find('#customer_address_individual').val(data.address || '');
                 } else {
-                    $wiz.find('#recipient_corporate_title').val(data.name || '');
-                    $wiz.find('#recipient_tax_office').val(data.tax_office || '');
-                    $wiz.find('#recipient_person').val(data.contact_person || '');
-                    $wiz.find('#recipient_phone_corporate').val(data.phone || '');
-                    $wiz.find('#recipient_email_corporate').val(data.email || '');
-                    $wiz.find('#recipient_address_corporate').val(data.address || '');
+                    $wiz.find('#customer_corporate_title').val(data.name || '');
+                    $wiz.find('#customer_tax_office').val(data.tax_office || '');
+                    $wiz.find('#customer_person').val(data.contact_person || '');
+                    $wiz.find('#customer_phone_corporate').val(data.phone || '');
+                    $wiz.find('#customer_email_corporate').val(data.email || '');
+                    $wiz.find('#customer_address_corporate').val(data.address || '');
                 }
                 
                 self.displayNotification({
@@ -2750,6 +3154,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }).catch(function(error) {
             console.error('Error looking up customer:', error);
         });
+        this._checkRules()
     },
 
 });

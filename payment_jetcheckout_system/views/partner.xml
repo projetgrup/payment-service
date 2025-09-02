@@ -471,7 +471,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Recipients" name="recipients">
+                    <page string="Recipients" name="customers">
                         <group>
                             <group>
                                 <field name="partner_ids" widget="many2many_tags"/>

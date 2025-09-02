@@ -1687,6 +1687,9 @@
             border-color: var(--danger);
             box-shadow: 0 0 0 0.1rem rgba(254,80,87,0.15);
         }
+        .form-control.is-valid {
+            border-color: var(--success);
+        }
         .invalid-feedback {
             display: block;
         }
@@ -2017,6 +2020,10 @@
 .form__control.just-validate-error-field {
     border-color: var(--color-error) !important;
     box-shadow: 0 0 0 0.2rem rgba(255, 82, 85, 0.25) !important;
+}
+.form__control.is-valid{
+    border-color: var(--color-success) !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
 }
 
 /* Card Information Notice Styles */

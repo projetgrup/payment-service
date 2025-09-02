@@ -193,7 +193,7 @@
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="wizard_tckn">T.C. Identity Number</label>
-                            <input class="form__control -letter" id="wizard_tckn" name="idendity" type="text" placeholder="T.C. Identity Number" field="seller.input.tc"/>
+                            <input class="form__control -letter" id="wizard_tckn" name="tc" type="text" placeholder="T.C. Identity Number" field="seller.input.tc"/>
                             <div class="form__error d-none">Please enter a valid TCKN.</div>
                         </div>
                         <div class="form__group">
@@ -325,7 +325,7 @@
                     <h3>Recipient Information</h3>
                 </div>
                 <div class="panel__body">
-                    <form action="#" id="recipientInfo" class="form">
+                    <form action="#" id="customerInfo" class="form">
                         <div class="radioTabSelector">
                             <div class="radioTab">
                                 <div class="radioTab__slider"></div>
@@ -339,11 +339,11 @@
                                 </label>
                             </div>
                         </div>
-                        <div id="recipientCorporate" style="display: none;">
-                            <t t-call="payment_escrow.recipient_corporate"/>
+                        <div id="customerCorporate" style="display: none;">
+                            <t t-call="payment_escrow.customer_corporate"/>
                         </div>
-                        <div id="recipientIndividual">
-                            <t t-call="payment_escrow.recipient_individual"/>
+                        <div id="customerIndividual">
+                            <t t-call="payment_escrow.customer_individual"/>
                         </div>
                         <div class="form__group mt-3 d-flex justify-content-between">
                             <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
