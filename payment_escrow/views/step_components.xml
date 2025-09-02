@@ -52,17 +52,17 @@
                                     </div>
                                     <div class="col-6">
                                         <small class="text-muted">Amount:</small>
-                                        <div field="payment.transaction.amount">2.400.000 TL</div>
+                                        <div field="payment.amount.total">2.400.000 TL</div>
                                     </div>
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-6">
                                         <small class="text-muted">Status:</small>
-                                        <div class="text-success">Completed</div>
+                                        <div class="text-success" field="payment.transaction.status">Completed</div>
                                     </div>
                                     <div class="col-6">
                                         <small class="text-muted">Date:</small>
-                                        <div field="transaction.date">Aug 29, 2025</div>
+                                        <div field="payment.transaction.date">Aug 29, 2025</div>
                                     </div>
                                 </div>
                             </div>

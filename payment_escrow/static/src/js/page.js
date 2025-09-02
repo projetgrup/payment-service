@@ -207,7 +207,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 total: new fields.element()
             },
             transaction: {
-                reference: new fields.element()
+                reference: new fields.element(),
+                date: new fields.element(),
+                status: new fields.element()
             },
             button: {
                 return: new fields.element({
@@ -2554,7 +2556,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 this.payment.amount.remaining.$.text(this._formatCurrency(data.remaining_amount));
                 this.payment.amount.total.$.text(this._formatCurrency(data.total_amount));
                 this.payment.transaction.reference.$.text(data.transaction_reference);
-                
+                this.payment.transaction.date.$.text(data.transaction_date);
+                if (data.transaction_status){
+                    this.payment.transaction.status.$.text('Approved');
+                } else {
+                    this.payment.transaction.status.$.text('Pending');
+                }
+
                 const percentage = Math.round((data.previous_amount / data.total_amount) * 100);
                 $('.progress-text').text(percentage + '%');
                 const circumference = 219.8;
