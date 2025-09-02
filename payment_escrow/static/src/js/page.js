@@ -81,6 +81,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 iban_name_corporate: new fields.string(),
             }
         };
+
         this.customer = {
             input: {
                 name_surname: new fields.string(),
@@ -134,6 +135,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     events: [['click', this._onClickButtonContinue]],
                 }),
             },
+
             input: {
                 img: new fields.file({
                     allowMultiple: true,
@@ -734,10 +736,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _parsePrice: function(priceStr) {
         if (!priceStr) return 0;
         const str = String(priceStr);
+        console.log('first', str)
         const cleaned = str.replace(/\./g, '').replace(',', '.');
-        console.log(cleaned)
+        console.log('second', cleaned)
         const parsed = parseFloat(cleaned);
-        console.log(parsed)
+        console.log('third', parsed)
         return isNaN(parsed) ? 0 : parsed;
     },
 
