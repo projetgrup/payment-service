@@ -54,6 +54,8 @@ class PayloxSystemEscrowController(Controller):
                 'transaction_reference': transaction_reference,
                 'currency': 'TL',
                 'paid': payment_item.paid,
+                'transaction_date': latest_transaction.create_date if latest_transaction else '',
+                'transaction_status': transactions.paylox_product_ids[0]['product_id']['escrow_ad_approval'] 
             }
             
         except Exception as e:
@@ -81,13 +83,13 @@ class PayloxSystemEscrowController(Controller):
                 if payment_items_paid:
                     url = f'/my/ads?step=5'
                     if item_id:
-                        url += f'&item_id={item_id}'
+                        url += f'&item_id={item_id}&product_id={tx.paylox_product_ids[0]['id']}'
                 else:
                     url = f'/my/ads?step=4&status=completed'
                     if item_id:
-                        url += f'&item_id={item_id}'
+                        url += f'&item_id={item_id}&product_id={tx.paylox_product_ids[0]['id']}'
             elif tx.state in ['error', 'cancel']:
-                url = '/my/ads?step=error'
+                url = '/my/ads?step=4&status=error'
             else:
                 url = '/my/ads?step=result'
         return url, tx, status
@@ -608,7 +610,6 @@ class PayloxSystemEscrowController(Controller):
 
     @route('/my/customer/lookup', type='json', auth='public', methods=['POST'], csrf=False)
     def lookup_customer_by_identity(self, **kwargs):
-        """Look up customer information by identity number"""
         try:
             identity = kwargs.get('identity', '').strip()
             customer_type = kwargs.get('customer_type', 'individual')
@@ -634,6 +635,7 @@ class PayloxSystemEscrowController(Controller):
                         'email': partner.email,
                         'phone': partner.mobile or partner.phone,
                         'address': partner.street or '',
+                        'is_otp_verified': partner.is_otp_verified,
                         'tax_office': getattr(partner, 'paylox_tax_office', '') if customer_type == 'corporate' else '',
                         'contact_person': getattr(partner, 'contact_person', '') if customer_type == 'corporate' else '',
                     }
@@ -773,6 +775,7 @@ class PayloxSystemEscrowController(Controller):
                 'city': partner.city,
                 'zip': partner.zip,
                 'vat': partner.vat,
+                'is_otp_verified': partner.is_otp_verified,
                 'is_company': partner.is_company,
                 'is_escrow_customer': partner.is_escrow_customer,
                 'commercial_partner_id': {

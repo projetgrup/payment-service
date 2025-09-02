@@ -255,7 +255,15 @@
                             <t t-set="step_5_class" t-value="''"/>
                         </t>
 
-                        <div class="row mx-0 w-100">
+                        <div class="row mx-0 w-100 position-relative">
+                            <!-- Close Button -->
+                            <button type="button" class="btn-close wizard-close-btn position-absolute" 
+                                    style="top: 15px; right: 15px; z-index: 1060; background: rgba(255,255,255,0.9); border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" 
+                                    field="seller.button.close" 
+                                    title="Close Wizard">
+                                <i class="fa fa-times" style="color: #666; font-size: 16px;"></i>
+                            </button>
+                            
                             <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center">
                                 <div class="wizard-step wizard-step-1">
                                     <t t-call="payment_escrow.step_1_content"/>

@@ -1687,6 +1687,9 @@
             border-color: var(--danger);
             box-shadow: 0 0 0 0.1rem rgba(254,80,87,0.15);
         }
+        .form-control.is-valid {
+            border-color: var(--success);
+        }
         .invalid-feedback {
             display: block;
         }
@@ -2017,6 +2020,10 @@
 .form__control.just-validate-error-field {
     border-color: var(--color-error) !important;
     box-shadow: 0 0 0 0.2rem rgba(255, 82, 85, 0.25) !important;
+}
+.form__control.is-valid{
+    border-color: var(--color-success) !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
 }
 
 /* Card Information Notice Styles */
@@ -2464,6 +2471,37 @@
             .fa {
                 color: #ffc107;
             }
+        }
+    }
+
+    // Wizard Close Button Styles
+    .wizard-close-btn {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        
+        &:hover {
+            background: rgba(255, 255, 255, 1) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+            transform: scale(1.05);
+            
+            i {
+                color: #dc3545 !important;
+                transform: rotate(90deg);
+                transition: all 0.3s ease;
+            }
+        }
+        
+        &:active {
+            transform: scale(0.95);
+        }
+        
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25) !important;
+        }
+        
+        i {
+            transition: all 0.3s ease;
         }
     }
 }

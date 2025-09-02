@@ -8,7 +8,7 @@
             </div>
             <div class="selectCartType__title">
                 <strong>Credit Card Holder and Recipient Information Different</strong>
-                <p>Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and recipient information are different.</p>
+                <p>Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and customer information are different.</p>
             </div>
         </div>
     </template>

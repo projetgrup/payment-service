@@ -17,7 +17,7 @@
 
     <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="99" groups="group_escrow_manager"/>
 
-    <menuitem id="menu_infrastructure_provider" action="action_infrastructure_provider" parent="menu_main" sequence="100"/>
+    <menuitem id="menu_infrastructure_provider" action="action_infrastructure_provider" parent="menu_main" groups="payment_jetcheckout_system.group_system_manager" sequence="100"/>
 
     <menuitem id="menu_cars" name="Car Configuration" parent="menu_conf" sequence="0"/>
     <menuitem id="menu_car_brand" action="action_escrow_car_brand" name="Car Brands" parent="menu_cars" sequence="1"/>
