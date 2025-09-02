@@ -55,7 +55,7 @@ class PayloxSystemEscrowController(Controller):
                 'currency': 'TL',
                 'paid': payment_item.paid,
                 'transaction_date': latest_transaction.create_date if latest_transaction else '',
-                'transaction_status': transactions.paylox_product_ids[0].escrow_ad_approval if transactions.escrow_ad_approval else ''
+                'transaction_status': transactions.paylox_product_ids[0].escrow_ad_approval if transactions.paylox_product_ids[0].escrow_ad_approval else ''
             }
             
         except Exception as e:
