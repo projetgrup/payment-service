@@ -98,6 +98,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 ],
             },
             wizard: new fields.element(),
+            ads: new fields.element(),
             button: {
                 close: new fields.element({ events: [['click', this._onClickWizardClose]] }),
             },
@@ -278,20 +279,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 form: new fields.element({
                     events: [['click', this._onClickButtonForm]],
                 }),
-                discard: new fields.element({
-                    events: [['click', this._onClickButtonDiscard]],
-                }),
                 create: new fields.element({
                     events: [['click', this._onClickButtonCreate]],
-                }),
-                // save: new fields.element({
-                //     events: [['click', this._onClickButtonSave]],
-                // }),
-                delete: new fields.element({
-                    events: [['click', this._onClickButtonDelete]],
-                }),
-                continue: new fields.element({
-                    events: [['click', this._onClickButtonContinue]],
                 }),
             },
 
@@ -703,28 +692,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _parseAds: function () {
         $('[field="ad.item"][data-value]').each((i, e) => {
             const $this = $(e);
-            const categ = $this.find('.escrow-ad-item-categ');
+            const values = $this.data('value');
             this.values.ads[e.dataset.id] = {
-                id: $this.data('id'),
                 img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
-                categ: categ.data('id'),
                 price: $this.find('.escrow-ad-item-price').data('value'),
                 state: $this.find('.escrow-ad-item-state').html().trim(),
-                owner_id: $this.data('owner-id'),
-                customer_id: $this.data('customer-id'),
-                vin: $this.data('vin'),
-                plate: $this.data('plate'),
-                brand_id: $this.data('brand-id'),
-                brand_name: $this.data('brand-name'),
-                model_id: $this.data('model-id'),
-                model_name: $this.data('model-name'),
-                year: $this.data('model-year'),
-                item_id: $this.data('item-id'),
-                amount: $this.data('item-amount'),
-                residual_amount: $this.data('item-residual-amount'),
-                paid_amount: $this.data('item-paid-amount'),
+                ...values
             };
+            $this.data('value', null);
+            $this.attr('data-value', null);
         });
     },
 
@@ -927,14 +904,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._activateView('form');
     },
 
-    _onClickButtonDiscard: function () {
-        this._prepareAd();
-        this._activateView('list');
-    },
-
     _onClickButtonCreate: function (ev) {
-        this._prepareAd();
-        this._openWizard();
+        this._navigateToStep(1);
     },
 
     _closeSidebar: function() {
@@ -1165,19 +1136,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         popup.open();
     },
 
-    _onClickButtonContinue: function (ev) {
-        const id = parseInt($(ev.currentTarget).data('id'));
-        if (!id) {
-            this.displayNotification({
-                type: 'warning',
-                title: _t('Warning'),
-                message: _t('Please select an ad first.'),
-            });
-            return;
-        }
-        this._openWizard(id);
-    },
-
     _onClickAd: function (ev) {
         this._onClickButtonSidebarToggle({ currentTarget: { dataset: { value: 'items'}}});
 
@@ -1188,16 +1146,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.state.item_id = item_id ? parseInt(item_id, 10) : 0;
 
         const value = this.values.ads[id];
-        if (value && value.owner_id && !value.seller_name) {
+        /*if (value && value.owner_id && !value.seller_name) {
             this._loadSellerInfoForSidebar(id, value.owner_id);
-        }
+        }*/
         const $item = $('.escrow-ad-sidebar-items');
         if ($item.length) {
             $item.find('.escrow-ad-item-name').text(value.name);
             $item.find('.escrow-ad-item-categ').text(value.categ);
-            $item.find('.seller-name').text(value.seller_name || 'Not specified');
-            $item.find('.seller-tc').text(value.seller_tc || 'Not specified');
-            $item.find('.seller-iban').text(value.seller_iban || 'Not specified');
+            $item.find('.seller-name').text(value.partner || 'Not specified');
+            $item.find('.seller-tc').text(value.vat || 'Not specified');
+            $item.find('.seller-iban').text(value.iban || 'Not specified');
             
             const brandModel = value.brand && value.model ? `${value.brand} / ${value.model}` : 'Not specified';
             $item.find('.escrow-ad-item-brand-model').text(brandModel);
@@ -1207,9 +1165,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
             $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
             $item.find('.escrow-ad-item-state').html(value.state);
-            $item.find('.escrow-ad-button-edit').data('id', id);
-            $item.find('.escrow-ad-button-delete').data('id', id);
-            $item.find('.escrow-ad-button-continue').data('id', id);
             if (value.residual_amount !== undefined) {
                 $('#remainingBalance').text(format.currency(value.residual_amount, this.currency.position, this.currency.symbol, this.currency.decimal));
             }
@@ -1220,9 +1175,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-state').html('');
             $item.find('.escrow-ad-item-name').text(_t('No ad found'));
             $item.find('.escrow-ad-item-categ').text('');
-            $item.find('.escrow-ad-button-edit').data('id', 0);
-            $item.find('.escrow-ad-button-delete').data('id', 0);
-            $item.find('.escrow-ad-button-continue').data('id', 0);
         }
 
         const $src = $(ev.currentTarget);
@@ -1303,51 +1255,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _openWizard: function (id) {
-        if (this.ad.sidebar.$.hasClass('show')) {
-            this._onClickButtonSidebarToggle();
-        }
-        this.seller.wizard.$.removeClass('d-none').hide().fadeIn(200);
-        $('.escrow-ad-read').hide();
-
-        const $wiz = $('.escrow-wizard');
-        const $step1 = $wiz.find('.wizard-step-1');
-        const $step2 = $wiz.find('.wizard-step-2');
-        const $step3 = $wiz.find('.wizard-step-3');
-        $step1.removeClass('d-none');
-        $step2.addClass('d-none');
-        $step3.addClass('d-none');
-        const $steps = $wiz.find('.escrow-wizard-header .step.bullet');
-        $steps.removeClass('active completed');
-        $steps.find('.check').addClass('d-none');
-        $steps.find('.num').removeClass('d-none');
-        $steps.eq(0).addClass('active');
-
-        if (!this.wizard) {
-            this.wizard = {
-                currentStep: 1,
-                previousStep: 1
-            };
-        } else {
-            this.wizard.currentStep = 1;
-            this.wizard.previousStep = 1;
-        }
-        if (!id) {
-            const $categorySelect = $wiz.find('#wizard_category');
-            const $firstOption = $categorySelect.find('option[value!=""]').first();
-            if ($firstOption.length) {
-                $categorySelect.val($firstOption.val());
-                $categorySelect.trigger('change');
-            }
-        }
-        
-        this._updateStepStates();
-    },
-
     _onClickWizardClose: function () {
         this.seller.wizard.$.fadeOut(200, () => {
-            this.seller.wizard.$.addClass('d-none');
-            $('.escrow-ad-read').removeClass('d-none').fadeIn(200);
+            this.seller.ads.$.fadeIn(200);
         });
     },
 
@@ -1443,8 +1353,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _ensureWizardVisible: function() {
-        $('.escrow-ad-read').addClass('d-none');
-        this.seller.wizard.$.removeClass('d-none');
+        if (this.ad.sidebar.$.hasClass('show')) {
+            this._onClickButtonSidebarToggle();
+        }
+
+        if (this.seller.ads.$.css('display') !== 'none') {
+            this.seller.ads.$.fadeOut(200, () => {
+                this.seller.wizard.$.fadeIn(200);
+            });
+        }
     },
 
     _updateStepHeaders: function(stepNumber, options) {

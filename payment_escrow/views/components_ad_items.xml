@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="ad_list_item" name="Ad List Item">
-        <div class="escrow-ad-list-item escrow-item" t-att-data-id="ad.id" t-att-data-product-id="ad.id" t-att-data-item-id="ad.escrow_payment_item_id.id" t-att-data-item-amount="ad.escrow_payment_item_id.amount" t-att-data-item-residual-amount="ad.escrow_payment_item_id.residual_amount" t-att-data-item-paid-amount="ad.escrow_payment_item_id.paid_amount" t-att-data-name="ad.name" t-att-data-amount="ad.list_price or 0" t-att-data-quantity="1" t-att-data-description="ad.name" data-value="" field="ad.item" t-att-data-vin="ad.escrow_car_vin or ''" t-att-data-plate="ad.escrow_car_plate or ''" t-att-data-brand-id="ad.escrow_car_brand_id.id" t-att-data-brand-name="ad.escrow_car_brand_id.name or ''" t-att-data-category-name="ad.categ_id.name or ''" t-att-data-model-id="ad.escrow_car_model_id.id" t-att-data-model-name="ad.escrow_car_model_id.name or ''" t-att-data-owner-id="ad.escrow_owner_id.id"  t-att-data-model-year="ad.escrow_car_model_year">
+        <div class="escrow-ad-list-item escrow-item" t-att-data-id="ad.id" t-att-data-value="json.dumps({
+                'id': ad.id,
+                'product_id': ad.id,
+                'item_id': ad.escrow_payment_item_id.id,
+                'amount': ad.escrow_payment_item_id.amount,
+                'residual_amount': ad.escrow_payment_item_id.residual_amount,
+                'paid_amount': ad.escrow_payment_item_id.paid_amount,
+                'name': ad.name,
+                'amount': ad.list_price or 0,
+                'quantity': 1,
+                'description': ad.name,
+                'vin': ad.escrow_car_vin or '',
+                'plate': ad.escrow_car_plate or '',
+                'brand_id': ad.escrow_car_brand_id.id,
+                'brand_name': ad.escrow_car_brand_id.name or '',
+                'category_name': ad.categ_id.name or '',
+                'model_id': ad.escrow_car_model_id.id,
+                'model_name': ad.escrow_car_model_id.name or '',
+                'owner_id': ad.escrow_owner_id.id,
+                'year': ad.escrow_car_model_year,
+                'categ': ad.categ_id.id,
+                'partner': ad.escrow_payment_item_id.parent_id.name,
+                'vat': ad.escrow_payment_item_id.parent_id.vat,
+                'iban': ad.escrow_payment_item_id.parent_id.bank_ids and ad.escrow_payment_item_id.parent_id.bank_ids[0]['acc_number'] or '',
+            })" field="ad.item">
             <div class="escrow-ad-item-info">
                 <div class="escrow-ad-item-image">
                     <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
@@ -20,7 +44,7 @@
     </template>
 
     <template id="ad_grid_item" name="Ad Grid Item">
-        <div class="escrow-ad-grid-item escrow-item" t-att-data-id="ad.id" t-att-data-product-id="ad.id" t-att-data-item-id="ad.escrow_payment_item_id.id" t-att-data-item-amount="ad.escrow_payment_item_id.amount" t-att-data-item-residual-amount="ad.escrow_payment_item_id.residual_amount" t-att-data-item-paid-amount="ad.escrow_payment_item_id.paid_amount" t-att-data-name="ad.name" t-att-data-amount="ad.list_price or 0" t-att-data-quantity="1" t-att-data-description="ad.name" field="ad.item" t-att-data-vin="ad.escrow_car_vin or ''" t-att-data-plate="ad.escrow_car_plate or ''" t-att-data-brand-id="ad.escrow_car_brand_id.id" t-att-data-brand-name="ad.escrow_car_brand_id.name or ''" t-att-data-model-id="ad.escrow_car_model_id.id" t-att-data-model-name="ad.escrow_car_model_id.name or ''" t-att-data-owner-id="ad.escrow_owner_id.id" t-att-data-model-year="ad.escrow_car_model_year" t-att-data-category-name="ad.categ_id.name or ''">
+        <div class="escrow-ad-grid-item escrow-item" t-att-data-id="ad.id" field="ad.item">
             <div class="escrow-ad-grid-item-header">
                 <div class="escrow-ad-figure">
                     <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>

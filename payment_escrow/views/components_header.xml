@@ -15,7 +15,6 @@
             </div>
             <div t-if="variant == 'ads'" class="header__user">
                 <div class="user-info">
-                    <t>Welcome To </t>
                     <img t-att-src="'/web/image/res.users/%s/image_128' % request.env.user.id" class="user-avatar" alt="User"/>
                     <span class="user-name" t-esc="request.env.user.name"/>
                 </div>

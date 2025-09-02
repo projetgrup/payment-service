@@ -157,11 +157,9 @@
                     <t t-set="company" t-value="company"/>
                 </t>
 
-                <t t-call="payment_escrow.payment_step5_completion_modal"/>
-
                 <div class="escrow-ad-container">
                     <div class="col-12 col-lg-8 mx-auto p-2 d-flex justify-content-center">
-                        <div class="escrow-ad-read col-12">
+                        <div class="col-12" field="seller.ads">
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title">My Ads</h3>
                                 <div class="escrow-ad-nav-control">
@@ -245,7 +243,7 @@
                         <div class="escrow-ad-edit col-12">
                         </div>
                     </div>
-                    <div class="escrow-wizard d-none" field="seller.wizard">
+                    <div class="escrow-wizard" field="seller.wizard" style="display:none">
                         <t t-call="payment_escrow.steps_container_template">
                             <t t-set="container_class" t-value="'escrow-wizard-header'"/>
                             <t t-set="step_1_class" t-value="'-active'"/>
@@ -257,11 +255,12 @@
 
                         <div class="row mx-0 w-100 position-relative">
                             <!-- Close Button -->
-                            <button type="button" class="btn-close wizard-close-btn position-absolute" 
-                                    style="top: 15px; right: 15px; z-index: 1060; background: rgba(255,255,255,0.9); border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" 
-                                    field="seller.button.close" 
-                                    title="Close Wizard">
-                                <i class="fa fa-times" style="color: #666; font-size: 16px;"></i>
+                            <button type="button" class="btn-close wizard-close-btn position-absolute px-3 py-2" 
+                                style="top: 15px; left: 15px; background: rgba(255,255,255,0.9); border: 1px solid #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" 
+                                field="seller.button.close" 
+                                title="Close Wizard">
+                                    <i class="fa fa-chevron-left mr8" style="color: #666; font-size: 16px;"/>
+                                    <span>Back</span>
                             </button>
                             
                             <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center">
@@ -395,22 +394,6 @@
                                 <span class="info-value escrow-ad-item-price"></span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="escrow-ad-item-desc"/>
-                    <div class="escrow-ad-item-footer">
-                        <button class="btn escrow-ad-button-delete" field="ad.button.delete">
-                            <i class="fa fa-trash mr8"/>
-                            Delete
-                        </button>
-                        <button class="btn escrow-ad-button-edit" field="ad.button.edit">
-                            <i class="fa fa-edit mr8"/>
-                            Edit
-                        </button>
-                        <button class="btn escrow-ad-button-continue" field="ad.button.continue">
-                            <i class="fa fa-chevron-right mr8"/>
-                            Continue
-                        </button>
                     </div>
                 </div>
             </div>
