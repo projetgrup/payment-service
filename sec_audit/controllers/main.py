@@ -45,12 +45,14 @@ class AuditController(Controller):
                     except Exception:
                         raise UserError(_('Bad end date format'))
                     domain += [('create_date', '<=', date_end)]
-            logs = request.env['security.audit'].sudo().search_read(domain, ['create_uid', 'create_uid_email', 'create_date', 'uid', 'success', 'message', 'view', 'ip_address', 'action'])
+            logs = request.env['security.audit'].sudo().search_read(domain, ['create_uid', 'create_uid_email', 'create_date', 'uid', 'success', 'message', 'view', 'ip_address', 'record', 'tracking', 'action'])
             logs = [{
                 'id': log['uid'] or None,
                 'date': log['create_date'].strftime('%Y-%d-%m %H:%M:%S') if log['create_date'] else None,
                 'user': '%s%s' % (log['create_uid'] and log['create_uid'][1] or '', log['create_uid_email'] and ' <%s>' % log['create_uid_email']),
                 #'user': log['create_uid'][1] if log['create_uid'] else None,
+                'record': log['record'] or None,
+                'tracking': log['tracking'] or None,
                 'success': log['success'] or None,
                 'message': log['message'] or None,
                 'address': log['ip_address'] or None,
