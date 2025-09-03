@@ -63,12 +63,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
         this.seller = {
             rules: {
-                namesurname: [
+                /*namesurname: [
                     { type: 'required', errorMessage: _t("Name is required"), isValid: false, mod: 'individual' },
                 ],
                 tc: [
                     { errorMessage: _t("Tax ID is required"), type: 'tckn', isValid: false, mod: 'individual' },
-                ],
+                ],*/
                 email: [
                     { errorMessage: _t("Email is required"), type: 'email', isValid: false, mod: 'individual' },
                 ],
@@ -107,10 +107,38 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
             input: {
                 name: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.name;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' && !field.value) {
+                            message = _t('Name is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
-                tc: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                tc: new fields.float({
+                    mask: '00000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.tc;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Tax ID is required');
+                                valid = false;
+                            } else if (!this._isTcknValid(field.value)) {
+                                message = _t('Tax ID is not valid');
+                                valid = false;
+                            } 
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 phone_individual: new fields.string({
                     events: [['input', this._onInputRequired]]
@@ -388,7 +416,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    _onInputRequired: function(ev){
+    _onFieldValid: function(field, valid, message='') {
+        field.$.closest('.form__group').find('.form__error-label, .just-validate-error-label').remove();
+        if (valid) {
+            field.$.removeClass('is-invalid -error just-validate-error-field').addClass('is-valid');
+        } else {
+            field.$.addClass('is-invalid -error just-validate-error-field').removeClass('is-valid');
+            field.$.closest('.form__group').append($(`<div class="form__error-label just-validate-error-label">${message}</div>`));
+        }
+    },
+
+    _onInputRequired: function(ev) {
         const $field = $(ev.currentTarget);
         const $group = $field.closest('.form__group');
         let value = $field.val();
@@ -527,7 +565,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return cleanIban;
     },
 
-    _formatTckn: function(value){
+    _isTcknValid: function(value) {
         if (!/^\d{11}$/.test(value)) {
             return false;
         }
@@ -779,7 +817,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickButtonCreate: function (ev) {
-        this._onChangeStep(1);
+        this._onChangeStep(1, { scratch: true });
     },
 
     _closeSidebar: function() {
@@ -1199,7 +1237,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _handleStepSpecificActions: function(stepNumber, options, stateId) {
         switch(stepNumber) {
             case 1:
-                this._initializeSellerInfoForm(stateId);
+                if (options.scratch) {
+                    for (const input of Object.values(this.seller.input)) {
+                        input.$.val(null);
+                    }
+                } else {
+                    this._initializeSellerInfoForm(stateId);
+                }
                 break;
                 
             case 2:
@@ -1244,7 +1288,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         switch(this.wizard.currentStep) {
             case 1:
-                currentRules = this.seller.rules;
+                currentRules = this.seller.rules || {};
                 break;
             case 2:
                 currentRules = this.ad.rules || {};
@@ -1265,7 +1309,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         };
         
         const currentMode = getCurrentMode();
-        
+
         Object.keys(currentRules).forEach(fieldName => {
             const rule = currentRules[fieldName];
             if (!rule[0]?.isValid && rule[0]?.mod === currentMode) {

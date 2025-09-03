@@ -365,7 +365,7 @@
                     <div class="info-card vehicle-info-card" data-action="edit-vehicle" field="edit.vehicle.holder">
                         <div class="info-card-header">
                             <i class="fa fa-car"></i>
-                            <h4>Licancing Information</h4>
+                            <h4>Licencing Information</h4>
                             <div class="info-badge escrow-ad-item-state"></div>
                         </div>
                         <div class="info-card-content">

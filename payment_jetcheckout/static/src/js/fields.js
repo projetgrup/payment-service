@@ -27,6 +27,7 @@ class fields {
         this.$ = $();
         this._ = undefined;
         this._name = undefined;
+        this.valid = true;
         this.options = options || {};
     }
 
@@ -61,6 +62,12 @@ class fields {
                     this.$.on(e, f.bind(self));
                 }
             }
+        }
+
+        if (this.validate) {
+            this.$.on('input', () => {
+                this.valid = this.validate();
+            });
         }
 
         //this.$.prop('field', undefined);
