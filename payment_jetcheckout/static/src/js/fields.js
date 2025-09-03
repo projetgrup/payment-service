@@ -65,7 +65,11 @@ class fields {
         }
 
         if (this.validate) {
+            this.valid = false
             this.$.on('input', () => {
+                this.valid = this.validate();
+            });
+            this.$.on('change', () => {
                 this.valid = this.validate();
             });
         }

@@ -62,44 +62,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             default: 0,
         });
         this.seller = {
-            rules: {
-                /*namesurname: [
-                    { type: 'required', errorMessage: _t("Name is required"), isValid: false, mod: 'individual' },
-                ],
-                tc: [
-                    { errorMessage: _t("Tax ID is required"), type: 'tckn', isValid: false, mod: 'individual' },
-                ],*/
-                email: [
-                    { errorMessage: _t("Email is required"), type: 'email', isValid: false, mod: 'individual' },
-                ],
-                phone: [
-                    { errorMessage: _t("Phone is required"), type: 'phone', isValid: false, mod: 'individual' },
-                ],
-                iban: [
-                    { type: 'iban', errorMessage: _t("IBAN is required"), isValid: false, mod: 'individual' },
-                ],
-                address: [
-                    { type: 'required', errorMessage: _t("Address is required"), isValid: false, mod: 'corporate' },
-                ],
-                ibanaccountname: [
-                    { type: 'required', errorMessage: _t("IBAN Name is required"), isValid: false, mod: 'corporate' },
-                ],
-                corporate_title: [
-                    { type: 'required', errorMessage: _t("Corporate Title is required"), isValid: false, mod: 'corporate' },
-                ],
-                tax_number: [
-                    { type: 'required', errorMessage: _t("Tax Number is required"), isValid: false, mod: 'corporate' },
-                ],
-                tax_office: [
-                    { type: 'required', errorMessage: _t("Tax Office is required"), isValid: false, mod: 'corporate' },
-                ],
-                iban_corporate: [
-                    { type: 'required', errorMessage: _t("IBAN is required"), isValid: false, mod: 'corporate' },
-                ],
-                iban_name_corporate: [
-                    { type: 'required', errorMessage: _t("IBAN Name is required"), isValid: false, mod: 'corporate' },
-                ],
-            },
             wizard: new fields.element(),
             ads: new fields.element(),
             button: {
@@ -141,153 +103,426 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 phone_individual: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: '0000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.phone_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Phone number is required');
+                                valid = false;
+                            } 
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    },
+                    check: new fields.element(),
+                    error: new fields.element()
                 }),
                 email_individual: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.email_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' && !field.value) {
+                            message = _t('Email is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 address_individual: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.address_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' && !field.value) {
+                            message = _t('Address is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 iban_individual: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: 'TR00000000000000000000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.iban_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('IBAN is required');
+                                valid = false;
+                            }
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    },
+                    check: new fields.element(),
+                    error: new fields.element()
                 }),
                 iban_name_individual: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.iban_name_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' && !field.value) {
+                            message = _t('IBAN name is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 corporate_title: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.corporate_title;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Corporate title is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 tax_number: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: '0000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.tax_number;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Tax ID is required');
+                                valid = false;
+                            } else if (!this._isTcknValid(field.value)) {
+                                message = _t('Tax ID is not valid');
+                                valid = false;
+                            } 
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 tax_office: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.tax_office;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Tax Office title is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 corporate_person: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.corporate_person;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Corporate person is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 phone_corporate: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: '0000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.phone_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Phone number is required');
+                                valid = false;
+                            } 
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    },
+                    check: new fields.element(),
+                    error: new fields.element()
                 }),
                 email_corporate: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.email_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Email is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 address_corporate: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.address_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Email is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 iban_corporate: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: 'TR00000000000000000000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.iban_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('IBAN is required');
+                                valid = false;
+                            }
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    },
+                    check: new fields.element(),
+                    error: new fields.element()
                 }),
                 iban_name_corporate: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.iban_name_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('IBAN Name is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
             }
         };
 
         this.customer = {
-            rules: {
-                customer_name_surname: [
-                    { type: 'required', errorMessage: _t("Name is required"), isValid: false, mod: 'individual' },
-                ],
-                customer_identity: [
-                    { type: 'tckn', errorMessage: _t("Identity is required"), isValid: false, mod: 'individual' },
-                ],
-                customer_phone: [
-                    { type: 'phone', errorMessage: _t("Phone is required"), isValid: false, mod: 'individual' },
-                ],
-                customer_email: [
-                    { type: 'email', errorMessage: _t("Email is required"), isValid: false, mod: 'individual' },
-                ],
-                customer_address: [
-                    { type: 'required', errorMessage: _t("Address is required"), isValid: false, mod: 'individual' },
-                ],
-                corporate_title: [
-                    { type: 'required', errorMessage: _t("Corporate Title is required"), isValid: false, mod: 'corporate' },
-                ],
-                tax_number: [
-                    { type: 'required', errorMessage: _t("Tax Number is required"), isValid: false, mod: 'corporate' },
-                ],
-                tax_office: [
-                    { type: 'required', errorMessage: _t("Tax Office is required"), isValid: false, mod: 'corporate' },
-                ],
-                person: [
-                    { type: 'required', errorMessage: _t("Person is required"), isValid: false, mod: 'corporate' },
-                ],
-                phone_corporate: [
-                    { type: 'phone', errorMessage: _t("Phone is required"), isValid: false, mod: 'corporate' },
-                ],
-                email_corporate: [
-                    { type: 'email', errorMessage: _t("Email is required"), isValid: false, mod: 'corporate' },
-                ],
-                address_corporate: [
-                    { type: 'required', errorMessage: _t("Address is required"), isValid: false, mod: 'corporate' },
-                ],
-            },
             input: {
                 name_surname: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.name_surname;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' && !field.value) {
+                            message = _t('Name is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 identity: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: '00000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.identity;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Identity is required');
+                                valid = false;
+                            } else if (!this._isTcknValid(field.value)) {
+                                message = _t('Identity is not valid');
+                                valid = false;
+                            } 
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 phone_individual: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: '0000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.phone_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Phone number is required');
+                                valid = false;
+                            } 
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    },
+                    check: new fields.element(),
+                    error: new fields.element()
                 }),
                 email_individual: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.email_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' && !field.value) {
+                            message = _t('Email is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 address_individual: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                   validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.address_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' && !field.value) {
+                            message = _t('Email is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 corporate_title: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.corporate_title;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Corporate title is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 tax_number: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: '00000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.identity;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Tax number is required');
+                                valid = false;
+                            } else if (!this._isTcknValid(field.value)) {
+                                message = _t('Tax number is not valid');
+                                valid = false;
+                            } 
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 tax_office: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.tax_office;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Tax office is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 person: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.person;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Person is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 phone_corporate: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    mask: '0000000000',
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.phone_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Phone number is required');
+                                valid = false;
+                            } 
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    },
+                    check: new fields.element(),
+                    error: new fields.element()
                 }),
                 email_corporate: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.email_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Email is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 address_corporate: new fields.string({
-                    events: [['input', this._onInputRequired]]
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.address_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'corporate' && !field.value) {
+                            message = _t('Address is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
             }
         }
 
         this.ad = {
-            rules: {
-                name: [
-                    { type: 'required', errorMessage: _t("Product name is required") },
-                ],
-                category: [
-                    { type: 'required', errorMessage: _t("Category is required") },
-                ],
-                price: [
-                    { type: 'required', errorMessage: _t("Price is required") },
-                ],
-                vin: [
-                    { type: 'required', errorMessage: _t("VIN is required") },
-                ],
-                plate: [
-                    { type: 'required', errorMessage: _t("Plate is required") },
-                ],
-                brand: [
-                    { type: 'required', errorMessage: _t("Brand is required") },
-                ],
-                year: [
-                    { type: 'required', errorMessage: _t("Year is required") },
-                ],
-            },
             sideback: new fields.element(),
             sidebar: new fields.element(),
             button: {
@@ -329,18 +564,116 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     styleButtonRemoveItemPosition: 'left bottom',
                     styleButtonProcessItemPosition: 'right bottom',
                 }),
-                name: new fields.string(),
-                categ: new fields.selection(),
+                name: new fields.string({
+                    validate: () => {
+                        const field = this.ad.input.name;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Name is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                categ: new fields.selection({
+                    validate: () => {
+                        const field = this.ad.input.categ;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Category is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
                 price: new fields.float({
                     mask: payloxPage.prototype._maskAmount.bind(this),
-                    default: 0,
+                    validate: () => {
+                        const field = this.ad.input.price;
+                        let message = null;
+                        let valid = true;
+                        console.log(field.value);
+                        if (field.value <= 0) {
+                            message = _t('Price must be positive');
+                            valid = false;
+                        } else if (!field.value && !field._.masked.isComplete) {
+                            message = _t('Price is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 id: new fields.integer(),
-                category: new fields.selection(),
-                brand: new fields.selection(),
-                year: new fields.selection(),
-                vin: new fields.string(),
-                plate: new fields.string(),
+                category: new fields.selection({
+                    validate: () => {
+                        const field = this.ad.input.category;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Category is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                brand: new fields.selection({
+                    validate: () => {
+                        const field = this.ad.input.brand;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Brand is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                year: new fields.selection({
+                    validate: () => {
+                        const field = this.ad.input.year;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Year is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                vin: new fields.string({
+                    validate: () => {
+                        const field = this.ad.input.vin;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('VIN is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                plate: new fields.string({
+                    validate: () => {
+                        const field = this.ad.input.plate;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Plate is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
             },
             view: {
                 list: new fields.element(),
@@ -426,131 +759,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _onInputRequired: function(ev) {
-        const $field = $(ev.currentTarget);
-        const $group = $field.closest('.form__group');
-        let value = $field.val();
-        const fieldName = $field.attr('name');
-        
-        let rules = [];
-        if (this.seller.rules[fieldName]) {
-            rules = this.seller.rules[fieldName];
-        } else if (this.customer.rules[fieldName]) {
-            rules = this.customer.rules[fieldName];
-        } else if (this.ad.rules[fieldName]) {
-            rules = this.ad.rules[fieldName];
-        } else if (this.payment && this.payment.rules && this.payment.rules[fieldName]) {
-            rules = this.payment.rules[fieldName];
-        }
-        
-        const numericFieldLimits = {
-            'tc': 11,                    
-            'tax_number': 10,
-            'phone': 10,
-            'phone_individual': 10,
-            'phone_corporate': 10,
-            'identity': 11,
-        };
-        
-        const isIbanField = fieldName.includes('iban') && !fieldName.includes('name');
-        
-        if (isIbanField) {
-            let cleanValue = value.replace(/[^A-Z0-9]/gi, '').toUpperCase();
-            
-            if (cleanValue.length > 0 && !cleanValue.startsWith('TR')) {
-                cleanValue = 'TR' + cleanValue;
-            }
-            
-            if (cleanValue.length > 26) {
-                cleanValue = cleanValue.substring(0, 26);
-            }
-            
-            let formattedValue = '';
-            if (cleanValue.length >= 4) {
-                formattedValue = cleanValue.substring(0, 4);
-                
-                for (let i = 4; i < cleanValue.length; i += 4) {
-                    formattedValue += ' ' + cleanValue.substring(i, i + 4);
-                }
-            } else {
-                formattedValue = cleanValue;
-            }
-            if (value !== formattedValue) {
-                $field.val(formattedValue);
-                value = cleanValue; 
-            }
-        } else {
-            const fieldLimit = Object.keys(numericFieldLimits).find(field => fieldName.includes(field));
-            if (fieldLimit) {
-                let numericValue = value.replace(/[^\d]/g, '');
-                const maxLength = numericFieldLimits[fieldLimit];
-                if (numericValue.length > maxLength) {
-                    numericValue = numericValue.substring(0, maxLength);
-                }
-                
-                // if (!this.wizard.lookup) {
-                //     if (fieldLimit.includes('identity') && numericValue.length === 11) {
-                //         this._lookupCustomerByIdentity(numericValue, 'individual');
-                //         this.wizard.lookup = true;
-                //     }
-                // }
-                
-                if (fieldLimit.includes('phone') && numericValue.length > 0) {
-                    let formattedValue = '';
-                    if (numericValue.length <= 3) {
-                        formattedValue = numericValue;
-                    } else if (numericValue.length <= 6) {
-                        formattedValue = numericValue.substring(0, 3) + ' ' + numericValue.substring(3);
-                    } else {
-                        formattedValue = numericValue.substring(0, 3) + ' ' + 
-                                       numericValue.substring(3, 6) + ' ' + 
-                                       numericValue.substring(6);
-                    }
-
-                    if (value !== formattedValue) {
-                        $field.val(formattedValue);
-                        value = numericValue;
-                    }
-                } else if (value !== numericValue) {
-                    $field.val(numericValue);
-                    value = numericValue;
-                }
-            }
-        }
-
-        $field.removeClass('is-invalid -error just-validate-error-field is-valid');
-        $group.find('.form__error-label, .just-validate-error-label').remove();
-
-        for (const rule of rules) {
-            let isValid = true;
-            let errorMessage = rule.errorMessage;
-
-            if (rule.type === 'required') {
-                isValid = value.trim() !== '';
-            } else if (rule.type === 'custom' && rule.validator) {
-                isValid = rule.validator(value);
-            } else if (rule.type === 'email') {
-                isValid = this._formatEmail(value);
-            } else if (rule.type === 'tckn') {
-                isValid = this._formatTckn(value);
-            } else if (rule.type === 'phone') {
-                isValid = this._formatPhoneNumber(value);
-            }
-
-            if (isValid){
-                $field.addClass('is-valid');
-                rule.isValid = true;
-            } else {
-                $field.addClass('is-invalid -error just-validate-error-field');
-                const $errorDiv = $(`<div class="form__error-label just-validate-error-label">${errorMessage}</div>`);
-                $group.append($errorDiv);
-                rule.isValid = false;
-                return false;
-            }
-        }
-        return true;
-    },
-
     _formatIbanDisplay: function(iban) {
         if (!iban) return '';
         const cleanIban = iban.replace(/\s/g, '').toUpperCase();
@@ -599,12 +807,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return true;
     },
 
-    _formatPhoneNumber: function(value){
-        const cleaned = value.replace(/[^\d+]/g, '');
-        if (cleaned.startsWith('+')) {
-            return /^\+\d{10,15}$/.test(cleaned);
+    _formatPhoneNumber: function(field){
+        if (field.value.length <= 3) {
+        } else if (field.value.length <= 6) {
+            field.value = field.value.substring(0, 3) + ' ' + field.value.substring(3);
         } else {
-            return /^5\d{9}$/.test(cleaned);
+            field.value = field.value.substring(0, 3) + ' ' + 
+                            field.value.substring(3, 6) + ' ' + 
+                            field.value.substring(6);
         }
     },
 
@@ -848,6 +1058,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.phone_corporate.$.val(owner.phone || '');
                         this.seller.input.email_corporate.$.val(owner.email || '');
                         this.seller.input.address_corporate.$.val(this._formatAddress(owner));
+                        if (owner.is_otp_verified) {
+                            this.seller.input.phone_corporate.check.$.removeClass('d-none');
+                            this.seller.input.phone_corporate.error.$.addClass('d-none');
+                        } else {
+                            this.seller.input.phone_corporate.check.$.addClass('d-none');
+                            this.seller.input.phone_corporate.error.$.removeClass('d-none');
+                        }
                     } else {
                         $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
                         this._bindWizardToggle();
@@ -856,6 +1073,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.phone_individual.$.val(owner.phone || '');
                         this.seller.input.email_individual.$.val(owner.email || '');
                         this.seller.input.address_individual.$.val(this._formatAddress(owner));
+                        if (owner.is_otp_verified) {
+                            console.log('test')
+                            this.seller.input.phone_individual.check.$.removeClass('d-none');
+                            this.seller.input.phone_individual.error.$.addClass('d-none');
+                        } else {
+                            this.seller.input.phone_individual.check.$.addClass('d-none');
+                            this.seller.input.phone_individual.error.$.removeClass('d-none');
+                        }
                     }
                     
                     if (owner.bank_ids && owner.bank_ids.length > 0) {
@@ -864,31 +1089,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.iban_individual.$.val(this._formatIbanDisplay(bankAccount.acc_number));
                         this.seller.input.iban_name_individual.$.val(bankAccount.api_merchant || owner.name);
                         this.seller.input.iban_name_corporate.$.val(bankAccount.api_merchant || owner.name);
+                        if (owner.bank_ids[0].is_verified) {
+                            this.seller.input.iban_name_individual.check.$.removeClass('d-none');
+                            this.seller.input.iban_name_individual.error.$.addClass('d-none');
+                        } else {
+                            this.seller.input.iban_name_individual.check.$.addClass('d-none');
+                            this.seller.input.iban_name_individual.error.$.removeClass('d-none');
+                        }
                     }
                     
                 }
-                this._checkRules();
                 return Promise.resolve();
             }).catch(() => {
                 console.warn('Could not load owner data for prefill');
             });
         }
-    },
-
-    _checkRules: function() {
-        const $wiz = $('.escrow-wizard');
-        console.log('check rules')
-        $wiz.find('input[type="text"], input[type="email"], textarea').each((index, element) => {
-            const $field = $(element);
-            const value = $field.val();
-            if (value && value.trim() !== '' && $field.is(':visible')) {
-                const fakeEvent = {
-                    currentTarget: element
-                };
-                console.log('test')
-                this._onInputRequired(fakeEvent);
-            }
-        });
     },
 
     _loadSellerInfoForSidebar: function(adId, ownerId) {
@@ -1279,71 +1494,20 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         window.history.pushState({step: stepNumber}, '', url);
     },
 
-    _validateCurrentStepRules: function() {
-        $('.form__error-label, .just-validate-error-label').remove();
-        $('.form__control').removeClass('is-invalid -error just-validate-error-field');
-        
-        let hasValidationErrors = false;
-        let currentRules = {};
-
-        switch(this.wizard.currentStep) {
-            case 1:
-                currentRules = this.seller.rules || {};
-                break;
-            case 2:
-                currentRules = this.ad.rules || {};
-                break;
-            case 3:
-                currentRules = this.customer.rules || {};
-                break;
-            case 4:
-                currentRules = this.payment.rules || {};
-                break;
-            default:
-                return { isValid: true };
-        }
-
-        const getCurrentMode = () => {
-            const $checkedRadio = $('input[name="userType"]:checked');
-            return $checkedRadio.length ? $checkedRadio.val() : 'individual';
-        };
-        
-        const currentMode = getCurrentMode();
-
-        Object.keys(currentRules).forEach(fieldName => {
-            const rule = currentRules[fieldName];
-            if (!rule[0]?.isValid && rule[0]?.mod === currentMode) {
-                const errorMessage = rule[0]?.errorMessage;
-                const $field = $(`[name="${fieldName}"]`);
-                const $group = $field.closest('.form__group');
-                
-                if (!$group.find('.form__error-label, .just-validate-error-label').length) {
-                    $field.addClass('is-invalid -error just-validate-error-field');
-                    const $errorDiv = $(`<div class="form__error-label just-validate-error-label">${errorMessage}</div>`);
-                    $group.append($errorDiv);
-                }
-                
-                hasValidationErrors = true;
-            }
-        });
-        
-        return { isValid: !hasValidationErrors };
-    },
-
     _nextStep: function () {
         const self = this;
-        
-        const validationResult = this._validateCurrentStepRules();
-        if (!validationResult.isValid) {
-            this.displayNotification({
-                type: 'warning',
-                title: 'Validation Error',
-                message: 'Please fix the errors before proceeding.',
-            });
-            return false;
-        }
-        
         if (this.wizard.currentStep === 1) {
+            for (const input of Object.values(this.seller.input)) {
+                let valid;
+                valid = input.validate();
+                if (!valid) {
+                    return self.displayNotification({
+                        title: 'Error',
+                        message: 'An error occurred while saving seller information.',
+                        type: 'warning',
+                    });
+                }
+            }
             this._saveSellerInfo().then(function(result) {
                 if (result.success && result.partner_id) {
                     self.wizard.sellerId = result.partner_id;
@@ -1957,17 +2121,32 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 const $wiz = $('.escrow-wizard');
                 
                 if (customerType === 'individual') {
-                    $wiz.find('#customer_name_surname').val(data.name || '');
-                    $wiz.find('#customer_phone_individual').val(data.phone || '');
-                    $wiz.find('#customer_email_individual').val(data.email || '');
-                    $wiz.find('#customer_address_individual').val(data.address || '');
+                    this.customer.input.name_surname.$.val(data.name || '');
+                    this.customer.input.phone_individual.$.val(data.phone || '');
+                    this.customer.input.email_individual.$.val(data.email || '');
+                    this.customer.input.address_individual.$.val(data.address || '');
+                    this.customer.input.identity.$.val(data.vat || '');
+                    if (data.is_otp_verified) {
+                            this.customer.input.phone_individual.check.$.removeClass('d-none');
+                            this.customer.input.phone_individual.error.$.addClass('d-none');
+                        } else {
+                            this.customer.input.phone_individual.check.$.addClass('d-none');
+                            this.customer.input.phone_individual.error.$.removeClass('d-none');
+                        }
                 } else {
-                    $wiz.find('#customer_corporate_title').val(data.name || '');
-                    $wiz.find('#customer_tax_office').val(data.tax_office || '');
-                    $wiz.find('#customer_person').val(data.contact_person || '');
-                    $wiz.find('#customer_phone_corporate').val(data.phone || '');
-                    $wiz.find('#customer_email_corporate').val(data.email || '');
-                    $wiz.find('#customer_address_corporate').val(data.address || '');
+                    this.customer.input.corporate_title.$.val(data.name || '');
+                    this.customer.input.tax_number.$.val(data.vat || '');
+                    this.customer.input.tax_office.$.val(data.tax_office || '');
+                    this.customer.input.phone_corporate.$.val(data.phone || '');
+                    this.customer.input.email_corporate.$.val(data.email || '');
+                    this.customer.input.address_corporate.$.val(data.address || '');
+                    if (data.is_otp_verified) {
+                            this.customer.input.phone_corporate.check.$.removeClass('d-none');
+                            this.customer.input.phone_corporate.error.$.addClass('d-none');
+                        } else {
+                            this.customer.input.phone_corporate.check.$.addClass('d-none');
+                            this.customer.input.phone_corporate.error.$.removeClass('d-none');
+                        }
                 }
                 
                 self.displayNotification({
@@ -1980,7 +2159,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }).catch(function(error) {
             console.error('Error looking up customer:', error);
         });
-        this._checkRules()
     },
 
 });
