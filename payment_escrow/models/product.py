@@ -23,6 +23,7 @@ class ProductProduct(models.Model):
     escrow_car_brand_id = fields.Many2one('escrow.car.brand', string='Car Brand')
     escrow_car_model_id = fields.Many2one('escrow.car.model', string='Car Model')
     escrow_car_model_year = fields.Char(string='Car Model Year')
+
     escrow_car_vin = fields.Char(string='Chassis (VIN)')
     escrow_car_plate = fields.Char(string='License Plate')
     escrow_owner_id = fields.Many2one('res.partner', string='Owner', domain=[('system', '=', 'escrow')])

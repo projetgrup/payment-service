@@ -127,6 +127,7 @@ class PaymentTransaction(models.Model):
     jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
 
     paylox_product_ids = fields.One2many('payment.transaction.product', 'transaction_id', 'Products')
+    paylox_basket_ids = fields.One2many('payment.transaction.basket', 'transaction_id', 'Customer Basket')
     paylox_log_ids = fields.One2many('payment.paylox.log', 'transaction_id', 'Logs')
     paylox_log_count = fields.Integer('Log Count', compute='_compute_paylox_log_count')
     paylox_description = fields.Char()
@@ -900,3 +901,19 @@ class PaymentTransactionProduct(models.Model):
     categ = fields.Char()
     brand = fields.Char()
     price = fields.Float()
+
+
+class PaymentTransactionBasket(models.Model):
+    _name = 'payment.transaction.basket'
+    _description = 'Payment Transaction Customer Basket'
+
+    transaction_id = fields.Many2one('payment.transaction', ondelete='cascade')
+    uid = fields.Char('ID')
+    name = fields.Char('Name')
+    description = fields.Char('Description')
+    qty = fields.Integer('Quantity')
+    amount = fields.Float('Amount')
+    physical = fields.Boolean('Physical')
+    category = fields.Char('Category')
+    submerchant_external_id = fields.Char('Submerchant External ID')
+    submerchant_price = fields.Float('Submerchant External Price')

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--<record id="kanban_ad" model="ir.ui.view">
-    <field name="name">payment.escrow.ad.kanban</field>
-    <field name="model">payment.escrow.ad</field>
+    <record id="kanban_ad" model="ir.ui.view">
+    <field name="name">product.product.escrow.ad.kanban</field>
+    <field name="model">product.product</field>
     <field name="arch" type="xml">
         <kanban sample="1">
             <field name="id"/>
@@ -22,7 +22,7 @@
                                 </div>
                                 <field name="priority" widget="priority"/>
                             </div>
-                            <t t-if="record.ref.value">[<field name="ref"/>]</t>
+                            <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
                             <div class="o_kanban_tags_section">
                                 <field name="product_template_attribute_value_ids" widget="many2many_tags" options="{'color_field': 'product_attribute_value_color'}"/>
                             </div>
@@ -43,14 +43,14 @@
     </record>
 
     <record id="tree_ad" model="ir.ui.view">
-    <field name="name">payment.escrow.ad.tree</field>
-    <field name="model">payment.escrow.ad</field>
+    <field name="name">product.product.escrow.ad.tree</field>
+    <field name="model">product.product</field>
     <field name="arch" type="xml">
         <tree multi_edit="1" sample="1">
             <field name="sequence" widget="handle"/>
             <field name="priority" widget="priority" optional="show" nolabel="1"/>
             <field name="name" string="Ad Name" decoration-bf="1"/>
-            <field name="ref" optional="show"/>
+            <field name="default_code" optional="show"/>
             <field name="categ_id" optional="hide"/>
             <field name="uom_id" readonly="1" optional="hide" groups="uom.group_uom"/>
             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" optional="hide"/>
@@ -61,8 +61,8 @@
     </record>
 
     <record id="form_ad" model="ir.ui.view">
-    <field name="name">payment.escrow.ad.form</field>
-    <field name="model">payment.escrow.ad</field>
+    <field name="name">product.product.escrow.ad.form</field>
+    <field name="model">product.product</field>
     <field name="arch" type="xml">
         <form>
             <sheet>
@@ -106,7 +106,8 @@
                 </div>
                 <group>
                     <group name="group_price">
-                        <field name="ref"/>
+                        <!--<field name="price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" attrs="{'invisible': [('payment_price_method', '=', 'formula')], 'readonly': [('payment_price_flow_option', '=', 'dynamic')]}"/>-->
+                        <field name="default_code"/>
                         <field name="barcode"/>
                         <field name="lst_price"/>
                     </group>
@@ -158,8 +159,8 @@
     </record>
 
     <record id="search_ad" model="ir.ui.view">
-    <field name="name">payment.escrow.ad.search</field>
-    <field name="model">payment.escrow.ad</field>
+    <field name="name">product.product.escrow.ad.search</field>
+    <field name="model">product.product</field>
     <field name="arch" type="xml">
         <search>
             <field name="name"/>
@@ -170,5 +171,5 @@
             </group>
         </search>
     </field>
-    </record>-->
+    </record>
 </odoo>

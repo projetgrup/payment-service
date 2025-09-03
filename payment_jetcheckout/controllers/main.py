@@ -1566,6 +1566,19 @@ class PayloxController(http.Controller):
                 data.update({'is_preauth': True})
 
             data.update(self._get_data_values(data, tx, **kwargs))
+            if 'customer_basket' in data:
+                tx.write({'paylox_basket_ids': [(0, 0, {
+                    'uid': basket.get('id'),
+                    'name': basket.get('name'),
+                    'description': basket.get('description'),
+                    'qty': basket.get('qty'),
+                    'amount': basket.get('amount'),
+                    'physical': basket.get('is_physical'),
+                    'category': basket.get('category'),
+                    'submerchant_external_id': basket.get('submerchant_external_id'),
+                    'submerchant_price': basket.get('submerchant_price'),
+                }) for basket in data['customer_basket']]})
+
             response = requests.post(url, data=json.dumps(data))
             result = None
 

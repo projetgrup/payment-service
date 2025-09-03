@@ -1479,7 +1479,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 const installmentData = this._getInstallmentData();
                 const installmentCount = installmentData.id || 1;
                 const row = this._getInstallmentRow(installmentCount);
-                const installmentRate = row.crate;
+                const installmentRate = row?.crate || 0;
                 if (installmentRate > 0) {
                     const advisor = (advice) => {
                         if (advice === 1) {
