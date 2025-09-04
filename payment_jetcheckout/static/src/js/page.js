@@ -389,7 +389,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             delete mask.min;
             delete mask.signed;
         }
-        return mask
+        return mask;
     },
 
     _maskDate: function () {

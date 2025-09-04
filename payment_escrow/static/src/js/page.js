@@ -69,14 +69,18 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
             input: {
                 name: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
+                    prepareChar: str => str.toLocaleUpperCase('tr-TR'),
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.name;
                         let message = null;
                         let valid = true;
-                        if (mod == 'individual' && !field.value) {
-                            message = _t('Name is required');
-                            valid = false;
+                        if (mod == 'individual' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Name is required');
+                                valid = false;
+                            } 
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -103,7 +107,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 phone_individual: new fields.string({
-                    mask: '0000000000',
+                    mask: '000 000 0000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.phone_individual;
@@ -122,35 +126,30 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     error: new fields.element()
                 }),
                 email_individual: new fields.string({
+                    mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.email_individual;
                         let message = null;
                         let valid = true;
-                        if (mod == 'individual' && !field.value) {
-                            message = _t('Email is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                address_individual: new fields.string({
-                    validate: () => {
-                        const mod = $('input[name="userType"]:checked').val();
-                        const field = this.seller.input.address_individual;
-                        let message = null;
-                        let valid = true;
-                        if (mod == 'individual' && !field.value) {
-                            message = _t('Address is required');
-                            valid = false;
+                        if (mod == 'individual' ) {
+                            if (!field.value) {
+                                message = _t('Email is required');
+                                valid = false;
+                            } else  {
+                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                    message = _t('Email format is not correct');
+                                    valid = false;
+                                }
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
                 }),
                 iban_individual: new fields.string({
-                    mask: 'TR00000000000000000000000000',
+                    mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.iban_individual;
@@ -159,6 +158,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
+                                valid = false;
+                            } else if (!this._isIbanValid(field._.masked.value)) {
+                                message = _t('IBAN is not valid');
                                 valid = false;
                             }
                         }
@@ -169,28 +171,41 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     error: new fields.element()
                 }),
                 iban_name_individual: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
+                    prepareChar: str => str.toLocaleUpperCase('tr-TR'),
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.iban_name_individual;
                         let message = null;
                         let valid = true;
-                        if (mod == 'individual' && !field.value) {
-                            message = _t('IBAN name is required');
-                            valid = false;
+                        if (mod == 'individual' ) {
+                            if (!field.value) {
+                                message = _t('IBAN name is required');
+                                valid = false;
+                            } else if (!field._.masked.isComplete) {
+                                message = _t('IBAN name is not correct');
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
                 }),
                 corporate_title: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.corporate_title;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
-                            message = _t('Corporate title is required');
-                            valid = false;
+                        if (mod == 'corporate' ) {
+                            if (!field.value) {
+                                message = _t('Corporate title is required');
+                                valid = false;
+                            } else if (!field._.masked.isComplete) {
+                                message = _t('Corporate title is not correct');
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -207,7 +222,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             if (!field._.masked.isComplete) {
                                 message = _t('Tax ID is required');
                                 valid = false;
-                            } else if (!this._isTcknValid(field.value)) {
+                            } else if (!this._isVatValid(field.value)) {
                                 message = _t('Tax ID is not valid');
                                 valid = false;
                             } 
@@ -216,7 +231,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         return valid;
                     }
                 }),
-                tax_office: new fields.string({
+                /*tax_office: new fields.string({
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.tax_office;
@@ -229,23 +244,29 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
-                }),
+                }),*/
                 corporate_person: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.corporate_person;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
-                            message = _t('Corporate person is required');
-                            valid = false;
+                        if (mod == 'corporate' ) {
+                            if (!field.value) {
+                                message = _t('Corporate person is required');
+                                valid = false;
+                            } else if (!field._.masked.isComplete) {
+                                message = _t('Corporate person is not correct');
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
                 }),
                 phone_corporate: new fields.string({
-                    mask: '0000000000',
+                    mask: '000 000 0000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.phone_corporate;
@@ -264,35 +285,30 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     error: new fields.element()
                 }),
                 email_corporate: new fields.string({
+                    mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.email_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
-                            message = _t('Email is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                address_corporate: new fields.string({
-                    validate: () => {
-                        const mod = $('input[name="userType"]:checked').val();
-                        const field = this.seller.input.address_corporate;
-                        let message = null;
-                        let valid = true;
-                        if (mod == 'corporate' && !field.value) {
-                            message = _t('Email is required');
-                            valid = false;
+                        if (mod == 'corporate' ) {
+                            if (!field.value) {
+                                message = _t('Email is required');
+                                valid = false;
+                            } else  {
+                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                    message = _t('Email format is not correct');
+                                    valid = false;
+                                }
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
                 }),
                 iban_corporate: new fields.string({
-                    mask: 'TR00000000000000000000000000',
+                    mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.iban_corporate;
@@ -301,6 +317,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         if (mod == 'corporate' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
+                                valid = false;
+                            } else if (!this._isIbanValid(field._.masked.value)) {
+                                message = _t('IBAN is not valid');
                                 valid = false;
                             }
                         }
@@ -311,14 +330,20 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     error: new fields.element()
                 }),
                 iban_name_corporate: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.iban_name_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
-                            message = _t('IBAN Name is required');
-                            valid = false;
+                        if (mod == 'corporate' ) {
+                            if (!field.value) {
+                                message = _t('IBAN name is required');
+                                valid = false;
+                            } else if (!field._.masked.isComplete) {
+                                message = _t('IBAN name is not correct');
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -383,14 +408,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     error: new fields.element()
                 }),
                 email_individual: new fields.string({
+                    mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.customer.input.email_individual;
                         let message = null;
                         let valid = true;
-                        if (mod == 'individual' && !field.value) {
-                            message = _t('Email is required');
-                            valid = false;
+                        if (mod == 'individual' ) {
+                            if (!field._.masked.isComplete) {
+                                message = _t('Email is required');
+                                valid = false;
+                            } 
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -546,7 +574,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
 
             input: {
-                img: new fields.file({
+                /*img: new fields.file({
                     allowMultiple: true,
                     accept: 'image/*',
                     maxFileSize: '15MB',
@@ -563,7 +591,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     styleProgressIndicatorPosition: 'right bottom',
                     styleButtonRemoveItemPosition: 'left bottom',
                     styleButtonProcessItemPosition: 'right bottom',
-                }),
+                }),*/
                 name: new fields.string({
                     validate: () => {
                         const field = this.ad.input.name;
@@ -591,6 +619,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 price: new fields.float({
+                    events: [
+                        ['update', function() { this.ad.input.price._.updateValue(); }],
+                    ],
                     mask: payloxPage.prototype._maskAmount.bind(this),
                     validate: () => {
                         const field = this.ad.input.price;
@@ -773,6 +804,36 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return cleanIban;
     },
 
+    _isIbanValid: function(iban) {
+        iban = iban.replace(/\s+/g, '').toUpperCase();
+        if (!/^[A-Z0-9]+$/.test(iban)) {
+            return false;
+        }
+
+        const rearranged = iban.slice(4) + iban.slice(0, 4);
+        let expanded = '';
+        for (let ch of rearranged) {
+            const code = ch.charCodeAt(0);
+            if (code >= 65 && code <= 90) {
+            expanded += (code - 55).toString(); // 'A' → 10
+            } else {
+            expanded += ch;
+            }
+        }
+
+        let remainder = expanded;
+        let block;
+        let total = '';
+
+        while (remainder.length > 0) {
+            block = total + remainder.substring(0, 9);
+            remainder = remainder.substring(9);
+            total = (parseInt(block, 10) % 97).toString();
+        }
+
+        return parseInt(total, 10) === 1;
+    },
+
     _isTcknValid: function(value) {
         if (!/^\d{11}$/.test(value)) {
             return false;
@@ -805,6 +866,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
         
         return true;
+    },
+
+    _isVatValid: function(value) {
+        if (value.length === 10) {
+            let v = [];
+            let lastDigit = Number(value.charAt(9));
+            for (let i = 0; i < 9; i++) {
+                let tmp = (Number(value.charAt(i)) + (9 - i)) % 10;
+                v[i] = (tmp * 2 ** (9 - i)) % 9;
+                if (tmp !== 0 && v[i] === 0) v[i] = 9;
+            }
+            let sum = v.reduce((a, b) => a + b, 0) % 10;
+            return (10 - (sum % 10)) % 10 === lastDigit;
+        }
+        return false;
     },
 
     _formatPhoneNumber: function(field){
@@ -856,9 +932,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
         const reader = new FileReader();
         reader.onload = (e) => {
-            if (this.ad && this.ad.input && this.ad.input.img) {
+            /*if (this.ad && this.ad.input && this.ad.input.img) {
                 this.ad.input.img.value = e.target.result;
-            }
+            }*/
             this._showImagePreview(e.target.result);
         };
         reader.readAsDataURL(file);
@@ -1068,13 +1144,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     } else {
                         $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
                         this._bindWizardToggle();
-                        this.seller.input.name.$.val(owner.name || '');
-                        this.seller.input.tc.$.val(owner.vat || '');
-                        this.seller.input.phone_individual.$.val(owner.phone || '');
-                        this.seller.input.email_individual.$.val(owner.email || '');
-                        this.seller.input.address_individual.$.val(this._formatAddress(owner));
+                        this.seller.input.name.value = owner.name || '';
+                        this.seller.input.tc.value = owner.vat || '';
+                        this.seller.input.phone_individual.value = owner.phone || '';
+                        this.seller.input.email_individual.value = owner.email || '';
                         if (owner.is_otp_verified) {
-                            console.log('test')
                             this.seller.input.phone_individual.check.$.removeClass('d-none');
                             this.seller.input.phone_individual.error.$.addClass('d-none');
                         } else {
@@ -1085,10 +1159,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     
                     if (owner.bank_ids && owner.bank_ids.length > 0) {
                         const bankAccount = owner.bank_ids[0];
-                        this.seller.input.iban_corporate.$.val(this._formatIbanDisplay(bankAccount.acc_number));
-                        this.seller.input.iban_individual.$.val(this._formatIbanDisplay(bankAccount.acc_number));
-                        this.seller.input.iban_name_individual.$.val(bankAccount.api_merchant || owner.name);
-                        this.seller.input.iban_name_corporate.$.val(bankAccount.api_merchant || owner.name);
+                        this.seller.input.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
+                        this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
+                        this.seller.input.iban_name_individual.value = bankAccount.api_merchant || owner.name;
+                        this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || owner.name;
                         if (owner.bank_ids[0].is_verified) {
                             this.seller.input.iban_name_individual.check.$.removeClass('d-none');
                             this.seller.input.iban_name_individual.error.$.addClass('d-none');
@@ -1156,7 +1230,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.year.$.val(adData.year);
         }
 
-        if (adData.img) {
+        /*if (adData.img) {
             let src = adData.img;
             if (typeof src === 'string' && !src.startsWith('data:image/')) {
                 src = 'data:image/png;base64,' + src;
@@ -1165,7 +1239,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 this.ad.input.img.value = src;
             }
             this._showImagePreview(src);
-        }
+        }*/
     },
 
     _formatAddress: function(partner) {
@@ -1192,12 +1266,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         params = {
             id: isEditMode ? this.state.id : null,
             categ_id: parseInt(this.ad.input.category.$.val(), 10) || null,
-            price: this._parsePrice($('#wizard_price').val()),
+            price: this._parsePrice(this.ad.input.price.value),
             escrow_car_vin: this.ad.input.vin.$.val(),
             escrow_car_plate: this.ad.input.plate.$.val(),
             escrow_car_brand_id: parseInt(this.ad.input.brand.$.val(), 10) || null,
             escrow_car_model_year: parseInt(this.ad.input.year.$.val(), 10) || null,
-            image_1920: this.ad.input.img.value || null
+            //image_1920: this.ad.input.img.value || null
         };
         
         if (this.wizard && this.wizard.sellerId) {
@@ -1357,14 +1431,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.name.value = ad.name;
             this.ad.input.categ.value = ad.categ[0];
             this.ad.input.price.value = format.float(ad.price);
-            setTimeout(() => this.ad.input.img.value = ad.img, 1000);
+            //setTimeout(() => this.ad.input.img.value = ad.img, 1000);
 
         } else {
             this.state.id = 0;
             this.ad.input.name.value = '';
             this.ad.input.categ.value = '';
             this.ad.input.price.value = format.float(0);
-            this.ad.input.img.reset();
+            //this.ad.input.img.reset();
         }
     },
 
@@ -1374,6 +1448,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._onChangeStep(step - 1);
         } else {
             this.seller.wizard.$.fadeOut(200, () => {
+                $('.header').removeClass('header__steps');
                 this.seller.ads.$.fadeIn(200);
             });
         }
@@ -1399,6 +1474,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             console.error('Invalid step number:', stepNumber);
             return;
         }
+
+        $('.header').addClass('header__steps');
 
         this.wizard.previousStep = this.wizard.currentStep;
         this.wizard.currentStep = stepNumber;
@@ -1498,8 +1575,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const self = this;
         if (this.wizard.currentStep === 1) {
             for (const input of Object.values(this.seller.input)) {
-                let valid;
-                valid = input.validate();
+                let valid = input.validate();
                 if (!valid) {
                     return self.displayNotification({
                         title: 'Error',

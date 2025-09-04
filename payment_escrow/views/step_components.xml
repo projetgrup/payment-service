@@ -225,8 +225,7 @@
             <form action="#" id="productInfo" class="form">
                 <div class="form__group -mt-lg">
                     <label class="form__label" for="wizard_category">Sale Category</label>
-                    <select id="wizard_category" class="form__control" name="category" field="ad.input.category">
-                        <option value="">Select</option>
+                    <select id="wizard_category" class="form__control" name="category" field="ad.input.category" placeholder="Select a category">
                         <t t-foreach="company.env['product.category'].sudo().with_context(system='escrow').search([('company_id', '=', company.id)])" t-as="categ">
                             <option t-att-value="categ.id" t-esc="categ.name"/>
                         </t>
@@ -234,7 +233,7 @@
                 </div>
                 <div class="form__group -mb-0">
                     <label class="form__label" for="wizard_price">Sale Price</label>
-                    <input id="wizard_price" class="form__control" type="text" name="price" field="ad.input.price"/>
+                    <input id="adInputPrice" type="text" inputmode="decimal" required="required" field="ad.input.price" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" class="form__control"/>
                 </div>
                 <div class="panel mt-3">
                     <div class="panel__header">
@@ -254,8 +253,7 @@
                             </div>
                             <div class="form__group">
                                 <label class="form__label" for="wizard_brand">Brand</label>
-                                <select id="wizard_brand" class="form__control" name="brand" field="ad.input.brand">
-                                    <option value="">Select</option>
+                                <select id="wizard_brand" class="form__control" name="brand" field="ad.input.brand" placeholder="Select a brand">
                                     <t t-foreach="company.env['escrow.car.brand'].sudo().search([])" t-as="brand">
                                         <option t-att-value="brand.id" t-esc="brand.name"/>
                                     </t>

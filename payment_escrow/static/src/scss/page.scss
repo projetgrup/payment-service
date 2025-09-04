@@ -286,6 +286,10 @@
     }
 
     .header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+
         img {
             max-width: 200px;
             max-height: 70px;
@@ -551,14 +555,19 @@
         }
     }
 
-    /* React-like Header */
     .header {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
         padding: 12px 16px;
         border-bottom: 1px solid #edf2f7;
         background: var(--white);
+
+        .header__top {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 1em;
+        }
 
         .header__logo img { height: 30px; }
 
@@ -596,16 +605,6 @@
 
             .icon { color: #1C274C; }
         }
-    }
-
-    /* Sticky Wizard Header */
-    .escrow-wizard-header {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: var(--white);
-        border-bottom: 1px solid var(--color-border);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     /* Info Cards */
@@ -834,6 +833,11 @@
                 }
             }
         }
+
+        @media (max-width: 767px) {
+            width: 100%;
+            right: -100%;
+        }
     }
 
     /* React-like form styles for wizard */
@@ -883,6 +887,20 @@
             bottom: 0;
             top: 40px;
             color: var(--color-error);
+        }
+
+        .select2-container {
+            .select2-choice {
+                color: black;
+                display: inline-block;
+                text-align: left;
+                width: 100%;
+                padding: 0;
+            }
+
+            &.select2-dropdown-open {
+                border-width: 2px !important;
+            }
         }
     }
     .form__group.-mb-0 { margin-bottom: 0; }
@@ -1811,11 +1829,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: solid 1px var(--color-border);
-  padding: calc(1.25rem) 0;
-  position: relative;
-  z-index: 1;
-  background-color: var(--background-color);
 
   @media (max-width: 767px) {
     padding: calc(0.625rem) 0;
@@ -1943,7 +1956,7 @@
 }
 
 // Wizard dışındaki tüm steps'leri gizle
-.steps:not(.escrow-wizard .steps) {
+.header:not(.header__steps) .steps {
     display: none !important;
 }
 

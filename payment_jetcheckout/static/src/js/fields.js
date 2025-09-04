@@ -87,6 +87,9 @@ class fields {
 
     set value(v) {
         this.$.val(v);
+        if (this._) {
+            this._.updateValue();
+        }
     }
 
     get checked() {

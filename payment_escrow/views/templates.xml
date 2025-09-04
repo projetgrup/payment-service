@@ -193,7 +193,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="escrow-ad-edit col-12">
+                        <!--<div class="escrow-ad-edit col-12">
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title"></h3>
                                 <div class="escrow-ad-nav-control">
@@ -239,31 +239,23 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="escrow-ad-edit col-12">
                         </div>
                     </div>
                     <div class="escrow-wizard" field="seller.wizard" style="display:none">
-                        <t t-call="payment_escrow.steps_container_template">
-                            <t t-set="container_class" t-value="'escrow-wizard-header'"/>
-                            <t t-set="step_1_class" t-value="'-active'"/>
-                            <t t-set="step_2_class" t-value="''"/>
-                            <t t-set="step_3_class" t-value="''"/>
-                            <t t-set="step_4_class" t-value="''"/>
-                            <t t-set="step_5_class" t-value="''"/>
-                        </t>
 
                         <div class="row mx-0 w-100 position-relative">
                             <!-- Close Button -->
                             <button type="button" class="btn-close wizard-close-btn position-absolute px-3 py-2" 
-                                style="top: 15px; left: 15px; background: rgba(255,255,255,0.9); border: 1px solid #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" 
+                                style="top: 15px; left: 15px; background: rgba(255,255,255,0.9); z-index: 1; border: 1px solid #ddd; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" 
                                 field="seller.button.close" 
                                 title="Close Wizard">
                                     <i class="fa fa-chevron-left mr8" style="color: #666; font-size: 16px;"/>
                                     <span>Back</span>
                             </button>
                             
-                            <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center">
+                            <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center pt-5 p-sm-0">
                                 <div class="wizard-step wizard-step-1">
                                     <t t-call="payment_escrow.step_1_content"/>
                                 </div>
