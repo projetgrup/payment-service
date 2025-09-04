@@ -25,7 +25,7 @@
                 'partner': ad.escrow_payment_item_id.parent_id.name,
                 'vat': ad.escrow_payment_item_id.parent_id.vat,
                 'iban': ad.escrow_payment_item_id.parent_id.bank_ids and ad.escrow_payment_item_id.parent_id.bank_ids[0]['acc_number'] or '',
-            })" field="ad.item">
+            })" field="ad.item" t-att-data-item-id="ad.escrow_payment_item_id.id" t-att-data-product-id="ad.id">
             <div class="escrow-ad-item-info">
                 <div class="escrow-ad-item-image">
                     <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>

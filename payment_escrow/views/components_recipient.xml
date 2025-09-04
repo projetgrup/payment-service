@@ -36,11 +36,11 @@
     <template id="customer_individual" name="Customer Individual Section">
         <div class="form__group">
             <label class="form__label" for="customer_identity">Identity Number</label>
-            <input class="form__control -letter" name="customer_identity" id="customer_identity" type="text" placeholder="T.C. Identity Number" value="" field="customer.input.identity"/>
+            <input class="form__control -letter" name="customer_identity" id="customer_identity" type="text" placeholder="T.C. Identity Number" value="" field="customer.input.tc"/>
         </div>
         <div class="form__group">
             <label class="form__label" for="customer_name_surname">Full Name</label>
-            <input class="form__control -letter" name="customer_name_surname" id="customer_name_surname" type="text" placeholder="Full Name" value="" field="customer.input.name_surname"/>
+            <input class="form__control -letter" name="customer_name_surname" id="customer_name_surname" type="text" placeholder="Full Name" value="" field="customer.input.name"/>
         </div>
         <div class="form__group">
             <label class="form__label" for="customer_phone_individual">Phone Number</label>

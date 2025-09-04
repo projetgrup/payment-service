@@ -77,10 +77,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
-                            if (!field._.masked.isComplete) {
+                            if (!field.value) {
                                 message = _t('Name is required');
                                 valid = false;
-                            } 
+                            } else if (!field._.masked.isComplete) {
+                                message = _t('name is not correct');
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -354,33 +357,19 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         this.customer = {
             input: {
-                name_surname: new fields.string({
-                    validate: () => {
-                        const mod = $('input[name="userType"]:checked').val();
-                        const field = this.customer.input.name_surname;
-                        let message = null;
-                        let valid = true;
-                        if (mod == 'individual' && !field.value) {
-                            message = _t('Name is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                identity: new fields.string({
+                tc: new fields.string({
                     mask: '00000000000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
-                        const field = this.customer.input.identity;
+                        const field = this.customer.input.tc;
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
-                                message = _t('Identity is required');
+                                message = _t('Tax ID is required');
                                 valid = false;
                             } else if (!this._isTcknValid(field.value)) {
-                                message = _t('Identity is not valid');
+                                message = _t('Tax ID is not valid');
                                 valid = false;
                             } 
                         }
@@ -388,8 +377,29 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         return valid;
                     }
                 }),
+                name: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
+                    prepareChar: str => str.toLocaleUpperCase('tr-TR'),
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.customer.input.name;
+                        let message = null;
+                        let valid = true;
+                        if (mod == 'individual' ) {
+                            if (!field.value) {
+                                message = _t('Name is required');
+                                valid = false;
+                            } else if (!field._.masked.isComplete) {
+                                message = _t('name is not correct');
+                                valid = false;
+                            }
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
                 phone_individual: new fields.string({
-                    mask: '0000000000',
+                    mask: '000 000 0000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.customer.input.phone_individual;
@@ -415,10 +425,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
-                            if (!field._.masked.isComplete) {
+                            if (!field.value) {
                                 message = _t('Email is required');
                                 valid = false;
-                            } 
+                            } else  {
+                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                    message = _t('Email format is not correct');
+                                    valid = false;
+                                }
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -431,7 +447,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' && !field.value) {
-                            message = _t('Email is required');
+                            message = _t('Address is required');
                             valid = false;
                         }
                         this._onFieldValid(field, valid, message);
@@ -439,32 +455,38 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 corporate_title: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.customer.input.corporate_title;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
-                            message = _t('Corporate title is required');
-                            valid = false;
+                        if (mod == 'corporate' ) {
+                            if (!field.value) {
+                                message = _t('Corporate title is required');
+                                valid = false;
+                            } else if (!field._.masked.isComplete) {
+                                message = _t('Corporate title is not correct');
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
                 }),
                 tax_number: new fields.string({
-                    mask: '00000000000',
+                    mask: '0000000000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
-                        const field = this.customer.input.identity;
+                        const field = this.customer.input.tax_number;
                         let message = null;
                         let valid = true;
                         if (mod == 'corporate' ) {
                             if (!field._.masked.isComplete) {
-                                message = _t('Tax number is required');
+                                message = _t('Tax ID is required');
                                 valid = false;
-                            } else if (!this._isTcknValid(field.value)) {
-                                message = _t('Tax number is not valid');
+                            } else if (!this._isVatValid(field.value)) {
+                                message = _t('Tax ID is not valid');
                                 valid = false;
                             } 
                         }
@@ -486,22 +508,28 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         return valid;
                     }
                 }),
-                person: new fields.string({
+                corporate_person: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
-                        const field = this.customer.input.person;
+                        const field = this.customer.input.corporate_person;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
-                            message = _t('Person is required');
-                            valid = false;
+                        if (mod == 'corporate' ) {
+                            if (!field.value) {
+                                message = _t('Corporate person is required');
+                                valid = false;
+                            } else if (!field._.masked.isComplete) {
+                                message = _t('Corporate person is not correct');
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
                 }),
                 phone_corporate: new fields.string({
-                    mask: '0000000000',
+                    mask: '000 000 0000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.customer.input.phone_corporate;
@@ -520,14 +548,23 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     error: new fields.element()
                 }),
                 email_corporate: new fields.string({
+                    mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.customer.input.email_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
-                            message = _t('Email is required');
-                            valid = false;
+                        if (mod == 'corporate' ) {
+                            if (!field.value) {
+                                message = _t('Email is required');
+                                valid = false;
+                            } else  {
+                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                    message = _t('Email format is not correct');
+                                    valid = false;
+                                }
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -592,32 +629,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     styleButtonRemoveItemPosition: 'left bottom',
                     styleButtonProcessItemPosition: 'right bottom',
                 }),*/
-                name: new fields.string({
-                    validate: () => {
-                        const field = this.ad.input.name;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Name is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                categ: new fields.selection({
-                    validate: () => {
-                        const field = this.ad.input.categ;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Category is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
                 price: new fields.float({
                     events: [
                         ['update', function() { this.ad.input.price._.updateValue(); }],
@@ -625,6 +636,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     mask: payloxPage.prototype._maskAmount.bind(this),
                     validate: () => {
                         const field = this.ad.input.price;
+                        this.ad.input.price._.updateValue();
                         let message = null;
                         let valid = true;
                         console.log(field.value);
@@ -639,7 +651,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         return valid;
                     }
                 }),
-                id: new fields.integer(),
+                // id: new fields.integer(),
                 category: new fields.selection({
                     validate: () => {
                         const field = this.ad.input.category;
@@ -738,7 +750,28 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             amount: {
                 previous: new fields.element(),
                 remaining: new fields.element(),
-                total: new fields.element()
+                total: new fields.element(),
+                paid: new fields.float({
+                    events: [
+                        ['update', function() { this.payment.amount.paid._.updateValue(); }],
+                    ],
+                    mask: payloxPage.prototype._maskAmount.bind(this),
+                    validate: () => {
+                        const field = this.payment.amount.paid;
+                        $('span[field="payment.amount.paid"]').text(this._formatCurrency(field.value));
+                        let message = null;
+                        let valid = true;
+                        if (field.value <= 0) {
+                            message = _t('Price must be positive');
+                            valid = false;
+                        } else if (!field.value && !field._.masked.isComplete) {
+                            message = _t('Price is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                })
             },
             transaction: {
                 reference: new fields.element(),
@@ -1627,6 +1660,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (this.wizard.currentStep === 2) {
+            for (const input of Object.values(this.ad.input)) {
+                let valid = input.validate();
+                console.log('Validating input:', input, 'Result:', valid);
+                if (!valid) {
+                    return self.displayNotification({
+                        title: 'Error',
+                        message: 'An error occurred while saving ad information.',
+                        type: 'warning',
+                    });
+                }
+            }
             this._saveAdData().then(function(result) {
                 if (result.success || result.id) {
                     if (result.id) {
@@ -1659,6 +1703,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (this.wizard.currentStep === 3) {
+            for (const input of Object.values(this.customer.input)) {
+                let valid = input.validate();
+                console.log('Validating input:', input, 'Result:', valid);
+                if (!valid) {
+                    return self.displayNotification({
+                        title: 'Error',
+                        message: 'An error occurred while saving customer information.',
+                        type: 'warning',
+                    });
+                }
+            }
             this._saveCustomerInfo().then(function(result) {
                 if (result.success && result.partner_id) {
                     return self._startOtp(result.partner_id).then(function(otpRes){
@@ -1722,6 +1777,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializeCustomerInfoForm: function () {
+        console.log('test')
         this._bindRecipientToggle();
     },
 
@@ -1768,49 +1824,79 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _bindUserTypeToggle: function (cfg) {
-        const $root = typeof cfg.root === 'string' ? $(cfg.root) : cfg.root;
-        if (!$root || !$root.length) return;
-        const radioName = cfg.radioName || 'userType';
-        const $radioInd = $root.find(`input[name="${radioName}"][value="individual"]`);
-        const $radioCor = $root.find(`input[name="${radioName}"][value="corporate"]`);
-        const $ind = cfg.individualSelector ? $root.find(cfg.individualSelector) : $();
-        const $cor = cfg.corporateSelector ? $root.find(cfg.corporateSelector) : $();
-        const $btnInd = cfg.buttonIndividual ? $root.find(cfg.buttonIndividual) : $();
-        const $btnCor = cfg.buttonCorporate ? $root.find(cfg.buttonCorporate) : $();
-        const $slider = cfg.sliderSelector ? $root.find(cfg.sliderSelector) : $();
+    const $root = typeof cfg.root === 'string' ? $(cfg.root) : cfg.root;
+    if (!$root || !$root.length) return;
 
-        function setMode(mode) {
-            const isInd = mode === 'individual';
-            if ($ind.length) $ind.toggleClass('d-none', !isInd).toggle(isInd);
-            if ($cor.length) $cor.toggleClass('d-none', isInd).toggle(!isInd);
+    const radioName = cfg.radioName || 'userType';
+    const $radioInd = $root.find(`input[name="${radioName}"][value="individual"]`);
+    const $radioCor = $root.find(`input[name="${radioName}"][value="corporate"]`);
+    const $ind = cfg.individualSelector ? $root.find(cfg.individualSelector) : $();
+    const $cor = cfg.corporateSelector ? $root.find(cfg.corporateSelector) : $();
+    const $btnInd = cfg.buttonIndividual ? $root.find(cfg.buttonIndividual) : $();
+    const $btnCor = cfg.buttonCorporate ? $root.find(cfg.buttonCorporate) : $();
+    const $slider = cfg.sliderSelector ? $root.find(cfg.sliderSelector) : $();
 
-            if ($radioInd.length) $radioInd.prop('checked', isInd);
-            if ($radioCor.length) $radioCor.prop('checked', !isInd);
+    function setMode(mode) {
+        const isInd = mode === 'individual';
 
-            if ($btnInd.length && $btnCor.length) {
-                $btnInd.toggleClass('btn-dark active', isInd).toggleClass('btn-outline-dark', !isInd);
-                $btnCor.toggleClass('btn-outline-dark', isInd).toggleClass('btn-dark active', !isInd);
-            }
+        // Section toggle
+        if ($ind.length) $ind.toggleClass('d-none', !isInd).toggle(isInd);
+        if ($cor.length) $cor.toggleClass('d-none', isInd).toggle(!isInd);
 
-            if ($slider.length) {
-                $slider.css('transform', isInd ? 'translateX(0%)' : 'translateX(100%)');
-            }
+        // Radio toggle
+        if ($radioInd.length) $radioInd.prop('checked', isInd);
+        if ($radioCor.length) $radioCor.prop('checked', !isInd);
+
+        // Button toggle
+        if ($btnInd.length && $btnCor.length) {
+            $btnInd
+                .toggleClass('btn-dark active', isInd)
+                .toggleClass('btn-outline-dark', !isInd);
+            $btnCor
+                .toggleClass('btn-dark active', !isInd)
+                .toggleClass('btn-outline-dark', isInd);
         }
 
-        $btnInd.off('click.userTypeToggle');
-        $btnCor.off('click.userTypeToggle');
-        $radioInd.off('change.userTypeToggle');
-        $radioCor.off('change.userTypeToggle');
+        // Slider
+        if ($slider.length) {
+            $slider.css('transform', isInd ? 'translateX(0%)' : 'translateX(100%)');
+        }
+    }
 
-        if ($btnInd.length) $btnInd.on('click.userTypeToggle', (e) => { e.preventDefault(); setMode('individual'); });
-        if ($btnCor.length) $btnCor.on('click.userTypeToggle', (e) => { e.preventDefault(); setMode('corporate'); });
-        if ($radioInd.length) $radioInd.on('change.userTypeToggle', () => { if ($radioInd.is(':checked')) setMode('individual'); });
-        if ($radioCor.length) $radioCor.on('change.userTypeToggle', () => { if ($radioCor.is(':checked')) setMode('corporate'); });
+    // Eski eventleri temizle
+    $btnInd.off('click.userTypeToggle');
+    $btnCor.off('click.userTypeToggle');
+    $radioInd.off('change.userTypeToggle');
+    $radioCor.off('change.userTypeToggle');
 
-        const selected = ($root.find(`input[name="${radioName}"]:checked`).val()) || 'individual';
-        setMode(selected === 'corporate' ? 'corporate' : 'individual');
-    },
+    // Yeni eventler
+    if ($btnInd.length) {
+        $btnInd.on('click.userTypeToggle', (e) => {
+            e.preventDefault();
+            setMode('individual');
+        });
+    }
+    if ($btnCor.length) {
+        $btnCor.on('click.userTypeToggle', (e) => {
+            e.preventDefault();
+            setMode('corporate');
+        });
+    }
+    if ($radioInd.length) {
+        $radioInd.on('change.userTypeToggle', () => {
+            if ($radioInd.is(':checked')) setMode('individual');
+        });
+    }
+    if ($radioCor.length) {
+        $radioCor.on('change.userTypeToggle', () => {
+            if ($radioCor.is(':checked')) setMode('corporate');
+        });
+    }
 
+    // Başlangıçta seçili radio’ya göre ayarla
+    const selected = $root.find(`input[name="${radioName}"]:checked`).val() || 'individual';
+    setMode(selected);
+},
     _bindWizardToggle: function () {
         this._bindUserTypeToggle({
             root: $('#sellerInfo'),
@@ -1960,20 +2046,19 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         if (isCardHolderDifferent) {
 
-            data.customer_name_surname = this.customer.input.name_surname.$.val();
-            data.customer_identity = this.customer.input.identity.$.val();
+            data.customer_name_surname = this.customer.input.name.$.val();
+            data.customer_identity = this.customer.input.tc.$.val();
             data.customer_phone = this.customer.input.phone_individual.$.val();
             data.customer_email = this.customer.input.email_individual.$.val();
             data.customer_address = this.customer.input.address_individual.$.val();
-            
             if (this.wizard && this.wizard.customerID) {
                 data.escrow_customer_id = this.wizard.customerID;
             }
         }
 
         if (userType === 'individual') {
-            data.customer_name_surname = this.customer.input.name_surname.$.val();
-            data.customer_identity = this.customer.input.identity.$.val();
+            data.customer_name_surname = this.customer.input.name.$.val();
+            data.customer_identity = this.customer.input.tc.$.val();
             data.customer_phone = this.customer.input.phone_individual.$.val();
             data.customer_email = this.customer.input.email_individual.$.val();
             data.customer_address = this.customer.input.address_individual.$.val();
@@ -2194,8 +2279,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }).then(function(result) {
             if (result && result.success && result.found) {
                 const data = result.customer_data;
-                const $wiz = $('.escrow-wizard');
-                
                 if (customerType === 'individual') {
                     this.customer.input.name_surname.$.val(data.name || '');
                     this.customer.input.phone_individual.$.val(data.phone || '');
@@ -2224,7 +2307,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             this.customer.input.phone_corporate.error.$.removeClass('d-none');
                         }
                 }
-                
                 self.displayNotification({
                     type: 'info',
                     title: 'Customer Found',

@@ -18,7 +18,7 @@
                 <div class="priceBox">
                     <div class="form__group">
                         <label class="form__label" for="paymentAmount">Payment Amount</label>
-                        <input class="form__control" field="amount" name="paymentAmount" id="paymentAmount" type="text" placeholder="Payment Amount"/>
+                        <input class="form__control" field="payment.amount.paid" name="paymentAmount" id="paymentAmount" type="text" placeholder="Payment Amount"/>
                     </div>
                 </div>
                 <p>Remaining Balance: <strong id="remainingBalance" field="payment.amount.remaining">1.900.000 TL</strong>
