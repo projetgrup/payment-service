@@ -83,11 +83,11 @@ class PayloxSystemEscrowController(Controller):
                 if payment_items_paid:
                     url = f'/my/ads?step=5'
                     if item_id:
-                        url += f'&item_id={item_id}&product_id={tx.paylox_product_ids[0]['id']}'
+                        url += f'&item_id={item_id}&product_id={tx.paylox_product_ids[0]['product_id']}'
                 else:
                     url = f'/my/ads?step=4&status=completed'
                     if item_id:
-                        url += f'&item_id={item_id}&product_id={tx.paylox_product_ids[0]['id']}'
+                        url += f'&item_id={item_id}&product_id={tx.paylox_product_ids[0]['product_id']}'
             elif tx.state in ['error', 'cancel']:
                 url = '/my/ads?step=4&status=error'
             else:

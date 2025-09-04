@@ -1342,16 +1342,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.year.$.val(adData.year);
         }
 
-        /*if (adData.img) {
+        if (adData.img) {
             let src = adData.img;
             if (typeof src === 'string' && !src.startsWith('data:image/')) {
                 src = 'data:image/png;base64,' + src;
             }
-            if (this.ad && this.ad.input && this.ad.input.img) {
-                this.ad.input.img.value = src;
+            if (this.wizard && this.wizard.file) {
+                this.wizard.file.value = src;
             }
             this._showImagePreview(src);
-        }*/
+        }
     },
 
     _formatAddress: function(partner) {
@@ -1634,9 +1634,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _showStepContent: function(stepNumber) {
-        $('.wizard-step').fadeOut(200, () => {
-            $(`.wizard-step-${stepNumber}`).fadeIn(200);
-        });
+        const $steps = $('.wizard-step');
+        const $targetStep = $(`.wizard-step-${stepNumber}`);
+        if ($targetStep.is(':visible')) {
+            return;
+        }
+        $steps.stop(true, true);
+        const $currentStep = $steps.filter(':visible');
+        
+        if ($currentStep.length === 0) {
+            $steps.hide();
+            $targetStep.fadeIn(300);
+        } else {
+            $currentStep.fadeOut(250, () => {
+                $targetStep.fadeIn(250);
+            });
+        }
     },
 
     _handleStepSpecificActions: function(stepNumber, options, stateId) {
@@ -1681,6 +1694,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _updateURL: function (stepNumber) {
         const url = new URL(window.location);
         url.searchParams.set('step', stepNumber);
+        url.searchParams.set('item_id', this.state.item_id);
+        url.searchParams.set('product_id', this.state.id);
         window.history.pushState({step: stepNumber}, '', url);
     },
 
@@ -1711,12 +1726,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         if (otpRes && otpRes.success) {
                             self.wizard.otpId = otpRes.otp_id;
                             self._showOtpModal(otpRes.expires_in || 120);
-                            console.log('OTP started:', otpRes.otp_id);
                         } else if (otpRes && otpRes.is_otp_verified) {
                             self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
                             self._markStepCompleted(self.wizard.currentStep);
                             self._onChangeStep(self.wizard.currentStep + 1);
-                            console.log('navigate')
                         } else {
                             self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
                         }

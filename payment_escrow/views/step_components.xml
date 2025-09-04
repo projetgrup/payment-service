@@ -418,7 +418,7 @@
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="card_number"><span>Card Number</span></label>
-                            <input id="card_number" class="form__control -letter" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
+                            <input id="card_number" class="form__control -letter" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number" placeholder="---- ---- ---- ----"/>
                             <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row justify-content-center'}" field="card.logo"/>
                             <div t-attf-class="#{'d-none' if no_card_family else 'ccicon overflow-hidden fade card flex-row justify-content-center'}" field="card.icon"/>
                         </div>

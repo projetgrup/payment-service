@@ -2614,3 +2614,51 @@
         }
     }
 }
+
+/* Wizard Step Transitions */
+.wizard-step {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+    
+    &.fade-in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    &.fade-out {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Smooth step content animations */
+.wizard-step {
+    opacity: 0;
+    transform: translateY(20px);
+    
+    &:not(.d-none) {
+        animation: slideInUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
