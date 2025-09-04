@@ -857,7 +857,34 @@
     }
     .panel__header { text-align: center; }
     .panel__header h3 { font-size: calc(1rem); font-weight: 600; }
-    .form__group { display: flex; flex-direction: column; margin-bottom: 15px; position: relative; }
+    .form__group { 
+        display: flex; 
+        flex-direction: column; 
+        margin-bottom: 15px; 
+        position: relative;
+
+        i.fa-phone-square{
+            position: absolute;
+            right: 15px;
+            bottom: 0;
+            top: 40px;
+            color: var(--success);
+        }
+        i.fa-check{
+            position: absolute;
+            right: 15px;
+            bottom: 0;
+            top: 40px;
+            color: var(--success);
+        }
+        i.fa-times{
+            position: absolute;
+            right: 15px;
+            bottom: 0;
+            top: 40px;
+            color: var(--color-error);
+        }
+    }
     .form__group.-mb-0 { margin-bottom: 0; }
     .form__group.-mt-lg { margin-top: 30px; }
     .form__label { font-size: 14px; font-weight: 500; color: var(--text-color); margin-bottom: 0; }

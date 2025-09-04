@@ -637,6 +637,7 @@ class PayloxSystemEscrowController(Controller):
                         'address': partner.street or '',
                         'is_otp_verified': partner.is_otp_verified,
                         'tax_office': getattr(partner, 'paylox_tax_office', '') if customer_type == 'corporate' else '',
+                        'vat': partner.vat,
                         'contact_person': getattr(partner, 'contact_person', '') if customer_type == 'corporate' else '',
                     }
                 }
@@ -762,6 +763,7 @@ class PayloxSystemEscrowController(Controller):
                     'acc_number': bank.acc_number,
                     'api_merchant': bank.acc_holder_name,
                     'bank_name': bank.bank_id.name if bank.bank_id else '',
+                    'is_verified': bank.api_state,
                 })
             
             partner_data = {

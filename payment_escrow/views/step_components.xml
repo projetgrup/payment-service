@@ -158,14 +158,6 @@
                         <div class="form__group">
                             <label class="form__label -between" for="wizard_iban_corp">
                                 <span>Transfer IBAN</span>
-                                <span class="form__loading d-none">
-                                    <svg fill="hsl(228, 97%, 42%)" width="12" height="12" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z">
-                                            <animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/>
-                                        </path>
-                                    </svg>
-                                    Verifying..
-                                </span>
                             </label>
                             <input class="form__control -letter" id="wizard_iban_corp" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_corporate"/>
                         </div>
@@ -194,11 +186,12 @@
                         <div class="form__group">
                             <label class="form__label" for="wizard_tckn">T.C. Identity Number</label>
                             <input class="form__control -letter" id="wizard_tckn" name="tc" type="text" placeholder="T.C. Identity Number" field="seller.input.tc"/>
-                            <div class="form__error d-none">Please enter a valid TCKN.</div>
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="phone_individual">Mobile Phone</label>
                             <input class="form__control -letter" id="phone_individual" name="phone" type="text" placeholder="E.g.: 532 123 3456" field="seller.input.phone_individual"/>
+                            <i class="fa fa-phone-square d-none" field="seller.input.phone_individual.check"/>
+                            <i class="fa fa-times" field="seller.input.phone_individual.error"/>
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="email_individual">E-Mail</label>
@@ -207,17 +200,10 @@
                         <div class="form__group">
                             <label class="form__label -between" for="wizard_iban">
                                 <span>Transfer IBAN</span>
-                                <span class="form__loading d-none">
-                                    <svg fill="hsl(228, 97%, 42%)" width="12" height="12" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z">
-                                            <animateTransform attributeName="transform" type="rotate" dur="0.75s" values="0 12 12;360 12 12" repeatCount="indefinite"/>
-                                        </path>
-                                    </svg>
-                                    Checked...
-                                </span>
                             </label>
                             <input class="form__control -letter" id="wizard_iban" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_individual"/>
-                            <div class="form__error d-none">Please enter a valid IBAN.</div>
+                            <i class="fa fa-check d-none" field="seller.input.iban_individual.check"/>
+                            <i class="fa fa-times" field="seller.input.iban_individual.error"/>
                         </div>
                         <div class="form__group -mb-0">
                             <label class="form__label" for="ibanaccountname_individual">Transferring account name</label>

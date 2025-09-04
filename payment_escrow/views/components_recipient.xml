@@ -24,6 +24,8 @@
         <div class="form__group">
             <label class="form__label" for="customer_phone_corporate">Authorized Mobile Phone</label>
             <input class="form__control -letter" name="customer_phone" id="customer_phone_corporate" type="text" placeholder="e.g: 532 123 3456" value="" field="customer.input.phone_corporate"/>
+            <i class="fa fa-phone-square d-none" field="customer.input.phone_corporate.check"/>
+            <i class="fa fa fa-times" field="customer.input.phone_corporate.error"/>
         </div>
         <div class="form__group">
             <label class="form__label" for="customer_email_corporate">Authorized Email</label>
@@ -43,6 +45,8 @@
         <div class="form__group">
             <label class="form__label" for="customer_phone_individual">Phone Number</label>
             <input class="form__control -letter" name="customer_phone" id="customer_phone_individual" type="text" placeholder="Exp: 532 123 3456" value="" field="customer.input.phone_individual"/>
+            <i class="fa fa-phone-square d-none" field="customer.input.phone_individual.check"/>
+            <i class="fa fa fa-times" field="customer.input.phone_individual.error"/>
         </div>
         <div class="form__group">
             <label class="form__label" for="customer_email_individual">E-mail</label>
