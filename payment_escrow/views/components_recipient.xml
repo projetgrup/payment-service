@@ -19,7 +19,7 @@
         </div>
         <div class="form__group">
             <label class="form__label" for="customer_person">Authorized Person</label>
-            <input class="form__control -letter" name="customer_person" id="customer_person" type="text" placeholder="Authorized Person" value="" field="customer.input.person"/>
+            <input class="form__control -letter" name="customer_person" id="customer_person" type="text" placeholder="Authorized Person" value="" field="customer.input.corporate_person"/>
         </div>
         <div class="form__group">
             <label class="form__label" for="customer_phone_corporate">Authorized Mobile Phone</label>

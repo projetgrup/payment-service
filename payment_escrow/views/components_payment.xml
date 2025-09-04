@@ -11,6 +11,24 @@
                 <p>Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and customer information are different.</p>
             </div>
         </div>
+        <div field="payment.different.info.container" style="display:none">
+            <div class="form__group">
+                <label class="form__label" for="payment_different_info_tc">Identity Number</label>
+                <input class="form__control -letter" name="payment_different_info_tc" id="payment_different_info_tc" type="text" placeholder="T.C. Identity Number" value="" field="payment.different.info.tc"/>
+            </div>
+            <div class="form__group">
+                <label class="form__label" for="payment_different_info_name">Full Name</label>
+                <input class="form__control -letter" name="payment_different_info_name" id="payment_different_info_name" type="text" placeholder="Full Name" value="" field="payment.different.info.name"/>
+            </div>
+            <div class="form__group">
+                <label class="form__label" for="payment_different_info_phone">Phone Number</label>
+                <input class="form__control -letter" name="payment_different_info_phone" id="payment_different_info_phone" type="text" placeholder="Exp: 532 123 3456" value="" field="payment.different.info.phone"/>
+            </div>
+            <div class="form__group">
+                <label class="form__label" for="payment_different_info_email">E-mail</label>
+                <input class="form__control -letter" name="payment_different_info_email" id="payment_different_info_email" type="email" placeholder="test@mail.com" value="" field="payment.different.info.email"/>
+            </div>
+        </div>
     </template>
     <template id="payment_partial_price" name="Payment Partial Price">
         <div class="partialPrice">
@@ -18,7 +36,7 @@
                 <div class="priceBox">
                     <div class="form__group">
                         <label class="form__label" for="paymentAmount">Payment Amount</label>
-                        <input class="form__control" field="payment.amount.paid" name="paymentAmount" id="paymentAmount" type="text" placeholder="Payment Amount"/>
+                        <input class="form__control" field="amount" name="paymentAmount" id="paymentAmount" type="text" placeholder="Payment Amount"/>
                     </div>
                 </div>
                 <p>Remaining Balance: <strong id="remainingBalance" field="payment.amount.remaining">1.900.000 TL</strong>

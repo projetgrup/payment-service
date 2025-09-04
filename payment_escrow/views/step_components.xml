@@ -305,11 +305,11 @@
                             <div class="radioTab">
                                 <div class="radioTab__slider"></div>
                                 <label class="radioTab__label">
-                                    <input type="radio" class="radioTab__control" name="userType" value="individual"/>
+                                    <input type="radio" class="radioTab__control" name="customerUserType" value="individual"/>
                                     <span>Individual</span>
                                 </label>
                                 <label class="radioTab__label">
-                                    <input type="radio" class="radioTab__control" name="userType" value="corporate"/>
+                                    <input type="radio" class="radioTab__control" name="customerUserType" value="corporate"/>
                                     <span>Corporate</span>
                                 </label>
                             </div>
@@ -394,7 +394,7 @@
                     
                     <!-- Return to Payment Button -->
                     <div class="mt-4 text-center">
-                        <button type="button" class="btn btn-outline-primary btn-lg px-4" field="payment.button.return">
+                        <button type="button" class="btn px-4" field="payment.button.return">
                             <i class="fa fa-arrow-left mr-2"></i>
                             Ödeme Adımına Geri Dön
                         </button>
@@ -416,10 +416,9 @@
                             <label for="card_holder_name" class="form__label">Name Surname</label>
                             <input type="text" field="card.holder" name="card_holder_name" id="card_holder_name" class="form__control -letter" placeholder="Name Surname"/>
                         </div>
-                        <div class="field-container field-number fade show">
-                            <label class="card_label" for="card_number"><span>Card Number</span></label>
-                            <input id="card_number" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
-                            <span class="bar-container"/>
+                        <div class="form__group">
+                            <label class="form__label" for="card_number"><span>Card Number</span></label>
+                            <input id="card_number" class="form__control -letter" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number"/>
                             <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row justify-content-center'}" field="card.logo"/>
                             <div t-attf-class="#{'d-none' if no_card_family else 'ccicon overflow-hidden fade card flex-row justify-content-center'}" field="card.icon"/>
                         </div>
@@ -450,7 +449,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form__row" id="installmentOptionsContainer">
+                        <div class="form__row mt-3" id="installmentOptionsContainer">
                             <div class="form__col">
                                 <div class="form__group">
                                     <div class="form__label">Installment Options</div>
@@ -473,7 +472,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form__group d-none" field="assignment.form.section">
+                        <div class="form__group" field="assignment.form.section" style="display:none">
                             <div class="form__label">Assignment Form Information</div>
                             <p class="form__infoText">You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature.</p>
                             <div class="download">
@@ -514,7 +513,7 @@
                                 </t>
                             </div>
                             <div class="form__group">
-                                <button class="payment__button">
+                                <button class="payment__button" field="payment.button">
                                     <div class="payment__info">
                                         <span class="label">Payment Amount</span>
                                         <span class="amount" field="payment.amount.paid">0 TL</span>

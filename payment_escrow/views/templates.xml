@@ -158,7 +158,7 @@
                 </t>
 
                 <div class="escrow-ad-container">
-                    <div class="col-12 col-lg-8 mx-auto p-2 d-flex justify-content-center">
+                    <div class="col-12 col-lg-8 mx-auto p-2 d-flex justify-content-center" t-att-style="'display:none !important' if step &gt;= 1 else None">
                         <div class="col-12" field="seller.ads">
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title">My Ads</h3>
@@ -243,7 +243,7 @@
                         <div class="escrow-ad-edit col-12">
                         </div>
                     </div>
-                    <div class="escrow-wizard" field="seller.wizard" style="display:none">
+                    <div class="escrow-wizard" field="seller.wizard" t-att-style="'display:none' if step &lt; 1 else None">
 
                         <div class="row mx-0 w-100 position-relative">
                             <!-- Close Button -->
@@ -256,23 +256,23 @@
                             </button>
                             
                             <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center pt-5 p-sm-0">
-                                <div class="wizard-step wizard-step-1">
+                                <div class="wizard-step wizard-step-1" t-att-style="'display:none' if step != 1 else None">
                                     <t t-call="payment_escrow.step_1_content"/>
                                 </div>
 
-                                <div class="wizard-step wizard-step-2 d-none">
+                                <div class="wizard-step wizard-step-2" t-att-style="'display:none' if step != 2 else None">
                                     <t t-call="payment_escrow.step_2_content"/>
                                 </div>
 
-                                <div class="wizard-step wizard-step-3 d-none">
+                                <div class="wizard-step wizard-step-3" t-att-style="'display:none' if step != 3 else None">
                                     <t t-call="payment_escrow.step_3_content"/>
                                 </div>
 
-                                <div class="wizard-step wizard-step-4 d-none">
+                                <div class="wizard-step wizard-step-4" t-att-style="'display:none' if step != 4 else None">
                                     <t t-call="payment_escrow.step_4_content"/>
                                 </div>
 
-                                <div class="wizard-step wizard-step-5 d-none">
+                                <div class="wizard-step wizard-step-5" t-att-style="'display:none' if step != 5 else None">
                                     <t t-call="payment_escrow.step_5_content"/>
                                 </div>
                             </div>

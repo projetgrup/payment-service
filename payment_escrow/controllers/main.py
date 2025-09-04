@@ -212,7 +212,7 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.country_id.name)
             values.update({
                 'submerchant_external_id': reference_seller,
-                'is_submerchant_payment': True,
+                #'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
                     "name": fullname[0],
@@ -324,12 +324,17 @@ class PayloxSystemEscrowController(Controller):
         if user.share:
             domain.append(('broker_id', '=', partner.id))
         ads = request.env['product.product'].sudo().with_context(system='escrow').search(domain)
+        try:
+            step = int(kwargs['step'])
+        except:
+            step = 0
         values = {
             'ads': ads,
             'partner': partner,
             'company': company,
             'currency': company.currency_id,
             'agreements': self._get_agreements(),
+            'step': step,
         }
         return request.render('payment_escrow.page_ads', values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
