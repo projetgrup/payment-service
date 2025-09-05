@@ -31,6 +31,7 @@
         'views/step_components.xml',
         'views/templates.xml',
         'views/settings.xml',
+        'wizards/sync.xml',
     ],
     'assets': {
         'web.assets_frontend': [
@@ -53,6 +54,12 @@
         ],
         'web.assets_qweb': [
             'payment_escrow/static/src/xml/templates.xml',
+            'payment_escrow/static/src/xml/button.xml',
+        ],
+        
+        'web.assets_backend': [
+            'payment_escrow/static/src/js/button.js',
+            'payment_escrow/static/src/js/view.js',
         ],
     },
 }

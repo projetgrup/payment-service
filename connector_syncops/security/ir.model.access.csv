@@ -19,5 +19,3 @@ syncops_settings_notif_type_user,syncops_settings_notif_type_user,model_syncops_
 
 syncops_log_user,syncops_log_user,model_syncops_log,base.group_user,1,0,0,0
 syncops_log_wizard_user,syncops_log_wizard_user,model_syncops_log_wizard,base.group_user,1,1,1,1
-syncops_sync_wizard_user,syncops_sync_wizard_user,model_syncops_sync_wizard,base.group_user,1,1,1,1
-syncops_sync_wizard_line_user,syncops_sync_wizard_line_user,model_syncops_sync_wizard_line,base.group_user,1,1,1,1

@@ -171,4 +171,11 @@
     <field name="target">inline</field>
     <field name="context">{'active_system': 'escrow'}</field>
     </record>
+
+    <record id="action_sync" model="ir.actions.server">
+    <field name="name">Sync</field>
+    <field name="model_id" ref="payment_escrow.model_escrow_sync"/>
+    <field name="state">code</field>
+    <field name="code">action = model.action_sync()</field>
+    </record>
 </odoo>

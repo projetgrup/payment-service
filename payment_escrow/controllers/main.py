@@ -447,6 +447,34 @@ class PayloxSystemEscrowController(Controller):
             'id': product.id,
             'item_id': item.id
         }
+    
+    @route(['/my/ad/vin/check'], type='json', auth='user', methods=['POST'], website=True)
+    def page_my_ad_vin_check(self, **kwargs):
+        vin = kwargs.get('vin')
+        company = request.env.company
+        if not vin:
+            return {'error': _('VIN is required.')}
+
+        result, message = self.env['syncops.connector'].sudo()._execute('other_get_vpic_vin_brand', reference=str(vin), params={
+            'vin': vin
+        },company=company,  message=True)
+        if not result:
+            return {'error': message}
+        res = result[0]
+
+        brand = request.env['escrow.car.brand'].sudo().search([('brand_id', '=', res.get('brand_id'))], limit=1)
+        model = request.env['escrow.car.model'].sudo().search([('model_id', '=', res.get('model_id')), ('brand_id', '=', brand.id)], limit=1) if brand else None
+
+        return {
+            'success': True,
+            'data': {
+                'brand_id': brand.id if brand else None,
+                'brand_name': brand.name if brand else None,
+                'model_id': model.id if model else None,
+                'model_name': model.name if model else None,
+                'model_year': res.get('year') or None,
+            }
+        }
 
     @route(['/my/ad/delete'], type='json', auth='user', website=True)
     def page_my_ad_delete(self, **kwargs):
@@ -463,7 +491,6 @@ class PayloxSystemEscrowController(Controller):
 
     @route(['/my/iban/check'], type='json', auth='user', methods=['POST'], website=True)
     def check_iban(self, **kwargs):
-        """Check IBAN validity using syncOPS if available"""
         try:
             iban = kwargs.get('iban', '').replace(' ', '').upper()
             vat = kwargs.get('vat', '')
@@ -549,8 +576,6 @@ class PayloxSystemEscrowController(Controller):
             }
             iban = kwargs.get('seller_iban', '')
             vat = kwargs.get('seller_tax_number', '') if kwargs.get('seller_type') == 'corporate' else kwargs.get('seller_tc_number', '')
-            
-            # Validate IBAN if provided
             if iban:
                 iban_check = self.check_iban(iban=iban, vat=vat)
                 if not iban_check.get('success', False):
