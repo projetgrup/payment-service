@@ -160,16 +160,16 @@ class file extends fields {
         Object.assign(props, this.options);
         if (!FilePondInitialized) initFilePond();
         this._ = FilePond.create(this.$[0], props);
+        console.log(this._);
+        this.$ = $(this._.element);
     }
 
     get value() {
-        const file = this._.getFile()
+        const file = this._.getFile();
         return file ? file.getFileEncodeBase64String() : false;
     }
 
     set value(v) {
-        this.$.html(v);
-        this.$.trigger('change');
         this._.addFile(v);
     }
 
