@@ -15,7 +15,6 @@
                     <t t-set="variant" t-value="'payment'"/>
                     <t t-set="company" t-value="tx.company_id"/>
                 </t>
-                <div style="position: fixed; z-index: 9999; inset: 16px; pointer-events: none;"></div>
 
                 <!-- Payment Steps - Using Template Component -->
                 <t t-call="payment_escrow.steps_container_template">
@@ -148,9 +147,7 @@
             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-call="payment_jetcheckout.payment_loading"/>
-            
             <t t-call="payment_escrow.background_animation"/>
-            
             <div class="escrow-ad-wrapper">
                 <t t-call="payment_escrow.header">
                     <t t-set="variant" t-value="'ads'"/>
@@ -158,8 +155,8 @@
                 </t>
 
                 <div class="escrow-ad-container">
-                    <div class="col-12 col-lg-8 mx-auto p-2 d-flex justify-content-center" t-att-style="'display:none !important' if step &gt;= 1 else None">
-                        <div class="col-12" field="seller.ads">
+                    <div class="col-12 col-lg-8 mx-auto p-2 escrow-ad-dashboard" style="display:none" field="seller.ads">
+                        <div class="col-12">
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title">My Ads</h3>
                                 <div class="escrow-ad-nav-control">
@@ -193,58 +190,8 @@
                                 </div>
                             </div>
                         </div>
-                        <!--<div class="escrow-ad-edit col-12">
-                            <div class="escrow-ad-nav">
-                                <h3 class="escrow-ad-nav-title"></h3>
-                                <div class="escrow-ad-nav-control">
-                                    <button class="btn escrow-ad-nav-button-primary" title="Add New Ad" data-view="form" field="ad.button.save">
-                                        <i class="fa fa-save mr8"/>
-                                        Save
-                                    </button>
-                                    <button class="btn escrow-ad-nav-button-secondary" data-view="list" field="ad.button.discard">Discard</button>
-                                </div>
-                            </div>
-                            <div class="escrow-ad-form form-view" field="ad.view.form">
-                                <div class="escrow-ad-form-container">
-                                    <div class="field-container field-name">
-                                        <input id="adInputName" type="text" class="text-center" required="required" field="ad.input.name"/>
-                                        <span class="bar-container"/>
-                                        <label for="adInputName">
-                                            <span>Name</span>
-                                        </label>
-                                    </div>
-                                    <div class="field-container field-categ">
-                                        <select required="required" field="ad.input.categ" placeholder="Select a category">
-                                            <option/>
-                                            <t t-foreach="company.env['product.category'].sudo().with_context(system='escrow').search_read([('company_id', '=', company.id)])" t-as="categ">
-                                                <option t-att-value="categ['id']" t-esc="categ['name']"/>
-                                            </t>
-                                        </select>
-                                        <span class="bar-container"/>
-                                        <label for="adInputCateg">
-                                            <span>Category</span>
-                                        </label>
-                                    </div>
-                                    <div class="field-img">
-                                        <input type="file" class="filepond" name="filepond" accept="image/png, image/jpeg, image/gif" field="ad.input.img"/>
-                                    </div>
-                                    <div class="field-container field-price">
-                                        <input id="adInputPrice" type="text" inputmode="decimal" required="required" field="ad.input.price" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" class="text-center"/>
-                                        <span class="bar-container"/>
-                                        <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
-                                        <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
-                                        <label for="adInputPrice">
-                                            <span>Price</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-                        <div class="escrow-ad-edit col-12">
-                        </div>
                     </div>
-                    <div class="escrow-wizard" field="seller.wizard" t-att-style="'display:none' if step &lt; 1 else None">
-
+                    <div class="escrow-wizard" field="seller.wizard" style="display:none">
                         <div class="row mx-0 w-100 position-relative">
                             <!-- Close Button -->
                             <button type="button" class="btn-close wizard-close-btn position-absolute px-3 py-2" 
@@ -256,23 +203,23 @@
                             </button>
                             
                             <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center pt-5 p-sm-0">
-                                <div class="wizard-step wizard-step-1" t-att-style="'display:none' if step != 1 else None">
+                                <div class="wizard-step wizard-step-1" style="display:none">
                                     <t t-call="payment_escrow.step_1_content"/>
                                 </div>
 
-                                <div class="wizard-step wizard-step-2" t-att-style="'display:none' if step != 2 else None">
+                                <div class="wizard-step wizard-step-2" style="display:none">
                                     <t t-call="payment_escrow.step_2_content"/>
                                 </div>
 
-                                <div class="wizard-step wizard-step-3" t-att-style="'display:none' if step != 3 else None">
+                                <div class="wizard-step wizard-step-3" style="display:none">
                                     <t t-call="payment_escrow.step_3_content"/>
                                 </div>
 
-                                <div class="wizard-step wizard-step-4" t-att-style="'display:none' if step != 4 else None">
+                                <div class="wizard-step wizard-step-4" style="display:none">
                                     <t t-call="payment_escrow.step_4_content"/>
                                 </div>
 
-                                <div class="wizard-step wizard-step-5" t-att-style="'display:none' if step != 5 else None">
+                                <div class="wizard-step wizard-step-5" style="display:none">
                                     <t t-call="payment_escrow.step_5_content"/>
                                 </div>
                             </div>

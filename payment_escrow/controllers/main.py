@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
+import json
+import base64
 import logging
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 from odoo import _, fields
 from odoo import http
 from odoo.http import route, request
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round
 from odoo.addons.portal.controllers import portal
-from odoo.addons.payment_system_agreement.controllers.main import PayloxAgreementController as Controller
+from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 from odoo.addons.base.models.res_bank import sanitize_account_number
 
 _logger = logging.getLogger(__name__)
@@ -334,6 +336,15 @@ class PayloxSystemEscrowController(Controller):
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_my_ads(self, **kwargs):
+        hash = kwargs.get('')
+        values = {}
+        if hash:
+            try:
+                value = base64.b64decode(unquote(hash)).decode('utf-8')
+                values = json.loads(value)
+            except:
+                pass
+
         company = request.env.company
         user = request.env.user
         partner = user.partner_id
@@ -341,10 +352,12 @@ class PayloxSystemEscrowController(Controller):
         if user.share:
             domain.append(('broker_id', '=', partner.id))
         ads = request.env['product.product'].sudo().with_context(system='escrow').search(domain)
+
         try:
-            step = int(kwargs['step'])
+            step = int(values['s'])
         except:
             step = 0
+
         values = {
             'ads': ads,
             'partner': partner,

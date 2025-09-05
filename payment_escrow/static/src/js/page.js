@@ -23,7 +23,20 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.values = {
             ads: {},
         };
+        this.state = {
+            id: 0,
+            step: 0,
+        };
 
+        this.currency = {
+            id: 0,
+            decimal: 2,
+            name: '',
+            separator: '.',
+            thousand: ',', 
+            position: 'after',
+            symbol: '', 
+        };
         this.wizard = {
             lookup: false,
             button: {
@@ -40,23 +53,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             file: new fields.element({
                 events: [['change', this._onFileChange]]
             })
-        };
-
-        this.state = {
-            id: 0,
-            item_id: 0,
-            amount: 0,
-            residual_amount: 0,
-            paid_amount: 0,
-        };
-        this.currency = {
-            id: 0,
-            decimal: 2,
-            name: '',
-            separator: '.',
-            thousand: ',', 
-            position: 'after',
-            symbol: '', 
         };
         this.amount = new fields.float({
             events: [
@@ -771,7 +767,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         <span class="text-600">Select Image or Take New</span>
                         <div class="text-600">No Image Selected</div>`,
                     validate: () => {
-                        return true;
+                        const field = this.ad.input.fileLicence;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Licence image is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
                     },
                 }),
             },
@@ -912,14 +916,35 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         };
     },
 
+    _startState: function () {
+        //let hash = window.location.hash.split('#')[1];
+        let hash = new URLSearchParams(window.location.search).get('');
+        if (hash) {
+            try {
+                let state = JSON.parse(atob(hash));
+                Object.assign(this.state, {
+                    id: state.i,
+                    step: state.s,
+                });
+            } catch {
+                window.history.replaceState(null, '', window.location.pathname);
+            }
+        }
+        this._onChangeStep(this.state.step, { init: true });
+    },
+
+    _startToggles: function() {
+        this._bindWizardToggle();
+    },
+
     start: function () {
         return this._super.apply(this, arguments).then(() => {
             payloxPage.prototype._setCurrency.apply(this);
             payloxPage.prototype._start.apply(this);
             this._parseAds();
-            this._bindWizardToggle();
-            this._bindWizardSteps();
-            this._checkSuccess();
+            this._startState();
+            this._startToggles();
+            $('.escrow-ad-wrapper').removeClass('d-none');
             framework.hideLoading();
         });
     },
@@ -1377,14 +1402,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (adData.img) {
-            let src = adData.img;
-            if (typeof src === 'string' && !src.startsWith('data:image/')) {
-                src = 'data:image/png;base64,' + src;
-            }
-            if (this.wizard && this.wizard.file) {
-                this.wizard.file.value = src;
-            }
-            this._showImagePreview(src);
+            this.ad.input.fileLicence.value = adData.img;
         }
     },
 
@@ -1589,62 +1607,40 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickWizardClose: function () {
-        const step = this.wizard.currentStep;
-        if (step > 1) {
-            this._onChangeStep(step - 1);
-        } else {
+        this._onChangeStep(this.wizard.currentStep - 1);
+    },
+
+    _onChangeStep: function (step, options={}) {
+        if (step < 0 || step > 5) {
+            return;
+        }
+
+        if (step === 0) {
             this.seller.wizard.$.fadeOut(200, () => {
                 $('.header').removeClass('header__steps');
                 this.seller.ads.$.fadeIn(200);
             });
-        }
-    },
-
-    _bindWizardSteps: function () {
-        if (!$('.steps').length) return;
-        this.wizard = {
-            currentStep: this._getCurrentStepFromURL() || 1,
-            previousStep: 1
-        };
-
-    },
-
-    _getCurrentStepFromURL: function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const step = urlParams.get('step');
-        return step ? parseInt(step) : null;
-    },
-
-    _onChangeStep: function(stepNumber, options = {}, stateId) {
-        if (stepNumber < 1 || stepNumber > 5) {
-            console.error('Invalid step number:', stepNumber);
-            return;
+        } else { 
+            $('.header').addClass('header__steps');
+            this.wizard.previousStep = this.wizard.currentStep;
+            this.wizard.currentStep = step;
+            this._ensureWizardVisible();
+            this._updateStepHeaders(step, options);
+            this._showStepContent(step);
+            this._handleStepSpecificActions(step, options);
         }
 
-        $('.header').addClass('header__steps');
-
-        this.wizard.previousStep = this.wizard.currentStep;
-        this.wizard.currentStep = stepNumber;
-        this._ensureWizardVisible();
-        this._updateStepHeaders(stepNumber, options);
-        this._showStepContent(stepNumber);
-        this._handleStepSpecificActions(stepNumber, options, stateId);
-        
-        if (!options.skipUrlUpdate) {
-            this._updateURL(stepNumber);
-        }
-    },
-
-    _ensureWizardVisible: function() {
         if (this.ad.sidebar.$.hasClass('show')) {
             this._onClickButtonSidebarToggle();
         }
 
-        if (this.seller.ads.$.css('display') !== 'none') {
-            this.seller.ads.$.fadeOut(200, () => {
-                this.seller.wizard.$.fadeIn(200);
-            });
-        }
+        this._setState({ step });
+    },
+
+    _ensureWizardVisible: function() {
+        this.seller.ads.$.fadeOut(200, () => {
+            this.seller.wizard.$.fadeIn(200);
+        });
     },
 
     _updateStepHeaders: function(stepNumber, options) {
@@ -1725,12 +1721,28 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _updateURL: function (stepNumber) {
-        const url = new URL(window.location);
-        url.searchParams.set('step', stepNumber);
-        url.searchParams.set('item_id', this.state.item_id);
-        url.searchParams.set('product_id', this.state.id);
-        window.history.pushState({step: stepNumber}, '', url);
+    _setCookie: function (name, value, days=1) {
+        let date = new Date(); date.setTime(date.getTime() + (days*24*60*60*1000));
+        let expires = '; expires=' + date.toUTCString();
+        document.cookie = `${name}=${encodeURIComponent(value)}${expires}; path=/`;
+    },
+
+    _setState: function (value={}) {
+        if ('id' in value) {
+            this.state.id = value.id;
+        }
+        if ('step' in value) {
+            this.state.step = value.step;
+        }
+
+        let values = {
+            i: this.state.id,
+            s: this.state.step,
+        }
+        let hash = btoa(JSON.stringify(values));
+        let url = new URL(window.location); url.searchParams.set('', hash);
+        window.history.replaceState({'': hash}, '', url);
+        //window.location.hash = hash;
     },
 
     _nextStep: function () {
@@ -2211,30 +2223,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
             return result;
         });
-    },
-
-    _checkSuccess: function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const step = urlParams.get('step');
-        const status = urlParams.get('status');
-        const itemId = urlParams.get('item_id');
-        const productId = urlParams.get('product_id');
-        this.state.id = productId;
-        this.state.item_id = itemId;
-
-        if (step === '4' && status === 'completed') {
-            this._onChangeStep(4, {
-                paymentCompleted: true,
-                markAsCompleted: true,
-                itemId: itemId,
-                skipUrlUpdate: true
-            }, this.state.id);
-        } else if (step === '5') {
-            this._onChangeStep(5, {
-                skipUrlUpdate: true,
-                itemId: itemId
-            }, this.state.id);
-        }
     },
 
     _showRemainingPaymentInfo: function() {

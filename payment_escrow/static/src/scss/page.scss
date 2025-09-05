@@ -278,7 +278,8 @@
     }
 
     .o_loading {
-        backdrop-filter: blur(5px);
+        /*backdrop-filter: blur(5px);*/
+        background-color: #ffffff;
     }
 
     .text-primary {
@@ -1464,6 +1465,10 @@
     }
 
     .escrow-ad-container {
+        .escrow-ad-dashboard {
+            display: flex;
+            justify-content: center;
+        }
     }
 
     .escrow-ad-edit {
@@ -1815,7 +1820,9 @@
             border-radius: 6px;
             height: initial;
         }
-
+        .filepond--root {
+            margin: 0 !important
+        }
     }
 
     .installment-table > div > div {
