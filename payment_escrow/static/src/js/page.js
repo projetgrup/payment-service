@@ -649,24 +649,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
 
             input: {
-                /*img: new fields.file({
-                    allowMultiple: true,
-                    accept: 'image/*',
-                    maxFileSize: '15MB',
-                    maxFiles: 10,
-                    labelIdle: 'Drag & drop images or <span class="filepond--label-action">Browse</span><br><small>Up to 10 images, max 5MB</small>',
-                    imagePreviewHeight: 170,
-                    // Preserve original aspect; avoid client-side downscaling
-                    // imageCropAspectRatio: undefined,
-                    imageResizeTargetWidth: 1920,
-                    imageResizeUpscale: false,
-                    imageTransformOutputQuality: 0.95,
-                    stylePanelLayout: 'compact circle',
-                    styleLoadIndicatorPosition: 'center bottom',
-                    styleProgressIndicatorPosition: 'right bottom',
-                    styleButtonRemoveItemPosition: 'left bottom',
-                    styleButtonProcessItemPosition: 'right bottom',
-                }),*/
                 price: new fields.float({
                     events: [
                         ['update', function() { this.ad.input.price._.updateValue(); }],
@@ -687,7 +669,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         return valid;
                     }
                 }),
-                // id: new fields.integer(),
                 category: new fields.selection({
                     validate: () => {
                         const field = this.ad.input.category;
@@ -728,12 +709,25 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 vin: new fields.string({
+                    mask: /^[A-Z0-9]{0,17}$/,
+                    prepareChar: str => str.toUpperCase(),
+                    events: [
+                        ['input', function() {
+                            const field = this.ad.input.vin;
+                            if (field.value && field.value.length === 17) {
+                                this._onVinComplete(field.value);
+                            }
+                        }]
+                    ],
                     validate: () => {
                         const field = this.ad.input.vin;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
                             message = _t('VIN is required');
+                            valid = false;
+                        } else if (field.value.length !== 17) {
+                            message = _t('VIN must be exactly 17 characters');
                             valid = false;
                         }
                         this._onFieldValid(field, valid, message);
@@ -957,6 +951,27 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             field.$.addClass('is-invalid -error just-validate-error-field').removeClass('is-valid');
             field.$.closest('.form__group').append($(`<div class="form__error-label just-validate-error-label">${message}</div>`));
         }
+    },
+
+    _onVinComplete: function(vin) {
+        const self = this;
+        this._rpc({
+            route: '/my/ad/vin/check',
+            params: { vin: vin },
+        }).then(function (result) {;
+            if (result && result.success) {
+                if (result.data) {
+                    if (result.data.brand_id) {
+                        self.ad.input.brand.value = result.data.brand_id;
+                        self.ad.input.brand.$.trigger('change');
+                    }
+                    if (result.data.model_year) {
+                        self.ad.input.year.value = result.data.model_year
+                    }
+                }
+            }
+        }).catch(function () {
+        });
     },
 
     _formatIbanDisplay: function(iban) {

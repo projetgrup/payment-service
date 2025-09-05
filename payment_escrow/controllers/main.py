@@ -468,7 +468,7 @@ class PayloxSystemEscrowController(Controller):
         if not vin:
             return {'error': _('VIN is required.')}
 
-        result, message = self.env['syncops.connector'].sudo()._execute('other_get_vpic_vin_brand', reference=str(vin), params={
+        result, message = request.env['syncops.connector'].sudo()._execute('other_get_vpic_vin_brand', reference=str(vin), params={
             'vin': vin
         },company=company,  message=True)
         if not result:
