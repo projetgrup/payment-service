@@ -124,6 +124,23 @@ class PayloxSystemEscrowController(Controller):
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
+
+            if kwargs.get('file'):
+                for f in kwargs['file']:
+                    if f['type'] == 'conveyance':
+                        attachment = request.env['ir.attachment'].sudo().create({
+                            'name': _('%s - %s') % (transaction.reference, f['name'] or _('File.pdf')),
+                            'res_model': transaction._name,
+                            'res_id': transaction.id,
+                            'mimetype': f['mimetype'] or 'application/pdf',
+                            'datas': f['data'],
+                            'type': 'binary',
+                        })
+                        body = _('User has been signed conveyance. User IP Address is %s') % (transaction.jetcheckout_ip_address or request.httprequest.remote_addr,)
+                        self.message_post(body=body, attachment_ids=attachment.ids)
+                        transaction.message_post()
+                        break
+
             product = transaction.paylox_product_ids[0]
             customer_basket = []
 

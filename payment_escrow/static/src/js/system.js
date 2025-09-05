@@ -17,6 +17,7 @@ payloxPage.include({
         params.system = 'escrow';
         params.items = items;
         params.payments = payments;
+        params.files = this._getEscrowFiles();
         if (products.length) params.products = products;
         return params;
     },
@@ -66,5 +67,19 @@ payloxPage.include({
                 return { items, payments, products };
             }
         }
+    },
+
+    _getEscrowFiles: function () {
+        const $el = $('input[name=fileConveyance]');
+        if ($el.length) {
+            let file = JSON.parse($el);
+            return [{
+                type: 'conveyance',
+                name: file.name,
+                data: file.data,
+                mimetype: file.type,
+            }]
+        }
+        return [];
     },
 });

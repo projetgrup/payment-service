@@ -145,15 +145,6 @@ class file extends fields {
             captureMethod: 'environment',
             allowFileSizeValidation: false,
             allowMultiple: this.options.allowMultiple || false,
-
-            labelIdle: _t('Drag & Drop your picture or <span class="filepond--label-action">Browse</span>'),
-            imagePreviewHeight: 170,
-            imageCropAspectRatio: '1:1',
-            imageResizeTargetWidth: 200,
-            imageResizeTargetHeight: 200,
-            stylePanelLayout: 'compact circle',
-            styleLoadIndicatorPosition: 'center bottom',
-            styleButtonRemoveItemPosition: 'center bottom',
         }
         if (this.options.maxFileSize) {
             Object.assign(props, {
@@ -166,6 +157,7 @@ class file extends fields {
             })
         }
 
+        Object.assign(props, this.options);
         if (!FilePondInitialized) initFilePond();
         this._ = FilePond.create(this.$[0], props);
     }

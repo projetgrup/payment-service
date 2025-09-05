@@ -1201,49 +1201,6 @@
         margin-left: 0.625rem;
     }
 
-    .upload {
-        width: 100%;
-        position: relative;
-        border: dashed 1px #ddd;
-        border-radius: 0.625rem;
-    }
-    .upload input[type=file] {
-        display: none;
-    }
-    .upload label {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        position: relative;
-        font-size: 0.875rem;
-        font-weight: 500;
-        text-align: center;
-        padding: 0.9375rem;
-        border-radius: 0.31em;
-        cursor: pointer;
-    }
-    .upload #num-of-files {
-        font-size: 0.6875rem;
-        font-weight: 400;
-        text-align: center;
-        margin-top: 0.5rem;
-    }
-    .upload ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0.5rem 0 0 0;
-    }
-    .upload ul li {
-        font-weight: 500;
-        background-color: #eff5ff;
-        color: #025bee;
-        margin-bottom: 1em;
-        padding: 1.1em 1em;
-        border-radius: 0.3em;
-        display: flex;
-        justify-content: space-between;
-    }
-
     .primaryButton {
         display: flex;
         align-items: center;
@@ -1849,6 +1806,16 @@
             max-height: 220px;
             overflow: auto;
         }
+    }
+
+    .filepond {
+        .filepond--drop-label {
+            background-color: #ffffff !important;
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            height: initial;
+        }
+
     }
 
     .installment-table > div > div {
