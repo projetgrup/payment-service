@@ -10,6 +10,8 @@ import payloxPage from 'paylox.page';
 import fields from 'paylox.fields';
 import { format } from 'paylox.tools';
 
+const REGEXP_EMAIL = /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/;
+
 publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     selector: '.payment-escrow #wrapwrap',
     jsLibs: [
@@ -159,8 +161,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                 message = _t('Email is required');
                                 valid = false;
                             } else  {
-                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                if (!field._.masked.isComplete || !REGEXP_EMAIL.test(field.value)) {
                                     message = _t('Email format is not correct');
                                     valid = false;
                                 }
@@ -318,8 +319,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                 message = _t('Email is required');
                                 valid = false;
                             } else  {
-                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                if (!field._.masked.isComplete || !REGEXP_EMAIL.test(field.value)) {
                                     message = _t('Email format is not correct');
                                     valid = false;
                                 }
@@ -448,8 +448,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                 message = _t('Email is required');
                                 valid = false;
                             } else  {
-                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                if (!field._.masked.isComplete || !REGEXP_EMAIL.test(field.value)) {
                                     message = _t('Email format is not correct');
                                     valid = false;
                                 }
@@ -578,8 +577,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                 message = _t('Email is required');
                                 valid = false;
                             } else  {
-                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                if (!field._.masked.isComplete || !REGEXP_EMAIL.test(field.value)) {
                                     message = _t('Email format is not correct');
                                     valid = false;
                                 }
@@ -693,7 +691,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         return valid;
                     }
                 }),
-                year: new fields.selection({
+                year: new fields.string({
                     validate: () => {
                         const field = this.ad.input.year;
                         let message = null;
@@ -701,6 +699,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         if (!field.value) {
                             message = _t('Year is required');
                             valid = false;
+                        } else {
+                            let date = new Date();
+                            let year = date.getFullYear();
+                            if (field.value > year) {
+                                message = _.str.sprintf(_t('Year cannot be later than %s.'), year);
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -862,8 +867,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                 message = _t('Email is required');
                                 valid = false;
                             } else  {
-                                const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-                                if (!field._.masked.isComplete || !email_regex.test(field.value)) {
+                                if (!field._.masked.isComplete || !REGEXP_EMAIL.test(field.value)) {
                                     message = _t('Email format is not correct');
                                     valid = false;
                                 }
@@ -1463,7 +1467,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             escrow_car_plate: this.ad.input.plate.$.val(),
             escrow_car_brand_id: parseInt(this.ad.input.brand.$.val(), 10) || null,
             escrow_car_model_year: parseInt(this.ad.input.year.$.val(), 10) || null,
-            image_1920: this.ad.input.fileLicence.value || null,
+            escrow_ad_sale_img: this.ad.input.fileLicence.value || null,
         };
         
         if (this.wizard && this.wizard.sellerId) {
@@ -1553,8 +1557,20 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-plate').text(value.plate || 'Not specified');
             $item.find('.escrow-ad-item-vin').text(value.vin || 'Not specified');
 
+            let stateClass, stateLabel;
+            if (value.state === 'new') {
+                stateClass = 'success';
+                stateLabel = _t('New');
+            } else if (value.state === 'sold') {
+                stateClass = 'danger';
+                stateLabel = _t('Sold');
+            } else {
+                stateClass = 'info';
+                stateLabel = _t('Waiting Approval');
+            }
+
+            $item.find('.escrow-ad-item-state').html(`<span class="${stateClass}">${stateLabel}</span>`);
             $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
-            $item.find('.escrow-ad-item-state').html(`<span class="${value.state === 'new' ? 'success' : 'danger'}">${value.state === 'new' ? _t('New') : _t('Sold')}</span>`);
             if (value.residual_amount !== undefined) {
                 $('#remainingBalance').text(format.currency(value.residual_amount, this.currency.position, this.currency.symbol, this.currency.decimal));
             }
@@ -1715,7 +1731,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             case 1:
                 if (options.scratch) {
                     for (const input of Object.values(this.seller.input)) {
-                        input.$.val(null);
+                        input.value = null;
                     }
                 } else {
                     this._initializeSellerInfoForm(stateId);
@@ -2307,20 +2323,20 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _clearCustomerInputs: function() {
         const $wiz = $('.escrow-wizard');
-        $wiz.find('#customer_name_surname').val('');
-        $wiz.find('#customer_identity').val('');
-        $wiz.find('#customer_phone_individual').val('');
-        $wiz.find('#customer_email_individual').val('');
-        $wiz.find('#customer_address_individual').val('');
-
-        $wiz.find('#customer_corporate_title').val('');
-        $wiz.find('#customer_tax_number').val('');
-        $wiz.find('#customer_tax_office').val('');
-        $wiz.find('#customer_person').val('');
-        $wiz.find('#customer_phone_corporate').val('');
-        $wiz.find('#customer_email_corporate').val('');
-        $wiz.find('#customer_address_corporate').val('');
-
+        $wiz.find('#customer_name_surname').value = null;
+        $wiz.find('#customer_identity').value = null;
+        $wiz.find('#customer_phone_individual').value = null;
+        $wiz.find('#customer_email_individual').value = null;
+        $wiz.find('#customer_address_individual').value = null;
+        
+        $wiz.find('#customer_corporate_title').value = null;
+        $wiz.find('#customer_tax_number').value = null;
+        $wiz.find('#customer_tax_office').value = null;
+        $wiz.find('#customer_person').value = null;
+        $wiz.find('#customer_phone_corporate').value = null;
+        $wiz.find('#customer_email_corporate').value = null;
+        $wiz.find('#customer_address_corporate').value = null;
+        
         $wiz.find('.form__control').removeClass('is-invalid -error just-validate-error-field');
         $wiz.find('.form__error-label, .just-validate-error-label').remove();
     },

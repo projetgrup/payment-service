@@ -34,9 +34,10 @@
             </div>
             <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name" t-att-data-id="ad.categ_id.id" name="categ"/>
             <div class="escrow-ad-item-price" t-esc="ad.escrow_payment_item_id.amount" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-data-value="ad.price" name="price"/>
-            <div class="escrow-ad-item-state" t-att-data-value="ad.escrow_payment_item_id.paid and 'sold' or 'new'">
+            <div class="escrow-ad-item-state" t-att-data-value="'sold' if ad.escrow_payment_item_id.paid else 'new' if ad.escrow_ad_approval else 'waiting'">
                 <span t-if="ad.escrow_payment_item_id.paid" class="danger">Sold</span>
-                <span t-else="" class="success">New</span>
+                <span t-elif="ad.escrow_ad_approval" class="success">New</span>
+                <span t-else="" class="info">Waiting Approval</span>
             </div>
             <div class="escrow-ad-item-arrow">
                 <i class="fa fa-chevron-right"/>

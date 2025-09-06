@@ -160,7 +160,6 @@ class file extends fields {
         Object.assign(props, this.options);
         if (!FilePondInitialized) initFilePond();
         this._ = FilePond.create(this.$[0], props);
-        console.log(this._);
         this.$ = $(this._.element);
     }
 

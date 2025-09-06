@@ -132,20 +132,11 @@
                                 <field name="escrow_car_brand_id"/>
                                 <field name="escrow_car_model_id" domain="[('brand_id','=',escrow_car_brand_id)]"/>
                                 <field name="escrow_car_model_year"/>
-                            </group>
-                            <group>
                                 <field name="escrow_car_vin"/>
                                 <field name="escrow_car_plate"/>
                             </group>
-                        </group>
-                    </page>
-                    <page name="sale_image" string="Sale Image">
-                        <group>
-                            <group colspan="4">
-                                <label for="escrow_ad_sale_img" string="Sale Image"/>
-                                <div class="o_row" style="justify-content:center;">
-                                    <field name="escrow_ad_sale_img" widget="image" options="{'preview_image': false}"/>
-                                </div>
+                            <group>
+                                <field name="escrow_ad_sale_img" colspan="2" nolabel="1" widget="image" options="{'preview_image': false}"/>
                             </group>
                         </group>
                     </page>
