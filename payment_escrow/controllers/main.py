@@ -319,7 +319,7 @@ class PayloxSystemEscrowController(Controller):
                 'name': ad.name,
                 'description': ad.description,
                 'price': ad.list_price,
-                'image': ad.image_1920,
+                'image': ad.escrow_ad_sale_img,
                 'categ_id': ad.categ_id and {'id': ad.categ_id.id, 'name': ad.categ_id.name} or None,
                 'brand_id': ad.escrow_car_brand_id.id,
                 'model_id': ad.escrow_car_model_id.id,
