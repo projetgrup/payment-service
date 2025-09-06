@@ -4,7 +4,9 @@
         <div class="header">
             <div class="header__top">
                 <div class="header__logo">
-                    <img t-att-src="'/web/image/res.company/%s/logo' % (company and company.id or request.env.company.id)" height="30" t-att-alt="company and company.name or request.env.company.name"/>
+                    <a href="/my/ads">
+                        <img t-att-src="'/web/image/res.company/%s/logo' % (company and company.id or request.env.company.id)" height="30" t-att-alt="company and company.name or request.env.company.name"/>
+                    </a>
                 </div>
                 <div t-if="variant == 'payment'" class="header__help">
                     <button class="header__settingsBtn btn text-600" type="button" data-value="settings" field="ad.button.sidebar.toggle">

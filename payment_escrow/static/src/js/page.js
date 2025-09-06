@@ -28,6 +28,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.state = {
             id: 0,
             step: 0,
+            owner: 0,
         };
 
         this.currency = {
@@ -174,7 +175,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_individual: new fields.string({
-                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual)]],
+                    events: [['input', () => this._isIbanVerified(this.seller.input.tc, this.seller.input.iban_individual)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -185,7 +186,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
                                 valid = false;
-                            } else if (!this._isIbanValid(field._.masked.value)) {
+                            } else if (!this._isIbanValid(field.value)) {
                                 message = _t('IBAN is not valid');
                                 valid = false;
                             }
@@ -330,7 +331,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_corporate: new fields.string({
-                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_corporate)]],
+                    events: [['input', () => this._isIbanVerified(this.seller.input.tax_number, this.seller.input.iban_corporate)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -341,7 +342,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
                                 valid = false;
-                            } else if (!this._isIbanValid(field._.masked.value)) {
+                            } else if (!this._isIbanValid(field.value)) {
                                 message = _t('IBAN is not valid');
                                 valid = false;
                             }
@@ -378,6 +379,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.customer = {
             input: {
                 tc: new fields.string({
+                    events: [['input', () => {
+                        this._lookupCustomerByIdentity(this.customer.input.tc.value, $('input[name="customerUserType"]:checked').val())
+                    }]],
                     mask: '00000000000',
                     validate: () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
@@ -920,6 +924,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 Object.assign(this.state, {
                     id: state.i,
                     step: state.s,
+                    owner: state.o,
                 });
             } catch {
                 window.history.replaceState(null, '', window.location.pathname);
@@ -966,9 +971,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         self.ad.input.brand.value = result.data.brand_id;
                         self.ad.input.brand.$.trigger('change');
                     }
-                    if (result.data.model_year) {
-                        self.ad.input.year.value = result.data.model_year
-                    }
                 }
             }
         }).catch(function () {
@@ -1000,9 +1002,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         for (let ch of rearranged) {
             const code = ch.charCodeAt(0);
             if (code >= 65 && code <= 90) {
-            expanded += (code - 55).toString();
+                expanded += (code - 55).toString();
             } else {
-            expanded += ch;
+                expanded += ch;
             }
         }
 
@@ -1020,12 +1022,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _isOtpValidate: async function(field) {
-        const value = field.value;
-        if (value.length === 10) {
+        let otp = field.value.replace(/\s+/g, '');
+        if (otp.length === 10) {
             //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/otp/validate',
-                params: { otp: value },
+                params: { otp },
             });
             if (result) {
                 this._showFieldSuccessIcon(field);
@@ -1035,20 +1037,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._hideFieldIcon(field);
     },
 
-    _isIbanVerified: async function(field) {
-        let iban = field._.masked.value;
+    _isIbanVerified: async function(vatField, ibanField) {
+        let vat = vatField._.masked.value;
+        let iban = ibanField._.masked.value;
         if (this._isIbanValid(iban)) {
             //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/iban/verify',
-                params: { iban },
+                params: { vat, iban },
             });
             if (result) {
-                this._showFieldSuccessIcon(field);
+                this._showFieldSuccessIcon(ibanField);
                 return result;
             }
         }
-        this._hideFieldIcon(field);
+        this._hideFieldIcon(ibanField);
     },
 
     _showFieldSuccessIcon: function(field) {
@@ -1285,10 +1288,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _prefillSellerFromAd: function(adData) {
         const $wiz = $('.escrow-wizard');
         
-        if (adData.owner_id) {
+        let ownerId = adData?.owner_id || this.state.owner;
+        if (ownerId) {
             this._rpc({
                 route: '/my/partner/get',
-                params: { partner_id: adData.owner_id }
+                params: { partner_id: ownerId }
             }).then((ownerData) => {
                 if (ownerData.success) {
                     const owner = ownerData.partner;
@@ -1308,7 +1312,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             const bankAccount = owner.bank_ids[0];
                             this.seller.input.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
                             this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || owner.name;
-                            this._isIbanVerified(this.seller.input.iban_corporate);
+                            this._isIbanVerified(this.seller.input.tax_number, this.seller.input.iban_corporate);
                         }
                     } else {
                         $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
@@ -1322,7 +1326,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             const bankAccount = owner.bank_ids[0];
                             this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
                             this.seller.input.iban_name_individual.value = bankAccount.api_merchant || owner.name;
-                            this._isIbanVerified(this.seller.input.iban_individual);
+                            this._isIbanVerified(this.seller.input.tc, this.seller.input.iban_individual);
                         }
                     }
                 }
@@ -1379,7 +1383,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.category.$.val(adData.categ);
             this.ad.input.category.$.trigger('change');
         }
-        
+
         if (adData.vin) {
             this.ad.input.vin.value = adData.vin;
         }
@@ -1691,9 +1695,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _handleStepSpecificActions: function(stepNumber, options, stateId) {
         switch(stepNumber) {
             case 1:
-                if (!this.state.id) {
+                if (!this.state.id && !this.state.owner) {
                     for (const input of Object.values(this.seller.input)) {
                         input.value = null;
+                        this._hideFieldIcon(input);
                     }
                 } else {
                     this._initializeSellerInfoForm(stateId);
@@ -1711,11 +1716,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             case 4:
                 this._initializePaymentForm(stateId);
                 if (options.paymentCompleted) {
-                    console.log('test')
                     $('.payment-panel').addClass('d-none');
                     $('#payment_type').addClass('d-none');
                     this._showRemainingPaymentInfo();
-                    
                     if (options.itemId) {
                         this._updatePaymentAmounts(options.itemId);
                     }
@@ -1744,6 +1747,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let values = {
             i: this.state.id,
             s: this.state.step,
+            o: this.state.owner,
         }
         let hash = btoa(JSON.stringify(values));
         let url = new URL(window.location); url.searchParams.set('', hash);
@@ -1777,13 +1781,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._disableWizard();
             this._saveSellerInfo().then((result) => {
                 if (result.success && result.partner_id) {
-                    this.wizard.sellerId = result.partner_id;
-                    this.displayNotification({
-                        type: 'success',
-                        title: 'Success',
-                        message: 'Seller information saved',
-                    });
-
+                    this.state.owner = result.partner_id;
                     return this._startOtp(result.partner_id).then((otpRes) => {
                         if (otpRes && otpRes.success) {
                             this.wizard.otpId = otpRes.otp_id;
@@ -1839,12 +1837,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                     this._markStepCompleted(this.wizard.currentStep);
                     this._onChangeStep(this.wizard.currentStep + 1);
-
-                    this.displayNotification({
-                        type: 'success',
-                        title: 'Success',
-                        message: result.message || 'Product information has been saved.',
-                    });
                 } else {
                     this.displayNotification({
                         type: 'danger',
@@ -1883,11 +1875,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         if (otpRes && otpRes.success) {
                             this.wizard.otpId = otpRes.otp_id;
                             this._showOtpModal({ expiresIn: otpRes.expires_in || 120 });
-                            this.displayNotification({
-                                type: 'success',
-                                title: 'Success',
-                                message: result.message || 'Customer information saved. A verification code has been sent.',
-                            });
                         } else if (otpRes && otpRes.is_otp_verified) {
                             this.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
                             this._markStepCompleted(this.wizard.currentStep);
@@ -1929,9 +1916,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _initializeSellerInfoForm: function () {
         this._bindWizardToggle();
-        if (this.state.id > 0) {
-            this._prefillSellerFromAd(this.values.ads[this.state.id]);
-        }
+        this._prefillSellerFromAd(this.values.ads[this.state.id]);
     },
 
     _initializeProductInfoForm: function () {
@@ -2353,109 +2338,95 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         const $uploadStatus = this.assignment.form['upload.status'].$;
 
-            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-            if (!allowedTypes.includes(file.type)) {
-                $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Please upload only PDF, JPG, or PNG files.</div>');
-                event.target.value = '';
-                return;
-            }
+        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Please upload only PDF, JPG, or PNG files.</div>');
+            event.target.value = '';
+            return;
+        }
 
-            const maxSize = 5 * 1024 * 1024;
-            if (file.size > maxSize) {
-                $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> File size must be less than 5MB.</div>');
-                event.target.value = '';
-                return;
-            }
+        const maxSize = 5 * 1024 * 1024;
+        if (file.size > maxSize) {
+            $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> File size must be less than 5MB.</div>');
+            event.target.value = '';
+            return;
+        }
 
-            $uploadStatus.html('<div class="text-info"><i class="fa fa-spinner fa-spin"></i> Uploading...</div>');
+        $uploadStatus.html('<div class="text-info"><i class="fa fa-spinner fa-spin"></i> Uploading...</div>');
 
-            const reader = new FileReader();
-            reader.onload = () => {
-                try {
-                    const dataUrl = reader.result || '';
-                    const base64 = String(dataUrl).split(',')[1] || '';
-                    this._rpc({
-                        route: '/escrow/assignment/form/upload',
-                        params: {
-                            filename: file.name,
-                            mimetype: file.type,
-                            content: base64,
-                        },
-                    }).then((result) => {
-                        if (result && result.success) {
-                            $uploadStatus.html('<div class="text-success"><i class="fa fa-check"></i> File uploaded successfully</div>');
-                            const $downloadBtn = this.assignment.form.download.$;
-                            $downloadBtn.removeClass('d-none');
-                        } else {
-                            $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> ' + ((result && result.error) || 'Upload failed') + '</div>');
-                            event.target.value = '';
-                        }
-                    }).catch(() => {
-                        $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Upload failed. Please try again.</div>');
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                const dataUrl = reader.result || '';
+                const base64 = String(dataUrl).split(',')[1] || '';
+                this._rpc({
+                    route: '/escrow/assignment/form/upload',
+                    params: {
+                        filename: file.name,
+                        mimetype: file.type,
+                        content: base64,
+                    },
+                }).then((result) => {
+                    if (result && result.success) {
+                        $uploadStatus.html('<div class="text-success"><i class="fa fa-check"></i> File uploaded successfully</div>');
+                        const $downloadBtn = this.assignment.form.download.$;
+                        $downloadBtn.removeClass('d-none');
+                    } else {
+                        $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> ' + ((result && result.error) || 'Upload failed') + '</div>');
                         event.target.value = '';
-                    });
-                } catch (e) {
-                    $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Could not read the file.</div>');
+                    }
+                }).catch(() => {
+                    $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Upload failed. Please try again.</div>');
                     event.target.value = '';
-                }
-            };
-            reader.onerror = () => {
+                });
+            } catch (e) {
                 $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Could not read the file.</div>');
                 event.target.value = '';
-            };
-            reader.readAsDataURL(file);
-        },
+            }
+        };
+        reader.onerror = () => {
+            $uploadStatus.html('<div class="text-danger"><i class="fa fa-times"></i> Could not read the file.</div>');
+            event.target.value = '';
+        };
+        reader.readAsDataURL(file);
+    },
 
     _lookupCustomerByIdentity: function(identity, customerType) {
         const self = this;
-        
-        this._rpc({
-            route: '/my/customer/lookup',
-            params: {
-                identity: identity,
-                customer_type: customerType
-            }
-        }).then(function(result) {
-            if (result && result.success && result.found) {
-                const data = result.customer_data;
-                if (customerType === 'individual') {
-                    this.customer.input.name_surname.$.val(data.name || '');
-                    this.customer.input.phone_individual.$.val(data.phone || '');
-                    this.customer.input.email_individual.$.val(data.email || '');
-                    this.customer.input.address_individual.$.val(data.address || '');
-                    this.customer.input.identity.$.val(data.vat || '');
-                    if (data.is_otp_verified) {
-                            this.customer.input.phone_individual.check.$.removeClass('d-none');
-                            this.customer.input.phone_individual.error.$.addClass('d-none');
-                        } else {
-                            this.customer.input.phone_individual.check.$.addClass('d-none');
-                            this.customer.input.phone_individual.error.$.removeClass('d-none');
-                        }
-                } else {
-                    this.customer.input.corporate_title.$.val(data.name || '');
-                    this.customer.input.tax_number.$.val(data.vat || '');
-                    this.customer.input.tax_office.$.val(data.tax_office || '');
-                    this.customer.input.phone_corporate.$.val(data.phone || '');
-                    this.customer.input.email_corporate.$.val(data.email || '');
-                    this.customer.input.address_corporate.$.val(data.address || '');
-                    if (data.is_otp_verified) {
-                            this.customer.input.phone_corporate.check.$.removeClass('d-none');
-                            this.customer.input.phone_corporate.error.$.addClass('d-none');
-                        } else {
-                            this.customer.input.phone_corporate.check.$.addClass('d-none');
-                            this.customer.input.phone_corporate.error.$.removeClass('d-none');
-                        }
+        if (identity.length === 11) {
+            this._rpc({
+                route: '/my/customer/lookup',
+                params: {
+                    identity: identity,
+                    customer_type: customerType
                 }
-                self.displayNotification({
-                    type: 'info',
-                    title: 'Customer Found',
-                    message: 'Customer information has been automatically filled from existing records.',
-                    sticky: false
-                });
-            }
-        }).catch(function(error) {
-            console.error('Error looking up customer:', error);
-        });
+            }).then(function(result) {
+                if (result && result.success && result.found) {
+                    const data = result.customer_data;
+                    if (customerType === 'individual') {
+                        self.customer.input.name.value = data.name || '';
+                        self.customer.input.phone_individual.value = data.phone || '';
+                        self.customer.input.email_individual.value = data.email || '';
+                        self.customer.input.address_individual.value = data.address || '';
+                        self.customer.input.identity.value = data.vat || '';
+                    } else {
+                        self.customer.input.corporate_title.value = data.name || '';
+                        self.customer.input.tax_number.value = data.vat || '';
+                        self.customer.input.tax_office.value = data.tax_office || '';
+                        self.customer.input.phone_corporate.value = data.phone || '';
+                        self.customer.input.email_corporate.value = data.email || '';
+                        self.customer.input.address_corporate.value = data.address || '';
+                    }
+                    self.displayNotification({
+                        type: 'info',
+                        title: 'Customer Found',
+                        message: 'Customer information has been automatically filled from existing records.',
+                        sticky: false
+                    });
+                }
+            }).catch(function(error) {
+                console.error('Error looking up customer:', error);
+            });
+        }
     },
-
 });

@@ -142,6 +142,7 @@ class file extends fields {
         const callbacks = {};
         const props = {
             ...callbacks,
+            allowImageEdit: true,
             credits: false,
             captureMethod: 'environment',
             allowFileSizeValidation: false,

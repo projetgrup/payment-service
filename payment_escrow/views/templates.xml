@@ -153,7 +153,6 @@
                     <t t-set="variant" t-value="'ads'"/>
                     <t t-set="company" t-value="company"/>
                 </t>
-
                 <div class="escrow-ad-container">
                     <div class="col-12 col-lg-8 mx-auto p-2 escrow-ad-dashboard" style="display:none" field="seller.ads">
                         <div class="col-12">

@@ -252,14 +252,26 @@ class PayloxSystemEscrowController(Controller):
         return values
     
     @http.route(['/my/iban/verify'], type='json', auth='user', methods=['POST'], website=True)
-    def verify_iban(self, iban, **kwargs):
+    def verify_iban(self, vat, iban, **kwargs):
         iban = sanitize_account_number(iban)
-        bank_account = request.env['res.partner.bank'].sudo().search([('sanitized_acc_number', '=', iban), ('api_state', '=', True)], limit=1)
+        bank_account = request.env['res.partner.bank'].sudo().search([
+            ('api_state', '=', True),
+            ('partner_id.vat', '=', vat),
+            ('sanitized_acc_number', '=', iban),
+        ], limit=1)
         return bool(bank_account)
     
     @route('/my/otp/validate', type='json', auth='user', methods=['POST'], website=True)
-    def validate_otp(self, otp=None, **kwargs):
-        partner = request.env['res.partner'].sudo().search([('mobile', '=', otp), ('is_otp_verified', '=', True)], limit=1)
+    def validate_otp(self, otp, **kwargs):
+        domain = [('mobile', 'like', '%%%s' % otp)]
+        try:
+            otp = '%s %s %s %s' % (otp[0:3], otp[3:6], otp[6:8], otp[8:10])
+            domain = ['|'] + domain + [('mobile', 'like', '%%%s' % otp)]
+        except:
+            pass
+
+        domain = [('is_otp_verified', '=', True)] + domain
+        partner = request.env['res.partner'].sudo().search(domain, limit=1)
         return bool(partner)
 
     @route('/my/otp/start', type='json', auth='user', methods=['POST'], website=True)
@@ -606,13 +618,6 @@ class PayloxSystemEscrowController(Controller):
             }
             iban = kwargs.get('seller_iban', '')
             vat = kwargs.get('seller_tax_number', '') if kwargs.get('seller_type') == 'corporate' else kwargs.get('seller_tc_number', '')
-            if iban:
-                iban_check = self.check_iban(iban=iban, vat=vat)
-                if not iban_check.get('success', False):
-                    return {
-                        'success': False,
-                        'message': 'IBAN Doğrulama Hatası: ' + iban_check.get('message', 'Bilinmeyen hata')
-                    }
 
             if kwargs.get('seller_type') == 'corporate':
                 partner_data.update({
@@ -651,7 +656,8 @@ class PayloxSystemEscrowController(Controller):
             else:
                 partner.write(partner_data)
 
-            if kwargs.get('seller_iban'):
+            iban_verified = self.verify_iban(vat, iban)
+            if kwargs.get('seller_iban') and not iban_verified:
                 iban_raw = kwargs.get('seller_iban', '')
                 iban_sanitized = sanitize_account_number(iban_raw)
                 bank = request.env['res.partner.bank'].sudo()
@@ -669,8 +675,8 @@ class PayloxSystemEscrowController(Controller):
 
                 if not existing:
                     bank.create(bank_vals)
-                else:
-                    existing.write(bank_vals)
+                #else:
+                #    existing.write(bank_vals)
 
             return {
                 'success': True,

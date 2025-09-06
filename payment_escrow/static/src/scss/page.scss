@@ -765,10 +765,15 @@
                     font-size: 0.82em;
                     font-weight: 500;
                     text-align: center;
+                    width: 100%;
 
                     &.danger {
                         background-color: var(--danger);
                         color: var(--white);
+                    }
+                    &.info {
+                        color: var(--primary-color);
+                        border: 1px dashed var(--primary-color);
                     }
                     &.success {
                         background-color: var(--success);
@@ -1627,10 +1632,15 @@
                     padding: 4px 12px;
                     font-size: 0.82em;
                     text-align: center;
+                    width: 100%;
 
                     &.danger {
                         background-color: var(--danger);
                         color: var(--white);
+                    }
+                    &.info {
+                        color: var(--primary-color);
+                        border: 1px dashed var(--primary-color);
                     }
                     &.success {
                         background-color: var(--success);
@@ -1700,6 +1710,10 @@
                                 background-color: var(--danger);
                                 color: var(--white);
                             }
+                            &.info {
+                                color: var(--primary-color);
+                                border: 1px dashed var(--primary-color);
+                            }
                             &.success {
                                 background-color: var(--success);
                                 color: var(--white);
@@ -1748,7 +1762,7 @@
                     }
                 }*/
 
-                .filepond--drop-label label {
+                .--drop-label label {
                     color: #888888;
                 }
             }
@@ -1839,14 +1853,13 @@
     }
 
     .filepond {
+        margin: 0 !important;
+
         .filepond--drop-label {
             background-color: #ffffff !important;
             border: 2px dashed #ddd;
             border-radius: 6px;
             height: initial;
-        }
-        .filepond--root {
-            margin: 0 !important
         }
     }
 
