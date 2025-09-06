@@ -135,22 +135,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 phone_individual: new fields.string({
                     mask: '000 000 0000',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.phone_individual;
+                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            } 
+                            }  else if (!isOtpValidate) {
+                                message = _t('Phone number is not valid');
+                                valid = true;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 email_individual: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
@@ -176,9 +178,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 iban_individual: new fields.string({
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.iban_individual;
+                        const isIbanVerified = await this._isIbanVerified(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
@@ -188,13 +191,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             } else if (!this._isIbanValid(field._.masked.value)) {
                                 message = _t('IBAN is not valid');
                                 valid = false;
+                            } else if (!isIbanVerified) {
+                                message = _t('IBAN is not verified');
+                                valid = true;
                             }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 iban_name_individual: new fields.string({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
@@ -293,22 +297,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 phone_corporate: new fields.string({
                     mask: '000 000 0000',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.phone_corporate;
+                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            } 
+                            }  else if (!isOtpValidate) {
+                                message = _t('Phone number is not valid');
+                                valid = true;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 email_corporate: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
@@ -422,22 +428,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 phone_individual: new fields.string({
                     mask: '000 000 0000',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
                         const field = this.customer.input.phone_individual;
+                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            } 
+                            }  else if (!isOtpValidate) {
+                                message = _t('Phone number is not valid');
+                                valid = true;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 email_individual: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
@@ -551,22 +559,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 phone_corporate: new fields.string({
                     mask: '000 000 0000',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
                         const field = this.customer.input.phone_corporate;
+                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            } 
+                            }  else if (!isOtpValidate) {
+                                message = _t('Phone number is not valid');
+                                valid = true;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 email_corporate: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
@@ -1004,7 +1014,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         for (let ch of rearranged) {
             const code = ch.charCodeAt(0);
             if (code >= 65 && code <= 90) {
-            expanded += (code - 55).toString(); // 'A' → 10
+            expanded += (code - 55).toString();
             } else {
             expanded += ch;
             }
@@ -1021,6 +1031,107 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         return parseInt(total, 10) === 1;
+    },
+
+    _isOtpValidate: async function(field) {
+        const self = this;
+        const value = field.value;
+        if (value.length === 10) {
+            this._showFieldLoadingIcon(field);
+            return this._rpc({
+                route: '/my/otp/validate',
+                params: { otp: value },
+            }).then(function (result) {
+                if (result && result.success) {
+                    self._showFieldSuccessIcon(field);
+                    return true;
+                } else {
+                    self._showFieldErrorIcon(field);
+                    return false;
+                }
+            })
+        } 
+    },
+
+    _isIbanVerified: async function(field) {
+        const self = this;
+        if (this._isIbanValid(field._.masked.value)) {
+            this._showFieldLoadingIcon(field);
+            this._rpc({
+                route: '/my/iban/verify',
+                params: { iban: field._.masked.value },
+            }).then(function (result) {
+                if (result && result.success) {
+                    self._showFieldSuccessIcon(field);
+                    return true;
+                } else {
+                    self._showFieldErrorIcon(field);
+                    return false;
+                }
+            });
+        }
+    },
+
+    _showFieldSuccessIcon: function(field) {
+        this._hideFieldIcon(field);
+        const $group = field.$.closest('.form__group');
+        const $icon = $('<i class="fa fa-check-circle field-status-icon" aria-hidden="true"></i>');
+        $group.css('position', 'relative');
+        $icon.css({
+            position: 'absolute',
+            right: '15px',
+            top: '50%',
+            color: '#28a745',
+            transform: 'translateY(-50%)',
+            'z-index': 10,
+            'pointer-events': 'none',
+            'font-size': '16px',
+        });
+        $group.append($icon);
+    },
+
+    _showFieldErrorIcon: function(field) {
+        this._hideFieldIcon(field);
+        const $group = field.$.closest('.form__group');
+        const $icon = $('<i class="fa fa-exclamation-circle field-status-icon" aria-hidden="true"></i>');
+
+        $group.css('position', 'relative');
+        $icon.css({
+            position: 'absolute',
+            right: '15px',
+            top: '50%',
+            color: '#dc3545',
+            transform: 'translateY(-50%)',
+            'z-index': 10,
+            'pointer-events': 'none',
+            'font-size': '16px',
+        });
+
+        $group.append($icon);
+    },
+
+    _showFieldLoadingIcon: function(field) {
+        this._hideFieldIcon(field);
+        const $group = field.$.closest('.form__group');
+        const $icon = $('<i class="fa fa-spinner fa-spin field-status-icon" aria-hidden="true"></i>');
+
+        $group.css('position', 'relative');
+        $icon.css({
+            position: 'absolute',
+            right: '15px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            'z-index': 10,
+            'pointer-events': 'none',
+            'font-size': '16px',
+            color: '#0d6efd'
+        });
+
+        $group.append($icon);
+    },
+
+    _hideFieldIcon: function(field) {
+        field.$.closest('.form__group').find('.field-status-icon').remove();
     },
 
     _isTcknValid: function(value) {
@@ -1042,18 +1153,18 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 sum2 += digits[i];
             }
         }
-        
+
         const check1 = ((sum1 * 7) - sum2) % 10;
         if (check1 !== digits[9]) {
             return false;
         }
-        
+
         const totalSum = digits.slice(0, 10).reduce((a, b) => a + b, 0);
         const check2 = totalSum % 10;
         if (check2 !== digits[10]) {
             return false;
         }
-        
+
         return true;
     },
 
@@ -1119,61 +1230,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _onFileChange: function(e) {
-        const self = this;
-        const files = e.target.files;
-        if (files && files.length > 0) {
-            const firstFile = files[0];
-            self._clearImagePreview();
-            self._setProductImage(firstFile);
-        } else {
-            self._clearImagePreview();
-        }
-    },
-
-    _setProductImage: function(file) {
-        if (!file || !file.type.startsWith('image/')) {
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            /*if (this.ad && this.ad.input && this.ad.input.img) {
-                this.ad.input.img.value = e.target.result;
-            }*/
-            this._showImagePreview(e.target.result);
-        };
-        reader.readAsDataURL(file);
-    },
-
-    _showImagePreview: function(imageSrc) {
-        const $label = $('label[for="wizard_file_input"]');
-        if (!$label.length) return;
-        $label.find('svg, span, #wizard_num_of_files').addClass('d-none');
-        let $img = $label.find('img#wizard_image_preview');
-        if (!$img.length) {
-            $img = $('<img id="wizard_image_preview" alt="License Photo"/>')
-                .css({
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block',
-                    marginTop: '8px',
-                    objectFit: 'contain'
-                });
-            $label.append($img);
-        }
-        $img.attr('src', imageSrc);
-        $('#image-preview').remove();
-    },
-
-    _clearImagePreview: function() {
-        const $label = $('label[for="wizard_file_input"]');
-        if ($label.length) {
-            $label.find('img#wizard_image_preview').remove();
-            $label.find('svg, span, #wizard_num_of_files').removeClass('d-none');
-        }
-        $('#image-preview').remove();
-    },
-
     _openSellerEditForCard: function(id, section) {
         this._closeSidebar();
         if (section === 'seller') {
@@ -1196,37 +1252,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             };
             $this.data('value', null);
             $this.attr('data-value', null);
-        });
-    },
-
-    _setupFileUpload: function() {
-        const $wiz = $('.escrow-wizard');
-        const $fileInput = $wiz.find('#file-input');
-        const $fileList = $wiz.find('#files-list');
-        const $numOfFiles = $wiz.find('#num-of-files');
-
-        if (!$fileInput.length || !$fileList.length || !$numOfFiles.length) return;
-
-        $fileInput.on('change', () => {
-            $fileList.empty();
-
-            const files = $fileInput[0].files;
-            $numOfFiles.text(`${files.length} files selected`);
-
-            Array.from(files).forEach((file) => {
-                const fileName = file.name;
-                let fileSize = (file.size / 1024).toFixed(1);
-                let fileSizeStr = `${fileSize} KB`;
-
-                if (fileSize >= 1024) {
-                    fileSize = (fileSize / 1024).toFixed(1);
-                    fileSizeStr = `${fileSize} MB`;
-                }
-
-                const $listItem = $('<li></li>');
-                $listItem.html(`<p>${fileName}</p><p>${fileSizeStr}</p>`);
-                $fileList.append($listItem);
-            });
         });
     },
 
@@ -1340,13 +1365,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.phone_corporate.$.val(owner.phone || '');
                         this.seller.input.email_corporate.$.val(owner.email || '');
                         this.seller.input.address_corporate.$.val(this._formatAddress(owner));
-                        if (owner.is_otp_verified) {
-                            this.seller.input.phone_corporate.check.$.removeClass('d-none');
-                            this.seller.input.phone_corporate.error.$.addClass('d-none');
-                        } else {
-                            this.seller.input.phone_corporate.check.$.addClass('d-none');
-                            this.seller.input.phone_corporate.error.$.removeClass('d-none');
-                        }
                     } else {
                         $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
                         this._bindWizardToggle();
@@ -1354,13 +1372,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.tc.value = owner.vat || '';
                         this.seller.input.phone_individual.value = owner.phone || '';
                         this.seller.input.email_individual.value = owner.email || '';
-                        if (owner.is_otp_verified) {
-                            this.seller.input.phone_individual.check.$.removeClass('d-none');
-                            this.seller.input.phone_individual.error.$.addClass('d-none');
-                        } else {
-                            this.seller.input.phone_individual.check.$.addClass('d-none');
-                            this.seller.input.phone_individual.error.$.removeClass('d-none');
-                        }
                     }
                     
                     if (owner.bank_ids && owner.bank_ids.length > 0) {
@@ -1369,13 +1380,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
                         this.seller.input.iban_name_individual.value = bankAccount.api_merchant || owner.name;
                         this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || owner.name;
-                        if (owner.bank_ids[0].is_verified) {
-                            this.seller.input.iban_name_individual.check.$.removeClass('d-none');
-                            this.seller.input.iban_name_individual.error.$.addClass('d-none');
-                        } else {
-                            this.seller.input.iban_name_individual.check.$.addClass('d-none');
-                            this.seller.input.iban_name_individual.error.$.removeClass('d-none');
-                        }
                     }
                     
                 }
@@ -1971,7 +1975,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializeSellerInfoForm: function () {
-        this._setupFileUpload();
         this._bindWizardToggle();
         if (this.state.id > 0) {
             this._prefillSellerFromAd(this.values.ads[this.state.id]);
@@ -1979,7 +1982,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializeProductInfoForm: function () {
-        this._setupFileUpload();
         if (this.state.id > 0) {
             this._getProductData();
             this._prefillProductFromAd(this.values.ads[this.state.id]);
@@ -1992,7 +1994,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializePaymentForm: function () {
-        this._setupFileUpload();
         this._updatePaymentAmounts(this.state.item_id);
     },
 

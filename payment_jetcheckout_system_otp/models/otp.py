@@ -14,6 +14,8 @@ class PartnerOtp(models.Model):
             otp.date_local = fields.Datetime.context_timestamp(otp, otp.date).strftime(DATETIME_FORMAT)
 
     partner_id = fields.Many2one('res.partner', string='Partner', readonly=True, copy=False)
+    phone = fields.Char(string='Phone', readonly=True, copy=False)
+    is_verified = fields.Boolean(string='Is Verified', default=False, readonly=True, copy=False)
     code = fields.Char(string='Code', readonly=True, copy=False)
     date = fields.Datetime(string='Date', readonly=True, copy=False)
     date_local = fields.Char(compute='_compute_date')
