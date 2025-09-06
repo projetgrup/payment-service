@@ -31,4 +31,17 @@
             </div>
         </div>
     </t>
+
+    <t t-name="paylox.escrow.transaction.item">
+        <t t-foreach="transactions" t-as="payment" t-key="payment.id">
+            <div class="col-6">
+                <small class="text-muted">Transaction ID:</small>
+                <div t-esc="payment.transaction.reference">#TXN-12345</div>
+            </div>
+            <div class="col-6">
+                <small class="text-muted">Amount:</small>
+                <div t-esc="payment.amount.total">2.400.000 TL</div>
+            </div>
+        </t>
+    </t>
 </templates>

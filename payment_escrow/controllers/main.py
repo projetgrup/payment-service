@@ -29,12 +29,12 @@ class CustomerPortal(portal.CustomerPortal):
 class PayloxSystemEscrowController(Controller):
 
     @http.route('/payment/escrow/transaction-data', type='json', auth='user', methods=['POST'])
-    def get_transaction_data(self, item_id=None, **kwargs):
+    def get_transaction_data(self, product_id=None, **kwargs):
         try:
-            if not item_id:
-                return {'error': 'No item ID provided'}
-            
-            payment_item = request.env['payment.item'].sudo().browse(int(item_id))
+            if not product_id:
+                return {'error': 'No product ID provided'}
+
+            payment_item = request.env['payment.item'].sudo().search([('product_id', '=', int(product_id))], limit=1)
             if not payment_item.exists():
                 return {'error': 'Payment item not found'}
             
@@ -99,6 +99,7 @@ class PayloxSystemEscrowController(Controller):
 
     def _get_tx_values(self, **kwargs):
         res = super()._get_tx_values(**kwargs)
+        raise Exception(res)
         system = kwargs.get('system', request.env.company.system)
         if system == 'escrow':
             items = kwargs.get('items', [])
@@ -251,15 +252,34 @@ class PayloxSystemEscrowController(Controller):
             })
         return values
     
+    @http.route(['/payment/escrow/get_items'], type='json', auth='user', methods=['POST'], website=True)
+    def get_items(self, id,**kwargs):
+        item = request.env['payment.item'].sudo().search([('product_id', '=', id)], limit=1)
+        if not item:
+            return {'error': 'Item not found'}
+        return {'item': item.read()[0]}
+    
     @http.route(['/my/iban/verify'], type='json', auth='user', methods=['POST'], website=True)
-    def verify_iban(self, iban, **kwargs):
+    def verify_iban(self, vat, iban, **kwargs):
         iban = sanitize_account_number(iban)
-        bank_account = request.env['res.partner.bank'].sudo().search([('sanitized_acc_number', '=', iban), ('api_state', '=', True)], limit=1)
+        bank_account = request.env['res.partner.bank'].sudo().search([
+            ('api_state', '=', True),
+            ('partner_id.vat', '=', vat),
+            ('sanitized_acc_number', '=', iban),
+        ], limit=1)
         return bool(bank_account)
     
     @route('/my/otp/validate', type='json', auth='user', methods=['POST'], website=True)
-    def validate_otp(self, otp=None, **kwargs):
-        partner = request.env['res.partner'].sudo().search([('mobile', '=', otp), ('is_otp_verified', '=', True)], limit=1)
+    def validate_otp(self, otp, **kwargs):
+        domain = [('mobile', 'like', '%%%s' % otp)]
+        try:
+            otp = '%s %s %s %s' % (otp[0:3], otp[3:6], otp[6:8], otp[8:10])
+            domain = ['|'] + domain + [('mobile', 'like', '%%%s' % otp)]
+        except:
+            pass
+
+        domain = [('is_otp_verified', '=', True)] + domain
+        partner = request.env['res.partner'].sudo().search(domain, limit=1)
         return bool(partner)
 
     @route('/my/otp/start', type='json', auth='user', methods=['POST'], website=True)

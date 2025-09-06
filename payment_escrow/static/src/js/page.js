@@ -29,7 +29,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             id: 0,
             step: 0,
         };
-
+        this.transaction = []
         this.currency = {
             id: 0,
             decimal: 2,
@@ -174,7 +174,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_individual: new fields.string({
-                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual)]],
+                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc.value)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -330,7 +330,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_corporate: new fields.string({
-                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_corporate)]],
+                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_corporate, this.seller.input.tc.value)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -421,7 +421,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 phone_individual: new fields.string({
                     events: [['input', () => this._isOtpValidate(this.customer.input.phone_individual)]],
                     mask: '000 000 0000',
-                    validate: async () => {
+                    validate: () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
                         const field = this.customer.input.phone_individual;
                         let message = null;
@@ -1035,13 +1035,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._hideFieldIcon(field);
     },
 
-    _isIbanVerified: async function(field) {
+    _isIbanVerified: async function(field, tc) {
         let iban = field._.masked.value;
         if (this._isIbanValid(iban)) {
             //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/iban/verify',
-                params: { iban },
+                params: { iban, tc },
             });
             if (result) {
                 this._showFieldSuccessIcon(field);
@@ -1308,7 +1308,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             const bankAccount = owner.bank_ids[0];
                             this.seller.input.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
                             this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || owner.name;
-                            this._isIbanVerified(this.seller.input.iban_corporate);
+                            this._isIbanVerified(this.seller.input.iban_corporate, owner.vat);
                         }
                     } else {
                         $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
@@ -1322,7 +1322,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             const bankAccount = owner.bank_ids[0];
                             this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
                             this.seller.input.iban_name_individual.value = bankAccount.api_merchant || owner.name;
-                            this._isIbanVerified(this.seller.input.iban_individual);
+                            this._isIbanVerified(this.seller.input.iban_individual, owner.vat);
                         }
                     }
                 }
@@ -1715,16 +1715,50 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     $('.payment-panel').addClass('d-none');
                     $('#payment_type').addClass('d-none');
                     this._showRemainingPaymentInfo();
-                    
                     if (options.itemId) {
-                        this._updatePaymentAmounts(options.itemId);
+                        this._updatePaymentAmounts(this.state.id);
                     }
                 }
                 break;
                 
             case 5:
-                this._updatePaymentAmounts(options.itemId, stateId);
+                this._initializeFinalStep(stateId);
+                this._updatePaymentAmounts(stateId);
         }
+    },
+
+    _initializeFinalStep: function(stateId) {
+        const self = this;
+        
+        this._rpc({
+            route: '/my/payment/transactions',
+            params: { 
+                state_id: stateId || this.state.id,
+                item_id: this.state.item_id
+            }
+        }).then(function(result) {
+            if (result && result.success) {
+                const templateData = {
+                    transactions: result.transactions || [],
+                    currency: self.currency,
+                    format: format
+                };
+                
+                const $rendered = $(QWeb.render('paylox.escrow.transaction.item', templateData));
+                
+                const $container = $('.final-step-transactions, .wizard-step-5 .transaction-list, .escrow-final-step');
+                if ($container.length) {
+                    $container.html($rendered);
+                } else {
+                    const $stepContainer = $('.wizard-step-5');
+                    if ($stepContainer.length) {
+                        $stepContainer.append($rendered);
+                    }
+                }
+            }
+        }).catch(function(error) {
+            console.error('Error loading transaction data:', error);
+        });
     },
 
     _setCookie: function (name, value, days=1) {
@@ -2257,33 +2291,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _updatePaymentAmounts: function(itemId) {
-        rpc.query({
+    _updatePaymentAmounts: async function(itemId) {
+        let data = await rpc.query({
             route: '/payment/escrow/transaction-data',
-            params: { item_id: itemId }
-        }).then(data => {
-            if (data && !data.error) {
-                this.payment.amount.previous.$.text(this._formatCurrency(data.previous_amount));
-                this.payment.amount.remaining.$.text(this._formatCurrency(data.remaining_amount));
-                this.payment.amount.total.$.text(this._formatCurrency(data.total_amount));
-                this.payment.transaction.reference.$.text(data.transaction_reference);
-                this.payment.transaction.date.$.text(data.transaction_date);
-                if (data.transaction_status){
-                    this.payment.transaction.status.$.text('Approved');
-                } else {
-                    this.payment.transaction.status.$.text('Pending');
-                }
-
-                const percentage = Math.round((data.previous_amount / data.total_amount) * 100);
-                $('.progress-text').text(percentage + '%');
-                const circumference = 219.8;
-                const offset = circumference - (percentage / 100) * circumference;
-                $('.progress-ring-fill').css('stroke-dashoffset', offset);
-            }
-            return data;
-        }).catch(error => {
-            console.error('Error fetching payment data:', error);
+            params: { product_id: itemId }
         });
+        if (data && !data.error) {
+            this.payment.amount.remaining.$.text(this._formatCurrency(data.remaining_amount));
+            if (data.transaction_status){
+                this.payment.transaction.status.$.text('Approved');
+            } else {
+                this.payment.transaction.status.$.text('Pending');
+            }
+        }
+        this.transaction = data;
+        return data;
+        
     },
 
     _formatCurrency: function(amount) {
