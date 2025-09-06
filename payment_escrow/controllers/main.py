@@ -249,6 +249,10 @@ class PayloxSystemEscrowController(Controller):
                 }
             })
         return values
+    
+    @route('/my/otp/validate', type='json', auth='user', methods=['POST'], website=True)
+    def validate_otp(self, otp=None, **kwargs):
+        return {'success': True, 'message': 'OTP service is currently unavailable', 'valid': True}
 
     @route('/my/otp/start', type='json', auth='user', methods=['POST'], website=True)
     def start_otp(self, partner_id=None, **kwargs):
