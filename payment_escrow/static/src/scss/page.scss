@@ -909,6 +909,28 @@
             font-weight: 600;
             padding: 12px;
         }
+        
+        .form__icon {
+            position: absolute;
+            right: 15px;
+            top: 40px;
+            z-index: 10;
+            pointer-events: none;
+            font-size: 16px;
+
+            &.fa-check-circle {
+                color: var(--success);
+            }
+
+            &.fa-exclamation-circle {
+                color: var(--danger);
+            }
+
+            &.fa-spinner {
+                color: var(--primary);
+            }
+            
+        }
 
         i.fa-phone-square{
             position: absolute;
@@ -1835,19 +1857,18 @@
 
     [field="wizard.loading"] {
         z-index: 9;
-        position: absolute;
         inset: 0;
+        position: absolute;
         justify-self: center;
-        top: 2em;
-        bottom: 2em;
         background: #eeeeeeaa;
-        background: linear-gradient(110deg, #ecececaa 8%, #fcfcfcaa 18%, #ecececaa 33%);
+        background: linear-gradient(110deg, #ffffffaa 8%, #eeeeeeaa 18%, #ffffffaa 33%);
         border-radius: calc(1.25rem);
         background-size: 200% 400%;
         animation: 1.5s shine linear infinite;
         backdrop-filter: blur(4px);
-        transition: all 0.5s;
+        transition: all 1s;
         pointer-events: none;
+        width: 100%;
 
         &.show {
             pointer-events: initial;
@@ -1973,9 +1994,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  border-radius: 50%;
   margin-right: calc(0.9375rem);
   font-size: calc(0.875rem);
   font-weight: 600;

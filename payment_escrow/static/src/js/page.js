@@ -134,20 +134,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 phone_individual: new fields.string({
+                    events: [['input', () => this._isOtpValidate(this.seller.input.phone_individual)]],
                     mask: '000 000 0000',
                     validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.phone_individual;
-                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            }  else if (!isOtpValidate) {
-                                message = _t('Phone number is not valid');
-                                valid = true;
                             }
                         }
                         this._onFieldValid(field, valid, message);
@@ -177,11 +174,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_individual: new fields.string({
+                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.iban_individual;
-                        const isIbanVerified = await this._isIbanVerified(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
@@ -191,9 +188,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             } else if (!this._isIbanValid(field._.masked.value)) {
                                 message = _t('IBAN is not valid');
                                 valid = false;
-                            } else if (!isIbanVerified) {
-                                message = _t('IBAN is not verified');
-                                valid = true;
                             }
                         }
                         this._onFieldValid(field, valid, message);
@@ -296,20 +290,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 phone_corporate: new fields.string({
+                    events: [['input', () => this._isOtpValidate(this.seller.input.phone_corporate)]],
                     mask: '000 000 0000',
                     validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.phone_corporate;
-                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            }  else if (!isOtpValidate) {
-                                message = _t('Phone number is not valid');
-                                valid = true;
                             }
                         }
                         this._onFieldValid(field, valid, message);
@@ -339,6 +330,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_corporate: new fields.string({
+                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_corporate)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -427,20 +419,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 phone_individual: new fields.string({
+                    events: [['input', () => this._isOtpValidate(this.customer.input.phone_individual)]],
                     mask: '000 000 0000',
                     validate: async () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
                         const field = this.customer.input.phone_individual;
-                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            }  else if (!isOtpValidate) {
-                                message = _t('Phone number is not valid');
-                                valid = true;
                             }
                         }
                         this._onFieldValid(field, valid, message);
@@ -558,20 +547,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 phone_corporate: new fields.string({
+                    events: [['input', () => this._isOtpValidate(this.customer.input.phone_corporate)]],
                     mask: '000 000 0000',
                     validate: async () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
                         const field = this.customer.input.phone_corporate;
-                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            }  else if (!isOtpValidate) {
-                                message = _t('Phone number is not valid');
-                                valid = true;
                             }
                         }
                         this._onFieldValid(field, valid, message);
@@ -1034,104 +1020,56 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _isOtpValidate: async function(field) {
-        const self = this;
         const value = field.value;
         if (value.length === 10) {
-            this._showFieldLoadingIcon(field);
-            return this._rpc({
+            //this._showFieldLoadingIcon(field);
+            let result = await this._rpc({
                 route: '/my/otp/validate',
                 params: { otp: value },
-            }).then(function (result) {
-                if (result && result.success) {
-                    self._showFieldSuccessIcon(field);
-                    return true;
-                } else {
-                    self._showFieldErrorIcon(field);
-                    return false;
-                }
-            })
+            });
+            if (result) {
+                this._showFieldSuccessIcon(field);
+                return result;
+            }
         } 
+        this._hideFieldIcon(field);
     },
 
     _isIbanVerified: async function(field) {
-        const self = this;
-        if (this._isIbanValid(field._.masked.value)) {
-            this._showFieldLoadingIcon(field);
-            this._rpc({
+        let iban = field._.masked.value;
+        if (this._isIbanValid(iban)) {
+            //this._showFieldLoadingIcon(field);
+            let result = await this._rpc({
                 route: '/my/iban/verify',
-                params: { iban: field._.masked.value },
-            }).then(function (result) {
-                if (result && result.success) {
-                    self._showFieldSuccessIcon(field);
-                    return true;
-                } else {
-                    self._showFieldErrorIcon(field);
-                    return false;
-                }
+                params: { iban },
             });
+            if (result) {
+                this._showFieldSuccessIcon(field);
+                return result;
+            }
         }
+        this._hideFieldIcon(field);
     },
 
     _showFieldSuccessIcon: function(field) {
-        this._hideFieldIcon(field);
-        const $group = field.$.closest('.form__group');
-        const $icon = $('<i class="fa fa-check-circle field-status-icon" aria-hidden="true"></i>');
-        $group.css('position', 'relative');
-        $icon.css({
-            position: 'absolute',
-            right: '15px',
-            top: '50%',
-            color: '#28a745',
-            transform: 'translateY(-50%)',
-            'z-index': 10,
-            'pointer-events': 'none',
-            'font-size': '16px',
-        });
-        $group.append($icon);
+        const $icon = field.$.closest('.form__group').find('.form__icon');
+        $icon.removeClass('fa-exclamation-circle fa-spinner fa-spin').addClass('fa-check-circle');
     },
 
     _showFieldErrorIcon: function(field) {
-        this._hideFieldIcon(field);
-        const $group = field.$.closest('.form__group');
-        const $icon = $('<i class="fa fa-exclamation-circle field-status-icon" aria-hidden="true"></i>');
+        const $icon = field.$.closest('.form__group').find('.form__icon');
+        $icon.removeClass('fa-check-circle fa-spinner fa-spin').addClass('fa-exclamation-circle');
 
-        $group.css('position', 'relative');
-        $icon.css({
-            position: 'absolute',
-            right: '15px',
-            top: '50%',
-            color: '#dc3545',
-            transform: 'translateY(-50%)',
-            'z-index': 10,
-            'pointer-events': 'none',
-            'font-size': '16px',
-        });
-
-        $group.append($icon);
     },
 
     _showFieldLoadingIcon: function(field) {
-        this._hideFieldIcon(field);
-        const $group = field.$.closest('.form__group');
-        const $icon = $('<i class="fa fa-spinner fa-spin field-status-icon" aria-hidden="true"></i>');
-
-        $group.css('position', 'relative');
-        $icon.css({
-            position: 'absolute',
-            right: '15px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            'z-index': 10,
-            'pointer-events': 'none',
-            'font-size': '16px',
-            color: '#0d6efd'
-        });
-
-        $group.append($icon);
+        const $icon = field.$.closest('.form__group').find('.form__icon');
+        $icon.removeClass('fa-check-circle fa-exclamation-circle').addClass('fa-spinner fa-spin');
     },
 
     _hideFieldIcon: function(field) {
-        field.$.closest('.form__group').find('.field-status-icon').remove();
+        const $icon = field.$.closest('.form__group').find('.form__icon');
+        $icon.removeClass('fa-exclamation-circle fa-check-circle fa-spinner fa-spin');
     },
 
     _isTcknValid: function(value) {
@@ -1217,16 +1155,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleSellerHolder: function() {
         const id = this.state.id;
-        if (this.values.ads[id].state === 'new') {
-            if (id) {
-                this._openSellerEditForCard(id, 'seller');
-            }
-        } else {
+        if (this.values.ads[id].state === 'sold') {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('This ad has already been finalized.'),
             });
+        } else {
+            if (id) {
+                this._openSellerEditForCard(id, 'seller');
+            }
         }
     },
 
@@ -1365,6 +1303,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.phone_corporate.$.val(owner.phone || '');
                         this.seller.input.email_corporate.$.val(owner.email || '');
                         this.seller.input.address_corporate.$.val(this._formatAddress(owner));
+                        this._isOtpValidate(this.seller.input.phone_corporate);
+                        if (owner.bank_ids && owner.bank_ids.length > 0) {
+                            const bankAccount = owner.bank_ids[0];
+                            this.seller.input.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
+                            this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || owner.name;
+                            this._isIbanVerified(this.seller.input.iban_corporate);
+                        }
                     } else {
                         $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
                         this._bindWizardToggle();
@@ -1372,26 +1317,27 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.tc.value = owner.vat || '';
                         this.seller.input.phone_individual.value = owner.phone || '';
                         this.seller.input.email_individual.value = owner.email || '';
+                        this._isOtpValidate(this.seller.input.phone_individual);
+                        if (owner.bank_ids && owner.bank_ids.length > 0) {
+                            const bankAccount = owner.bank_ids[0];
+                            this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
+                            this.seller.input.iban_name_individual.value = bankAccount.api_merchant || owner.name;
+                            this._isIbanVerified(this.seller.input.iban_individual);
+                        }
                     }
-                    
-                    if (owner.bank_ids && owner.bank_ids.length > 0) {
-                        const bankAccount = owner.bank_ids[0];
-                        this.seller.input.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
-                        this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
-                        this.seller.input.iban_name_individual.value = bankAccount.api_merchant || owner.name;
-                        this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || owner.name;
-                    }
-                    
                 }
                 return Promise.resolve();
             }).catch(() => {
                 console.warn('Could not load owner data for prefill');
             });
         }
+        $wiz.find('.form__control').removeClass('is-invalid -error just-validate-error-field');
+        $wiz.find('.form__error-label, .just-validate-error-label').remove();
     },
 
     _loadSellerInfoForSidebar: function(adId, ownerId) {
         const self = this;
+        const $wiz = $('.escrow-wizard');
         
         this._rpc({
             route: '/my/partner/get',
@@ -1419,10 +1365,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }).catch(() => {
             console.warn('Could not load seller data for sidebar');
         });
+        $wiz.find('.form__control').removeClass('is-invalid -error just-validate-error-field');
+        $wiz.find('.form__error-label, .just-validate-error-label').remove();
     },
 
     _prefillProductFromAd: function(adData) {
         if (!adData) return;
+
         if (adData.price) {
             this.ad.input.price.value = format.float(adData.price);
         }
@@ -1431,15 +1380,19 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.input.category.$.trigger('change');
         }
         
-        if (adData.vin) this.ad.input.vin.$.val(adData.vin);
-        if (adData.plate) this.ad.input.plate.$.val(adData.plate);
+        if (adData.vin) {
+            this.ad.input.vin.value = adData.vin;
+        }
+        if (adData.plate) {
+            this.ad.input.plate.value = adData.plate;
+        }
         
         if (adData.brand_id) {
             this.ad.input.brand.$.val(adData.brand_id);
             this.ad.input.brand.$.trigger('change');
         }
         if (adData.year) {
-            this.ad.input.year.$.val(adData.year);
+            this.ad.input.year.value = adData.year;
         }
 
         if (adData.img) {
@@ -1738,7 +1691,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _handleStepSpecificActions: function(stepNumber, options, stateId) {
         switch(stepNumber) {
             case 1:
-                if (this.state.id) {
+                if (!this.state.id) {
                     for (const input of Object.values(this.seller.input)) {
                         input.value = null;
                     }
@@ -1808,10 +1761,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.seller.button.close.$.attr('disabled', null);
     },
 
-    _nextStep: function () {
+    _nextStep: async function () {
         if (this.wizard.currentStep === 1) {
             for (const input of Object.values(this.seller.input)) {
-                let valid = input.validate();
+                let valid = await input.validate();
                 if (!valid) {
                     return this.displayNotification({
                         title: 'Error',
@@ -1867,7 +1820,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         if (this.wizard.currentStep === 2) {
             for (const input of Object.values(this.ad.input)) {
-                let valid = input.validate();
+                let valid = await input.validate();
                 if (!valid) {
                     return this.displayNotification({
                         title: 'Error',
@@ -1913,7 +1866,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
         if (this.wizard.currentStep === 3) {
             for (const input of Object.values(this.customer.input)) {
-                let valid = input.validate();
+                let valid = await input.validate();
                 if (!valid) {
                     return this.displayNotification({
                         title: 'Error',
@@ -2367,7 +2320,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         $wiz.find('#customer_phone_corporate').value = null;
         $wiz.find('#customer_email_corporate').value = null;
         $wiz.find('#customer_address_corporate').value = null;
-        
+
         $wiz.find('.form__control').removeClass('is-invalid -error just-validate-error-field');
         $wiz.find('.form__error-label, .just-validate-error-label').remove();
     },

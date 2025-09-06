@@ -160,6 +160,7 @@
                                 <span>Transfer IBAN</span>
                             </label>
                             <input class="form__control -letter" id="wizard_iban_corp" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_corporate"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="ibanaccountname_corporate">Transfer Account Name</label>
@@ -172,6 +173,7 @@
                         <div class="form__group">
                             <label class="form__label" for="phone_corporate">Authorized Mobile Phone</label>
                             <input class="form__control -letter" id="phone_corporate" name="phone" type="text" placeholder="e.g: 532 123 3456" field="seller.input.phone_corporate"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
                         </div>
                         <div class="form__group -mb-0">
                             <label class="form__label" for="email_corporate">Authorized Email</label>
@@ -190,6 +192,7 @@
                         <div class="form__group">
                             <label class="form__label" for="phone_individual">Mobile Phone</label>
                             <input class="form__control -letter" id="phone_individual" name="phone" type="text" placeholder="E.g.: 532 123 3456" field="seller.input.phone_individual"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="email_individual">E-Mail</label>
@@ -200,6 +203,7 @@
                                 <span>Transfer IBAN</span>
                             </label>
                             <input class="form__control -letter" id="wizard_iban" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_individual"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
                         </div>
                         <div class="form__group -mb-0">
                             <label class="form__label" for="ibanaccountname_individual">Transferring account name</label>

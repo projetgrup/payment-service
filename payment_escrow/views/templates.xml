@@ -202,7 +202,7 @@
                                     <span>Back</span>
                             </button>
                             
-                            <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center pt-5 p-sm-0">
+                            <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center pt-5 p-sm-0 position-static">
 
                                 <div class="wizard-loading fade" field="wizard.loading">
                                 </div>

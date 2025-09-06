@@ -89,6 +89,7 @@ class fields {
         this.$.val(v);
         if (this._) {
             this._.updateValue();
+            this._.updateControl();
         }
     }
 
