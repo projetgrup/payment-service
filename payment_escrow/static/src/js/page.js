@@ -131,23 +131,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 phone_individual: new fields.string({
                     mask: '000 000 0000',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.phone_individual;
-                        const isOtpValidate = this._isOtpValidate(field);
+                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            } 
+                            }  else if (!isOtpValidate) {
+                                message = _t('Phone number is not valid');
+                                valid = true;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 email_individual: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
@@ -173,9 +174,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 iban_individual: new fields.string({
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.iban_individual;
+                        const isIbanVerified = await this._isIbanVerified(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
@@ -185,13 +187,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             } else if (!this._isIbanValid(field._.masked.value)) {
                                 message = _t('IBAN is not valid');
                                 valid = false;
+                            } else if (!isIbanVerified) {
+                                message = _t('IBAN is not verified');
+                                valid = true;
                             }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 iban_name_individual: new fields.string({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
@@ -290,22 +293,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 phone_corporate: new fields.string({
                     mask: '000 000 0000',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
                         const field = this.seller.input.phone_corporate;
+                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            } 
+                            }  else if (!isOtpValidate) {
+                                message = _t('Phone number is not valid');
+                                valid = true;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 email_corporate: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
@@ -419,22 +424,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 phone_individual: new fields.string({
                     mask: '000 000 0000',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
                         const field = this.customer.input.phone_individual;
+                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
                         if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            } 
+                            }  else if (!isOtpValidate) {
+                                message = _t('Phone number is not valid');
+                                valid = true;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 email_individual: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
@@ -548,22 +555,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 phone_corporate: new fields.string({
                     mask: '000 000 0000',
-                    validate: () => {
+                    validate: async () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
                         const field = this.customer.input.phone_corporate;
+                        const isOtpValidate = await this._isOtpValidate(field);
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod == 'individual' ) {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
-                            } 
+                            }  else if (!isOtpValidate) {
+                                message = _t('Phone number is not valid');
+                                valid = true;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     },
-                    check: new fields.element(),
-                    error: new fields.element()
                 }),
                 email_corporate: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
@@ -1020,7 +1029,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return parseInt(total, 10) === 1;
     },
 
-    _isOtpValidate: function(field) {
+    _isOtpValidate: async function(field) {
         const self = this;
         const value = field.value;
         if (value.length === 10) {
@@ -1030,17 +1039,33 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 params: { otp: value },
             }).then(function (result) {
                 if (result && result.success) {
-                    if (result.valid) {
-                        self._showFieldSuccessIcon(field);
-
-                        return true;
-                    } else {
-                        self._showFieldErrorIcon(field);
-                        return false;
-                    }
+                    self._showFieldSuccessIcon(field);
+                    return true;
+                } else {
+                    self._showFieldErrorIcon(field);
+                    return false;
                 }
             })
         } 
+    },
+
+    _isIbanVerified: async function(field) {
+        const self = this;
+        if (this._isIbanValid(field._.masked.value)) {
+            this._showFieldLoadingIcon(field);
+            this._rpc({
+                route: '/my/iban/verify',
+                params: { iban: field._.masked.value },
+            }).then(function (result) {
+                if (result && result.success) {
+                    self._showFieldSuccessIcon(field);
+                    return true;
+                } else {
+                    self._showFieldErrorIcon(field);
+                    return false;
+                }
+            });
+        }
     },
 
     _showFieldSuccessIcon: function(field) {
@@ -1335,13 +1360,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.phone_corporate.$.val(owner.phone || '');
                         this.seller.input.email_corporate.$.val(owner.email || '');
                         this.seller.input.address_corporate.$.val(this._formatAddress(owner));
-                        if (owner.is_otp_verified) {
-                            this.seller.input.phone_corporate.check.$.removeClass('d-none');
-                            this.seller.input.phone_corporate.error.$.addClass('d-none');
-                        } else {
-                            this.seller.input.phone_corporate.check.$.addClass('d-none');
-                            this.seller.input.phone_corporate.error.$.removeClass('d-none');
-                        }
                     } else {
                         $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
                         this._bindWizardToggle();
@@ -1349,13 +1367,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.tc.value = owner.vat || '';
                         this.seller.input.phone_individual.value = owner.phone || '';
                         this.seller.input.email_individual.value = owner.email || '';
-                        if (owner.is_otp_verified) {
-                            this.seller.input.phone_individual.check.$.removeClass('d-none');
-                            this.seller.input.phone_individual.error.$.addClass('d-none');
-                        } else {
-                            this.seller.input.phone_individual.check.$.addClass('d-none');
-                            this.seller.input.phone_individual.error.$.removeClass('d-none');
-                        }
                     }
                     
                     if (owner.bank_ids && owner.bank_ids.length > 0) {
@@ -1364,13 +1375,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
                         this.seller.input.iban_name_individual.value = bankAccount.api_merchant || owner.name;
                         this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || owner.name;
-                        if (owner.bank_ids[0].is_verified) {
-                            this.seller.input.iban_name_individual.check.$.removeClass('d-none');
-                            this.seller.input.iban_name_individual.error.$.addClass('d-none');
-                        } else {
-                            this.seller.input.iban_name_individual.check.$.addClass('d-none');
-                            this.seller.input.iban_name_individual.error.$.removeClass('d-none');
-                        }
                     }
                     
                 }

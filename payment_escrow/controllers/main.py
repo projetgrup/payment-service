@@ -250,9 +250,32 @@ class PayloxSystemEscrowController(Controller):
             })
         return values
     
+    @http.route(['/my/iban/verify'], type='json', auth='user', methods=['POST'], website=True)
+    def verify_iban(self, iban=None, **kwargs):
+        try:
+            if not iban:
+                return {'success': False, 'message': 'Missing IBAN'}
+
+            iban = sanitize_account_number(iban)
+            bank_account = request.env['res.partner.bank'].sudo().search([('sanitized_acc_number', '=', iban)], limit=1)
+            if not bank_account.exists():
+                return {'success': False, 'message': 'IBAN not found'}
+
+            if not bank_account.api_state:
+                return {'success': False, 'message': 'IBAN is not verified'}
+
+            return {'success': True, 'message': 'IBAN is verified'}
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+    
     @route('/my/otp/validate', type='json', auth='user', methods=['POST'], website=True)
     def validate_otp(self, otp=None, **kwargs):
-        return {'success': True, 'message': 'OTP service is currently unavailable', 'valid': True}
+        partner = request.env['res.partner'].sudo().search([('mobile', '=', otp)], limit=1)
+        if not partner:
+            return {'success': False, 'message': 'Partner not found'}
+        if partner.is_otp_verified:
+            return {'success': True, 'message': 'OTP already verified'}
+        return {'success': False, 'message': 'OTP service is currently unavailable'}
 
     @route('/my/otp/start', type='json', auth='user', methods=['POST'], website=True)
     def start_otp(self, partner_id=None, **kwargs):
@@ -271,6 +294,7 @@ class PayloxSystemEscrowController(Controller):
                     'partner_id': partner.id,
                     'company_id': request.env.company.id,
                     'lang': request.env.lang or 'tr_TR',
+                    'phone': partner.mobile
                 })
                 return {
                     'success': True,
