@@ -1085,16 +1085,32 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleVehicleHolder: function() {
         const id = this.state.id;
-        this.state.item_id = this.values.ads[id].item_id;
-        if (id) {
-            this._openSellerEditForCard(id, 'vehicle');
+        if (this.values.ads[id].state === 'new') {
+            this.state.item_id = this.values.ads[id].item_id;
+            if (id) {
+                this._openSellerEditForCard(id, 'vehicle');
+            }
+        } else {
+            this.displayNotification({
+                type: 'warning',
+                title: _t('Warning'),
+                message: _t('This ad has already been finalized.'),
+            });
         }
     },
 
     _onToggleSellerHolder: function() {
         const id = this.state.id;
-        if (id) {
-            this._openSellerEditForCard(id, 'seller');
+        if (this.values.ads[id].state === 'new') {
+            if (id) {
+                this._openSellerEditForCard(id, 'seller');
+            }
+        } else {
+            this.displayNotification({
+                type: 'warning',
+                title: _t('Warning'),
+                message: _t('This ad has already been finalized.'),
+            });
         }
     },
 
@@ -1170,7 +1186,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
                 price: $this.find('.escrow-ad-item-price').data('value'),
-                state: $this.find('.escrow-ad-item-state').html().trim(),
+                state: $this.find('.escrow-ad-item-state').data('value'),
                 ...values
             };
             $this.data('value', null);
@@ -1541,7 +1557,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-vin').text(value.vin || 'Not specified');
 
             $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
-            $item.find('.escrow-ad-item-state').html(value.state);
+            $item.find('.escrow-ad-item-state').html(`<span class="${value.state === 'new' ? 'success' : 'danger'}">${value.state === 'new' ? _t('New') : _t('Sold')}</span>`);
             if (value.residual_amount !== undefined) {
                 $('#remainingBalance').text(format.currency(value.residual_amount, this.currency.position, this.currency.symbol, this.currency.decimal));
             }
@@ -1953,7 +1969,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     name: product.ad.name,
                     categ: product.ad.categ,
                     price: product.ad.price,
-                    state: product.ad.state,
+                    //state: product.ad.state,
                     owner_id: product.ad.owner_id,
                     customer_id: product.ad.customer_id,
                     vin: product.ad.vin,
