@@ -203,6 +203,10 @@
                             </button>
                             
                             <div class="col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center pt-5 p-sm-0">
+
+                                <div class="wizard-loading fade" field="wizard.loading">
+                                </div>
+
                                 <div class="wizard-step wizard-step-1" style="display:none">
                                     <t t-call="payment_escrow.step_1_content"/>
                                 </div>

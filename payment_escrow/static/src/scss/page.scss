@@ -1832,6 +1832,28 @@
         border-radius: initial !important;
         box-shadow: none !important;
     }
+
+    [field="wizard.loading"] {
+        z-index: 9;
+        position: absolute;
+        inset: 0;
+        justify-self: center;
+        top: 2em;
+        bottom: 2em;
+        background: #eeeeeeaa;
+        background: linear-gradient(110deg, #ecececaa 8%, #fcfcfcaa 18%, #ecececaa 33%);
+        border-radius: calc(1.25rem);
+        background-size: 200% 400%;
+        animation: 1.5s shine linear infinite;
+        backdrop-filter: blur(4px);
+        transition: all 0.5s;
+        pointer-events: none;
+
+        &.show {
+            pointer-events: initial;
+            cursor: wait;
+        }
+    }
 }
 
 /* Payment (Step 3) */

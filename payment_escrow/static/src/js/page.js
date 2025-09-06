@@ -54,7 +54,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
             file: new fields.element({
                 events: [['change', this._onFileChange]]
-            })
+            }),
+            loading: new fields.element()
         };
         this.amount = new fields.float({
             events: [
@@ -1089,17 +1090,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleVehicleHolder: function() {
         const id = this.state.id;
-        if (this.values.ads[id].state === 'new') {
-            this.state.item_id = this.values.ads[id].item_id;
-            if (id) {
-                this._openSellerEditForCard(id, 'vehicle');
-            }
-        } else {
+        if (this.values.ads[id].state === 'sold') {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),
                 message: _t('This ad has already been finalized.'),
             });
+        } else {
+            this.state.item_id = this.values.ads[id].item_id;
+            if (id) {
+                this._openSellerEditForCard(id, 'vehicle');
+            }
         }
     },
 
@@ -1307,7 +1308,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickButtonCreate: function (ev) {
-        this._onChangeStep(1, { scratch: true });
+        this.state.id = 0;
+        this._onChangeStep(1);
     },
 
     _closeSidebar: function() {
@@ -1732,7 +1734,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _handleStepSpecificActions: function(stepNumber, options, stateId) {
         switch(stepNumber) {
             case 1:
-                if (options.scratch) {
+                if (this.state.id) {
                     for (const input of Object.values(this.seller.input)) {
                         input.value = null;
                     }
@@ -1792,98 +1794,115 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         //window.location.hash = hash;
     },
 
+    _disableWizard: function() {
+        this.wizard.loading.$.addClass('show');
+        this.seller.button.close.$.attr('disabled', 'disabled');
+    },
+
+    _enableWizard: function() {
+        this.wizard.loading.$.removeClass('show');
+        this.seller.button.close.$.attr('disabled', null);
+    },
+
     _nextStep: function () {
-        const self = this;
         if (this.wizard.currentStep === 1) {
             for (const input of Object.values(this.seller.input)) {
                 let valid = input.validate();
                 if (!valid) {
-                    return self.displayNotification({
+                    return this.displayNotification({
                         title: 'Error',
                         message: 'An error occurred while saving seller information.',
                         type: 'warning',
                     });
                 }
             }
-            this._saveSellerInfo().then(function(result) {
-                if (result.success && result.partner_id) {
-                    self.wizard.sellerId = result.partner_id;
 
-                    self.displayNotification({
+            this._disableWizard();
+            this._saveSellerInfo().then((result) => {
+                if (result.success && result.partner_id) {
+                    this.wizard.sellerId = result.partner_id;
+                    this.displayNotification({
                         type: 'success',
                         title: 'Success',
                         message: 'Seller information saved',
                     });
 
-                    return self._startOtp(result.partner_id).then((otpRes) => {
+                    return this._startOtp(result.partner_id).then((otpRes) => {
                         if (otpRes && otpRes.success) {
-                            self.wizard.otpId = otpRes.otp_id;
-                            self._showOtpModal(otpRes.expires_in || 120);
+                            this.wizard.otpId = otpRes.otp_id;
+                            this._showOtpModal(otpRes.expires_in || 120);
                         } else if (otpRes && otpRes.is_otp_verified) {
-                            self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
-                            self._markStepCompleted(self.wizard.currentStep);
-                            self._onChangeStep(self.wizard.currentStep + 1);
+                            this.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
+                            this._markStepCompleted(this.wizard.currentStep);
+                            this._onChangeStep(this.wizard.currentStep + 1);
                         } else {
-                            self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
+                            this.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
                         }
+                    }).finally(() => {
+                        this._enableWizard();
                     });
 
                 } else {
-                    self.displayNotification({
+                    this.displayNotification({
                         type: 'danger',
                         title: 'Error',
                         message: result.message || 'An error occurred while saving seller information.',
                     });
                 }
-            }).catch(function(error) {
-                self.displayNotification({
+            }).catch((error) => {
+                this.displayNotification({
                     type: 'danger',
                     title: 'Error',
                     message: 'Connection error occurred.',
                 });
                 console.error('Error saving seller info:', error);
+            }).finally(() => {
+                this._enableWizard();
             });
         }
 
         if (this.wizard.currentStep === 2) {
             for (const input of Object.values(this.ad.input)) {
                 let valid = input.validate();
-                console.log('Validating input:', input, 'Result:', valid);
                 if (!valid) {
-                    return self.displayNotification({
+                    return this.displayNotification({
                         title: 'Error',
                         message: 'An error occurred while saving ad information.',
                         type: 'warning',
                     });
                 }
             }
-            this._saveAdData().then(function(result) {
+
+            this._disableWizard();
+            this._saveAdData().then((result) => {
                 if (result.success || result.id) {
                     if (result.id) {
-                        self.state.id = result.id;
-                        self.state.item_id = result.item_id;
+                        this.state.id = result.id;
+                        this.state.item_id = result.item_id;
                     }
-                    self._markStepCompleted(self.wizard.currentStep);
-                    self._onChangeStep(self.wizard.currentStep + 1);
+                    this._markStepCompleted(this.wizard.currentStep);
+                    this._onChangeStep(this.wizard.currentStep + 1);
 
-                    self.displayNotification({
+                    this.displayNotification({
                         type: 'success',
                         title: 'Success',
                         message: result.message || 'Product information has been saved.',
                     });
                 } else {
-                    self.displayNotification({
+                    this.displayNotification({
                         type: 'danger',
                         title: 'Error',
                         message: result.message || 'Product information could not be saved.',
                     });
                 }
-            }).catch(function(error) {
-                self.displayNotification({
+            }).catch((error) => {
+                this.displayNotification({
                     type: 'danger',
                     title: 'Error',
                     message: 'Connection error occurred.',
                 });
+            }).finally(() => {
+                this._enableWizard();
             });
             return false;
         }
@@ -1891,49 +1910,54 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (this.wizard.currentStep === 3) {
             for (const input of Object.values(this.customer.input)) {
                 let valid = input.validate();
-                console.log('Validating input:', input, 'Result:', valid);
                 if (!valid) {
-                    return self.displayNotification({
+                    return this.displayNotification({
                         title: 'Error',
                         message: 'An error occurred while saving customer information.',
                         type: 'warning',
                     });
                 }
             }
-            this._saveCustomerInfo().then(function(result) {
+
+            this._disableWizard();
+            this._saveCustomerInfo().then((result) => {
                 if (result.success && result.partner_id) {
-                    return self._startOtp(result.partner_id).then(function(otpRes){
+                    return this._startOtp(result.partner_id).then((otpRes) => {
                         if (otpRes && otpRes.success) {
-                            self.wizard.otpId = otpRes.otp_id;
-                            self._showOtpModal({ expiresIn: otpRes.expires_in || 120 });
-                            self.displayNotification({
+                            this.wizard.otpId = otpRes.otp_id;
+                            this._showOtpModal({ expiresIn: otpRes.expires_in || 120 });
+                            this.displayNotification({
                                 type: 'success',
                                 title: 'Success',
                                 message: result.message || 'Customer information saved. A verification code has been sent.',
                             });
                         } else if (otpRes && otpRes.is_otp_verified) {
-                            self.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
-                            self._markStepCompleted(self.wizard.currentStep);
-                            self._onChangeStep(self.wizard.currentStep + 1);
+                            this.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
+                            this._markStepCompleted(this.wizard.currentStep);
+                            this._onChangeStep(this.wizard.currentStep + 1);
                         } else {
-                            self.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
+                            this.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
                         }
+                    }).finally(() => {
+                        this._enableWizard();
                     });
                 } else if (result.success) {
-                    self.displayNotification({ type: 'warning', title: 'Customer', message: 'Saved but verification could not start.' });
+                    this.displayNotification({ type: 'warning', title: 'Customer', message: 'Saved but verification could not start.' });
                 } else {
-                    self.displayNotification({
+                    this.displayNotification({
                         type: 'danger',
                         title: 'Error',
                         message: result.message || 'Customer Information could not be saved.',
                     });
                 }
-            }).catch(function(error) {
-                self.displayNotification({
+            }).catch((error) => {
+                this.displayNotification({
                     type: 'danger',
                     title: 'Error',
                     message: 'Connection error occurred.',
                 });
+            }).finally(() => {
+                this._enableWizard();
             });
             return false;
         }
