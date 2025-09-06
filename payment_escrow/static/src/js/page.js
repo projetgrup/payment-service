@@ -222,7 +222,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.seller.input.corporate_title;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field.value) {
                                 message = _t('Corporate title is required');
                                 valid = false;
@@ -242,7 +242,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.seller.input.tax_number;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field._.masked.isComplete) {
                                 message = _t('Tax ID is required');
                                 valid = false;
@@ -261,7 +261,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.seller.input.tax_office;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
+                        if (mod === 'corporate'&& !field.value) {
                             message = _t('Tax Office title is required');
                             valid = false;
                         }
@@ -276,7 +276,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.seller.input.corporate_person;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field.value) {
                                 message = _t('Corporate person is required');
                                 valid = false;
@@ -297,7 +297,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.seller.input.phone_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod === 'individual' ) {
+                        if (mod === 'corporate') {
                             if (!field._.masked.isComplete) {
                                 message = _t('Phone number is required');
                                 valid = false;
@@ -314,7 +314,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.seller.input.email_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field.value) {
                                 message = _t('Email is required');
                                 valid = false;
@@ -337,7 +337,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.seller.input.iban_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
                                 valid = false;
@@ -359,7 +359,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.seller.input.iban_name_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field.value) {
                                 message = _t('IBAN name is required');
                                 valid = false;
@@ -479,7 +479,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.customer.input.corporate_title;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field.value) {
                                 message = _t('Corporate title is required');
                                 valid = false;
@@ -499,7 +499,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.customer.input.tax_number;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field._.masked.isComplete) {
                                 message = _t('Tax ID is required');
                                 valid = false;
@@ -518,7 +518,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.customer.input.tax_office;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
+                        if (mod === 'corporate'&& !field.value) {
                             message = _t('Tax office is required');
                             valid = false;
                         }
@@ -533,7 +533,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.customer.input.corporate_person;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field.value) {
                                 message = _t('Corporate person is required');
                                 valid = false;
@@ -549,7 +549,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 phone_corporate: new fields.string({
                     events: [['input', () => this._isOtpValidate(this.customer.input.phone_corporate)]],
                     mask: '000 000 0000',
-                    validate: async () => {
+                    validate: () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
                         const field = this.customer.input.phone_corporate;
                         let message = null;
@@ -571,7 +571,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.customer.input.email_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' ) {
+                        if (mod === 'corporate') {
                             if (!field.value) {
                                 message = _t('Email is required');
                                 valid = false;
@@ -592,7 +592,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.customer.input.address_corporate;
                         let message = null;
                         let valid = true;
-                        if (mod == 'corporate' && !field.value) {
+                        if (mod === 'corporate'&& !field.value) {
                             message = _t('Address is required');
                             valid = false;
                         }
