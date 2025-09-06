@@ -29,12 +29,12 @@ class CustomerPortal(portal.CustomerPortal):
 class PayloxSystemEscrowController(Controller):
 
     @http.route('/payment/escrow/transaction-data', type='json', auth='user', methods=['POST'])
-    def get_transaction_data(self, item_id=None, **kwargs):
+    def get_transaction_data(self, product_id=None, **kwargs):
         try:
-            if not item_id:
-                return {'error': 'No item ID provided'}
-            
-            payment_item = request.env['payment.item'].sudo().browse(int(item_id))
+            if not product_id:
+                return {'error': 'No product ID provided'}
+
+            payment_item = request.env['payment.item'].sudo().search([('product_id', '=', int(product_id))], limit=1)
             if not payment_item.exists():
                 return {'error': 'Payment item not found'}
             
@@ -99,6 +99,7 @@ class PayloxSystemEscrowController(Controller):
 
     def _get_tx_values(self, **kwargs):
         res = super()._get_tx_values(**kwargs)
+        raise Exception(res)
         system = kwargs.get('system', request.env.company.system)
         if system == 'escrow':
             items = kwargs.get('items', [])
@@ -251,8 +252,15 @@ class PayloxSystemEscrowController(Controller):
             })
         return values
     
+    @http.route(['/payment/escrow/get_items'], type='json', auth='user', methods=['POST'], website=True)
+    def get_items(self, id,**kwargs):
+        item = request.env['payment.item'].sudo().search([('product_id', '=', id)], limit=1)
+        if not item:
+            return {'error': 'Item not found'}
+        return {'item': item.read()[0]}
+    
     @http.route(['/my/iban/verify'], type='json', auth='user', methods=['POST'], website=True)
-    def verify_iban(self, vat, iban, **kwargs):
+    def verify_iban(self, iban, vat, **kwargs):
         iban = sanitize_account_number(iban)
         bank_account = request.env['res.partner.bank'].sudo().search([
             ('api_state', '=', True),
@@ -648,7 +656,6 @@ class PayloxSystemEscrowController(Controller):
                 else:
                     partner_data['comment'] = iban_info
 
-            
             partner_field = company._get_payment_partner_unique_field()
             partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'owner')])
             if not partner:
@@ -656,7 +663,7 @@ class PayloxSystemEscrowController(Controller):
             else:
                 partner.write(partner_data)
 
-            iban_verified = self.verify_iban(vat, iban)
+            iban_verified = self.verify_iban(iban, vat)
             if kwargs.get('seller_iban') and not iban_verified:
                 iban_raw = kwargs.get('seller_iban', '')
                 iban_sanitized = sanitize_account_number(iban_raw)
