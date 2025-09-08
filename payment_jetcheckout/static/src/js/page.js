@@ -892,7 +892,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
             this.campaign.name.value = $input.data('campaign');
             this.campaign.name.$.trigger('change');
-        } 
+        }
     },
 
     _onClickInstallmentCredit: function (ev) {
@@ -1065,6 +1065,8 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 format: format,
                                 ...self.currency,
                             });
+
+                            self.installment.row.$.find('.installment-selected').trigger('click');
 
                             if (self.installment.summary.exist) {
                                 self.installment.summary.html = qweb.render('paylox.installment.summary', {
@@ -1658,6 +1660,9 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             technical: false,
         });
         popup.open();
+        popup.on_detach_callback = () => {
+            framework.hideLoading();
+        };
     },
 
     _onClickPaymentContactless: function() {

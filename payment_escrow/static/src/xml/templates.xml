@@ -33,15 +33,65 @@
     </t>
 
     <t t-name="paylox.escrow.transaction.item">
-        <t t-foreach="transactions" t-as="payment" t-key="payment.id">
-            <div class="col-6">
-                <small class="text-muted">Transaction ID:</small>
-                <div t-esc="payment.transaction.reference">#TXN-12345</div>
+        <div class="transaction-summary">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <small class="text-muted">Total Amount:</small>
+                    <div class="font-weight-bold text-nowrap" t-esc="format.currency(total_amount, currency.position, currency.symbol, currency.decimal)">0</div>
+                </div>
+                <div class="col-4">
+                    <small class="text-muted">Paid Amount:</small>
+                    <div class="text-success font-weight-bold text-nowrap" t-esc="format.currency(previous_amount, currency.position, currency.symbol, currency.decimal)">0</div>
+                </div>
+                <div class="col-4">
+                    <small class="text-muted">Remaining Amount:</small>
+                    <div class="text-warning font-weight-bold text-nowrap" t-esc="format.currency(remaining_amount, currency.position, currency.symbol, currency.decimal)">0</div>
+                </div>
             </div>
-            <div class="col-6">
-                <small class="text-muted">Amount:</small>
-                <div t-esc="payment.amount.total">2.400.000 TL</div>
+            
+            <div class="col-12 mb-3" t-if="paid">
+                <div class="alert alert-success">
+                    <i class="fa fa-check-circle"></i> Payment Completed
+                </div>
             </div>
-        </t>
+            
+            <div t-if="transactions and transactions.length > 0">
+                <h5 class="mb-3">Payment History</h5>
+                <div class="transaction-list">
+                    <t t-foreach="transactions" t-as="payment" t-key="payment.id">
+                        <div class="transaction-item border rounded p-3 mb-2">
+                            <div class="row">
+                                <div class="col-6">
+                                    <small class="text-muted">Reference:</small>
+                                    <div class="font-weight-bold text-nowrap" t-esc="payment.reference">No Reference</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Amount:</small>
+                                    <div t-attf-class="font-weight-bold text-nowrap {{ payment.status === 'done' ? 'text-success' : payment.status === 'error' ? 'text-danger' : 'text-muted' }}" t-esc="format.currency(payment.amount, currency.position, currency.symbol, currency.decimal)">0</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Date:</small>
+                                    <div class="text-nowrap" t-esc="new Date(payment.date).toLocaleDateString('tr-TR')">-</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Status:</small>
+                                    <div>
+                                        <span t-attf-class="text-nowrap badge badge-pill {{ payment.status === 'done' ? 'badge-success' : payment.status === 'error' ? 'badge-danger' : 'badge-dark' }}" t-esc="payment.status">-</span>
+                                    </div>
+                                </div>
+                                <div t-if="payment.status !== 'done' and payment.message" class="col-12 border-top mt-2 text-muted small">
+                                    <small class="text-muted">Message:</small>
+                                    <div t-esc="payment.message"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            
+            <div t-if="!transactions or transactions.length === 0" class="text-center text-muted">
+                <i class="fa fa-info-circle"></i> No payments found
+            </div>
+        </div>
     </t>
 </templates>

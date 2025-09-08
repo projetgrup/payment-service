@@ -80,10 +80,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     value = 0;
                 }
                 this._onFieldValid(field, valid, message);
-                this.payment.amount.paid.$.text(this._formatCurrency(value));
+                this._onInputAmount();
                 return valid;
             }
-        })
+        });
+        this.installment = {
+            row: new fields.string({
+                events: [['click', this._onClickInstallmentRow]],
+            }),
+        };
         this.partner = new fields.integer({
             default: 0,
         });
@@ -380,9 +385,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.customer = {
             input: {
                 tc: new fields.string({
-                    events: [['input', () => {
-                        this._lookupCustomerByIdentity(this.customer.input.tc.value, $('input[name="customerUserType"]:checked').val())
-                    }]],
+                    events: [['input', this._lookupCustomerByIdentity]],
                     mask: '00000000000',
                     validate: () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
@@ -947,6 +950,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._startToggles();
             $('.escrow-ad-wrapper').removeClass('d-none');
             framework.hideLoading();
+            setTimeout(() => {
+                $('div.o_loading').addClass('transparent');
+            }, 2000);
         });
     },
 
@@ -1616,6 +1622,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._onChangeStep(this.wizard.currentStep - 1);
     },
 
+    _onInputAmount: function (ev) {
+        this._onClickInstallmentRow();
+    },
+
+    _onClickInstallmentRow: function () {
+        const $el = $('[field="installment.row"] .installment-selected');
+        const value = $el.data('value') || 0;
+        this.payment.amount.paid.$.text(format.currency(value, this.currency.position, this.currency.symbol, this.currency.decimal));
+    },
+
     _onChangeStep: function (step, options={}) {
         if (step < 0 || step > 5) {
             return;
@@ -1712,45 +1728,53 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 
             case 4:
                 this._initializePaymentForm();
-                this._updatePaymentAmounts();
                 break;
                 
             case 5:
                 this._initializeFinalStep();
-                this._updatePaymentAmounts();
         }
     },
 
-    _initializeFinalStep: function() {        
-        // this._rpc({
-        //     route: '/my/payment/transactions',
-        //     params: { 
-        //         state_id: stateId || this.state.id,
-        //         item_id: this.state.item_id
-        //     }
-        // }).then(function(result) {
-        //     if (result && result.success) {
-        //         const templateData = {
-        //             transactions: result.transactions || [],
-        //             currency: self.currency,
-        //             format: format
-        //         };
-                
-        //         const $rendered = $(qweb.render('paylox.escrow.transaction.item', templateData));
-                
-        //         const $container = $('.final-step-transactions, .wizard-step-5 .transaction-list, .escrow-final-step');
-        //         if ($container.length) {
-        //             $container.html($rendered);
-        //         } else {
-        //             const $stepContainer = $('.wizard-step-5');
-        //             if ($stepContainer.length) {
-        //                 $stepContainer.append($rendered);
-        //             }
-        //         }
-        //     }
-        // }).catch(function(error) {
-        //     console.error('Error loading transaction data:', error);
-        // });
+    _initializeFinalStep: function() {
+        const self = this;
+        
+        this._rpc({
+            route: '/payment/escrow/transaction-data',
+            params: { 
+                product_id: this.state.id,
+            }
+        }).then(function(result) {
+            if (result && !result.error) {
+                const templateData = {
+                    total_amount: result.total_amount || 0,
+                    previous_amount: result.previous_amount || 0,
+                    remaining_amount: result.remaining_amount || 0,
+                    transactions: result.transactions || [],
+                    paid: result.paid || false,
+                    currency: self.currency,
+                    format: format
+                };
+                const $rendered = $(qweb.render('paylox.escrow.transaction.item', templateData));
+
+                const $container = $('.paylox-transaction-summary');
+                if ($container.length) {
+                    $container.append($rendered);
+                }
+                if (result.paid > 0) {
+                    self.payment.transaction.status.html = 'Success';
+                    self.payment.transaction.status.$.addClass('text-success');
+                    self.payment.transaction.date.html = result.paid_date;
+                } else {
+                    self.payment.transaction.status.html = 'Pending';
+                    self.payment.transaction.status.$.addClass('text-warning');
+                    self.payment.transaction.date.html = '-';
+                }
+            } else {
+                console.error('Error loading transaction data:', result && result.error);
+            }
+        }).catch(function(error) {
+            console.error('Error loading transaction data:', error);
+        });
     },
 
     _setCookie: function (name, value, days=1) {
@@ -2274,21 +2298,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             params: { product_id: this.state.id }
         });
         if (data && !data.error) {
-            this.payment.amount.remaining.$.text(this._formatCurrency(data.remaining_amount));
-            if (data.transaction_status){
-                this.payment.transaction.status.$.text('Approved');
-            } else {
-                this.payment.transaction.status.$.text('Pending');
-            }
+            this.payment.amount.remaining.$.text(format.currency(data.remaining_amount, this.currency.position, this.currency.symbol, this.currency.decimal));
         }
-        this.transaction = data;
         return data;
-        
-    },
-
-    _formatCurrency: function(amount) {
-        if (!amount) return '0 TL';
-        return new Intl.NumberFormat('tr-TR').format(amount) + ' TL';
     },
 
     _onToggleDifferentHolder: function(event) {
@@ -2406,36 +2418,44 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         reader.readAsDataURL(file);
     },
 
-    _lookupCustomerByIdentity: function(identity, customerType) {
-        const self = this;
-        if (identity.length === 11) {
+    _lookupCustomerByIdentity: function() {
+        let customerType = $('input[name="customerUserType"]:checked').val();
+        let vat, vatLength;
+        if (customerType === 'individual') {
+            vat = this.customer.input.tc.value;
+            vatLength = 11;
+        } else {
+            vat = this.customer.input.tax_number.value;
+            vatLength = 10;
+        }
+        if (vat.length === vatLength) {
             this._rpc({
                 route: '/my/customer/lookup',
                 params: {
-                    identity: identity,
+                    identity: vat,
                     customer_type: customerType
                 }
-            }).then(function(result) {
+            }).then((result) => {
                 if (result && result.success && result.found) {
                     const data = result.customer_data;
                     if (customerType === 'individual') {
-                        self.customer.input.name.value = data.name || '';
-                        self.customer.input.phone_individual.value = data.phone || '';
-                        self.customer.input.email_individual.value = data.email || '';
-                        self.customer.input.address_individual.value = data.address || '';
-                        self.customer.input.identity.value = data.vat || '';
-                        this._isOtpValidate(self.customer.input.phone_individual);
+                        this.customer.input.name.value = data.name || '';
+                        this.customer.input.phone_individual.value = data.phone || '';
+                        this.customer.input.email_individual.value = data.email || '';
+                        this.customer.input.address_individual.value = data.address || '';
+                        this.customer.input.tc.value = data.vat || '';
+                        this._isOtpValidate(this.customer.input.phone_individual);
                     } else {
-                        self.customer.input.corporate_title.value = data.name || '';
-                        self.customer.input.tax_number.value = data.vat || '';
-                        self.customer.input.tax_office.value = data.tax_office || '';
-                        self.customer.input.phone_corporate.value = data.phone || '';
-                        self.customer.input.email_corporate.value = data.email || '';
-                        self.customer.input.address_corporate.value = data.address || '';
-                        this._isOtpValidate(self.customer.input.phone_corporate);
+                        this.customer.input.corporate_title.value = data.name || '';
+                        this.customer.input.tax_number.value = data.vat || '';
+                        this.customer.input.tax_office.value = data.tax_office || '';
+                        this.customer.input.phone_corporate.value = data.phone || '';
+                        this.customer.input.email_corporate.value = data.email || '';
+                        this.customer.input.address_corporate.value = data.address || '';
+                        this._isOtpValidate(this.customer.input.phone_corporate);
                     }
                 }
-            }).catch(function(error) {
+            }).catch((error) => {
                 console.error('Error looking up customer:', error);
             });
         }

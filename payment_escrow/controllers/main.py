@@ -38,34 +38,37 @@ class PayloxSystemEscrowController(Controller):
             if not payment_item.exists():
                 return {'error': 'Payment item not found'}
             
-            transactions = request.env['payment.transaction'].sudo().search([
-                ('paylox_transaction_item_ids.item_id', '=', payment_item.id),
-                ('state', '=', 'done')
-            ])
-            
+            transactions = payment_item.transaction_ids
             total_amount = payment_item.amount
-            paid_amount = sum(tx.amount for tx in transactions)
-            remaining_amount = total_amount - paid_amount
-            
-            latest_transaction = transactions.sorted('create_date', reverse=True)[:1]
-            transaction_reference = latest_transaction.reference if latest_transaction else ''
-            
+            paid_amount = payment_item.paid_amount
+            remaining_amount = payment_item.residual_amount
+
+            transaction_list = []
+            for tx in transactions:
+                transaction_list.append({
+                    'id': tx.id,
+                    'reference': tx.reference,
+                    'amount': tx.amount,
+                    'date': tx.create_date.isoformat() if tx.create_date else '',
+                    'status': tx.state,
+                    'message': tx.state_message,
+                    'payment_method': tx.acquirer_id.name if tx.acquirer_id else 'Unknown'
+                })
             return {
                 'total_amount': total_amount,
                 'previous_amount': paid_amount,
                 'remaining_amount': remaining_amount,
-                'transaction_reference': transaction_reference,
-                'currency': 'TL',
                 'paid': payment_item.paid,
-                'transaction_date': latest_transaction.create_date if latest_transaction else '',
-                'transaction_status': transactions.paylox_product_ids[0]['product_id']['escrow_ad_approval'] 
+                'transactions': transaction_list,
+                'paid_date': payment_item.paid_date.strftime('%d.%m.%Y') if payment_item.paid_date else '',
+                'currency': 'TL'
             }
             
         except Exception as e:
+            _logger.error("Error in get_transaction_data: %s", str(e))
             return {'error': str(e)}
 
     def _generate_hash_url(self, step=0, id=0, owner=None, status=None):
-        """Generate hashed URL for escrow system navigation"""
         import base64
         import json
         from urllib.parse import quote
@@ -117,17 +120,18 @@ class PayloxSystemEscrowController(Controller):
         if system == 'escrow':
             products = kwargs.get('products', [])
             payment_items = request.env['payment.item'].sudo().search([('product_id', 'in', products and [p['pid'] for p in products] or [])])
-            res['paylox_transaction_item_ids'] = [(0, 0, {
-                    'item_id': rec.id,
-                    'amount': kwargs.get('amount', 0.0),
-                    'ref': rec.ref,
-                    'date': rec.date,
-                    'desc': rec.description,
-                    'advance': rec.advance,
-                })
-                for rec in payment_items
-            ]
             res.update({
+                'paylox_transaction_item_ids':[(0, 0, {
+                        'item_id': rec.id,
+                        'amount': kwargs.get('amount', 0.0),
+                        'ref': rec.ref,
+                        'date': rec.date,
+                        'desc': rec.description,
+                        'advance': rec.advance,
+                    })
+                    for rec in payment_items
+                ],
+                'jetcheckout_item_ids': [(6, 0, payment_items.ids)],
                 'jetcheckout_approval_ok': True,
             })
         return res

@@ -27,7 +27,7 @@
                     <h3>Payment Completed</h3>
                 </div>
                 <div class="completion-content">
-                    <div class="success-icon-container text-center mb-4">
+                    <div class="success-icon-container text-center mt-2 mb-4">
                         <div class="success-icon">
                             <i class="fa fa-check-circle text-success" style="font-size: 4rem;"/>
                         </div>
@@ -51,11 +51,11 @@
                                 <div class="row mt-2">
                                     <div class="col-6">
                                         <small class="text-muted">Status:</small>
-                                        <div class="text-success" field="payment.transaction.status">Completed</div>
+                                        <div field="payment.transaction.status"></div>
                                     </div>
                                     <div class="col-6">
                                         <small class="text-muted">Date:</small>
-                                        <div field="payment.transaction.date">Aug 29, 2025</div>
+                                        <div field="payment.transaction.date"></div>
                                     </div>
                                 </div>
                             </div>
@@ -456,7 +456,7 @@
                             </div>
                         </div>
                         <div class="form__buttons">
-                            <div t-if="agreements" class="field-container field-agreement fade show" field="agreements">
+                            <div t-if="agreements" class="field-agreement" field="agreements">
                                 <t t-foreach="agreements" t-as="agreement">
                                     <div class="btn btn-payment-agreement" t-att-data-id="agreement.id" field="agreement">
                                         <label class="switch">

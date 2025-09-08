@@ -194,7 +194,7 @@
             <t t-set="selected" t-value="true"/>
             <t t-foreach="rows" t-as="row">
                 <t t-set="val" t-value="value * (1 + (row.crate / 100)) * (1 + (row.irate / 100))"/>
-                <div t-attf-class="installment-line #{selected ? 'installment-selected' : ''}">
+                <div t-attf-class="installment-line #{selected ? 'installment-selected' : ''}" t-att-data-value="val">
                     <div class="installment-cell">
                         <div class="text-center">
                             <input type="radio" t-att-name="row.id" t-att-value="row.id" t-att-checked="selected ? 'checked' : undefined" t-att-data-id="row.id" class="d-block mx-auto"/>
