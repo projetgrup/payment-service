@@ -41,31 +41,37 @@ class PayloxSystemEscrowController(Controller):
             transactions = request.env['payment.transaction'].sudo().search([
                 ('paylox_transaction_item_ids.item_id', '=', payment_item.id),
                 ('state', '=', 'done')
-            ])
+            ], order='create_date desc')
             
             total_amount = payment_item.amount
             paid_amount = sum(tx.amount for tx in transactions)
             remaining_amount = total_amount - paid_amount
-            
-            latest_transaction = transactions.sorted('create_date', reverse=True)[:1]
-            transaction_reference = latest_transaction.reference if latest_transaction else ''
+
+            transaction_list = []
+            for tx in transactions:
+                transaction_list.append({
+                    'id': tx.id,
+                    'reference': tx.reference,
+                    'amount': tx.amount,
+                    'date': tx.create_date.isoformat() if tx.create_date else '',
+                    'status': tx.state,
+                    'payment_method': tx.acquirer_id.name if tx.acquirer_id else 'Unknown'
+                })
             
             return {
                 'total_amount': total_amount,
                 'previous_amount': paid_amount,
                 'remaining_amount': remaining_amount,
-                'transaction_reference': transaction_reference,
-                'currency': 'TL',
                 'paid': payment_item.paid,
-                'transaction_date': latest_transaction.create_date if latest_transaction else '',
-                'transaction_status': transactions.paylox_product_ids[0]['product_id']['escrow_ad_approval'] 
+                'transactions': transaction_list,
+                'currency': 'TL'
             }
             
         except Exception as e:
+            _logger.error("Error in get_transaction_data: %s", str(e))
             return {'error': str(e)}
 
     def _generate_hash_url(self, step=0, id=0, owner=None, status=None):
-        """Generate hashed URL for escrow system navigation"""
         import base64
         import json
         from urllib.parse import quote
@@ -239,7 +245,7 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.country_id.name)
             values.update({
                 'submerchant_external_id': reference_seller,
-                'is_submerchant_payment': True,
+                # 'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
                     "name": fullname[0],

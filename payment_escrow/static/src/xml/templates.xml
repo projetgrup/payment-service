@@ -33,15 +33,59 @@
     </t>
 
     <t t-name="paylox.escrow.transaction.item">
-        <t t-foreach="transactions" t-as="payment" t-key="payment.id">
-            <div class="col-6">
-                <small class="text-muted">Transaction ID:</small>
-                <div t-esc="payment.transaction.reference">#TXN-12345</div>
+        <div class="transaction-summary">
+            <div class="row mb-3">
+                <div class="col-4">
+                    <small class="text-muted">Total Amount:</small>
+                    <div class="font-weight-bold" t-esc="format.currency(total_amount, currency.position, currency.symbol, currency.decimal)">0 TL</div>
+                </div>
+                <div class="col-4">
+                    <small class="text-muted">Paid Amount:</small>
+                    <div class="text-success font-weight-bold" t-esc="format.currency(previous_amount, currency.position, currency.symbol, currency.decimal)">0 TL</div>
+                </div>
+                <div class="col-4">
+                    <small class="text-muted">Remaining Amount:</small>
+                    <div class="text-warning font-weight-bold" t-esc="format.currency(remaining_amount, currency.position, currency.symbol, currency.decimal)">0 TL</div>
+                </div>
             </div>
-            <div class="col-6">
-                <small class="text-muted">Amount:</small>
-                <div t-esc="payment.amount.total">2.400.000 TL</div>
+            
+            <div class="col-12 mb-3" t-if="paid">
+                <div class="alert alert-success">
+                    <i class="fa fa-check-circle"></i> Payment Completed
+                </div>
             </div>
-        </t>
+            
+            <div t-if="transactions and transactions.length > 0">
+                <h5 class="mb-3">Payment History</h5>
+                <div class="transaction-list">
+                    <t t-foreach="transactions" t-as="payment" t-key="payment.id">
+                        <div class="transaction-item border rounded p-3 mb-2">
+                            <div class="row">
+                                <div class="col-6">
+                                    <small class="text-muted">Transaction Reference:</small>
+                                    <div class="font-weight-bold" t-esc="payment.reference">No Reference</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Amount:</small>
+                                    <div class="text-success font-weight-bold" t-esc="format.currency(payment.amount, currency.position, currency.symbol, currency.decimal)">0 TL</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Date:</small>
+                                    <div t-esc="new Date(payment.date).toLocaleDateString('tr-TR')">-</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Payment Method:</small>
+                                    <div t-esc="payment.payment_method">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            
+            <div t-if="!transactions or transactions.length === 0" class="text-center text-muted">
+                <i class="fa fa-info-circle"></i> No payments found
+            </div>
+        </div>
     </t>
 </templates>

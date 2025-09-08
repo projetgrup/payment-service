@@ -1713,7 +1713,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 break;
                 
             case 4:
-                console.log('Initializing payment form for stateId:', this.state.id);
                 this._initializePaymentForm();
                 this._updatePaymentAmounts();
                 break;
@@ -1725,38 +1724,36 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializeFinalStep: function() {
-        console.log(this.state);
-
+        const self = this;
         
-        // this._rpc({
-        //     route: '/my/payment/transactions',
-        //     params: { 
-        //         state_id: stateId || this.state.id,
-        //         item_id: this.state.item_id
-        //     }
-        // }).then(function(result) {
-        //     if (result && result.success) {
-        //         const templateData = {
-        //             transactions: result.transactions || [],
-        //             currency: self.currency,
-        //             format: format
-        //         };
-                
-        //         const $rendered = $(qweb.render('paylox.escrow.transaction.item', templateData));
-                
-        //         const $container = $('.final-step-transactions, .wizard-step-5 .transaction-list, .escrow-final-step');
-        //         if ($container.length) {
-        //             $container.html($rendered);
-        //         } else {
-        //             const $stepContainer = $('.wizard-step-5');
-        //             if ($stepContainer.length) {
-        //                 $stepContainer.append($rendered);
-        //             }
-        //         }
-        //     }
-        // }).catch(function(error) {
-        //     console.error('Error loading transaction data:', error);
-        // });
+        this._rpc({
+            route: '/payment/escrow/transaction-data',
+            params: { 
+                product_id: this.state.id,
+            }
+        }).then(function(result) {
+            if (result && !result.error) {
+                const templateData = {
+                    total_amount: result.total_amount || 0,
+                    previous_amount: result.previous_amount || 0,
+                    remaining_amount: result.remaining_amount || 0,
+                    paid: result.paid || false,
+                    transactions: result.transactions || [],
+                    currency: self.currency,
+                    format: format
+                };
+                const $rendered = $(qweb.render('paylox.escrow.transaction.item', templateData));
+
+                const $container = $('.paylox-transaction-summary');
+                if ($container.length) {
+                    $container.append($rendered);
+                } 
+            } else {
+                console.error('Error loading transaction data:', result && result.error);
+            }
+        }).catch(function(error) {
+            console.error('Error loading transaction data:', error);
+        });
     },
 
     _setCookie: function (name, value, days=1) {
@@ -2290,9 +2287,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 this.payment.transaction.status.$.text('Pending');
             }
         }
-        this.transaction = data;
         return data;
-        
     },
 
     _formatCurrency: function(amount) {
