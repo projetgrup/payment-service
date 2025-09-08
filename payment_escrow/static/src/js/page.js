@@ -29,6 +29,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             id: 0,
             step: 0,
             owner: 0,
+            customer: 0,
             status: '',
         };
         this.transaction = []
@@ -929,6 +930,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     step: state.s,
                     owner: state.o,
                     status: state.t,
+                    customer: state.c,
                 });
             } catch {
                 window.history.replaceState(null, '', window.location.pathname);
@@ -1280,7 +1282,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickButtonCreate: function (ev) {
-        Object.assign(this.state, { id: 0, owner: 0 });
+        Object.assign(this.state, { id: 0, owner: 0, customer: 0 });
         this._onChangeStep(1);
     },
 
@@ -1289,6 +1291,43 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         $('.escrow-ad-sidebar-section').addClass('d-none');
         this.ad.sideback.$.addClass('d-none');
         this.ad.sidebar.$.removeClass('show');
+    },
+
+    _prefillCustomerFromAd: function() {
+        const $wiz = $('.escrow-wizard');
+        let customerId = this.state.customer;
+
+        if (customerId) {
+            this._rpc({
+                route: '/my/partner/get',
+                params: { partner_id: customerId }
+            }).then((customerData) => {
+                if (customerData.success) {
+                    const customer = customerData.partner;
+                    if (!customer.is_company) {
+                        $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
+                        this._bindWizardToggle();
+                        this.customer.input.name.value = customer.name || '';
+                        this.customer.input.tc.value = customer.vat || '';
+                        this.customer.input.phone_individual.value = customer.phone || '';
+                        this.customer.input.email_individual.value = customer.email || '';
+                        this.customer.input.address_individual.value = this._formatAddress(customer);
+                        this._isOtpValidate(this.customer.input.phone_individual);
+                    } else {
+                        $wiz.find('input[name="userType"][value="corporate"]').prop('checked', true);
+                        this._bindWizardToggle();
+                        this.customer.input.corporate_title.value = customer.name || '';
+                        this.customer.input.tax_number.value = customer.vat || '';
+                        this.customer.input.tax_office.value = customer.commercial_partner_id?.name || '';
+                        this.customer.input.corporate_person.value = customer.name || '';
+                        this.customer.input.address_corporate.value = this._formatAddress(customer);
+                        this.customer.input.phone_corporate.value = customer.phone || '';
+                        this.customer.input.email_corporate.value = customer.email || '';
+                        this._isOtpValidate(this.customer.input.phone_corporate);
+                    }
+                }
+            });
+        }
     },
 
     _prefillSellerFromAd: function(adData) {
@@ -1802,6 +1841,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             s: this.state.step,
             o: this.state.owner,
             t: this.state.status,
+            c: this.state.customer
         }
         let hash = btoa(JSON.stringify(values));
         let url = new URL(window.location); url.searchParams.set('', hash);
@@ -1923,6 +1963,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._disableWizard();
             this._saveCustomerInfo().then((result) => {
                 if (result.success && result.partner_id) {
+                    this.state.customer = result.partner_id;
                     return this._startOtp(result.partner_id).then((otpRes) => {
                         if (otpRes && otpRes.success) {
                             this.wizard.otpId = otpRes.otp_id;
@@ -1979,6 +2020,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _initializeCustomerInfoForm: function () {
         this._bindRecipientToggle();
+        this._prefillCustomerFromAd();
     },
 
     _initializePaymentForm: function () {
@@ -1992,6 +2034,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             params: { ad_id: self.state.id },
         }).then((product) => {
             if (product && product.success) {
+                self.state.owner = product.ad.owner_id;
                 self.values.ads[product.ad.id] = {
                     id: product.ad.id,
                     img: product.ad.image,
