@@ -686,7 +686,7 @@ class PayloxSystemEscrowController(Controller):
                         return {
                             'success': False,
                             'partner_id': partner.id,
-                            'message': bank.message
+                            'message': bank.api_message
                         }
                 #else:
                 #    existing.write(bank_vals)
