@@ -16,8 +16,7 @@ payloxPage.include({
         const params = this._super.apply(this, arguments);
         this._getEscrowItems();
         params.system = 'escrow';
-        params.ad_id = this.state.id;
-        // params.files = this._getEscrowFiles();
+        params.products = [{'pid': this.state.id, 'qty': 1}];
         return params;
     },
 

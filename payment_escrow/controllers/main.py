@@ -64,6 +64,25 @@ class PayloxSystemEscrowController(Controller):
         except Exception as e:
             return {'error': str(e)}
 
+    def _generate_hash_url(self, step=0, id=0, owner=None, status=None):
+        """Generate hashed URL for escrow system navigation"""
+        import base64
+        import json
+        from urllib.parse import quote
+        
+        values = {
+            'i': id,
+            's': step,
+        }
+        
+        if owner is not None:
+            values['o'] = owner
+        if status is not None:
+            values['t'] = status
+            
+        hash_value = base64.b64encode(json.dumps(values).encode('utf-8')).decode('utf-8')
+        return f'/my/ads?={quote(hash_value)}'
+
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
         system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
@@ -77,49 +96,37 @@ class PayloxSystemEscrowController(Controller):
                             if not payment_item.paid:
                                 payment_items_paid = False
                                 break
-                item_id = None
+                
+                product_id = 0
                 if tx.paylox_transaction_item_ids:
-                    first_item_line = tx.paylox_transaction_item_ids[0]
-                    if first_item_line.item_id:
-                        item_id = first_item_line.item_id.id
+                    first_item = tx.paylox_transaction_item_ids[0]
+                    if first_item.item_id and first_item.item_id.product_id:
+                        product_id = first_item.item_id.product_id.id
                 
                 if payment_items_paid:
-                    url = f'/my/ads?step=5'
-                    if item_id:
-                        url += f"&item_id={item_id}&product_id={tx.paylox_product_ids[0]['product_id']}"
+                    url = self._generate_hash_url(step=5, id=product_id)
                 else:
-                    url = f'/my/ads?step=4&status=completed'
-                    if item_id:
-                        url += f"&item_id={item_id}&product_id={tx.paylox_product_ids[0]['product_id']}"
-            elif tx.state in ['error', 'cancel']:
-                url = '/my/ads?step=4&status=error'
+                    url = self._generate_hash_url(step=5, id=product_id, status='partial')
             else:
-                url = '/my/ads?step=result'
+                url = self._generate_hash_url(step=5, status='error')
         return url, tx, status
 
     def _get_tx_values(self, **kwargs):
         res = super()._get_tx_values(**kwargs)
-        raise Exception(res)
         system = kwargs.get('system', request.env.company.system)
         if system == 'escrow':
-            items = kwargs.get('items', [])
-            ids = [i for i, null in items]
-            item = {
-                item.id: {
-                    'ref': item.ref,
-                    'date': item.date,
-                    'desc': item.description,
-                    'advance': item.advance,
-                } for item in request.env['payment.item'].sudo().browse(ids)
-            }
+            products = kwargs.get('products', [])
+            payment_items = request.env['payment.item'].sudo().search([('product_id', 'in', products and [p['pid'] for p in products] or [])])
             res['paylox_transaction_item_ids'] = [(0, 0, {
-                'item_id': id,
-                'amount': amount,
-                'ref': item[id]['ref'],
-                'date': item[id]['date'],
-                'desc': item[id]['desc'],
-                'advance': item[id]['advance'],
-            }) for id, amount in items]
+                    'item_id': rec.id,
+                    'amount': kwargs.get('amount', 0.0),
+                    'ref': rec.ref,
+                    'date': rec.date,
+                    'desc': rec.description,
+                    'advance': rec.advance,
+                })
+                for rec in payment_items
+            ]
             res.update({
                 'jetcheckout_approval_ok': True,
             })
@@ -129,22 +136,21 @@ class PayloxSystemEscrowController(Controller):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
 
-            if kwargs.get('file'):
-                for f in kwargs['file']:
-                    if f['type'] == 'conveyance':
-                        attachment = request.env['ir.attachment'].sudo().create({
-                            'name': _('%s - %s') % (transaction.reference, f['name'] or _('File.pdf')),
-                            'res_model': transaction._name,
-                            'res_id': transaction.id,
-                            'mimetype': f['mimetype'] or 'application/pdf',
-                            'datas': f['data'],
-                            'type': 'binary',
-                        })
-                        body = _('User has been signed conveyance. User IP Address is %s') % (transaction.jetcheckout_ip_address or request.httprequest.remote_addr,)
-                        self.message_post(body=body, attachment_ids=attachment.ids)
-                        transaction.message_post()
-                        break
-
+            # if kwargs.get('file'):
+            #     for f in kwargs['file']:
+            #         if f['type'] == 'conveyance':
+            #             attachment = request.env['ir.attachment'].sudo().create({
+            #                 'name': _('%s - %s') % (transaction.reference, f['name'] or _('File.pdf')),
+            #                 'res_model': transaction._name,
+            #                 'res_id': transaction.id,
+            #                 'mimetype': f['mimetype'] or 'application/pdf',
+            #                 'datas': f['data'],
+            #                 'type': 'binary',
+            #             })
+            #             body = _('User has been signed conveyance. User IP Address is %s') % (transaction.jetcheckout_ip_address or request.httprequest.remote_addr,)
+            #             self.message_post(body=body, attachment_ids=attachment.ids)
+            #             transaction.message_post()
+            #             break
             product = transaction.paylox_product_ids[0]
             customer_basket = []
 
@@ -277,7 +283,6 @@ class PayloxSystemEscrowController(Controller):
             domain = ['|'] + domain + [('mobile', 'like', '%%%s' % otp)]
         except:
             pass
-
         domain = [('is_otp_verified', '=', True)] + domain
         partner = request.env['res.partner'].sudo().search(domain, limit=1)
         return bool(partner)
