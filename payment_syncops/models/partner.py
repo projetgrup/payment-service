@@ -175,7 +175,7 @@ class PartnerBank(models.Model):
             company = bank.partner_id.company_id or self.env.company
             if company.syncops_check_iban and has_group_check_iban:
                 if bank.syncops_api_state and bank.api_state:
-                    bank.api_result = '<i class="fa fa-check text-primary" title="%s"/><i class="fa fa-check text-primary" title="" style="position:absolute;pointer-events:none;margin-top:1px;margin-left:-8px;"/>' % bank.api_message
+                    bank.api_result = '<i class="fa fa-check text-primary" title="%s"/><i class="fa fa-check text-primary" title="" style="position:absolute;pointer-events:none;margin-top:2px;margin-left:-8px;"/>' % bank.api_message
                 elif bank.syncops_api_state:
                     bank.api_result = '<i class="fa fa-check text-primary" title="%s"/>' % bank.api_message
                 elif bank.api_message:
