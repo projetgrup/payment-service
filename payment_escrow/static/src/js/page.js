@@ -175,7 +175,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_individual: new fields.string({
-                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc.value)]],
+                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -186,7 +186,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
                                 valid = false;
-                            } else if (!this._isIbanValid(field.value)) {
+                            } else if (!this._isIbanValid(field._.masked.value)) {
                                 message = _t('IBAN is not valid');
                                 valid = false;
                             }
@@ -342,7 +342,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
                                 valid = false;
-                            } else if (!this._isIbanValid(field.value)) {
+                            } else if (!this._isIbanValid(field._.masked.value)) {
                                 message = _t('IBAN is not valid');
                                 valid = false;
                             }
@@ -1274,7 +1274,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickButtonCreate: function (ev) {
-        this.state.id = 0;
+        Object.assign(this.state, {
+            id: 0,
+            owner: 0,
+        });
         this._onChangeStep(1);
     },
 
@@ -1626,6 +1629,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (step === 0) {
+            Object.assign(this.state, {
+                id: 0,
+                owner: 0,
+            });
             this.seller.wizard.$.fadeOut(200, () => {
                 $('.header').removeClass('header__steps');
                 this.seller.ads.$.fadeIn(200);
