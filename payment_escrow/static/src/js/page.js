@@ -931,7 +931,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 window.history.replaceState(null, '', window.location.pathname);
             }
         }
-        console.log(this.state);
         this._onChangeStep(this.state.step, { init: true });
     },
 
@@ -1019,7 +1018,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             remainder = remainder.substring(9);
             total = (parseInt(block, 10) % 97).toString();
         }
-        console.log(parseInt(total, 10) === 1);
         return parseInt(total, 10) === 1;
     },
 
@@ -1713,7 +1711,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 break;
                 
             case 4:
-                console.log('Initializing payment form for stateId:', this.state.id);
                 this._initializePaymentForm();
                 this._updatePaymentAmounts();
                 break;
@@ -1724,10 +1721,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _initializeFinalStep: function() {
-        console.log(this.state);
-
-        
+    _initializeFinalStep: function() {        
         // this._rpc({
         //     route: '/my/payment/transactions',
         //     params: { 
@@ -1960,7 +1954,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializeCustomerInfoForm: function () {
-        console.log('test')
         this._bindRecipientToggle();
     },
 
@@ -2431,6 +2424,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         self.customer.input.email_individual.value = data.email || '';
                         self.customer.input.address_individual.value = data.address || '';
                         self.customer.input.identity.value = data.vat || '';
+                        this._isOtpValidate(self.customer.input.phone_individual);
                     } else {
                         self.customer.input.corporate_title.value = data.name || '';
                         self.customer.input.tax_number.value = data.vat || '';
@@ -2438,13 +2432,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         self.customer.input.phone_corporate.value = data.phone || '';
                         self.customer.input.email_corporate.value = data.email || '';
                         self.customer.input.address_corporate.value = data.address || '';
+                        this._isOtpValidate(self.customer.input.phone_corporate);
                     }
-                    self.displayNotification({
-                        type: 'info',
-                        title: 'Customer Found',
-                        message: 'Customer information has been automatically filled from existing records.',
-                        sticky: false
-                    });
                 }
             }).catch(function(error) {
                 console.error('Error looking up customer:', error);

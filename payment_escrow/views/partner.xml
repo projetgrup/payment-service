@@ -424,7 +424,6 @@
                         attrs="{'invisible': [('escrow_customer_ad_count', '=', 0)]}">
                     <field name="escrow_customer_ad_count" widget="statinfo" string="My Ads"/>
                 </button>
-                
                 <button name="action_view_successful_payments" 
                         type="object" 
                         class="oe_stat_button" 
@@ -432,7 +431,6 @@
                         attrs="{'invisible': [('escrow_successful_payment_count', '=', 0)]}">
                     <field name="escrow_successful_payment_count" widget="statinfo" string="Successful Payments"/>
                 </button>
-                
                 <button name="action_view_failed_payments" 
                         type="object" 
                         class="oe_stat_button" 
@@ -463,8 +461,24 @@
             <field name="acquirer_branch_id" string="Branch" domain="[('company_id', '=', company_id)]"/>
             <field name="is_company" invisible="1"/>
         </xpath>
-        <xpath expr='//field[@name="mobile"]' position="before">
+        <xpath expr='//field[@name="mobile"]' position="replace">
+            <field name="paylox_escrow_type" string="Type" widget="badge"/>
             <field name="phone" widget="phone"/>
+            <label for="mobile"/>
+            <div class="position-relative">
+                <field name="mobile" widget="phone" nolabel="1" required="1"/>
+                <div class="position-absolute d-flex justify-content-end align-items-baseline" style="left: -5em; top: 0; gap: 6px;">
+                    <span class="text-500" attrs="{'invisible': [('is_otp_verified', '=', False)]}">
+                        <span class="text-monospace font-weight-bold">OTP</span>
+                        <i class="fa fa-check ml4"/>
+                    </span>
+                    <span class="text-500" attrs="{'invisible': [('is_otp_verified', '=', True)]}">
+                        <span class="text-monospace font-weight-bold">OTP</span>
+                        <i class="fa fa-times ml4"/>
+                    </span>
+                </div>
+            </div>
+            <field name="is_otp_verified" invisible="1"/>
         </xpath>
         <xpath expr='//field[@name="acquirer_branch_id"]' position="replace"/>
         <xpath expr='//group[@name="communication"]' position="replace"/>
