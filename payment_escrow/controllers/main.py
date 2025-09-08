@@ -687,6 +687,12 @@ class PayloxSystemEscrowController(Controller):
 
                 if not existing:
                     bank.create(bank_vals)
+                    if not bank.api_state:
+                        return {
+                            'success': False,
+                            'partner_id': partner.id,
+                            'message': bank.api_message
+                        }
                 #else:
                 #    existing.write(bank_vals)
 
