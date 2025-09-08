@@ -45,15 +45,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <h6 class="card-title">Transaction Summary</h6>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <small class="text-muted">Transaction ID:</small>
-                                        <div field="payment.transaction.reference">#TXN-12345</div>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">Amount:</small>
-                                        <div field="payment.amount.total">2.400.000 TL</div>
-                                    </div>
+                                <div class="row paylox-transaction-summary">
+                                    
                                 </div>
                                 <div class="row mt-2">
                                     <div class="col-6">
@@ -70,9 +63,6 @@
                     </div>
                     
                     <div class="completion-actions text-center">
-                        <button type="button" class="btn btn-primary mr-2" onclick="window.open('/my/transactions', '_blank')">
-                            View Transactions
-                        </button>
                         <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/my/ads'">
                             Back to My Ads
                         </button>
@@ -423,19 +413,6 @@
                                 <div class="form__group">
                                     <label for="cvv" class="form__label">Security Code</label>
                                     <input type="text" field="card.code" name="cvv" id="cvv" class="form__control -letter" placeholder="CVC"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form__row">
-                            <div class="form__col">
-                                <div class="card-info-notice">
-                                    <div class="info-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="12" cy="12" r="10" stroke="#6B7280" stroke-width="2"/>
-                                            <path d="m9 12 2 2 4-4" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </div>
-                                    <span class="info-text">When you enter your credit card information, applicable installment options will be displayed</span>
                                 </div>
                             </div>
                         </div>

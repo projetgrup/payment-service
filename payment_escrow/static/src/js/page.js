@@ -29,6 +29,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             id: 0,
             step: 0,
             owner: 0,
+            status: '',
         };
         this.transaction = []
         this.currency = {
@@ -916,7 +917,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _startState: function () {
-        //let hash = window.location.hash.split('#')[1];
         let hash = new URLSearchParams(window.location.search).get('');
         if (hash) {
             try {
@@ -925,11 +925,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     id: state.i,
                     step: state.s,
                     owner: state.o,
+                    status: state.t,
                 });
             } catch {
                 window.history.replaceState(null, '', window.location.pathname);
             }
         }
+        console.log(this.state);
         this._onChangeStep(this.state.step, { init: true });
     },
 
@@ -1017,7 +1019,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             remainder = remainder.substring(9);
             total = (parseInt(block, 10) % 97).toString();
         }
-
+        console.log(parseInt(total, 10) === 1);
         return parseInt(total, 10) === 1;
     },
 
@@ -1423,10 +1425,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _saveAdData: function() {
-        const isEditMode = this.state.id > 0;
         let params;
         params = {
-            id: isEditMode ? this.state.id : null,
+            id: this.state.id,
             categ_id: parseInt(this.ad.input.category.$.val(), 10) || null,
             price: this._parsePrice(this.ad.input.price.value),
             escrow_car_vin: this.ad.input.vin.$.val(),
@@ -1434,11 +1435,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             escrow_car_brand_id: parseInt(this.ad.input.brand.$.val(), 10) || null,
             escrow_car_model_year: parseInt(this.ad.input.year.$.val(), 10) || null,
             escrow_ad_sale_img: this.ad.input.fileLicence.value || null,
+            escrow_owner_id: this.state.owner || null,
         };
-        
-        if (this.wizard && this.wizard.sellerId) {
-            params.escrow_owner_id = this.wizard.sellerId;
-        }
 
         return rpc.query({ route: '/my/ad/save', params }).then((result) => {
             if ('error' in result) {
@@ -1693,7 +1691,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _handleStepSpecificActions: function(stepNumber, options, stateId) {
+    _handleStepSpecificActions: function(stepNumber) {
         switch(stepNumber) {
             case 1:
                 if (!this.state.id && !this.state.owner) {
@@ -1702,68 +1700,63 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this._hideFieldIcon(input);
                     }
                 } else {
-                    this._initializeSellerInfoForm(stateId);
+                    this._initializeSellerInfoForm();
                 }
                 break;
                 
             case 2:
-                this._initializeProductInfoForm(stateId);
+                this._initializeProductInfoForm();
                 break;
                 
             case 3:
-                this._initializeCustomerInfoForm(stateId);
+                this._initializeCustomerInfoForm();
                 break;
                 
             case 4:
-                this._initializePaymentForm(stateId);
-                if (options.paymentCompleted) {
-                    $('.payment-panel').addClass('d-none');
-                    $('#payment_type').addClass('d-none');
-                    this._showRemainingPaymentInfo();
-                    if (options.itemId) {
-                        this._updatePaymentAmounts(this.state.id);
-                    }
-                }
+                console.log('Initializing payment form for stateId:', this.state.id);
+                this._initializePaymentForm();
+                this._updatePaymentAmounts();
                 break;
                 
             case 5:
-                this._initializeFinalStep(stateId);
-                this._updatePaymentAmounts(stateId);
+                this._initializeFinalStep();
+                this._updatePaymentAmounts();
         }
     },
 
-    _initializeFinalStep: function(stateId) {
-        const self = this;
+    _initializeFinalStep: function() {
+        console.log(this.state);
+
         
-        this._rpc({
-            route: '/my/payment/transactions',
-            params: { 
-                state_id: stateId || this.state.id,
-                item_id: this.state.item_id
-            }
-        }).then(function(result) {
-            if (result && result.success) {
-                const templateData = {
-                    transactions: result.transactions || [],
-                    currency: self.currency,
-                    format: format
-                };
+        // this._rpc({
+        //     route: '/my/payment/transactions',
+        //     params: { 
+        //         state_id: stateId || this.state.id,
+        //         item_id: this.state.item_id
+        //     }
+        // }).then(function(result) {
+        //     if (result && result.success) {
+        //         const templateData = {
+        //             transactions: result.transactions || [],
+        //             currency: self.currency,
+        //             format: format
+        //         };
                 
-                const $rendered = $(QWeb.render('paylox.escrow.transaction.item', templateData));
+        //         const $rendered = $(qweb.render('paylox.escrow.transaction.item', templateData));
                 
-                const $container = $('.final-step-transactions, .wizard-step-5 .transaction-list, .escrow-final-step');
-                if ($container.length) {
-                    $container.html($rendered);
-                } else {
-                    const $stepContainer = $('.wizard-step-5');
-                    if ($stepContainer.length) {
-                        $stepContainer.append($rendered);
-                    }
-                }
-            }
-        }).catch(function(error) {
-            console.error('Error loading transaction data:', error);
-        });
+        //         const $container = $('.final-step-transactions, .wizard-step-5 .transaction-list, .escrow-final-step');
+        //         if ($container.length) {
+        //             $container.html($rendered);
+        //         } else {
+        //             const $stepContainer = $('.wizard-step-5');
+        //             if ($stepContainer.length) {
+        //                 $stepContainer.append($rendered);
+        //             }
+        //         }
+        //     }
+        // }).catch(function(error) {
+        //     console.error('Error loading transaction data:', error);
+        // });
     },
 
     _setCookie: function (name, value, days=1) {
@@ -1779,16 +1772,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ('step' in value) {
             this.state.step = value.step;
         }
+        if ('owner' in value) {
+            this.state.owner = value.owner;
+        }
+        if ('status' in value) {
+            this.state.status = value.status;
+        }
 
         let values = {
             i: this.state.id,
             s: this.state.step,
             o: this.state.owner,
+            t: this.state.status,
         }
         let hash = btoa(JSON.stringify(values));
         let url = new URL(window.location); url.searchParams.set('', hash);
         window.history.replaceState({'': hash}, '', url);
-        //window.location.hash = hash;
     },
 
     _disableWizard: function() {
@@ -1966,7 +1965,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializePaymentForm: function () {
-        this._updatePaymentAmounts(this.state.item_id);
+        this._updatePaymentAmounts();
     },
 
     _getProductData: function() {
@@ -2276,10 +2275,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _updatePaymentAmounts: async function(itemId) {
+    _updatePaymentAmounts: async function() {
         let data = await rpc.query({
             route: '/payment/escrow/transaction-data',
-            params: { product_id: itemId }
+            params: { product_id: this.state.id }
         });
         if (data && !data.error) {
             this.payment.amount.remaining.$.text(this._formatCurrency(data.remaining_amount));
