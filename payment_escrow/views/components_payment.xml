@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="payment_select_holder_diff" name="Payment Select Holder Different">
-        <div class="selectCartType">
+        <!-- <div class="selectCartType">
             <div class="switch -small">
                 <input type="checkbox" name="checkPoint" class="switchControl" id="checkPoint" field="payment.different.holder"/>
                 <label for="checkPoint"></label>
@@ -10,7 +10,7 @@
                 <strong>Credit Card Holder and Recipient Information Different</strong>
                 <p>Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and customer information are different.</p>
             </div>
-        </div>
+        </div> -->
         <div field="payment.different.info.container" style="display:none">
             <div class="form__group">
                 <label class="form__label" for="payment_different_info_tc">Identity Number</label>

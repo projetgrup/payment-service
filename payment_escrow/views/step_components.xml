@@ -63,8 +63,8 @@
                     </div>
                     
                     <div class="completion-actions text-center">
-                        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/my/ads'">
-                            Back to My Ads
+                        <button type="button" class="btn btn-outline-secondary" field="wizard.button.close">
+                            Back to payment page
                         </button>
                     </div>
                 </div>

@@ -243,7 +243,7 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.country_id.name)
             values.update({
                 'submerchant_external_id': reference_seller,
-                'is_submerchant_payment': True,
+                # 'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
                     "name": fullname[0],
@@ -667,7 +667,7 @@ class PayloxSystemEscrowController(Controller):
                     partner_data['comment'] = iban_info
 
             partner_field = company._get_payment_partner_unique_field()
-            partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'owner')])
+            partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'owner')], limit=1)
             if not partner:
                 partner = request.env['res.partner'].sudo().create(partner_data)
             else:
