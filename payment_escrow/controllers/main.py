@@ -278,6 +278,7 @@ class PayloxSystemEscrowController(Controller):
             ('api_state', '=', True),
             ('partner_id.vat', '=', vat),
             ('sanitized_acc_number', '=', iban),
+            ('company_id', '=', request.env.company.id),
         ], limit=1)
         return bool(bank_account)
     
@@ -687,18 +688,18 @@ class PayloxSystemEscrowController(Controller):
                     'acc_holder_name': kwargs.get('seller_iban_name', ''),
                 }
                 existing = bank.search([
-                    ('sanitized_acc_number', '=', iban_sanitized),
+                    ('partner_id.vat', '=', vat),
                     ('company_id', '=', request.env.company.id),
+                    ('sanitized_acc_number', '=', iban_sanitized),
                 ], limit=1)
-
                 if not existing:
-                    bank.create(bank_vals)
-                    if not bank.api_state:
-                        return {
-                            'success': False,
-                            'partner_id': partner.id,
-                            'message': bank.api_message
-                        }
+                    existing = bank.create(bank_vals)
+                if not existing.api_state:
+                    return {
+                        'success': False,
+                        'partner_id': partner.id,
+                        'message': existing.api_message
+                    }
                 #else:
                 #    existing.write(bank_vals)
 

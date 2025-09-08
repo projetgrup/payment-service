@@ -1024,8 +1024,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _isOtpValidate: async function(field) {
-        let otp = field.value.replace(/\s+/g, '');
-        if (otp.length === 10) {
+        if (field.value.length === 10) {
+            let otp = field._.masked.value;
             //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/otp/validate',
@@ -1819,7 +1819,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             this.wizard.otpId = otpRes.otp_id;
                             this._showOtpModal(otpRes.expires_in || 120);
                         } else if (otpRes && otpRes.is_otp_verified) {
-                            this.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
                             this._markStepCompleted(this.wizard.currentStep);
                             this._onChangeStep(this.wizard.currentStep + 1);
                         } else {
@@ -1908,7 +1907,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             this.wizard.otpId = otpRes.otp_id;
                             this._showOtpModal({ expiresIn: otpRes.expires_in || 120 });
                         } else if (otpRes && otpRes.is_otp_verified) {
-                            this.displayNotification({ type: 'info', title: 'OTP', message: 'OTP has already been verified.' });
                             this._markStepCompleted(this.wizard.currentStep);
                             this._onChangeStep(this.wizard.currentStep + 1);
                         } else {
