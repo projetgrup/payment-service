@@ -1274,10 +1274,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickButtonCreate: function (ev) {
-        Object.assign(this.state, {
-            id: 0,
-            owner: 0,
-        });
+        Object.assign(this.state, { id: 0, owner: 0 });
         this._onChangeStep(1);
     },
 
@@ -1629,10 +1626,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (step === 0) {
-            Object.assign(this.state, {
-                id: 0,
-                owner: 0,
-            });
+            Object.assign(this.state, { id: 0, owner: 0 });
             this.seller.wizard.$.fadeOut(200, () => {
                 $('.header').removeClass('header__steps');
                 this.seller.ads.$.fadeIn(200);
