@@ -168,11 +168,35 @@ class Partner(models.Model):
 class PartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
+    @api.depends('api_state', 'api_message')
+    def _compute_api_result(self):
+        has_group_check_iban = self.env.user.has_group('payment_syncops.group_check_iban')
+        for bank in self:
+            company = bank.partner_id.company_id or self.env.company
+            if company.syncops_check_iban and has_group_check_iban:
+                if bank.syncops_api_state and bank.api_state:
+                    bank.api_result = '<i class="fa fa-check text-primary" title="%s"/><i class="fa fa-check text-primary" title="" style="position:absolute;pointer-events:none;margin-top:1px;margin-left:-8px;"/>' % bank.api_message
+                elif bank.syncops_api_state:
+                    bank.api_result = '<i class="fa fa-check text-primary" title="%s"/>' % bank.api_message
+                elif bank.api_message:
+                    bank.api_result = '<i class="fa fa-times text-danger" title="%s"/>' % bank.api_message
+                else:
+                    bank.api_result = '<i class="fa fa-minus text-muted" title="%s"/>' % _('No message yet')
+            else:
+                if bank.api_state:
+                    bank.api_result = '<i class="fa fa-check text-primary" title="%s"/>' % bank.api_message
+                elif bank.api_message:
+                    bank.api_result = '<i class="fa fa-times text-danger" title="%s"/>' % bank.api_message
+                else:
+                    bank.api_result = '<i class="fa fa-minus text-muted" title="%s"/>' % _('No message yet')
+
+    syncops_api_state = fields.Boolean('syncOPS State')
+
     def _paylox_api_save(self, acquirer, method, data):
         user = self.env.user
         partner = self.partner_id
         company = partner.company_id or self.env.company
-        if company.syncops_check_iban and user.has_group('payment_syncops.group_check_iban'):
+        if company.syncops_check_iban and not self.syncops_api_state and user.has_group('payment_syncops.group_check_iban'):
             iban = self.env['syncops.partner.iban'].sudo().search([('name', '=', data['iban'])])
             if not iban:
                 result, message = self.env['syncops.connector'].sudo()._execute('other_get_ozan_iban', reference=str(self.id), params={
@@ -180,10 +204,13 @@ class PartnerBank(models.Model):
                     'iban': data['iban'],
                 }, company=self.env.company, message=True)
                 if result is None:
+                    self.write({'syncops_api_state': False})
                     return {'state': False, 'message': message}
                 elif not result[0]['ok']:
+                    self.write({'syncops_api_state': False})
                     return {'state': False, 'message': result[0]['message']}
                 iban.create({'name': data['iban']})
+        self.write({'syncops_api_state': True})
         return super()._paylox_api_save(acquirer, method, data)
 
 
