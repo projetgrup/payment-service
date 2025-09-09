@@ -33,7 +33,7 @@
                 </div>
                 <span class="escrow-ad-item-name" t-esc="ad.name" name="name" field="ad.input.name"/>
             </div>
-            <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name" t-att-data-id="ad.categ_id.id" name="categ" field="ad.input.category"/>
+            <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name" t-att-data-id="ad.categ_id.id" name="categ"
             <div class="escrow-ad-item-price" t-esc="ad.escrow_payment_item_id.amount" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-data-value="ad.price" name="price"/>
             <div class="escrow-ad-item-state" t-att-data-value="ad.escrow_state">
                 <span t-if="ad.escrow_state == 'sold'" class="danger">Sold</span>
