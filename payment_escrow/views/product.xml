@@ -137,6 +137,7 @@
                             </group>
                             <group>
                                 <field name="escrow_ad_sale_img" colspan="2" nolabel="1" widget="image" options="{'preview_image': false}"/>
+                                <field name="escrow_ad_official_sale_img" colspan="2" nolabel="1" widget="image" options="{'preview_image': false}"/>
                             </group>
                         </group>
                     </page>
