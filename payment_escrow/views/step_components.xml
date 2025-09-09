@@ -23,11 +23,24 @@
     <template id="step_5_content" name="Step 5 Content">
         <div class="section">
             <div class="panel">
-                <div class="panel__header">
-                    <h3>Payment Completed</h3>
-                </div>
                 <div class="completion-content">
-                    
+                
+                </div>
+                <div  class="completion-actions text-center">
+                    <button type="button" class="btn btn-outline-secondary" field="wizard.button.close">
+                        Back to payment page
+                    </button>
+                </div>
+                <div class="form__group d-none -mb-0">
+                    <div class="form__label">Upload Official Sale Photo</div>
+                    <div class="pt-1">
+                        <input type="file" class="filepond" name="fileOfficialSale" accept="image/png, image/jpeg, image/gif" field="payment.different.info.fileOfficialSale"/>
+                    </div>
+                </div>
+                <div class="completion-actions mt-3 d-none text-center">
+                    <button type="button" class="btn btn-outline-secondary" field="wizard.button.submit">
+                        Send to official sale image
+                    </button>
                 </div>
             </div>
         </div>

@@ -61,14 +61,15 @@ class PayloxSystemEscrowController(Controller):
                 'paid': payment_item.paid,
                 'transactions': transaction_list,
                 'paid_date': payment_item.paid_date.strftime('%d.%m.%Y') if payment_item.paid_date else '',
-                'currency': 'TL'
+                'currency': 'TL',
+                'img': payment_item.product_id.escrow_ad_official_sale_img and 'data:%s;base64,%s' % (guess_mimetype(base64.b64decode(payment_item.product_id.escrow_ad_official_sale_img)), payment_item.product_id.escrow_ad_official_sale_img.decode('utf-8')) or '',
             }
             
         except Exception as e:
             _logger.error("Error in get_transaction_data: %s", str(e))
             return {'error': str(e)}
 
-    def _generate_hash_url(self, step=0, id=0, owner=None, status=None):
+    def _generate_hash_url(self, step=0, id=0, owner=None, customer=None, status=None):
         import base64
         import json
         from urllib.parse import quote
@@ -82,14 +83,23 @@ class PayloxSystemEscrowController(Controller):
             values['o'] = owner
         if status is not None:
             values['t'] = status
+        if customer is not None:
+            values['c'] = customer
             
         hash_value = base64.b64encode(json.dumps(values).encode('utf-8')).decode('utf-8')
         return f'/my/ads?={quote(hash_value)}'
 
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
+        _logger.error('Processing escrow transaction: %s', tx)
         system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
-        if system == 'escrow' and tx:
+        _logger.error('System: %s', system)
+        if system == 'escrow':
+            paylox_product_ids = request.env['payment.transaction.product'].sudo().browse(tx.paylox_product_ids.ids)
+            product_id = paylox_product_ids and paylox_product_ids.product_id.id or 0
+            owner = paylox_product_ids and paylox_product_ids.product_id.escrow_owner_id.id or None
+            escrow_customer_id = paylox_product_ids.product_id.escrow_customer_ids
+            customer = escrow_customer_id.filtered(lambda c: c.is_escrow_customer).id
             if tx.state == 'done':
                 payment_items_paid = True
                 if tx.paylox_transaction_item_ids:
@@ -107,11 +117,11 @@ class PayloxSystemEscrowController(Controller):
                         product_id = first_item.item_id.product_id.id
                 
                 if payment_items_paid:
-                    url = self._generate_hash_url(step=5, id=product_id, status='success')
+                    url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='success')
                 else:
-                    url = self._generate_hash_url(step=5, id=product_id, status='partial')
+                    url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='partial')
             else:
-                url = self._generate_hash_url(step=5, status='error')
+                url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='error')
         return url, tx, status
 
     def _get_tx_values(self, **kwargs):
@@ -359,6 +369,7 @@ class PayloxSystemEscrowController(Controller):
         if image:
             mime = guess_mimetype(base64.b64decode(image))
             image = 'data:%s;base64,%s' % (mime, image.decode('utf-8'))
+        acc_number = ad.escrow_owner_id.bank_ids.filtered(lambda b: b.api_state) and ad.escrow_owner_id.bank_ids.filtered(lambda b: b.api_state)[0]['acc_number'] or ''
         return {
             'success': True,
             'ad': {
@@ -374,12 +385,45 @@ class PayloxSystemEscrowController(Controller):
                 'vin': ad.escrow_car_vin,
                 'plate': ad.escrow_car_plate,
                 'owner_id': ad.escrow_owner_id.id,
+                'state': ad.escrow_state,
                 'customer_id': ad.escrow_customer_ids and [{'id': customer.id, 'name': customer.name} for customer in ad.escrow_customer_ids if customer.is_escrow_customer] or None,
                 'broker_id': ad.broker_id.id,
                 'item_id': ad.escrow_payment_item_id and ad.escrow_payment_item_id.id or None,
-                'paid_amount': ad.escrow_payment_item_id.paid_amount or 0.0
+                'paid_amount': ad.escrow_payment_item_id.paid_amount or 0.0,
+                'iban': acc_number,
+                'partner': ad.escrow_owner_id.name,
+                'vat': ad.escrow_owner_id.vat,
             }
         }
+
+    @route('/payment/escrow/ad/official_sale', type='json', auth='user', methods=['POST'], website=True)
+    def upload_official_sale_image(self, ad_id=None, file=None, **kwargs):
+        if not ad_id or not file:
+            return {'success': False, 'message': 'Missing parameters'}
+        company = request.env.company
+        user = request.env.user
+        partner = user.partner_id
+        domain = [('company_id', '=', company.id), ('id', '=', ad_id)]
+        ad = request.env['product.product'].sudo().with_context(system='escrow').search(domain, limit=1)
+        if not ad.exists():
+            return {'success': False, 'message': 'Ad not found'}
+        if ad.broker_id != partner:
+            return {'success': False, 'message': 'You are not allowed to update this ad'}
+        try:
+            attachment = request.env['ir.attachment'].sudo().create({
+                'name': _('%s - Official Sale Image') % (ad.name,),
+                'res_model': ad._name,
+                'res_id': ad.id,
+                'mimetype': file['mimetype'] or 'image/png',
+                'datas': file['data'],
+                'type': 'binary',
+            })
+            ad.escrow_ad_official_sale_img = file['data']
+            body = _('User has uploaded official sale image. User IP Address is %s') % (request.httprequest.remote_addr,)
+            ad.message_post(body=body, attachment_ids=attachment.ids)
+            return {'success': True, 'message': 'Official sale image uploaded successfully'}
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_my_ads(self, **kwargs):

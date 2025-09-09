@@ -13,7 +13,9 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _name = 'product.product'
+    _inherit = ['product.product', 'mail.thread', 'mail.activity.mixin']
+
 
     def _compute_escrow_customer_count(self):
         for product in self:
@@ -34,7 +36,12 @@ class ProductProduct(models.Model):
     escrow_payment_paid = fields.Boolean(string='Payment Item Paid', related='escrow_payment_item_id.paid', store=True, readonly=True)
     escrow_ad_sale_img = fields.Binary(string='Sale Image')
     escrow_ad_official_sale_img = fields.Binary(string='Official Sale Image')
-    escrow_ad_approval = fields.Boolean(string='Ad Approved')
+    escrow_state = fields.Selection([
+        ('waiting', 'Waiting'),
+        ('approved', 'Approved'),
+        ('new', 'New'),
+        ('sold', 'Sold'),
+    ], string='State', default='waiting', index=True, tracking=True)
 
     def action_get_customer(self):
         self.ensure_one()
@@ -76,7 +83,7 @@ class ProductProduct(models.Model):
             
             if not rec.escrow_ad_sale_img:
                 raise UserError(_('Sale image is required to approve this ad.'))
-            rec.escrow_ad_approval = True
+            rec.escrow_state = 'approved'
         return True
 
 

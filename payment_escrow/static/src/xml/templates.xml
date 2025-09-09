@@ -6,9 +6,9 @@
                 <div class="escrow-ad-item-image">
                     <img t-attf-src="data:image/png;base64,{{ad.img}}" alt="" name="img"/>
                 </div>
-                <span class="escrow-ad-item-name" t-esc="ad.name" name="name"/>
+                <span class="escrow-ad-item-name" t-esc="ad.name" name="name" field="ad.input.name"/>
             </div>
-            <div class="escrow-ad-item-categ" t-esc="ad.categ[1]" t-att-data-id="ad.categ[0]" name="categ"/>
+            <div class="escrow-ad-item-categ" t-esc="ad.categ[1]" t-att-data-id="ad.categ[0]" name="categ" field="ad.input.category"/>
             <div class="escrow-ad-item-price" t-esc="format.currency(ad.price, currency.position, currency.symbol, currency.decimal)" t-att-data-value="ad.price" name="price"/>
             <div class="escrow-ad-item-state"><span class="danger">Satıldı</span></div>
             <div class="escrow-ad-item-arrow"><i class="fa fa-chevron-right"/></div>
@@ -33,23 +33,22 @@
     </t>
 
     <t t-name="paylox.escrow.transaction.item">
-
         <div class="success-icon-container text-center mt-2 mb-4">
-            <div t-if="statee === 'success' or statee === 'partial'" class="success-icon">
+            <div t-if="state === 'success' or state === 'partial'" class="success-icon">
                 <i class="fa fa-expeditedssl text-success" style="font-size: 4rem;"/>
             </div>
             <div t-else="" class="success-icon">
                 <i class="fa fa-exclamation-triangle text-danger" style="font-size: 4rem;"/>
             </div>
-            <div t-if="statee === 'partial'" class="completion-message text-center">
+            <div t-if="state === 'partial' or state === 'success'" class="completion-message text-center">
                 <h4 class="text-success mb-3">Payment Successfully Completed!</h4>
                 <p class="text-muted mb-4">
                     Your escrow payment has been processed successfully. 
                     The transaction is now secure and the funds have been transferred to the escrow account.
                 </p>
             </div>
-            <div t-if="!paid and (statee === 'error' or statee === 'failed')" class="completion-message text-center">
-                <h4 class="text-warning mb-3">Payment Failed!</h4>
+            <div t-if="!paid and (state === 'error' or state === 'failed')" class="completion-message text-center">
+                <h4 class="text-danger mb-3">Payment Failed!</h4>
                 <p class="text-muted mb-4">
                     Your escrow payment has failed. 
                     You can see the failure reason from the payment history below.
@@ -75,7 +74,7 @@
                                 </div>
                                 <div class="col-4">
                                     <small class="text-muted">Remaining Amount:</small>
-                                    <div class="text-warning font-weight-bold text-nowrap" t-esc="format.currency(remaining_amount, currency.position, currency.symbol, currency.decimal)">0</div>
+                                    <div class="text-danger font-weight-bold text-nowrap" t-esc="format.currency(remaining_amount, currency.position, currency.symbol, currency.decimal)">0</div>
                                 </div>
                             </div>
                             
@@ -138,23 +137,5 @@
                 </div>
             </div>
         </div>
-        
-        <div class="completion-actions text-center">
-            <button type="button" class="btn btn-outline-secondary" field="wizard.button.close">
-                Back to payment page
-            </button>
-        </div>
-        <div class="form__group -mb-0">
-            <div class="form__label">Upload Official Sale Photo</div>
-            <div class="pt-1">
-                <input type="file" class="filepond" name="fileOfficialSale" accept="image/png, image/jpeg, image/gif" field="ad.input.fileOfficialSale"/>
-            </div>
-        </div>
-        <div class="completion-actions text-center">
-            <button type="button" class="btn btn-outline-secondary" field="wizard.button.submit">
-                Send to official sale image
-            </button>
-        </div>
-
     </t>
 </templates>
