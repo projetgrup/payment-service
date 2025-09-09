@@ -33,6 +33,7 @@ class ProductProduct(models.Model):
     escrow_payment_item_id = fields.Many2one('payment.item', string='Payment Items')
     escrow_payment_paid = fields.Boolean(string='Payment Item Paid', related='escrow_payment_item_id.paid', store=True, readonly=True)
     escrow_ad_sale_img = fields.Binary(string='Sale Image')
+    escrow_ad_official_sale_img = fields.Binary(string='Official Sale Image')
     escrow_ad_approval = fields.Boolean(string='Ad Approved')
 
     def action_get_customer(self):

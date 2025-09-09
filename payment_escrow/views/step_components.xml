@@ -27,46 +27,7 @@
                     <h3>Payment Completed</h3>
                 </div>
                 <div class="completion-content">
-                    <div class="success-icon-container text-center mt-2 mb-4">
-                        <div class="success-icon">
-                            <i class="fa fa-check-circle text-success" style="font-size: 4rem;"/>
-                        </div>
-                    </div>
                     
-                    <div class="completion-message text-center">
-                        <h4 class="text-success mb-3">Payment Successfully Completed!</h4>
-                        <p class="text-muted mb-4">
-                            Your escrow payment has been processed successfully. 
-                            The transaction is now secure and the funds have been transferred to the escrow account.
-                        </p>
-                    </div>
-                    
-                    <div class="transaction-summary mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h6 class="card-title">Transaction Summary</h6>
-                                <div class="row paylox-transaction-summary">
-                                    
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-6">
-                                        <small class="text-muted">Status:</small>
-                                        <div field="payment.transaction.status"></div>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">Date:</small>
-                                        <div field="payment.transaction.date"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="completion-actions text-center">
-                        <button type="button" class="btn btn-outline-secondary" field="wizard.button.close">
-                            Back to payment page
-                        </button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -264,7 +225,7 @@
                 </div>
                 <div class="form__group mt-3 d-flex justify-content-between">
                     <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
-                        Devam Et
+                        Continue
                         <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
                             <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
                         </svg>
@@ -338,45 +299,11 @@
                         <span class="text-muted">Order Code: </span>
                         <strong field="payment.transaction.reference" t-esc="transaction and transaction.reference or 'PLX394433'"/>
                     </div>
-                    
-                    <!-- Payment Summary -->
-                    <div class="payment-summary bg-white p-3 rounded" style="border: 1px solid #e9ecef;">
-                        <div class="row text-left">
-                            <div class="col-6">
-                                <div class="payment-item mb-2">
-                                    <small class="text-muted d-block">Payment Summary</small>
-                                </div>
-                                <div class="payment-item mb-2">
-                                    <span class="text-muted">Amount Received:</span>
-                                </div>
-                                <div class="payment-item mb-2">
-                                    <span class="text-muted">Remaining Amount:</span>
-                                </div>
-                            </div>
-                            <div class="col-6 text-right">
-                                <div class="payment-item mb-2">
-                                    <small class="text-muted d-block"></small>
-                                </div>
-                                <div class="payment-item mb-2">
-                                    <span class="text-success font-weight-bold" field="payment.amount.previous">0.0 TL</span>
-                                </div>
-                                <div class="payment-item mb-2">
-                                    <span class="text-primary font-weight-bold" field="payment.amount.remaining">0.0 TL</span>
-                                </div>
-                            </div>
-                        </div>
-                        <hr class="my-2"/>
-                        <div class="d-flex justify-content-between">
-                            <span class="font-weight-bold">Total Transaction:</span>
-                            <span class="font-weight-bold" field="payment.amount.total">0.0 TL</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Return to Payment Button -->
+
                     <div class="mt-4 text-center">
                         <button type="button" class="btn px-4" field="payment.button.return">
                             <i class="fa fa-arrow-left mr-2"></i>
-                            Ödeme Adımına Geri Dön
+                            Back to Payment Page
                         </button>
                     </div>
                 </div>
@@ -471,7 +398,7 @@
                                 <button class="payment__button" field="payment.button">
                                     <div class="payment__info">
                                         <span class="label">Payment Amount</span>
-                                        <span class="amount" field="payment.amount.paid">0 TL</span>
+                                        <span class="amount" field="payment.amount.paid"></span>
                                     </div>
                                     <div class="payment__action">
                                         Pay with Credit Card 
@@ -484,7 +411,7 @@
                             <button type="submit" class="primaryButton d-none" id="btn_pay_now">
                                 <div class="summary__priceBtn">
                                     <span>Payable Amount</span>
-                                    <strong>2.400.000 TL</strong>
+                                    <strong></strong>
                                 </div>
                                 <span>Pay Now
                                     <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg">

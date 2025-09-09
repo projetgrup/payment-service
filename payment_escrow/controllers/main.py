@@ -107,7 +107,7 @@ class PayloxSystemEscrowController(Controller):
                         product_id = first_item.item_id.product_id.id
                 
                 if payment_items_paid:
-                    url = self._generate_hash_url(step=5, id=product_id)
+                    url = self._generate_hash_url(step=5, id=product_id, status='success')
                 else:
                     url = self._generate_hash_url(step=5, id=product_id, status='partial')
             else:
@@ -243,7 +243,7 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.country_id.name)
             values.update({
                 'submerchant_external_id': reference_seller,
-                'is_submerchant_payment': True,
+                # 'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
                     "name": fullname[0],
