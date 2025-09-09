@@ -681,7 +681,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         const field = this.ad.input.category;
                         let message = null;
                         let valid = true;
-                        return true
                         if (!field.value) {
                             message = _t('Category is required');
                             valid = false;
