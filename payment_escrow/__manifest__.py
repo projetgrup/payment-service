@@ -18,7 +18,6 @@
         'views/components_recipient.xml',
         'views/components_payment.xml',
         'views/components_ad_items.xml',
-        'views/ad.xml',
         'views/product.xml',
         'views/sale.xml',
         'views/item.xml',
