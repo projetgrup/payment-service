@@ -49,6 +49,8 @@ class PayloxSystemEscrowController(Controller):
 
             transaction_list = []
             for tx in transactions:
+                conveyance_files = self._generate_conveyance_files(tx)
+                
                 transaction_list.append({
                     'id': tx.id,
                     'reference': tx.reference,
@@ -56,7 +58,9 @@ class PayloxSystemEscrowController(Controller):
                     'date': tx.create_date.isoformat() if tx.create_date else '',
                     'status': tx.state,
                     'message': tx.state_message,
-                    'payment_method': tx.acquirer_id.name if tx.acquirer_id else 'Unknown'
+                    'payment_method': tx.acquirer_id.name if tx.acquirer_id else 'Unknown',
+                    'different_holder': tx.jetcheckout_different_card_holder,
+                    'conveyance': conveyance_files,
                 })
             return {
                 'total_amount': total_amount,
@@ -67,11 +71,50 @@ class PayloxSystemEscrowController(Controller):
                 'paid_date': payment_item.paid_date.strftime('%d.%m.%Y') if payment_item.paid_date else '',
                 'currency': 'TL',
                 'img': payment_item.product_id.escrow_ad_official_sale_img and 'data:%s;base64,%s' % (guess_mimetype(base64.b64decode(payment_item.product_id.escrow_ad_official_sale_img)), payment_item.product_id.escrow_ad_official_sale_img.decode('utf-8')) or '',
+                'different': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder or False,
+                'different_holder': {
+                    'name': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder_id.name or '',
+                    'vat': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder_id.vat or '',
+                    'phone': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder_id.mobile or '',
+                    'email': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder_id.email or '',
+                }
             }
-            
+
         except Exception as e:
             _logger.error("Error in get_transaction_data: %s", str(e))
             return {'error': str(e)}
+
+    def _generate_conveyance_files(self, transaction):
+        """Generate conveyance files for a transaction"""
+        conveyance_files = []
+        
+        try:
+            if not hasattr(transaction, 'acquirer_id') or not transaction.acquirer_id:
+                _logger.error("Transaction %s has no acquirer_id, skipping conveyance generation", transaction.reference)
+                return conveyance_files
+
+            report = request.env.ref('payment_jetcheckout.report_conveyance', raise_if_not_found=False)
+            if not report:
+                _logger.error("Report 'payment_jetcheckout.report_conveyance' not found")
+                return conveyance_files
+
+            pdf_content, _ = report.with_user(1)._render_qweb_pdf([transaction.id])
+            
+            if pdf_content:
+                pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
+                
+                conveyance_files.append({
+                    'name': f'Conveyance_{transaction.reference}.pdf',
+                    'content': pdf_base64,
+                    'mimetype': 'application/pdf',
+                    'size': len(pdf_content),
+                    'url': '/web/content/%s/%s/pdf?mimetype=application%%2Fpdf&download=True' % (transaction._name, transaction.id)
+                })
+                
+        except Exception as e:
+            _logger.error("Could not generate conveyance file for transaction %s: %s", transaction.reference, str(e))
+        
+        return conveyance_files
 
     def _generate_hash_url(self, step=0, id=0, owner=None, customer=None, status=None):
         import base64
@@ -130,6 +173,9 @@ class PayloxSystemEscrowController(Controller):
         res = super()._get_tx_values(**kwargs)
         system = kwargs.get('system', request.env.company.system)
         if system == 'escrow':
+            different = kwargs.get('different_holder', {}).get('different', False)
+            if different:
+                partner = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('different_holder', {}).get('vat', ''))], limit=1)
             products = kwargs.get('products', [])
             payment_items = request.env['payment.item'].sudo().search([('product_id', 'in', products and [p['pid'] for p in products] or [])])
             res.update({
@@ -143,6 +189,8 @@ class PayloxSystemEscrowController(Controller):
                     })
                     for rec in payment_items
                 ],
+                'jetcheckout_different_card_holder_id': partner.id if different and partner.exists() else None,
+                'jetcheckout_different_card_holder': different,
                 'jetcheckout_item_ids': [(6, 0, payment_items.ids)],
                 'jetcheckout_approval_ok': True,
             })
@@ -860,29 +908,40 @@ class PayloxSystemEscrowController(Controller):
                 'message': f'Error looking up customer: {str(e)}'
             }
 
-    @route('/my/customer/save', type='json', auth='public', methods=['POST'], csrf=False)
-    def save_customer_info(self, **kwargs):
-        company = request.env.company
-        is_card_holder_different = kwargs.get('is_card_holder_different', False)
-        escrow_customer_id = kwargs.get('escrow_customer_id')
-        if is_card_holder_different:
+    @route('/payment/escrow/customer/card-holder/update', type='json', auth='user', methods=['POST'], website=True)
+    def update_card_holder_name(self, **kwargs):
+        try:
+            partner = request.env['res.partner'].sudo().browse(kwargs.get('partner_id'))
+            if not partner.exists():
+                return {'success': False, 'message': 'Partner not found'}
+            card_holder_partner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'card_holder'), ('vat', '=', kwargs.get('vat'))], limit=1)
             card_holder_data = {
-                'name': kwargs.get('customer_name_surname', ''),
-                'email': kwargs.get('customer_email', ''),
-                'mobile': kwargs.get('customer_phone', ''),
-                'vat': kwargs.get('customer_identity', ''),
-                'street': kwargs.get('customer_address', ''),
+                'name': kwargs.get('name', ''),
+                'email': kwargs.get('email', ''),
+                'mobile': kwargs.get('phone', ''),
+                'vat': kwargs.get('vat', ''),
                 'is_company': False,
-                'escrow_customer_id': escrow_customer_id,
+                'escrow_customer_id': partner.id,
                 'paylox_escrow_type': 'card_holder',
                 'system': 'escrow'
             }
-            card_holder_partner = request.env['res.partner'].sudo().create(card_holder_data)
-            return {
-                'success': True,
-                'partner_id': card_holder_partner.id,
-                'message': 'Card holder information has been successfully saved.'
-            }
+            if card_holder_partner:
+                card_holder_partner.write(card_holder_data)
+            else:
+                card_holder_partner = request.env['res.partner'].sudo().create(card_holder_data)
+            return {'success': True, 'partner': {
+                'id': card_holder_partner.id,
+                'name': card_holder_partner.name,
+                'email': card_holder_partner.email,
+                'phone': card_holder_partner.mobile,
+                'vat': card_holder_partner.vat,
+            }}
+        except Exception as e:
+            return {'success': False, 'message': str(e)}
+
+    @route('/my/customer/save', type='json', auth='public', methods=['POST'], csrf=False)
+    def save_customer_info(self, **kwargs):
+        company = request.env.company
         try:
             partner_data = {
                 'paylox_escrow_type': 'customer',

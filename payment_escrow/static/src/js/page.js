@@ -1792,7 +1792,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     paid: result.paid || false,
                     currency: self.currency,
                     format: format,
-                    state: self.state.status
+                    state: self.state.status,
                 };
                 const $rendered = $(qweb.render('paylox.escrow.transaction.item', templateData));
 
@@ -1821,6 +1821,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     self.payment.transaction.status.html = 'Pending';
                     self.payment.transaction.status.$.addClass('text-warning');
                     self.payment.transaction.date.html = '-';
+                }
+                if (result.different){
+                    self._setState({ different: true });
                 }
             } else {
                 console.error('Error loading transaction data:', result && result.error);
@@ -2043,8 +2046,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializePaymentForm: function () {
-        if (this.state.diffrent){
-            this.payment.different.info.holder.$.prop('checked', true);
+        console.log(this.state)
+        if (this.state.different){
+            this.payment.different.holder.$.prop('checked', true).trigger('change');
         }
         this._updatePaymentAmounts();
     },
@@ -2367,12 +2371,20 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
         if (data && !data.error) {
             this.payment.amount.remaining.$.text(format.currency(data.remaining_amount, this.currency.position, this.currency.symbol, this.currency.decimal));
+            if (data.different){
+                this._setState({ different: true });
+                const $card = $('.payment-info-card');
+                $card.find('[field="payment.different.info.display.tc"]').text(data.different_holder.vat || '-');
+                $card.find('[field="payment.different.info.display.name"]').text(data.different_holder.name || '-');
+                $card.find('[field="payment.different.info.display.phone"]').text(data.different_holder.phone || '-');
+                $card.find('[field="payment.different.info.display.email"]').text(data.different_holder.email || '-');
+            }
         }
         return data;
     },
 
     _onToggleDifferentHolder: function(event) {
-        this.state.different = event.target.checked;
+        this._setState({ different: event.target.checked });
         const isChecked = event.target.checked;
         const $assignmentSection = this.assignment.form.section.$;
         const $infoSection = this.payment.different.info.container.$;
@@ -2389,8 +2401,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _onEditPaymentInfo: function(event) {
         const $card = $('.payment-info-card');
         const $form = $('.payment-info-edit');
-        
-        // Hide display card and show edit form
         $card.slideUp(200, function() {
             $form.slideDown(300);
         });
@@ -2398,7 +2408,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onCancelEditPaymentInfo: function(event) {
         const $card = $('.payment-info-card');
-        const $form = $card('.payment-info-edit');
+        const $form = $('.payment-info-edit');
         
         $form.slideUp(200, function() {
             $card.slideDown(300);
@@ -2406,7 +2416,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onSavePaymentInfo: function(event) {
-        // Validate all payment info fields
         const tcValid = this.payment.different.info.tc.validate();
         const nameValid = this.payment.different.info.name.validate();
         const phoneValid = this.payment.different.info.phone.validate();
@@ -2425,16 +2434,40 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _updatePaymentInfoDisplay: function() {
-        const tcValue = this.payment.different.info.tc.value;
-        const nameValue = this.payment.different.info.name.value;
-        const phoneValue = this.payment.different.info.phone.value;
-        const emailValue = this.payment.different.info.email.value;
+        const params = {
+            partner_id: this.state.customer,
+            name: this.payment.different.info.name.value,
+            vat: this.payment.different.info.tc.value,
+            phone: this.payment.different.info.phone.value,
+            email: this.payment.different.info.email.value,
+        };
+        
+        this._rpc({
+            route: '/payment/escrow/customer/card-holder/update',
+            params: {
+                ...params,
+            },
+        }).then((result) => {
+            if (result && result.success) {
+                this.displayNotification({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'Card holder information updated successfully.',
+                });
+                const $card = $('.payment-info-card');
+                $card.find('[field="payment.different.info.display.tc"]').text(result.partner.vat || '-');
+                $card.find('[field="payment.different.info.display.name"]').text(result.partner.name || '-');
+                $card.find('[field="payment.different.info.display.phone"]').text(result.partner.phone || '-');
+                $card.find('[field="payment.different.info.display.email"]').text(result.partner.email || '-');
+            } else {
+                this.displayNotification({
+                    type: 'warning',
+                    title: 'Error',
+                    message: (result && result.error) || 'An error occurred while updating card holder information.',
+                });
+            }
+        });
 
-        const $card = $('.payment-info-card');
-        $card.find('[field="payment.different.info.display.tc"]').text(tcValue || '-');
-        $card.find('[field="payment.different.info.display.name"]').text(nameValue || '-');
-        $card.find('[field="payment.different.info.display.phone"]').text(phoneValue || '-');
-        $card.find('[field="payment.different.info.display.email"]').text(emailValue || '-');
     },
 
     _clearCustomerInputs: function() {

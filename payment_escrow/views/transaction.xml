@@ -9,6 +9,8 @@
             <div class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission">
                 <field name="jetcheckout_additional_rate" class="pr-1"/>%
             </div>
+            <field name="jetcheckout_different_card_holder" readonly="1" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+            <field name="jetcheckout_different_card_holder_id" readonly="1" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
         </xpath>
     </field>
     </record>

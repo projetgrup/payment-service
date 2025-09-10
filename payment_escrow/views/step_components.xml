@@ -390,10 +390,10 @@
                                 </svg>
                                 <a href="#" class="download__link" field="assignment.form.download">Temlikname Formunu İndir</a>
                             </div>
-                            <div class="form__label">Upload Assignment Form</div>
+                            <!-- <div class="form__label">Upload Assignment Form</div>
                             <div class="pt-1">
                                 <input type="file" class="filepond" name="fileConveyance" accept="image/png, image/jpeg, image/gif, application/pdf" field="customer.input.fileConveyance"/>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="form__buttons">
                             <div t-if="agreements" class="field-agreement" field="agreements">

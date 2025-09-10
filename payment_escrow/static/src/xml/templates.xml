@@ -108,6 +108,13 @@
                                                         <span t-attf-class="text-nowrap badge badge-pill {{ payment.status === 'done' ? 'badge-success' : payment.status === 'error' ? 'badge-danger' : 'badge-dark' }}" t-esc="payment.status">-</span>
                                                     </div>
                                                 </div>
+                                                <div class="col-12 mt-2">
+                                                    <small class="text-muted">Conveyance:</small>
+                                                    <a t-foreach="payment.conveyance" t-as="file" t-key="file.name" t-att-href="file.url" class="d-block" target="_blank" rel="noopener noreferrer">
+                                                        <i class="fa fa-paperclip mr-1"/>
+                                                        <span t-esc="file.name">File</span>
+                                                    </a>
+                                                </div>
                                                 <div t-if="payment.status !== 'done' and payment.message" class="col-12 border-top mt-2 text-muted small">
                                                     <small class="text-muted">Message:</small>
                                                     <div t-esc="payment.message"></div>

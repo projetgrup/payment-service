@@ -125,7 +125,6 @@ class PaymentTransaction(models.Model):
     jetcheckout_fund_amount = fields.Monetary('Fund Amount', compute='_compute_amounts', readonly=True, copy=False, store=True)
     jetcheckout_website_id = fields.Many2one('website', 'Website', readonly=True, copy=False)
     jetcheckout_date_expiration = fields.Datetime('Expiration Date', readonly=True, copy=False)
-
     paylox_product_ids = fields.One2many('payment.transaction.product', 'transaction_id', 'Products')
     paylox_basket_ids = fields.One2many('payment.transaction.basket', 'transaction_id', 'Customer Basket')
     paylox_log_ids = fields.One2many('payment.paylox.log', 'transaction_id', 'Logs')
