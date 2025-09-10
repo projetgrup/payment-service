@@ -41,6 +41,8 @@ class ProductProduct(models.Model):
         ('approved', 'Approved'),
         ('new', 'New'),
         ('sold', 'Sold'),
+        ('waiting_official_sale_img', 'Waiting Official Sale Image'),
+        ('transferred', 'Transferred'),
     ], string='State', default='waiting', index=True, tracking=True)
 
     def action_get_customer(self):
