@@ -1163,6 +1163,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _onToggleVehicleHolder: function() {
         const id = this.state.id;
         if (this.values.ads[id].state === 'sold') {
+            this.state.status = 'success';
             this._onChangeStep(5);
         } else {
             this.state.item_id = this.values.ads[id].item_id;
@@ -1175,6 +1176,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _onToggleSellerHolder: function() {
         const id = this.state.id;
         if (this.values.ads[id].state === 'sold') {
+            this.state.status = 'success';
             this._onChangeStep(5);
         } else {
             if (id) {

@@ -69,7 +69,7 @@ class PayloxSyncopsController(Controller):
                     'description': item['desc'] if item['desc'] and len(item['desc']) == desc_maxlength else tx.partner_ref or '',
                     'payment_amount': '%0.2f' % (item['amount'],),
                     'payment_type': types[tx.jetcheckout_payment_type],
-                    'partner_name': tx.partner_name or '',
+                    'partner_name': tx.partner_id.name or '',
                     'partner_ref': tx.partner_ref or '',
                     'partner_city': tx.partner_city or '',
                     'installment_count': tx.jetcheckout_installment_count or 1 if tx.jetcheckout_payment_type not in ('transfer', 'wallet', 'credit') else 1,
