@@ -1768,6 +1768,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             route: '/payment/escrow/transaction-data',
             params: { 
                 product_id: this.state.id,
+                status: this.state.status
             }
         }).then(function(result) {
             if (result && !result.error) {

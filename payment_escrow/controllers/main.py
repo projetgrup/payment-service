@@ -29,7 +29,7 @@ class CustomerPortal(portal.CustomerPortal):
 class PayloxSystemEscrowController(Controller):
 
     @http.route('/payment/escrow/transaction-data', type='json', auth='user', methods=['POST'])
-    def get_transaction_data(self, product_id=None, **kwargs):
+    def get_transaction_data(self, product_id=None, status=None, **kwargs):
         try:
             if not product_id:
                 return {'error': 'No product ID provided'}
@@ -37,8 +37,8 @@ class PayloxSystemEscrowController(Controller):
             payment_item = request.env['payment.item'].sudo().search([('product_id', '=', int(product_id))], limit=1)
             if not payment_item.exists():
                 return {'error': 'Payment item not found'}
-            
-            transactions = payment_item.transaction_ids
+
+            transactions = payment_item.transaction_ids.filtered(lambda tx: tx.state == status and tx.system == 'escrow').sorted(key='create_date', reverse=True)
             total_amount = payment_item.amount
             paid_amount = payment_item.paid_amount
             remaining_amount = payment_item.residual_amount
@@ -91,9 +91,7 @@ class PayloxSystemEscrowController(Controller):
 
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
-        _logger.error('Processing escrow transaction: %s', tx)
         system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
-        _logger.error('System: %s', system)
         if system == 'escrow':
             paylox_product_ids = request.env['payment.transaction.product'].sudo().browse(tx.paylox_product_ids.ids)
             product_id = paylox_product_ids and paylox_product_ids.product_id.id or 0
