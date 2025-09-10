@@ -62,7 +62,10 @@ class PayloxSystemEscrowController(Controller):
                     'different_holder': tx.jetcheckout_different_card_holder,
                     'conveyance': conveyance_files,
                 })
-            return {
+            # Get the latest transaction with different holder info safely
+            different_holder_txs = payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder).sorted('create_date', reverse=True)
+            
+            result = {
                 'total_amount': total_amount,
                 'previous_amount': paid_amount,
                 'remaining_amount': remaining_amount,
@@ -71,14 +74,31 @@ class PayloxSystemEscrowController(Controller):
                 'paid_date': payment_item.paid_date.strftime('%d.%m.%Y') if payment_item.paid_date else '',
                 'currency': 'TL',
                 'img': payment_item.product_id.escrow_ad_official_sale_img and 'data:%s;base64,%s' % (guess_mimetype(base64.b64decode(payment_item.product_id.escrow_ad_official_sale_img)), payment_item.product_id.escrow_ad_official_sale_img.decode('utf-8')) or '',
-                'different': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder or False,
-                'different_holder': {
-                    'name': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder_id.name or '',
-                    'vat': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder_id.vat or '',
-                    'phone': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder_id.mobile or '',
-                    'email': payment_item.transaction_ids and payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder)[-1].jetcheckout_different_card_holder_id.email or '',
-                }
             }
+            
+            if different_holder_txs:
+                latest_tx = different_holder_txs[0]
+                result.update({
+                    'different': latest_tx.jetcheckout_different_card_holder,
+                    'different_holder': {
+                        'name': latest_tx.jetcheckout_different_card_holder_id.name if latest_tx.jetcheckout_different_card_holder_id else '',
+                        'vat': latest_tx.jetcheckout_different_card_holder_id.vat if latest_tx.jetcheckout_different_card_holder_id else '',
+                        'phone': latest_tx.jetcheckout_different_card_holder_id.mobile if latest_tx.jetcheckout_different_card_holder_id else '',
+                        'email': latest_tx.jetcheckout_different_card_holder_id.email if latest_tx.jetcheckout_different_card_holder_id else '',
+                    }
+                })
+            else:
+                result.update({
+                    'different': False,
+                    'different_holder': {
+                        'name': '',
+                        'vat': '',
+                        'phone': '',
+                        'email': '',
+                    }
+                })
+            
+            return result
 
         except Exception as e:
             _logger.error("Error in get_transaction_data: %s", str(e))
