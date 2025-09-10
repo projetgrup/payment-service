@@ -70,12 +70,6 @@
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_view_full_image"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-external-link"
-                        attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('image_1920', '=', False)]}"
-                        string="Büyük Gör"/>
                     <button name="action_approve_ad"
                         type="object"
                         string="Approve"
