@@ -34,6 +34,10 @@ class PayloxSystemEscrowController(Controller):
             if not product_id:
                 return {'error': 'No product ID provided'}
 
+            if status == 'success':
+                status = 'done'
+            elif status == 'partial':
+                status = 'done'
             payment_item = request.env['payment.item'].sudo().search([('product_id', '=', int(product_id))], limit=1)
             if not payment_item.exists():
                 return {'error': 'Payment item not found'}

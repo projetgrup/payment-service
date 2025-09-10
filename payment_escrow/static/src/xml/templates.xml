@@ -124,16 +124,6 @@
                         </div>
                         
                     </div>
-                    <div class="row mt-2">
-                        <div class="col-6">
-                            <small class="text-muted">Status:</small>
-                            <div field="payment.transaction.status"></div>
-                        </div>
-                        <div class="col-6">
-                            <small class="text-muted">Date:</small>
-                            <div field="payment.transaction.date"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
