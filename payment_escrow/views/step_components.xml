@@ -146,12 +146,12 @@
                     </div>
                     <div id="individual" class="wizard-section wizard-section-individual">
                         <div class="form__group">
-                            <label class="form__label" for="namesurname">Name Surname</label>
-                            <input class="form__control -letter" id="namesurname" name="namesurname" type="text" placeholder="Name Surname" field="seller.input.name"/>
-                        </div>
-                        <div class="form__group">
                             <label class="form__label" for="wizard_tckn">T.C. Identity Number</label>
                             <input class="form__control -letter" id="wizard_tckn" name="tc" type="text" placeholder="T.C. Identity Number" field="seller.input.tc"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="namesurname">Name Surname</label>
+                            <input class="form__control -letter" id="namesurname" name="namesurname" type="text" placeholder="Name Surname" field="seller.input.name"/>
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="phone_individual">Mobile Phone</label>

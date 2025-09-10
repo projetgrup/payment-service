@@ -125,6 +125,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 tc: new fields.float({
+                    events: [['input', this._lookupSellerByIdentity]],
                     mask: '00000000000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -2465,6 +2466,64 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             event.target.value = '';
         };
         reader.readAsDataURL(file);
+    },
+
+    _lookupSellerByIdentity: function() {
+        let sellerType = $('input[name="userType"]:checked').val();
+        let vat, vatLength;
+        if (sellerType === 'individual') {
+            vat = this.seller.input.tc.value;
+            vatLength = 11;
+        } else {
+            vat = this.seller.input.tax_number.value;
+            vatLength = 10;
+        }
+        if (vat.length === vatLength) {
+            this._rpc({
+                route: '/my/seller/lookup',
+                params: {
+                    identity: vat,
+                    seller_type: sellerType
+                }
+            }).then((result) => {
+                if (result && result.success && result.found) {
+                    const data = result.seller_data;
+                    if (sellerType === 'corporate') {
+                        this._bindWizardToggle();
+                        this.seller.input.corporate_title.$.val(data.name || '');
+                        this.seller.input.tax_number.$.val(data.vat || '');
+                        this.seller.input.tax_office.$.val(data.commercial_partner_id?.name || '');
+                        this.seller.input.wizard_address.$.val(this._formatAddress(data));
+                        this.seller.input.corporate_person.$.val(data.name || '');
+                        this.seller.input.phone_corporate.$.val(data.phone || '');
+                        this.seller.input.email_corporate.$.val(data.email || '');
+                        this.seller.input.address_corporate.$.val(this._formatAddress(data));
+                        this._isOtpValidate(this.seller.input.phone_corporate);
+                        if (data.bank_ids && data.bank_ids.length > 0) {
+                            const bankAccount = data.bank_ids[0];
+                            this.seller.input.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
+                            this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || data.name;
+                            this._isIbanVerified(this.seller.input.iban_corporate, this.seller.input.tax_number);
+                        }
+                    } else {
+                        this._bindWizardToggle();
+                        this.seller.input.name.value = data.name || '';
+                        this.seller.input.tc.value = data.vat || '';
+                        this.seller.input.phone_individual.value = data.phone || '';
+                        this.seller.input.email_individual.value = data.email || '';
+                        this._isOtpValidate(this.seller.input.phone_individual);
+                        if (data.bank_ids && data.bank_ids.length > 0) {
+                            const bankAccount = data.bank_ids[0];
+                            this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
+                            this.seller.input.iban_name_individual.value = bankAccount.api_merchant || data.name;
+                            this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc);
+                        }
+                    }
+                }
+            }).catch((error) => {
+                console.error('Error looking up seller:', error);
+            });
+        }
     },
 
     _lookupCustomerByIdentity: function() {

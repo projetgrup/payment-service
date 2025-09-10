@@ -760,6 +760,60 @@ class PayloxSystemEscrowController(Controller):
                 'message': 'Seller information could not be saved.'
             }
 
+    @route('/my/seller/lookup', type='json', auth='public', methods=['POST'], csrf=False)
+    def lookup_seller_by_identity(self, **kwargs):
+        try:
+            identity = kwargs.get('identity', '').strip()
+            customer_type = kwargs.get('customer_type', 'individual')
+            
+            if not identity:
+                return {'success': False, 'message': 'Identity number is required'}
+            
+            company = request.env.company
+            search_field = 'vat'
+            partner = request.env['res.partner'].sudo().search([
+                (search_field, '=', identity),
+                ('company_id', '=', company.id),
+                ('paylox_escrow_type', '=', 'owner'),
+                ('is_company', '=', customer_type == 'corporate')
+            ], limit=1)
+            
+            if partner:
+                return {
+                    'success': True,
+                    'found': True,
+                    'seller_data': {
+                        'name': partner.name,
+                        'email': partner.email,
+                        'phone': partner.mobile or partner.phone,
+                        'address': partner.street or '',
+                        'is_otp_verified': partner.is_otp_verified,
+                        'tax_office': getattr(partner, 'paylox_tax_office', '') if customer_type == 'corporate' else '',
+                        'vat': partner.vat,
+                        'contact_person': getattr(partner, 'contact_person', '') if customer_type == 'corporate' else '',
+                        'bank_ids': [{
+                            'id': bank.id,
+                            'acc_number': bank.acc_number,
+                            'acc_holder_name': bank.acc_holder_name,
+                            'api_merchant': bank.api_merchant,
+                            'api_state': bank.api_state,
+                            'api_message': bank.api_message,
+                        } for bank in partner.bank_ids if bank.api_state]
+                    }
+                }
+            else:
+                return {
+                    'success': True,
+                    'found': False,
+                    'message': 'No existing customer found with this identity number'
+                }
+                
+        except Exception as e:
+            return {
+                'success': False,
+                'message': f'Error looking up customer: {str(e)}'
+            }
+
     @route('/my/customer/lookup', type='json', auth='public', methods=['POST'], csrf=False)
     def lookup_customer_by_identity(self, **kwargs):
         try:
