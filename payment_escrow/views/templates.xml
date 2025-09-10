@@ -286,11 +286,11 @@
                     <div class="info-card seller-info-card" data-action="edit-seller" field="edit.seller.holder">
                         <div class="info-card-header">
                             <i class="fa fa-user"></i>
-                            <h4>Satıcı Bilgileri</h4>
+                            <h4>Seller Information</h4>
                         </div>
                         <div class="info-card-content">
                             <div class="info-item">
-                                <span class="info-label">Ad Soyad:</span>
+                                <span class="info-label">Name Surname:</span>
                                 <span class="info-value seller-name"></span>
                             </div>
                             <div class="info-item">

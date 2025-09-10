@@ -61,17 +61,6 @@ class ProductProduct(models.Model):
             self = self.with_context(skip_view_mapping=True)
         return super(ProductProduct, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
-    def action_view_full_image(self):
-        self.ensure_one()
-        if not self.image_1920:
-            raise UserError('Resim bulunamadı.')
-        url = '/web/image/%s/%s/%s' % (self._name, self.id, 'image_1920')
-        return {
-            'type': 'ir.actions.act_url',
-            'url': url,
-            'target': 'new',
-        }
-
     def action_approve_ad(self):
         for rec in self:
             user_partner = self.env.user.partner_id
