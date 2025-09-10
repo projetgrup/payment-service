@@ -33,7 +33,7 @@
     </t>
 
     <t t-name="paylox.escrow.transaction.item">
-        <div class="success-icon-container text-center mt-2 mb-4">
+        <div class="success-icon-container text-center mt-2 mb-4" t-att-value="state">
             <div t-if="state === 'success' or state === 'partial'" class="success-icon">
                 <i class="fa fa-expeditedssl text-success" style="font-size: 4rem;"/>
             </div>

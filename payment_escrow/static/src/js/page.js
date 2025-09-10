@@ -31,6 +31,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             owner: 0,
             customer: 0,
             status: '',
+            different: false,
         };
         this.transaction = []
         this.currency = {
@@ -818,6 +819,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 info: {
                     container: new fields.element(),
+                    edit: new fields.element({     
+                        events: [['click', this._onEditPaymentInfo]]
+                    }),
+                    cancel: new fields.element({ 
+                        events: [['click', this._onCancelEditPaymentInfo]]
+                    }),
+                    save: new fields.element({
+                        events: [['click', this._onSavePaymentInfo]]
+                    }),
                     tc: new fields.string({
                         mask: '00000000000',
                         validate: () => {
@@ -960,6 +970,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     owner: state.o,
                     status: state.t,
                     customer: state.c,
+                    different: state.d
                 });
             } catch {
                 window.history.replaceState(null, '', window.location.pathname);
@@ -1838,13 +1849,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ('status' in value) {
             this.state.status = value.status;
         }
+        if ('different' in value) {
+            this.state.different = value.different;
+        }
 
         let values = {
             i: this.state.id,
             s: this.state.step,
             o: this.state.owner,
             t: this.state.status,
-            c: this.state.customer
+            c: this.state.customer,
+            d: this.state.different,
         }
         let hash = btoa(JSON.stringify(values));
         let url = new URL(window.location); url.searchParams.set('', hash);
@@ -2028,6 +2043,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializePaymentForm: function () {
+        if (this.state.diffrent){
+            this.payment.different.info.holder.$.prop('checked', true);
+        }
         this._updatePaymentAmounts();
     },
 
@@ -2354,6 +2372,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onToggleDifferentHolder: function(event) {
+        this.state.different = event.target.checked;
         const isChecked = event.target.checked;
         const $assignmentSection = this.assignment.form.section.$;
         const $infoSection = this.payment.different.info.container.$;
@@ -2365,6 +2384,57 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $assignmentSection.slideUp(300);
             $infoSection.slideUp(300);
         }
+    },
+
+    _onEditPaymentInfo: function(event) {
+        const $card = $('.payment-info-card');
+        const $form = $('.payment-info-edit');
+        
+        // Hide display card and show edit form
+        $card.slideUp(200, function() {
+            $form.slideDown(300);
+        });
+    },
+
+    _onCancelEditPaymentInfo: function(event) {
+        const $card = $('.payment-info-card');
+        const $form = $card('.payment-info-edit');
+        
+        $form.slideUp(200, function() {
+            $card.slideDown(300);
+        });
+    },
+
+    _onSavePaymentInfo: function(event) {
+        // Validate all payment info fields
+        const tcValid = this.payment.different.info.tc.validate();
+        const nameValid = this.payment.different.info.name.validate();
+        const phoneValid = this.payment.different.info.phone.validate();
+        const emailValid = this.payment.different.info.email.validate();
+        
+        if (tcValid && nameValid && phoneValid && emailValid) {
+            this._updatePaymentInfoDisplay();
+            
+            const $card = $('.payment-info-card');
+            const $form = $('.payment-info-edit');
+            
+            $form.slideUp(200, function() {
+                $card.slideDown(300);
+            });
+        }
+    },
+
+    _updatePaymentInfoDisplay: function() {
+        const tcValue = this.payment.different.info.tc.value;
+        const nameValue = this.payment.different.info.name.value;
+        const phoneValue = this.payment.different.info.phone.value;
+        const emailValue = this.payment.different.info.email.value;
+
+        const $card = $('.payment-info-card');
+        $card.find('[field="payment.different.info.display.tc"]').text(tcValue || '-');
+        $card.find('[field="payment.different.info.display.name"]').text(nameValue || '-');
+        $card.find('[field="payment.different.info.display.phone"]').text(phoneValue || '-');
+        $card.find('[field="payment.different.info.display.email"]').text(emailValue || '-');
     },
 
     _clearCustomerInputs: function() {
