@@ -24,20 +24,22 @@
                 'categ': ad.categ_id.id,
                 'partner': ad.escrow_owner_id.name,
                 'vat': ad.escrow_owner_id.vat,
+                'state': ad.escrow_state,
                 'iban': ad.escrow_owner_id.bank_ids and ad.escrow_owner_id.bank_ids[0]['acc_number'] or '',
             })" field="ad.item" t-att-data-item-id="ad.escrow_payment_item_id.id" t-att-data-product-id="ad.id">
             <div class="escrow-ad-item-info">
                 <div class="escrow-ad-item-image">
                     <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
                 </div>
-                <span class="escrow-ad-item-name" t-esc="ad.name" name="name"/>
+                <span class="escrow-ad-item-name" t-esc="ad.name" name="name" field="ad.input.name"/>
             </div>
             <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name" t-att-data-id="ad.categ_id.id" name="categ"/>
             <div class="escrow-ad-item-price" t-esc="ad.escrow_payment_item_id.amount" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-data-value="ad.price" name="price"/>
-            <div class="escrow-ad-item-state" t-att-data-value="'sold' if ad.escrow_payment_item_id.paid else 'new' if ad.escrow_ad_approval else 'waiting'">
-                <span t-if="ad.escrow_payment_item_id.paid" class="danger">Sold</span>
-                <span t-elif="ad.escrow_ad_approval" class="success">New</span>
-                <span t-else="" class="info">Waiting Approval</span>
+            <div class="escrow-ad-item-state" t-att-data-value="ad.escrow_state">
+                <span t-if="ad.escrow_state == 'sold'" class="danger">Sold</span>
+                <span t-elif="ad.escrow_state == 'new'" class="success">New</span>
+                <span t-elif="ad.escrow_state == 'waiting'" class="info">Waiting Approval</span>
+                <span t-else="" class="primary">Approved</span>
             </div>
             <div class="escrow-ad-item-arrow">
                 <i class="fa fa-chevron-right"/>

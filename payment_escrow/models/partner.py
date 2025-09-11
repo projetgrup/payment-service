@@ -52,12 +52,10 @@ class Partner(models.Model):
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
 
-            # Pending approval ads for platform owner users
             partner.escrow_pending_ad_count = self.env['product.product'].search_count([
                 ('company_id', '=', partner.company_id.id or self.env.company.id),
                 ('system', '=', 'escrow'),
-                ('escrow_ad_approval', '=', False),
-                ('escrow_payment_paid', '=', True),
+                ('escrow_state', '=', 'waiting'),
             ]) if partner.paylox_escrow_type == 'platform_owner' else 0
 
     def action_view_owner_ads(self):
@@ -143,8 +141,7 @@ class Partner(models.Model):
             'domain': [
                 ('company_id', '=', self.company_id.id or self.env.company.id),
                 ('system', '=', 'escrow'),
-                ('escrow_ad_approval', '=', False),
-                ('escrow_payment_paid', '=', True),
+                ('escrow_state', '=', 'waiting'),
             ],
             'context': {
                 'create': False,

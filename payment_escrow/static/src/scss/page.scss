@@ -1131,6 +1131,30 @@
         left: 30px;
     }
 
+    .transaction-list{
+        height: 300px;
+        overflow-y: auto;
+        padding-right: 5px;
+        
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        &::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        &::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        &::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    }
+
     .partialPrice {
         display: flex;
         flex-direction: column;
@@ -1890,7 +1914,7 @@
             background-color: #ffffff !important;
             border: 2px dashed #ddd;
             border-radius: 6px;
-            height: 100%;
+            height: initial !important;
         }
     }
 

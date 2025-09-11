@@ -15,6 +15,9 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    jetcheckout_different_card_holder = fields.Boolean('Different Card Holder', readonly=True, copy=False)
+    jetcheckout_different_card_holder_id = fields.Many2one('res.partner', 'Different Card Holder', readonly=True, copy=False)
+
     paylox_notif_mail_state = fields.Boolean('Paylox Email Notification State', readonly=True)
     paylox_notif_sms_state = fields.Boolean('Paylox SMS Notification State', readonly=True)
     jetcheckout_additional_rate = fields.Float('JetCheckout Additional Rate', digits=(12,4), readonly=True, copy=False)

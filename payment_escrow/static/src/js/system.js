@@ -13,10 +13,18 @@ payloxPage.include({
     },
     
     _getParams: function() {
+        const different = $('input[name=checkPoint]').is(':checked');
         const params = this._super.apply(this, arguments);
         this._getEscrowItems();
         params.system = 'escrow';
         params.products = [{'pid': this.state.id, 'qty': 1}];
+        if (different) {
+            const $card = $('.payment-info-card');
+            params.different_holder = {
+                vat : $card.find('[field="payment.different.info.display.tc"]').text(),
+                different: true,
+            };
+        }
         return params;
     },
 

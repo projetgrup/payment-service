@@ -13,7 +13,9 @@ class ProductTemplate(models.Model):
 
 
 class ProductProduct(models.Model):
-    _inherit = 'product.product'
+    _name = 'product.product'
+    _inherit = ['product.product', 'mail.thread', 'mail.activity.mixin']
+
 
     def _compute_escrow_customer_count(self):
         for product in self:
@@ -34,7 +36,14 @@ class ProductProduct(models.Model):
     escrow_payment_paid = fields.Boolean(string='Payment Item Paid', related='escrow_payment_item_id.paid', store=True, readonly=True)
     escrow_ad_sale_img = fields.Binary(string='Sale Image')
     escrow_ad_official_sale_img = fields.Binary(string='Official Sale Image')
-    escrow_ad_approval = fields.Boolean(string='Ad Approved')
+    escrow_state = fields.Selection([
+        ('waiting', 'Waiting'),
+        ('approved', 'Approved'),
+        ('new', 'New'),
+        ('sold', 'Sold'),
+        ('waiting_official_sale_img', 'Waiting Official Sale Image'),
+        ('transferred', 'Transferred'),
+    ], string='State', default='waiting', index=True, tracking=True)
 
     def action_get_customer(self):
         self.ensure_one()
@@ -54,17 +63,6 @@ class ProductProduct(models.Model):
             self = self.with_context(skip_view_mapping=True)
         return super(ProductProduct, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
-    def action_view_full_image(self):
-        self.ensure_one()
-        if not self.image_1920:
-            raise UserError('Resim bulunamadı.')
-        url = '/web/image/%s/%s/%s' % (self._name, self.id, 'image_1920')
-        return {
-            'type': 'ir.actions.act_url',
-            'url': url,
-            'target': 'new',
-        }
-
     def action_approve_ad(self):
         for rec in self:
             user_partner = self.env.user.partner_id
@@ -76,7 +74,7 @@ class ProductProduct(models.Model):
             
             if not rec.escrow_ad_sale_img:
                 raise UserError(_('Sale image is required to approve this ad.'))
-            rec.escrow_ad_approval = True
+            rec.escrow_state = 'approved'
         return True
 
 

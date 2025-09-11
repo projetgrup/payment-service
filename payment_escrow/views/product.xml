@@ -65,20 +65,17 @@
     <field name="model">product.product</field>
     <field name="arch" type="xml">
         <form>
+            <header>
+                <field name="escrow_state" widget="statusbar"/>
+            </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_view_full_image"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-external-link"
-                        attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('image_1920', '=', False)]}"
-                        string="Büyük Gör"/>
                     <button name="action_approve_ad"
                         type="object"
                         string="Approve"
                         class="oe_stat_button"
                         icon="fa-check"
-                        attrs="{'invisible': ['|','|', ('system','!=','escrow'), ('escrow_ad_approval','=',True), ('escrow_payment_paid','=',False)]}"/>
+                        attrs="{'invisible': ['|', ('system','!=','escrow'), ('escrow_state','!=','waiting')]}"/>
                     <button name="action_get_customer"
                         type="object"
                         class="oe_stat_button"
@@ -89,7 +86,6 @@
                 </div>
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="is_product_variant" invisible="1"/>
-                <field name="escrow_ad_approval" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="id" invisible="1"/>
                 <field name="active" invisible="1"/>
@@ -146,6 +142,11 @@
                     </page>
                 </notebook>
             </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="activity_ids" widget="mail_activity"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
             </form>
     </field>
     </record>

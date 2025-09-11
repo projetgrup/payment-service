@@ -23,11 +23,24 @@
     <template id="step_5_content" name="Step 5 Content">
         <div class="section">
             <div class="panel">
-                <div class="panel__header">
-                    <h3>Payment Completed</h3>
-                </div>
                 <div class="completion-content">
-                    
+                
+                </div>
+                <div  class="completion-actions text-center">
+                    <button type="button" class="btn btn-outline-secondary" field="wizard.button.close">
+                        Back to payment page
+                    </button>
+                </div>
+                <div class="form__group d-none -mb-0">
+                    <div class="form__label">Upload Official Sale Photo</div>
+                    <div class="pt-1">
+                        <input type="file" class="filepond" name="fileOfficialSale" accept="image/png, image/jpeg, image/gif" field="payment.different.info.fileOfficialSale"/>
+                    </div>
+                </div>
+                <div class="completion-actions mt-3 d-none text-center">
+                    <button type="button" class="btn btn-outline-secondary" field="wizard.button.submit">
+                        Send to official sale image
+                    </button>
                 </div>
             </div>
         </div>
@@ -133,12 +146,12 @@
                     </div>
                     <div id="individual" class="wizard-section wizard-section-individual">
                         <div class="form__group">
-                            <label class="form__label" for="namesurname">Name Surname</label>
-                            <input class="form__control -letter" id="namesurname" name="namesurname" type="text" placeholder="Name Surname" field="seller.input.name"/>
-                        </div>
-                        <div class="form__group">
                             <label class="form__label" for="wizard_tckn">T.C. Identity Number</label>
                             <input class="form__control -letter" id="wizard_tckn" name="tc" type="text" placeholder="T.C. Identity Number" field="seller.input.tc"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="namesurname">Name Surname</label>
+                            <input class="form__control -letter" id="namesurname" name="namesurname" type="text" placeholder="Name Surname" field="seller.input.name"/>
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="phone_individual">Mobile Phone</label>
@@ -163,7 +176,7 @@
                     </div>
                     <div class="form__group mt-3">
                         <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
-                            Devam Et
+                            Continue
                             <i class="fa fa-chevron-right ml-2"/>
                         </button>
                     </div>
@@ -211,8 +224,8 @@
                                 </select>
                             </div>
                             <div class="form__group">
-                                <label class="form__label" for="wizard_year">Yıl</label>
-                                <input id="wizard_year" class="form__control" type="text" name="year" placeholder="Model Yılı" field="ad.input.year"/>
+                                <label class="form__label" for="wizard_year">Year</label>
+                                <input id="wizard_year" class="form__control" type="text" name="year" placeholder="Model Year" field="ad.input.year"/>
                             </div>
                             <div class="form__group -mb-0">
                                 <div class="form__label">Upload License Photo</div>
@@ -263,7 +276,7 @@
                         </div>
                         <div class="form__group mt-3 d-flex justify-content-between">
                             <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
-                                Devam Et
+                                Continue
                                 <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
                                     <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
                                 </svg>
@@ -377,10 +390,10 @@
                                 </svg>
                                 <a href="#" class="download__link" field="assignment.form.download">Temlikname Formunu İndir</a>
                             </div>
-                            <div class="form__label">Upload Assignment Form</div>
+                            <!-- <div class="form__label">Upload Assignment Form</div>
                             <div class="pt-1">
                                 <input type="file" class="filepond" name="fileConveyance" accept="image/png, image/jpeg, image/gif, application/pdf" field="customer.input.fileConveyance"/>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="form__buttons">
                             <div t-if="agreements" class="field-agreement" field="agreements">
