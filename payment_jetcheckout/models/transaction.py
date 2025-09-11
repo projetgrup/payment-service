@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models, api, _
 from odoo.http import request
 from odoo.tools.float_utils import float_round
+from odoo.addons.payment import utils as payment_utils
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, DEFAULT_SERVER_DATETIME_FORMAT as DTF
 
@@ -355,12 +356,40 @@ class PaymentTransaction(models.Model):
         self.paylox_order_confirm()
         self.paylox_payment()
 
+    def action_capture(self):
+        if any(tx.provider == 'jetcheckout' for tx in self):
+            if len(self) != 1:
+                raise ValidationError(_('Only one transaction can be captured for Paylox acquirer.'))
+            if not self.env.user.has_group('payment_jetcheckout.group_transaction_postauth'):
+                raise ValidationError(_('You are not allowed to post authorize. Please contact with your system administrator.'))
+            if self.state != 'authorized':
+                raise ValidationError(_('Only authorized transactions can be captured.'))
+            payment_utils.check_rights_on_recordset(self)
+
+            wizard = self.env['payment.acquirer.jetcheckout.postauth'].create({
+                'transaction_id': self.id,
+                'total': self.amount,
+                'currency_id': self.currency_id.id,
+            })
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'payment.acquirer.jetcheckout.postauth',
+                'res_id': wizard.id,
+                'name': _('Post-authorization for %s') % self.reference,
+                'view_mode': 'form',
+                'target': 'new',
+            }
+
+        return super().action_capture()
+
     def _send_capture_request(self):
         super()._send_capture_request()
         if self.provider != 'jetcheckout':
             return
 
-        amount = self.env.context.get('amount', self.amount)
+        return self._paylox_api_postauth(self.amount)
+
+    def _paylox_api_postauth(self, amount):
         url = '%s/api/v1/payment/postauth' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,

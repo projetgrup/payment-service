@@ -21,6 +21,7 @@ class Users(models.Model):
             'group_transaction_commission',
             'group_transaction_cancel',
             'group_transaction_refund',
+            'group_transaction_postauth',
             'payment_page_item_priority',
             'payment_page_item_priority_selection',
             'payment_page_ok',
@@ -170,6 +171,16 @@ class Users(models.Model):
             code = user.group_transaction_refund and 4 or 3
             group = self.env.ref('payment_jetcheckout.group_transaction_refund')
             group.sudo().write({'users': [(code, user.id)]})
+ 
+    def _compute_group_transaction_postauth(self):
+        for user in self:
+            user.group_transaction_postauth = user.has_group('payment_jetcheckout.group_transaction_postauth')
+
+    def _set_group_transaction_postauth(self):
+        for user in self:
+            code = user.group_transaction_postauth and 4 or 3
+            group = self.env.ref('payment_jetcheckout.group_transaction_postauth')
+            group.sudo().write({'users': [(code, user.id)]})
 
     def _compute_group_own_partner(self):
         for user in self:
@@ -269,6 +280,7 @@ class Users(models.Model):
     group_transaction_commission = fields.Boolean(string='Transaction Commissions', compute='_compute_group_transaction_commission', inverse='_set_group_transaction_commission')
     group_transaction_cancel = fields.Boolean(string='Transaction Cancel', compute='_compute_group_transaction_cancel', inverse='_set_group_transaction_cancel')
     group_transaction_refund = fields.Boolean(string='Transaction Refund', compute='_compute_group_transaction_refund', inverse='_set_group_transaction_refund')
+    group_transaction_postauth = fields.Boolean(string='Transaction Post-Authorization', compute='_compute_group_transaction_postauth', inverse='_set_group_transaction_postauth')
     group_own_partner = fields.Boolean(string='Only Own Partners', compute='_compute_group_own_partner', inverse='_set_group_own_partner')
     group_own_transaction = fields.Boolean(string='Only Own Transactions', compute='_compute_group_own_transaction', inverse='_set_group_own_transaction')
     group_create_partner = fields.Boolean(string='Create Partners', compute='_compute_group_create_partner', inverse='_set_group_create_partner')

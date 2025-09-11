@@ -9,6 +9,7 @@ from urllib.parse import quote
 
 from odoo.http import Response, request
 from odoo.tools.translate import _, _lt
+from odoo.exceptions import MissingError, ValidationError, UserError
 from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest_datamodel.restapi import Datamodel
 from odoo.addons.component.core import Component
@@ -535,6 +536,112 @@ class OrderCheckoutAPIService(Component):
 
     query_payments.__doc__ = _lt("Query Payment")
 
+    @restapi.method(
+        [(["/report/powerbi"], "GET")],
+        input_param=Datamodel("oco.report.powerbi.request"),
+        output_param=Datamodel("oco.report.powerbi.response"),
+        auth="public",
+        tags=['Reports']
+    )
+    def report_powerbi(self, params):
+        """
+        PowerBI
+        """
+        try:
+            log = None
+            loggable = self._log_state()
+            if loggable:
+                log = {
+                    'service': 'api_oco_report_powerbi',
+                    'now': time.time(),
+                    'method': 'get',
+                    'url': '/oco/report/powerbi',
+                    'request': json.dumps(params.dump(), indent=4, default=str, ensure_ascii=False),
+                }
+        except:
+            log = None
+            loggable = None
+
+        try:
+            company = self.env.company.id
+            if loggable:
+                log.update({
+                    'company': company,
+                })
+
+            api = self._get_api(company, params.apikey)
+            if not api:
+                status, message = 401, _('Application key does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
+
+            if loggable:
+                log.update({
+                    'partner': api.company_id.partner_id.id,
+                    'company': api.company_id.id,
+                })
+
+            hash = self._get_hash(api, params.hash, '')
+            if not hash:
+                status, message = 401, _('Hash does not match.')
+                if loggable:
+                    log.update({
+                        'code': status,
+                        'status': False,
+                        'message': message,
+                        'response': message,
+                    })
+                    self._log(log)
+                return Response(message, status=status, mimetype="application/json")
+
+            try:
+                result = self._report_powerbi(api, params, log=log)
+            except MissingError as e:
+                return Response(str(e), status=404)
+            except ValidationError as e:
+                return Response(str(e), status=400)
+            except UserError as e:
+                return Response(str(e), status=400)
+
+            response = dict(**result, **RESPONSE[200])
+
+            if loggable:
+                log.update({
+                    'code': 200,
+                    'status': True,
+                    'message': _('Success'),
+                    'response': json.dumps(response, indent=4, default=str, ensure_ascii=False),
+                })
+                self._log(log)
+
+            ResponseOk = self.env.datamodels["oco.report.powerbi.response"]
+            return ResponseOk(**response)
+
+        except Exception as e:
+            status, message = 500, _('An error occured')
+            debug = traceback.format_exc()
+            if loggable:
+                log.update({
+                    'code': status,
+                    'status': False,
+                    'message': message,
+                    'debug': debug,
+                    'response': str(e),
+                })
+                self._log(log)
+
+            _logger.error(debug)
+            return Response(message, status=status, mimetype="application/json")
+
+    report_powerbi.__doc__ = _lt("PowerBI")
+
     #
     # PRIVATE METHODS
     #
@@ -753,3 +860,25 @@ class OrderCheckoutAPIService(Component):
                 'conveyance_url': 'https://%s/payment/card/report/conveyance/%s' % (request.httprequest.host, tx.jetcheckout_order_id),
             })
         return result
+
+    def _report_powerbi(self, api, params, log=None):
+        txs = request.env['payment.transaction'].sudo().search([('create_date', '>=', params.dateStart), ('create_date', '<=', params.dateEnd), ('state', '=', 'done')])
+        if not txs:
+            raise MissingError('Transaction cannot be found')
+
+        return {
+            'result': [{
+                'logDate': tx.create_date.strftime('%Y%m%d') or None,
+                'logTime': tx.create_date.strftime('%H%M%S') or None,
+                'paymentId': tx.jetcheckout_order_id or None,
+                'postAmount': tx.jetcheckout_postauth_amount or 0.0,
+                'bankCode': tx.jetcheckout_vpos_name or None,
+                'issuerCode': tx.jetcheckout_card_number or None,
+                'installment': tx.jetcheckout_installment_description or '0',
+                'outletNumber': tx.partner_ref or None,
+                'channel': None,
+                'paymentProvider': 'Iyzico',
+                'vkn': tx.partner_vat or None,
+                'distName': tx.partner_name or None,
+            } for tx in txs]
+        }

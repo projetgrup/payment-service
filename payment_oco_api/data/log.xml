@@ -25,5 +25,10 @@
             <field name="name">Query Payments</field>
             <field name="code">api_oco_query_payment</field>
         </record>
+
+    	<record id="log_service_report_powerbi" model="payment.paylox.log.service">
+            <field name="name">PowerBI</field>
+            <field name="code">api_oco_report_powerbi</field>
+        </record>
     </data>
 </odoo>

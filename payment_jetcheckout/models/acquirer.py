@@ -127,6 +127,30 @@ class PaymentPayloxRefund(models.TransientModel):
         return {'type': 'ir.actions.act_window_close'}
 
 
+class PaymentPayloxPostauth(models.TransientModel):
+    _name = 'payment.acquirer.jetcheckout.postauth'
+    _description = 'Paylox Post-Authorization'
+
+    transaction_id = fields.Many2one('payment.transaction', readonly=True)
+    currency_id = fields.Many2one('res.currency', readonly=True)
+    total = fields.Monetary(readonly=True, required=True)
+    amount = fields.Monetary()
+
+    def confirm(self):
+        if self.amount > self.total:
+            raise UserError(_('Post authorization amount cannot be higher than total amount'))
+        self.transaction_id._paylox_api_postauth(amount=self.amount)
+        return {'type': 'ir.actions.act_window_close'}
+
+    def draft(self):
+        if self.amount > self.total:
+            raise UserError(_('Post authorization amount cannot be higher than total amount'))
+
+        self.transaction_id.write({'jetcheckout_postauth': True, 'jetcheckout_postauth_amount': self.amount})
+        self.transaction_id._paylox_done_postprocess()
+        return {'type': 'ir.actions.act_window_close'}
+
+
 class PaymentPayloxBank(models.Model):
     _name = 'payment.acquirer.jetcheckout.bank'
     _description = 'Paylox Banks'

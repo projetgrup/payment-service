@@ -15,16 +15,21 @@
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
  
+        <record id="group_transaction_postauth" model="res.groups">
+            <field name="name">Transaction postauth</field>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+ 
         <record model="res.groups" id="base.group_system">
-            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund')), (4, ref('payment_jetcheckout.group_transaction_postauth'))]"/>
         </record>
  
         <record model="res.groups" id="base.group_erp_manager">
-            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund')), (4, ref('payment_jetcheckout.group_transaction_postauth'))]"/>
         </record>
  
         <record model="res.groups" id="account.group_account_invoice">
-            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund'))]"/>
+            <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund')), (4, ref('payment_jetcheckout.group_transaction_postauth'))]"/>
         </record>
  
         <record id="rule_report" model="ir.rule">
