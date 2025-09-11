@@ -31,6 +31,7 @@ class PayloxSystemEscrowController(Controller):
     @http.route('/payment/escrow/transaction-data', type='json', auth='user', methods=['POST'])
     def get_transaction_data(self, product_id=None, status=None, **kwargs):
         try:
+            company = request.env.company
             if not product_id:
                 return {'error': 'No product ID provided'}
 
@@ -49,8 +50,11 @@ class PayloxSystemEscrowController(Controller):
 
             transaction_list = []
             for tx in transactions:
-                conveyance_files = self._generate_conveyance_files(tx)
-                
+                if company.conveyance_show_link:
+                    transaction_list.append({
+                        'order_id': tx.jetcheckout_order_id,
+                    })
+
                 transaction_list.append({
                     'id': tx.id,
                     'reference': tx.reference,
@@ -60,9 +64,16 @@ class PayloxSystemEscrowController(Controller):
                     'message': tx.state_message,
                     'payment_method': tx.acquirer_id.name if tx.acquirer_id else 'Unknown',
                     'different_holder': tx.jetcheckout_different_card_holder,
-                    'conveyance': conveyance_files,
+                    'conveyance_attachment': {
+                        'name': tx.conveyance_file_name or '',
+                        'mimetype': tx.conveyance_attachment_id.mimetype if tx.conveyance_attachment_id else '',
+                        'data': tx.conveyance_attachment_id.datas.decode('utf-8') if tx.conveyance_attachment_id else '',
+                    } if tx.conveyance_attachment_id else None,
+                    'conveyance_file_name': tx.conveyance_file_name if tx.conveyance_file_name else None,
+                    'conveyance_upload_date': tx.conveyance_upload_date if tx.conveyance_upload_date else None,
+                    'conveyance_sent_date': tx.conveyance_sent_date if tx.conveyance_sent_date else None,
+                    'conveyance_status': tx.conveyance_status if tx.conveyance_status else None,
                 })
-            # Get the latest transaction with different holder info safely
             different_holder_txs = payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder).sorted('create_date', reverse=True)
             
             result = {
@@ -85,6 +96,7 @@ class PayloxSystemEscrowController(Controller):
                         'vat': latest_tx.jetcheckout_different_card_holder_id.vat if latest_tx.jetcheckout_different_card_holder_id else '',
                         'phone': latest_tx.jetcheckout_different_card_holder_id.mobile if latest_tx.jetcheckout_different_card_holder_id else '',
                         'email': latest_tx.jetcheckout_different_card_holder_id.email if latest_tx.jetcheckout_different_card_holder_id else '',
+                        'is_otp_verified': latest_tx.jetcheckout_different_card_holder_id.is_otp_verified if latest_tx.jetcheckout_different_card_holder_id else False,
                     }
                 })
             else:
@@ -103,38 +115,6 @@ class PayloxSystemEscrowController(Controller):
         except Exception as e:
             _logger.error("Error in get_transaction_data: %s", str(e))
             return {'error': str(e)}
-
-    def _generate_conveyance_files(self, transaction):
-        """Generate conveyance files for a transaction"""
-        conveyance_files = []
-        
-        try:
-            if not hasattr(transaction, 'acquirer_id') or not transaction.acquirer_id:
-                _logger.error("Transaction %s has no acquirer_id, skipping conveyance generation", transaction.reference)
-                return conveyance_files
-
-            report = request.env.ref('payment_jetcheckout.report_conveyance', raise_if_not_found=False)
-            if not report:
-                _logger.error("Report 'payment_jetcheckout.report_conveyance' not found")
-                return conveyance_files
-
-            pdf_content, _ = report.with_user(1)._render_qweb_pdf([transaction.id])
-            
-            if pdf_content:
-                pdf_base64 = base64.b64encode(pdf_content).decode('utf-8')
-                
-                conveyance_files.append({
-                    'name': f'Conveyance_{transaction.reference}.pdf',
-                    'content': pdf_base64,
-                    'mimetype': 'application/pdf',
-                    'size': len(pdf_content),
-                    'url': '/web/content/%s/%s/pdf?mimetype=application%%2Fpdf&download=True' % (transaction._name, transaction.id)
-                })
-                
-        except Exception as e:
-            _logger.error("Could not generate conveyance file for transaction %s: %s", transaction.reference, str(e))
-        
-        return conveyance_files
 
     def _generate_hash_url(self, step=0, id=0, owner=None, customer=None, status=None):
         import base64
@@ -1090,4 +1070,120 @@ class PayloxSystemEscrowController(Controller):
                 'success': False,
                 'error': str(e),
                 'message': 'An error occurred while retrieving partner information.'
+            }
+
+    @http.route('/payment/escrow/upload-conveyance', type='json', auth='user', methods=['POST'])
+    def upload_conveyance_file(self, **kwargs):
+        try:
+            file_name = kwargs.get('file_name')
+            file_data = kwargs.get('file_data')
+            file_type = kwargs.get('file_type')
+            payment_id = kwargs.get('payment_id')
+            
+            if not file_data or not payment_id or not file_name:
+                return {
+                    'success': False,
+                    'error': 'Missing file data, file name, or payment_id parameter'
+                }
+            payment = request.env['payment.transaction'].sudo().browse(int(payment_id))
+            if not payment.exists():
+                return {
+                    'success': False,
+                    'error': 'Payment transaction not found'
+                }
+            try:
+                file_content = base64.b64decode(file_data)
+            except Exception as e:
+                return {
+                    'success': False,
+                    'error': 'Invalid base64 file data'
+                }
+            
+            if not file_content:
+                return {
+                    'success': False,
+                    'error': 'Empty file uploaded'
+                }
+            if len(file_content) > 10 * 1024 * 1024:
+                return {
+                    'success': False,
+                    'error': 'File too large. Maximum size is 10MB'
+                }
+            allowed_types = ['image/png', 'image/jpeg', 'image/gif', 'application/pdf']
+            if file_type not in allowed_types:
+                return {
+                    'success': False,
+                    'error': 'Invalid file type. Only PNG, JPEG, GIF, and PDF files are allowed'
+                }
+            attachment = request.env['ir.attachment'].sudo().create({
+                'name': file_name,
+                'datas': file_data,
+                'mimetype': file_type,
+                'res_model': 'payment.transaction',
+                'res_id': payment.id,
+                'description': 'Conveyance form for payment transaction'
+            })
+            payment.sudo().write({
+                'conveyance_attachment_id': attachment.id,
+                'conveyance_file_name': file_name,
+                'conveyance_upload_date': fields.Datetime.now(),
+                'conveyance_status': 'uploaded'
+            })
+            
+            return {
+                'success': True,
+                'attachment_id': attachment.id,
+                'filename': file_name,
+                'message': 'File uploaded successfully'
+            }
+            
+        except Exception as e:
+            _logger.error(f"Error uploading conveyance file: {str(e)}")
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'An error occurred while uploading the file'
+            }
+
+    @http.route('/payment/escrow/send-conveyance', type='json', auth='user', methods=['POST'])
+    def send_conveyance(self, **kwargs):
+        try:
+            payment_id = kwargs.get('payment_id')
+            
+            if not payment_id:
+                return {
+                    'success': False,
+                    'error': 'Missing payment_id parameter'
+                }
+            payment = request.env['payment.transaction'].sudo().browse(int(payment_id))
+            if not payment.exists():
+                return {
+                    'success': False,
+                    'error': 'Payment transaction not found'
+                }
+            if not payment.conveyance_attachment_id:
+                return {
+                    'success': False,
+                    'error': 'No conveyance file uploaded for this transaction'
+                }
+            payment.sudo().write({
+                'conveyance_sent_date': fields.Datetime.now(),
+                'conveyance_status': 'sent'
+            })
+            body = _('Conveyance form has been sent. User IP Address is %s') % (request.httprequest.remote_addr,)
+            attachment = payment.conveyance_attachment_id
+            payment.sudo().message_post(body=body, attachment_ids=attachment.ids)
+            
+            return {
+                'success': True,
+                'message': 'Conveyance form sent successfully',
+                'sent_date': payment.conveyance_sent_date.isoformat() if payment.conveyance_sent_date else None
+            }
+            
+        except Exception as e:
+            _logger.error(f"Error sending conveyance: {str(e)}")
+            return {
+                'success': False,
+                'error': str(e),
+                'message': 'An error occurred while sending the conveyance form'
             }

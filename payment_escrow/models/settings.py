@@ -8,3 +8,4 @@ class PaymentSettings(models.TransientModel):
         config_parameter='paylox.installment.show_monthly',
         default=True,
     )
+    conveyance_show_link = fields.Boolean(string='Enable Conveyance Document Show Link', related='company_id.conveyance_show_link', readonly=False)
