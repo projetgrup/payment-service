@@ -71,11 +71,6 @@ class PayloxSystemEscrowController(Controller):
                     'conveyance_sent_date': tx.conveyance_sent_date if tx.conveyance_sent_date else None,
                     'conveyance_status': tx.conveyance_status if tx.conveyance_status else None,
                 })
-
-                if company.conveyance_show_link:
-                    transaction_list.append({
-                        'order_id': tx.jetcheckout_order_id,
-                    })
             different_holder_txs = payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder).sorted('create_date', reverse=True)
             
             result = {
@@ -272,8 +267,8 @@ class PayloxSystemEscrowController(Controller):
                 ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref']) or reference_seller
                 customer_basket.append({
                     "id": 25,
-                    "name": f"{product['product_id']['name']} - Altyapı Komisyonu",
-                    "description": f"Altyapı Komisyonu (%{infra_rate})",
+                    "name": infrastructure_provider.name,
+                    "description": f"Infrastructure Commission (%{infra_rate})",
                     "qty": 1,
                     "amount": infra_amount,
                     "category": "Komisyon",
@@ -286,11 +281,11 @@ class PayloxSystemEscrowController(Controller):
                 ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref']) or reference_seller
                 customer_basket.append({
                     "id": 26,
-                    "name": f"{product['product_id']['name']} - Platform Komisyonu",
-                    "description": f"Platform Komisyonu (%{platform_rate})",
+                    "name": platform_owner.name,
+                    "description": _(f"Platform commission (%{platform_rate})"),
                     "qty": 1,
                     "amount": platform_amount,
-                    "category": "Komisyon",
+                    "category": "Commission",
                     "is_physical": False,
                     "submerchant_external_id": ref_platform,
                     "submerchant_price": platform_commission

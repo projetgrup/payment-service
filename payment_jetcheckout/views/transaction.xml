@@ -168,13 +168,13 @@
                     <field name="paylox_basket_ids" readonly="1">
                         <tree>
                             <field name="uid"/>
-                            <field name="name"/>
                             <field name="description"/>
                             <field name="qty"/>
                             <field name="amount"/>
                             <field name="physical" optional="hide"/>
                             <field name="category" optional="hide"/>
-                            <field name="submerchant_external_id"/>
+                            <field name="name"/>
+                            <field name="submerchant_external_id" optional="hide"/>
                             <field name="submerchant_price"/>
                         </tree>
                         <form>
