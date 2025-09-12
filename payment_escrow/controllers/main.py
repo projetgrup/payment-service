@@ -50,10 +50,6 @@ class PayloxSystemEscrowController(Controller):
 
             transaction_list = []
             for tx in transactions:
-                if company.conveyance_show_link:
-                    transaction_list.append({
-                        'order_id': tx.jetcheckout_order_id,
-                    })
 
                 transaction_list.append({
                     'id': tx.id,
@@ -64,6 +60,7 @@ class PayloxSystemEscrowController(Controller):
                     'message': tx.state_message,
                     'payment_method': tx.acquirer_id.name if tx.acquirer_id else 'Unknown',
                     'different_holder': tx.jetcheckout_different_card_holder,
+                    'order_id': tx.jetcheckout_order_id if company.conveyance_show_link else None, 
                     'conveyance_attachment': {
                         'name': tx.conveyance_file_name or '',
                         'mimetype': tx.conveyance_attachment_id.mimetype if tx.conveyance_attachment_id else '',
@@ -74,6 +71,11 @@ class PayloxSystemEscrowController(Controller):
                     'conveyance_sent_date': tx.conveyance_sent_date if tx.conveyance_sent_date else None,
                     'conveyance_status': tx.conveyance_status if tx.conveyance_status else None,
                 })
+
+                if company.conveyance_show_link:
+                    transaction_list.append({
+                        'order_id': tx.jetcheckout_order_id,
+                    })
             different_holder_txs = payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder).sorted('create_date', reverse=True)
             
             result = {
