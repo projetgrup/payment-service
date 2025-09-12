@@ -61,13 +61,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane"/>
-                            <div class="o_setting_right_pane">
-                                <label for="installment_show_monthly" string="Installments Table"/>
-                                <div class="text-muted">Show Monthly column on installment tables</div>
-                                <field name="installment_show_monthly" widget="boolean_toggle"/>
+
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="conveyance_show_link"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="conveyance_show_link" string="Conveyance Document"/>
+                            <div class="text-muted">
+                                Show Conveyance Document
                             </div>
                         </div>
                     </div>

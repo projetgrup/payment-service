@@ -22,6 +22,17 @@ class PaymentTransaction(models.Model):
     paylox_notif_sms_state = fields.Boolean('Paylox SMS Notification State', readonly=True)
     jetcheckout_additional_rate = fields.Float('JetCheckout Additional Rate', digits=(12,4), readonly=True, copy=False)
 
+    conveyance_attachment_id = fields.Many2one('ir.attachment', 'Conveyance Form Attachment', readonly=True, copy=False)
+    conveyance_file_name = fields.Char('Conveyance File Name', readonly=True, copy=False)
+    conveyance_upload_date = fields.Datetime('Conveyance Upload Date', readonly=True, copy=False)
+    conveyance_sent_date = fields.Datetime('Conveyance Sent Date', readonly=True, copy=False)
+    conveyance_status = fields.Selection([
+        ('pending', 'Pending'),
+        ('uploaded', 'Uploaded'),
+        ('sent', 'Sent'),
+        ('processed', 'Processed')
+    ], string='Conveyance Status', default='pending', readonly=True, copy=False)
+
     def _generate_access_token(self):
         """Generate a secure access token for escrow payment URLs"""
         self.ensure_one()

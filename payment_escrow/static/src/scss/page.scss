@@ -876,9 +876,9 @@
     /* React-like form styles for wizard */
     .section { 
         margin: 0; 
-        width: 395px;
+        width: 475px;
     }
-    @media (max-width: 374px) {
+    @media (max-width: 475px) {
         .section { max-width: 100%; }
     }
     /* Center like React (container with row/col handled in template) */
@@ -905,8 +905,6 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 380px;
-            border: none;
             border-radius: 10px;
             background: linear-gradient(90deg, #4c1d95 0%, #3b82f6 100%);
             color: white;
@@ -2749,4 +2747,118 @@
         opacity: 0;
         transform: translateY(-20px);
     }
+}
+
+/* File upload styles */
+.uploaded-files-container {
+    .uploaded-files-list {
+        .uploaded-file-item {
+            background-color: var(--color-light-blue-bg);
+            border-color: var(--color-light-blue-border) !important;
+            border-radius: 8px;
+            
+            .file-info {
+                .file-name {
+                    color: var(--text-color);
+                    font-size: 14px;
+                }
+                
+                .file-size {
+                    color: var(--secondary-text-color);
+                    font-size: 12px;
+                }
+                
+                .file-details {
+                    color: var(--secondary-text-color);
+                    font-size: 12px;
+                    
+                    .fa {
+                        font-size: 11px;
+                    }
+                }
+            }
+            
+            .fa-check {
+                color: var(--color-success);
+                font-size: 16px;
+            }
+            
+            .file-actions {
+                .btn {
+                    border-radius: 4px;
+                    font-size: 12px;
+                    padding: 4px 8px;
+                    
+                    .fa {
+                        font-size: 12px;
+                    }
+                    
+                    &:hover {
+                        transform: translateY(-1px);
+                    }
+                }
+            }
+        }
+    }
+    
+    .send-conveyance-btn {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 16px;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            background-color: rgba(var(--primary-color-rgb), 0.9);
+            border-color: rgba(var(--primary-color-rgb), 0.9);
+            transform: translateY(-1px);
+        }
+        
+        &:active {
+            transform: translateY(0);
+        }
+        
+        &:disabled {
+            background-color: var(--color-disabled);
+            border-color: var(--color-disabled);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        &.btn-success {
+            background-color: var(--color-success);
+            border-color: var(--color-success);
+        }
+        
+        &.btn-danger {
+            background-color: var(--color-error);
+            border-color: var(--color-error);
+        }
+    }
+}
+
+/* FilePond custom styling for escrow */
+.filepond--root {
+    margin-bottom: 0;
+}
+
+.filepond--drop-label {
+    color: var(--secondary-text-color);
+    font-size: 14px;
+}
+
+.filepond--panel-root {
+    border: 2px dashed var(--color-border);
+    border-radius: 8px;
+    background-color: var(--background-color);
+}
+
+.filepond--panel-root:hover {
+    border-color: var(--primary-color);
+}
+
+.filepond--file-action-button {
+    background-color: var(--primary-color);
 }

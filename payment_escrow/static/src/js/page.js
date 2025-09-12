@@ -812,12 +812,33 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         };
 
+        this.card = {
+            holder: new fields.element({
+                validate: () => {
+                    const field = this.card.holder;
+                    const different = this.payment.different.info.name;
+                    let message = null;
+                    let valid = true;
+                    if (!field.value) {
+                        message = _t('Holder is required');
+                        valid = false;
+                    } else if (this.state.different && field.value !== different.value) {
+                        message = _t('Holder name must match the name entered in payment information');
+                        valid = false;
+                    }
+                    this._onFieldValid(field, valid, message);
+                    return valid;
+                }
+            }),
+        }
+
         this.payment = {
             different: {
                 holder: new fields.boolean({
                     events: [['change', this._onToggleDifferentHolder]]
                 }),
                 info: {
+                    form: new fields.element(),
                     container: new fields.element(),
                     edit: new fields.element({     
                         events: [['click', this._onEditPaymentInfo]]
@@ -846,6 +867,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         }
                     }),
                     name: new fields.string({
+                        events: [['input', () => {
+                            const $cardHolder = $('#card_holder_name');
+                            $cardHolder.val(this.payment.different.info.name.value);
+                            $cardHolder.trigger('input');
+                        }]],
                         mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                         prepareChar: str => str.toLocaleUpperCase('tr-TR'),
                         validate: () => {
@@ -864,6 +890,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         }
                     }),
                     phone: new fields.string({
+                        events: [['input', () => this._isOtpValidate(this.payment.different.info.phone)]],
                         mask: '000 000 0000',
                         validate: () => {
                             const field = this.payment.different.info.phone;
@@ -1072,7 +1099,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _isOtpValidate: async function(field) {
         if (field.value.length === 10) {
             let otp = field._.masked.value;
-            //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/otp/validate',
                 params: { otp },
@@ -1089,7 +1115,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let vat = vatField._.masked.value;
         let iban = ibanField._.masked.value;
         if (this._isIbanValid(iban)) {
-            //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/iban/verify',
                 params: { iban, vat },
@@ -1774,15 +1799,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializeFinalStep: function() {
-        const self = this;
-        console.log(this.state)
         this._rpc({
             route: '/payment/escrow/transaction-data',
             params: { 
                 product_id: this.state.id,
                 status: this.state.status
             }
-        }).then(function(result) {
+        }).then((result) => {
             if (result && !result.error) {
                 const templateData = {
                     total_amount: result.total_amount || 0,
@@ -1790,40 +1813,42 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     remaining_amount: result.remaining_amount || 0,
                     transactions: result.transactions || [],
                     paid: result.paid || false,
-                    currency: self.currency,
+                    currency: this.currency,
                     format: format,
-                    state: self.state.status,
+                    state: this.state.status,
                 };
                 const $rendered = $(qweb.render('paylox.escrow.transaction.item', templateData));
 
                 const $container = $('.completion-content');
                 if ($container.length) {
                     $container.empty().append($rendered);
+                    // Initialize file upload for each transaction
+                    this._initializeFileUploads(result.transactions || []);
                 }
                 if (result.paid > 0) {
-                    self.payment.transaction.status.html = 'Success';
-                    self.payment.transaction.status.$.addClass('text-success');
-                    self.payment.transaction.date.html = result.paid_date;
+                    this.payment.transaction.status.html = 'Success';
+                    this.payment.transaction.status.$.addClass('text-success');
+                    this.payment.transaction.date.html = result.paid_date;
                     if (!result.img) {
-                        const $buttonParent = self.wizard.button.submit.$.closest('.completion-actions');
+                        const $buttonParent = this.wizard.button.submit.$.closest('.completion-actions');
                         $buttonParent.removeClass('d-none');
-                        const $parent = self.payment.different.info.fileOfficialSale.$.closest('.form__group');
+                        const $parent = this.payment.different.info.fileOfficialSale.$.closest('.form__group');
                         $parent.removeClass('d-none');
-                        self.wizard.button.close.$.addClass('d-none');
+                        this.wizard.button.close.$.addClass('d-none');
                     } else {
-                        self.wizard.button.submit.$.attr('disabled', 'disabled').addClass('btn-secondary').removeClass('btn-primary');
-                        const $parent = self.payment.different.info.fileOfficialSale.$.closest('.form__group');
+                        this.wizard.button.submit.$.attr('disabled', 'disabled').addClass('btn-secondary').removeClass('btn-primary');
+                        const $parent = this.payment.different.info.fileOfficialSale.$.closest('.form__group');
                         $parent.removeClass('d-none');
-                        self.payment.different.info.fileOfficialSale.value = result.img;
-                        self.wizard.button.close.$.addClass('d-none');
+                        this.payment.different.info.fileOfficialSale.value = result.img;
+                        this.wizard.button.close.$.addClass('d-none');
                     }
                 } else {
-                    self.payment.transaction.status.html = 'Pending';
-                    self.payment.transaction.status.$.addClass('text-warning');
-                    self.payment.transaction.date.html = '-';
+                    this.payment.transaction.status.html = 'Pending';
+                    this.payment.transaction.status.$.addClass('text-warning');
+                    this.payment.transaction.date.html = '-';
                 }
                 if (result.different){
-                    self._setState({ different: true });
+                    this._setState({ different: true });
                 }
             } else {
                 console.error('Error loading transaction data:', result && result.error);
@@ -1899,8 +1924,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     return this._startOtp(result.partner_id).then((otpRes) => {
                         if (otpRes && otpRes.success) {
                             this.wizard.otpId = otpRes.otp_id;
-                            this._showOtpModal(otpRes.expires_in || 120);
+                            this._showOtpModal(otpRes.expires_in || 120, true); // Seller için step geçişi yap
                         } else if (otpRes && otpRes.is_otp_verified) {
+                            // OTP already verified, move to next step
                             this._markStepCompleted(this.wizard.currentStep);
                             this._onChangeStep(this.wizard.currentStep + 1);
                         } else {
@@ -1988,7 +2014,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     return this._startOtp(result.partner_id).then((otpRes) => {
                         if (otpRes && otpRes.success) {
                             this.wizard.otpId = otpRes.otp_id;
-                            this._showOtpModal({ expiresIn: otpRes.expires_in || 120 });
+                            this._showOtpModal({ expiresIn: otpRes.expires_in || 120 }, true); // Customer için step geçişi yap
                         } else if (otpRes && otpRes.is_otp_verified) {
                             this._markStepCompleted(this.wizard.currentStep);
                             this._onChangeStep(this.wizard.currentStep + 1);
@@ -2046,7 +2072,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializePaymentForm: function () {
-        console.log(this.state)
         if (this.state.different){
             this.payment.different.holder.$.prop('checked', true).trigger('change');
         }
@@ -2230,7 +2255,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return this._rpc({ route: '/my/otp/verify', params: { otp_id: this.wizard.otpId, code: code } });
     },
 
-    _showOtpModal: function(expiresOrOpts){
+    _showOtpModal: function(expiresOrOpts, shouldAdvanceStep = false){
         const self = this;
         const isObj = typeof expiresOrOpts === 'object' && expiresOrOpts !== null;
         const ttl = isObj ? (expiresOrOpts.expiresIn || expiresOrOpts.ttl || 120) : (typeof expiresOrOpts === 'number' ? expiresOrOpts : 120);
@@ -2293,8 +2318,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             verifyFn(code).then(res=>{
                 if (res && res.success) {
                     closeModal();
-                    self._markStepCompleted(self.wizard.currentStep);
-                    self._onChangeStep(self.wizard.currentStep + 1);
+                    self.displayNotification({ 
+                        type: 'success', 
+                        title: 'OTP', 
+                        message: 'Phone number verified successfully' 
+                    });
+                    if (shouldAdvanceStep) {
+                        self._markStepCompleted(self.wizard.currentStep);
+                        self._onChangeStep(self.wizard.currentStep + 1);
+                    }
                 } else {
                     self.displayNotification({ type:'danger', title:'OTP', message: (res && res.message) || 'Doğrulama başarısız' });
                 }
@@ -2378,6 +2410,17 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 $card.find('[field="payment.different.info.display.name"]').text(data.different_holder.name || '-');
                 $card.find('[field="payment.different.info.display.phone"]').text(data.different_holder.phone || '-');
                 $card.find('[field="payment.different.info.display.email"]').text(data.different_holder.email || '-');
+
+                this.payment.different.info.tc.value = data.different_holder.vat || '';
+                this.payment.different.info.name.value = data.different_holder.name || '';
+                this.payment.different.info.phone.value = data.different_holder.phone || '';
+                this.payment.different.info.email.value = data.different_holder.email || '';
+
+                if (data.different_holder.is_otp_verified){
+                    const $icon = $card.find('[field="payment.different.info.display.phone"]').siblings('i');
+                    $icon.removeClass('fa-exclamation-circle fa-spinner fa-spin').addClass('fa-check-circle');
+                    this._isOtpValidate(this.payment.different.info.phone);
+                }
             }
         }
         return data;
@@ -2388,12 +2431,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const isChecked = event.target.checked;
         const $assignmentSection = this.assignment.form.section.$;
         const $infoSection = this.payment.different.info.container.$;
+        const $infoForm = this.payment.different.info.form.$;
         
         if (isChecked) {
             $assignmentSection.slideDown(300);
-            $infoSection.slideDown(300);
+            $infoForm.slideDown(300);
         } else {
             $assignmentSection.slideUp(300);
+            $infoForm.slideUp(300);
             $infoSection.slideUp(300);
         }
     },
@@ -2406,7 +2451,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    _onCancelEditPaymentInfo: function(event) {
+    _onCancelEditPaymentInfo: function() {
         const $card = $('.payment-info-card');
         const $form = $('.payment-info-edit');
         
@@ -2415,7 +2460,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    _onSavePaymentInfo: function(event) {
+    _onSavePaymentInfo: function() {
         const tcValid = this.payment.different.info.tc.validate();
         const nameValid = this.payment.different.info.name.validate();
         const phoneValid = this.payment.different.info.phone.validate();
@@ -2449,16 +2494,27 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
         }).then((result) => {
             if (result && result.success) {
-                this.displayNotification({
-                    type: 'success',
-                    title: 'Success',
-                    message: 'Card holder information updated successfully.',
+                return this._startOtp(result.partner.id).then((otpRes) => {
+                    if (otpRes && otpRes.success) {
+                        this.wizard.otpId = otpRes.otp_id;
+                        this._showOtpModal(otpRes.expires_in || 120, false);
+                    } else if (otpRes && otpRes.is_otp_verified) {
+                        this.displayNotification({ 
+                            type: 'success', 
+                            title: 'OTP', 
+                            message: 'Phone number is already verified' 
+                        });
+                    } else {
+                        this.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
+                    }
+                }).finally(() => {
+                    this._enableWizard();
+                    const $card = $('.payment-info-card');
+                    $card.find('[field="payment.different.info.display.tc"]').text(result.partner.vat || '-');
+                    $card.find('[field="payment.different.info.display.name"]').text(result.partner.name || '-');
+                    $card.find('[field="payment.different.info.display.phone"]').text(result.partner.phone || '-');
+                    $card.find('[field="payment.different.info.display.email"]').text(result.partner.email || '-');
                 });
-                const $card = $('.payment-info-card');
-                $card.find('[field="payment.different.info.display.tc"]').text(result.partner.vat || '-');
-                $card.find('[field="payment.different.info.display.name"]').text(result.partner.name || '-');
-                $card.find('[field="payment.different.info.display.phone"]').text(result.partner.phone || '-');
-                $card.find('[field="payment.different.info.display.email"]').text(result.partner.email || '-');
             } else {
                 this.displayNotification({
                     type: 'warning',
@@ -2670,5 +2726,194 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 console.error('Error looking up customer:', error);
             });
         }
+    },
+
+    _initializeFileUploads: function(transactions) {
+        const self = this;
+        
+        transactions.forEach(function(payment) {
+            const fileInputId = `fileConveyance_${payment.id}`;
+            const uploadedFilesId = `uploadedFiles_${payment.id}`;
+            const $fileInput = $(`#${fileInputId}`);
+            const $uploadedContainer = $(`#${uploadedFilesId}`);
+            const $uploadedList = $uploadedContainer.find('.uploaded-files-list');
+
+            if (payment.conveyance_attachment) {
+                const fileName = payment.conveyance_file_name || 'Conveyance Form';
+                const uploadDate = payment.conveyance_upload_date ? 
+                    new Date(payment.conveyance_upload_date).toLocaleDateString() : '';
+                const status = payment.conveyance_status || 'uploaded';
+                
+                let statusIcon = 'fa-check text-success';
+                let statusText = 'Uploaded';
+                let buttonText = 'Send to Conveyance';
+                let buttonClass = 'btn-primary';
+                let buttonDisabled = false;
+                
+                if (status === 'sent') {
+                    statusIcon = 'fa-paper-plane text-info';
+                    statusText = 'Sent';
+                    buttonText = 'Sent Successfully';
+                    buttonClass = 'btn-success';
+                    buttonDisabled = true;
+                } else if (status === 'processed') {
+                    statusIcon = 'fa-check-circle text-success';
+                    statusText = 'Processed';
+                    buttonText = 'Processed';
+                    buttonClass = 'btn-success';
+                    buttonDisabled = true;
+                }
+                
+                $uploadedList.html(`
+                    <div class="uploaded-file-item d-flex align-items-center p-2 border rounded">
+                        <i class="fa fa-file-o mr-2"></i>
+                        <div class="file-info flex-grow-1">
+                            <div class="file-name font-weight-bold">${fileName}</div>
+                            <div class="file-details text-muted small">
+                                <span><i class="fa ${statusIcon.split(' ')[0]} mr-1"></i>${statusText}</span>
+                                ${uploadDate ? `<span class="ml-2">• ${uploadDate}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <a href="/payment/card/report/receipt/${payment.order_id}" 
+                               target="_blank" 
+                               class="btn btn-sm btn-outline-primary mr-2"
+                               title="Download File">
+                                <i class="fa fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                `);
+                
+                $uploadedContainer.show();
+                
+                const $sendButton = $uploadedContainer.find('.send-conveyance-btn');
+                if ($sendButton.length) {
+                    $sendButton
+                        .text(buttonText)
+                        .removeClass('btn-primary btn-success btn-danger')
+                        .addClass(buttonClass)
+                        .prop('disabled', buttonDisabled);
+                }
+            }
+        
+            if ($fileInput.length) {
+                const pond = FilePond.create($fileInput[0], {
+                    allowMultiple: false,
+                    credits: false,
+                    acceptedFileTypes: ['image/png', 'image/jpeg', 'image/gif', 'application/pdf'],
+                    maxFileSize: '10MB',
+                    labelIdle: `<svg class="w-100" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                            <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                            <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                        </svg>
+                        <span class="text-600">Select Image or Take New</span>
+                        <div class="text-600">No Image Selected</div>`,
+                    server: {
+                        process: function (fieldName, file, metadata, load, error, progress, abort, transfer, options) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                const base64Data = e.target.result.split(',')[1];
+                                self._rpc({
+                                    route: '/payment/escrow/upload-conveyance',
+                                    params: {
+                                        file_name: file.name,
+                                        file_data: base64Data,
+                                        file_type: file.type,
+                                        payment_id: payment.id
+                                    }
+                                }).then(function(result) {
+                                    if (result && result.success) {
+                                        load(result.attachment_id);
+                                        const fileName = file.name;
+                                        const fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+                                        
+                                        $uploadedList.html(`
+                                            <div class="uploaded-file-item d-flex align-items-center p-2 border rounded">
+                                                <i class="fa fa-file-o mr-2"></i>
+                                                <div class="file-info flex-grow-1">
+                                                    <div class="file-name font-weight-bold">${fileName}</div>
+                                                    <div class="file-size text-muted small">${fileSize}</div>
+                                                </div>
+                                                <i class="fa fa-check text-success"></i>
+                                            </div>
+                                        `);
+                                        $uploadedContainer.show();
+
+                                        const $sendButton = $uploadedContainer.find('.send-conveyance-btn');
+                                        if ($sendButton.length) {
+                                            $sendButton
+                                                .text('Send to Conveyance')
+                                                .removeClass('btn-primary btn-success btn-danger')
+                                                .addClass('btn-primary')
+                                                .prop('disabled', false);
+                                        }
+                                    } else {
+                                        error(result && result.error || 'Upload failed');
+                                    }
+                                }).catch(function(err) {
+                                    console.error('Upload error:', err);
+                                    error('Upload failed');
+                                });
+                            };
+                            
+                            reader.onerror = function() {
+                                error('Could not read file');
+                            };
+                            reader.readAsDataURL(file);
+                            return {
+                                abort: () => {
+                                    abort();
+                                }
+                            };
+                        }
+                    }
+                });
+                if (payment.conveyance_attachment) {
+                    const byteCharacters = atob(payment.conveyance_attachment.data);
+                    const byteNumbers = new Array(byteCharacters.length);
+                    for (let i = 0; i < byteCharacters.length; i++) {
+                        byteNumbers[i] = byteCharacters.charCodeAt(i);
+                    }
+                    const byteArray = new Uint8Array(byteNumbers);
+                    const blob = new Blob([byteArray], { type: payment.conveyance_attachment.mimetype });
+                    const file = new File([blob], payment.conveyance_file_name || 'Conveyance Form', { type: payment.conveyance_attachment.mimetype });
+                    pond.addFile(file, {type: 'local'});
+                }
+                $fileInput.data('pond', pond);
+            }
+        });
+
+        $(document).off('click', '.send-conveyance-btn').on('click', '.send-conveyance-btn', function(e) {
+            e.preventDefault();
+            const paymentId = $(this).data('payment-id');
+            self._sendToConveyance(paymentId);
+        });
+
+    },
+
+    _sendToConveyance: function(paymentId) {
+        const $button = $(`.send-conveyance-btn[data-payment-id="${paymentId}"]`);
+        const originalText = $button.text();
+        $button.prop('disabled', true).text('Sending...');
+        
+        this._rpc({
+            route: '/payment/escrow/send-conveyance',
+            params: { 
+                payment_id: paymentId
+            }
+        }).then(function(result) {
+            if (result && result.success) {
+                $button.removeClass('btn-primary').addClass('btn-success').text('Sent Successfully');
+            } else {
+                $button.removeClass('btn-primary').addClass('btn-danger').text('Send Failed');
+                console.error('Failed to send to conveyance:', result && result.error);
+            }
+        }).catch(function(error) {
+            $button.removeClass('btn-primary').addClass('btn-danger').text('Send Failed');
+            $button.removeClass('btn-danger').addClass('btn-primary').prop('disabled', false).text(originalText);
+            console.error('Error sending to conveyance:', error);
+        });
     },
 });
