@@ -12,3 +12,4 @@ access_escrow_sync_manager,escrow.sync manager,model_escrow_sync,payment_escrow.
 
 access_escrow_brand_sync_line_user,escrow.brand.sync.line user,model_escrow_brand_sync_line,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_brand_sync_line_manager,escrow.brand.sync.line manager,model_escrow_brand_sync_line,payment_escrow.group_escrow_manager,1,1,1,1
+

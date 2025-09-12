@@ -13,7 +13,5 @@ class PaymentItem(models.Model):
     def _compute_paid(self):
         super()._compute_paid()
         for item in self.filtered(lambda x: x.system == 'escrow'):
-            if item.paid and item.product_id and item.product_id.escrow_state != 'sold':
-                item.product_id.write({'escrow_state': 'sold'})
-    
-
+            if item.paid and item.product_id and item.product_id.escrow_state != 'waiting_official_sale_img':
+                item.product_id.write({'escrow_state': 'waiting_official_sale_img'})

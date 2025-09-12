@@ -24,6 +24,29 @@ class PaymentTransaction(models.Model):
     conveyance_attachment_id = fields.Many2one('ir.attachment', 'Conveyance Form Attachment', readonly=True, copy=False)
     conveyance_upload_date = fields.Datetime('Conveyance Upload Date', readonly=True, copy=False)
 
+    # Grouping helper for success vs failure in views
+    escrow_success_group = fields.Selection(
+        selection=[('successful', 'Successful'), ('unsuccessful', 'Unsuccessful')],
+        string='Escrow Success Group',
+        compute='_compute_escrow_success_group',
+        store=True,
+        index=True,
+        readonly=True,
+    )
+
+    @api.depends('state')
+    def _compute_escrow_success_group(self):
+        success_states = {'done'}
+        unsuccessful_states = {'error', 'cancel', 'expired'}
+        for tx in self:
+            if tx.state in success_states:
+                tx.escrow_success_group = 'successful'
+            elif tx.state in unsuccessful_states:
+                tx.escrow_success_group = 'unsuccessful'
+            else:
+                # Leave empty for other transient states (draft, pending, authorized, etc.)
+                tx.escrow_success_group = False
+
     def _generate_access_token(self):
         """Generate a secure access token for escrow payment URLs"""
         self.ensure_one()

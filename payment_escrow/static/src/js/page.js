@@ -1199,7 +1199,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleVehicleHolder: function() {
         const id = this.state.id;
-        if (this.values.ads[id].state === 'sold') {
+        if (this.values.ads[id].state === 'waiting_official_sale_img') {
             this.state.status = 'success';
             this._onChangeStep(5);
         } else {
@@ -1212,7 +1212,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleSellerHolder: function() {
         const id = this.state.id;
-        if (this.values.ads[id].state === 'sold') {
+        if (this.values.ads[id].state === 'waiting_official_sale_img') {
             this.state.status = 'success';
             this._onChangeStep(5);
         } else {
@@ -1605,7 +1605,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             if (value.state === 'new') {
                 stateClass = 'success';
                 stateLabel = _t('New');
-            } else if (value.state === 'sold') {
+            } else if (value.state === 'waiting_official_sale_img') {
                 stateClass = 'danger';
                 stateLabel = _t('Sold');
             } else {
