@@ -7,6 +7,12 @@
             <field name="icon">sign-in</field>
         </record>
 
+    	<record id="audit_action_login_error" model="security.audit.action">
+            <field name="name">Login Error</field>
+            <field name="code">login_error</field>
+            <field name="icon">times-circle-o</field>
+        </record>
+
     	<record id="audit_action_logout" model="security.audit.action">
             <field name="name">Logout</field>
             <field name="code">logout</field>

@@ -111,9 +111,9 @@ class SAMLLogin(Home):
             if error == "no-signup":
                 error = _("Sign up is not allowed.")
             elif error == "access-denied":
-                error = _("Access Denied")
+                error = _("Access denied")
             elif error == "expired":
-                error = _("Access Denied")
+                error = _("Session expired")
             else:
                 error = None
 

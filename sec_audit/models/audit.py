@@ -87,7 +87,7 @@ def log(cr, company=None, **values):
     vals = values.values()
     values['uid'] = str(uuid.uuid4())
     values['success'] = True
-    values['message'] = ''
+    values['message'] = values.get('message') or ''
     values['ip_address'] = request.httprequest.remote_addr
 
     try:

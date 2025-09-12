@@ -862,7 +862,14 @@ class OrderCheckoutAPIService(Component):
         return result
 
     def _report_powerbi(self, api, params, log=None):
-        txs = request.env['payment.transaction'].sudo().search([('create_date', '>=', params.dateStart), ('create_date', '<=', params.dateEnd), ('state', '=', 'done')])
+        txs = request.env['payment.transaction'].sudo().search([
+            ('state', '=', 'done'),
+            ('create_date', '>=', params.dateStart),
+            ('create_date', '<=', params.dateEnd),
+            '|',
+            ('company_id', '=', api.company_id.id),
+            ('company_id.parent_id', '=', api.company_id.id),
+        ])
         if not txs:
             raise MissingError('Transaction cannot be found')
 
@@ -872,13 +879,13 @@ class OrderCheckoutAPIService(Component):
                 'logTime': tx.create_date.strftime('%H%M%S') or None,
                 'paymentId': tx.jetcheckout_order_id or None,
                 'postAmount': tx.jetcheckout_postauth_amount or 0.0,
-                'bankCode': tx.jetcheckout_vpos_name or None,
-                'issuerCode': tx.jetcheckout_card_number or None,
+                'bankCode': 'Iyzico',
+                'issuerCode': 'Iyzico',
                 'installment': tx.jetcheckout_installment_description or '0',
                 'outletNumber': tx.partner_ref or None,
-                'channel': None,
+                'channel': 'Indirect',
                 'paymentProvider': 'Iyzico',
-                'vkn': tx.partner_vat or None,
-                'distName': tx.partner_name or None,
+                'vkn': tx.company_id.vat or None,
+                'distName': tx.company_id.name or None,
             } for tx in txs]
         }

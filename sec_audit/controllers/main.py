@@ -79,8 +79,11 @@ class AuditHomeController(Home):
     def web_login(self, *args, **kw):
         ensure_db()
         response = super().web_login(*args, **kw)
-        if request.httprequest.method == 'POST' and request.params.get('login_success', False) == True:
+        if request.httprequest.method == 'POST':
+            if request.params.get('login_success', False) == True:
                 log(request.cr, uid=request.session.uid, action='login')
+            elif response.is_qweb and request.params.get('saml_error'):
+                log(request.cr, uid=request.session.uid, action='login_error', message=request.params.get('saml_error'))
         return response
 
 
