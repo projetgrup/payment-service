@@ -251,7 +251,7 @@ class PayloxSystemEscrowController(Controller):
             customer_amount = paid * seller_net / total_paid
             customer_basket.append({
                 "id": 24,
-                "name": product['product_id']['name'],
+                "name": partner.name,
                 "description": product['name'],
                 "qty": 1,
                 "amount": customer_amount,
