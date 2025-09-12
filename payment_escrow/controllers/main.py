@@ -62,14 +62,12 @@ class PayloxSystemEscrowController(Controller):
                     'different_holder': tx.jetcheckout_different_card_holder,
                     'order_id': tx.jetcheckout_order_id if company.conveyance_show_link else None, 
                     'conveyance_attachment': {
-                        'name': tx.conveyance_file_name or '',
+                        'name': tx.conveyance_attachment_id.name or '',
                         'mimetype': tx.conveyance_attachment_id.mimetype if tx.conveyance_attachment_id else '',
                         'data': tx.conveyance_attachment_id.datas.decode('utf-8') if tx.conveyance_attachment_id else '',
                     } if tx.conveyance_attachment_id else None,
-                    'conveyance_file_name': tx.conveyance_file_name if tx.conveyance_file_name else None,
+                    'conveyance_file_name': tx.conveyance_attachment_id.name if tx.conveyance_attachment_id else None,
                     'conveyance_upload_date': tx.conveyance_upload_date if tx.conveyance_upload_date else None,
-                    'conveyance_sent_date': tx.conveyance_sent_date if tx.conveyance_sent_date else None,
-                    'conveyance_status': tx.conveyance_status if tx.conveyance_status else None,
                 })
             different_holder_txs = payment_item.transaction_ids.filtered(lambda tx: tx.jetcheckout_different_card_holder).sorted('create_date', reverse=True)
             
@@ -1122,10 +1120,12 @@ class PayloxSystemEscrowController(Controller):
             })
             payment.sudo().write({
                 'conveyance_attachment_id': attachment.id,
-                'conveyance_file_name': file_name,
                 'conveyance_upload_date': fields.Datetime.now(),
-                'conveyance_status': 'uploaded'
             })
+
+            body = _('Conveyance form has been sent. User IP Address is %s') % (request.httprequest.remote_addr,)
+            attachment = payment.conveyance_attachment_id
+            payment.sudo().message_post(body=body, attachment_ids=attachment.ids)
             
             return {
                 'success': True,
@@ -1140,47 +1140,4 @@ class PayloxSystemEscrowController(Controller):
                 'success': False,
                 'error': str(e),
                 'message': 'An error occurred while uploading the file'
-            }
-
-    @http.route('/payment/escrow/send-conveyance', type='json', auth='user', methods=['POST'])
-    def send_conveyance(self, **kwargs):
-        try:
-            payment_id = kwargs.get('payment_id')
-            
-            if not payment_id:
-                return {
-                    'success': False,
-                    'error': 'Missing payment_id parameter'
-                }
-            payment = request.env['payment.transaction'].sudo().browse(int(payment_id))
-            if not payment.exists():
-                return {
-                    'success': False,
-                    'error': 'Payment transaction not found'
-                }
-            if not payment.conveyance_attachment_id:
-                return {
-                    'success': False,
-                    'error': 'No conveyance file uploaded for this transaction'
-                }
-            payment.sudo().write({
-                'conveyance_sent_date': fields.Datetime.now(),
-                'conveyance_status': 'sent'
-            })
-            body = _('Conveyance form has been sent. User IP Address is %s') % (request.httprequest.remote_addr,)
-            attachment = payment.conveyance_attachment_id
-            payment.sudo().message_post(body=body, attachment_ids=attachment.ids)
-            
-            return {
-                'success': True,
-                'message': 'Conveyance form sent successfully',
-                'sent_date': payment.conveyance_sent_date.isoformat() if payment.conveyance_sent_date else None
-            }
-            
-        except Exception as e:
-            _logger.error(f"Error sending conveyance: {str(e)}")
-            return {
-                'success': False,
-                'error': str(e),
-                'message': 'An error occurred while sending the conveyance form'
             }

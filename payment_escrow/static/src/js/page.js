@@ -2742,28 +2742,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 const fileName = payment.conveyance_file_name || 'Conveyance Form';
                 const uploadDate = payment.conveyance_upload_date ? 
                     new Date(payment.conveyance_upload_date).toLocaleDateString() : '';
-                const status = payment.conveyance_status || 'uploaded';
                 
                 let statusIcon = 'fa-check text-success';
                 let statusText = 'Uploaded';
-                let buttonText = 'Send to Conveyance';
-                let buttonClass = 'btn-primary';
-                let buttonDisabled = false;
                 
-                if (status === 'sent') {
-                    statusIcon = 'fa-paper-plane text-info';
-                    statusText = 'Sent';
-                    buttonText = 'Sent Successfully';
-                    buttonClass = 'btn-success';
-                    buttonDisabled = true;
-                } else if (status === 'processed') {
-                    statusIcon = 'fa-check-circle text-success';
-                    statusText = 'Processed';
-                    buttonText = 'Processed';
-                    buttonClass = 'btn-success';
-                    buttonDisabled = true;
-                }
-                
+                statusIcon = 'fa-paper-plane text-info';
+                statusText = 'Sent';
                 $uploadedList.html(`
                     <div class="uploaded-file-item d-flex align-items-center p-2 border rounded">
                         <i class="fa fa-file-o mr-2"></i>
@@ -2775,7 +2759,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             </div>
                         </div>
                         <div class="file-actions">
-                            <a href="/payment/card/report/receipt/${payment.order_id}" 
+                            <a href="/payment/card/report/conveyance/${payment.order_id}" 
                                target="_blank" 
                                class="btn btn-sm btn-outline-primary mr-2"
                                title="Download File">
@@ -2784,17 +2768,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         </div>
                     </div>
                 `);
-                
+                console.log('test')
                 $uploadedContainer.show();
-                
-                const $sendButton = $uploadedContainer.find('.send-conveyance-btn');
-                if ($sendButton.length) {
-                    $sendButton
-                        .text(buttonText)
-                        .removeClass('btn-primary btn-success btn-danger')
-                        .addClass(buttonClass)
-                        .prop('disabled', buttonDisabled);
-                }
             }
         
             if ($fileInput.length) {
@@ -2840,15 +2815,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                             </div>
                                         `);
                                         $uploadedContainer.show();
-
-                                        const $sendButton = $uploadedContainer.find('.send-conveyance-btn');
-                                        if ($sendButton.length) {
-                                            $sendButton
-                                                .text('Send to Conveyance')
-                                                .removeClass('btn-primary btn-success btn-danger')
-                                                .addClass('btn-primary')
-                                                .prop('disabled', false);
-                                        }
                                     } else {
                                         error(result && result.error || 'Upload failed');
                                     }
@@ -2883,37 +2849,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }
                 $fileInput.data('pond', pond);
             }
-        });
-
-        $(document).off('click', '.send-conveyance-btn').on('click', '.send-conveyance-btn', function(e) {
-            e.preventDefault();
-            const paymentId = $(this).data('payment-id');
-            self._sendToConveyance(paymentId);
-        });
-
-    },
-
-    _sendToConveyance: function(paymentId) {
-        const $button = $(`.send-conveyance-btn[data-payment-id="${paymentId}"]`);
-        const originalText = $button.text();
-        $button.prop('disabled', true).text('Sending...');
-        
-        this._rpc({
-            route: '/payment/escrow/send-conveyance',
-            params: { 
-                payment_id: paymentId
-            }
-        }).then(function(result) {
-            if (result && result.success) {
-                $button.removeClass('btn-primary').addClass('btn-success').text('Sent Successfully');
-            } else {
-                $button.removeClass('btn-primary').addClass('btn-danger').text('Send Failed');
-                console.error('Failed to send to conveyance:', result && result.error);
-            }
-        }).catch(function(error) {
-            $button.removeClass('btn-primary').addClass('btn-danger').text('Send Failed');
-            $button.removeClass('btn-danger').addClass('btn-primary').prop('disabled', false).text(originalText);
-            console.error('Error sending to conveyance:', error);
         });
     },
 });

@@ -127,9 +127,6 @@
                                                     </div>
                                                     <div t-attf-id="uploadedFiles_#{payment.id}" class="uploaded-files-container mt-2" style="display: none;">
                                                         <div class="uploaded-files-list"></div>
-                                                        <button type="button" class="btn btn-primary btn-sm mt-2 send-conveyance-btn" t-attf-data-payment-id="#{payment.id}">
-                                                            Send to Conveyance
-                                                        </button>
                                                     </div>
                                                 </div>
                                                 <div t-if="payment.status !== 'done' and payment.message" class="col-12 border-top mt-2 text-muted small">
