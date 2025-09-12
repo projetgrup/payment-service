@@ -108,7 +108,7 @@
                                                         <span t-attf-class="text-nowrap badge badge-pill {{ payment.status === 'done' ? 'badge-success' : payment.status === 'error' ? 'badge-danger' : 'badge-dark' }}" t-esc="payment.status">-</span>
                                                     </div>
                                                 </div>
-                                                <div t-if="payment.order_id" class="col-12 mt-2">
+                                                <div t-if="payment.order_id and payment.status === 'done'" class="col-12 mt-2">
                                                     <div class="download">
                                                         <svg width="30" height="30" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                             <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
@@ -118,7 +118,7 @@
                                                         <a t-attf-href="/payment/card/report/receipt/#{payment.order_id}" class="d-block download__link" target="_blank" rel="noopener noreferrer">Temlikname Formunu İndir</a>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 mt-2">
+                                                <div t-if="payment.status === 'done" class="col-12 mt-2">
                                                     <div>
                                                         <label t-attf-for="fileConveyance_#{payment.id}" class="d-block upload__link ml-2" style="cursor: pointer; margin: 0;">
                                                             Please Upload Signed Conveyance Form

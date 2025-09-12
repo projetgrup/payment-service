@@ -177,7 +177,7 @@ class PayloxSystemEscrowController(Controller):
         if system == 'escrow':
             different = kwargs.get('different_holder', {}).get('different', False)
             if different:
-                partner = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('different_holder', {}).get('vat', ''))], limit=1)
+                partner = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('different_holder', {}).get('vat', '')), ('paylox_escrow_type', '=', 'card_holder')], limit=1)
             products = kwargs.get('products', [])
             payment_items = request.env['payment.item'].sudo().search([('product_id', 'in', products and [p['pid'] for p in products] or [])])
             res.update({
