@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="ad_list_item" name="Ad List Item">
-        <div class="escrow-ad-list-item escrow-item" t-att-data-id="ad.id" t-att-data-value="json.dumps({
+        <div class="escrow-ad-list-item escrow-item" 
+            t-att-data-id="ad.id" 
+            t-att-data-state="ad.escrow_state"
+            t-att-data-price="ad.list_price or 0"
+            t-att-data-name="ad.name"
+            t-att-data-date="ad.create_date"
+            t-att-data-value="json.dumps({
                 'id': ad.id,
                 'product_id': ad.id,
                 'item_id': ad.escrow_payment_item_id.id,
@@ -36,9 +42,11 @@
             <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name" t-att-data-id="ad.categ_id.id" name="categ"/>
             <div class="escrow-ad-item-price" t-esc="ad.escrow_payment_item_id.amount" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-data-value="ad.price" name="price"/>
             <div class="escrow-ad-item-state" t-att-data-value="ad.escrow_state">
-                <span t-if="ad.escrow_state == 'waiting_official_sale_img'" class="danger">Sold</span>
-                <span t-elif="ad.escrow_state == 'new'" class="success">New</span>
-                <span t-elif="ad.escrow_state == 'waiting'" class="info">Waiting Approval</span>
+                <span t-if="ad.escrow_state == 'new'" class="success">New</span>
+                <span t-elif="ad.escrow_state == 'waiting'" class="warning">Waiting</span>
+                <span t-elif="ad.escrow_state == 'waiting_official_sale_img'" class="info">Pending Sale</span>
+                <span t-elif="ad.escrow_state == 'transferred'" class="primary">Transferred</span>
+                <span t-else="" class="secondary">Unknown</span>
             </div>
             <div class="escrow-ad-item-arrow">
                 <i class="fa fa-chevron-right"/>
@@ -47,7 +55,13 @@
     </template>
 
     <template id="ad_grid_item" name="Ad Grid Item">
-        <div class="escrow-ad-grid-item escrow-item" t-att-data-id="ad.id" field="ad.item">
+        <div class="escrow-ad-grid-item escrow-item" 
+            t-att-data-id="ad.id" 
+            t-att-data-state="ad.escrow_state"
+            t-att-data-price="ad.list_price or 0"
+            t-att-data-name="ad.name"
+            t-att-data-date="ad.create_date"
+            field="ad.item">
             <div class="escrow-ad-grid-item-header">
                 <div class="escrow-ad-figure">
                     <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
@@ -58,8 +72,11 @@
                 <div class="escrow-ad-grid-item-categ" t-esc="ad.categ_id.name" name="categ"/>
                 <div class="escrow-ad-grid-item-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" name="price"/>
                 <div class="escrow-ad-grid-item-status">
-                    <span t-if="ad.escrow_payment_item_id.paid" class="danger">Sold</span>
-                    <span t-else="" class="success">New</span>
+                    <span t-if="ad.escrow_state == 'new'" class="badge badge-success">New</span>
+                    <span t-elif="ad.escrow_state == 'waiting'" class="badge badge-warning">Waiting</span>
+                    <span t-elif="ad.escrow_state == 'waiting_official_sale_img'" class="badge badge-info">Pending Sale</span>
+                    <span t-elif="ad.escrow_state == 'transferred'" class="badge badge-primary">Transferred</span>
+                    <span t-else="" class="badge badge-secondary">Unknown</span>
                 </div>
             </div>
         </div>

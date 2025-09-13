@@ -876,9 +876,9 @@
     /* React-like form styles for wizard */
     .section { 
         margin: 0; 
-        width: 475px;
+        width: 395px;
     }
-    @media (max-width: 475px) {
+    @media (max-width: 374px) {
         .section { max-width: 100%; }
     }
     /* Center like React (container with row/col handled in template) */
@@ -905,6 +905,8 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
+            max-width: 380px;
+            border: none;
             border-radius: 10px;
             background: linear-gradient(90deg, #4c1d95 0%, #3b82f6 100%);
             color: white;
@@ -2749,116 +2751,169 @@
     }
 }
 
-/* File upload styles */
-.uploaded-files-container {
-    .uploaded-files-list {
-        .uploaded-file-item {
-            background-color: var(--color-light-blue-bg);
-            border-color: var(--color-light-blue-border) !important;
-            border-radius: 8px;
+/* Modern Filter Styles */
+.filter-btn {
+    border-radius: 20px !important;
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    margin-right: 8px !important;
+    margin-bottom: 5px !important;
+    transition: all 0.3s ease !important;
+    border-width: 1px !important;
+    
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    &.active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.3);
+    }
+    
+    i {
+        font-size: 12px;
+    }
+}
+
+.btn-group-toggle .btn {
+    border-radius: 20px !important;
+    margin-right: 8px !important;
+}
+
+.btn-group-toggle .btn.active {
+    z-index: 1;
+}
+
+/* Ad State Filter Styles */
+.payment-escrow {
+    .btn-group[field="ad.state.filter"] {
+        .btn {
+            border-radius: 20px !important;
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: 0.375rem 1rem;
+            border: 1px solid var(--color-border);
+            transition: all 0.2s ease;
             
-            .file-info {
-                .file-name {
-                    color: var(--text-color);
-                    font-size: 14px;
-                }
+            &:not(:last-child) {
+                margin-right: 0.5rem;
+                border-top-right-radius: 20px !important;
+                border-bottom-right-radius: 20px !important;
+            }
+            
+            &:not(:first-child) {
+                border-top-left-radius: 20px !important;
+                border-bottom-left-radius: 20px !important;
+            }
+            
+            &.btn-outline-secondary {
+                color: var(--secondary-text-color);
+                background-color: transparent;
+                border-color: var(--color-border);
                 
-                .file-size {
-                    color: var(--secondary-text-color);
-                    font-size: 12px;
-                }
-                
-                .file-details {
-                    color: var(--secondary-text-color);
-                    font-size: 12px;
-                    
-                    .fa {
-                        font-size: 11px;
-                    }
+                &:hover {
+                    background-color: var(--color-hover);
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
                 }
             }
             
-            .fa-check {
-                color: var(--color-success);
-                font-size: 16px;
+            &.btn-outline-primary {
+                color: var(--primary-color);
+                background-color: transparent;
+                border-color: var(--primary-color);
+                
+                &:hover {
+                    background-color: var(--primary-color);
+                    color: white;
+                }
             }
             
-            .file-actions {
-                .btn {
-                    border-radius: 4px;
-                    font-size: 12px;
-                    padding: 4px 8px;
-                    
-                    .fa {
-                        font-size: 12px;
-                    }
-                    
-                    &:hover {
-                        transform: translateY(-1px);
-                    }
-                }
+            &.btn-primary.active {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+                color: white;
+                box-shadow: 0 2px 4px rgba(var(--primary-color-rgb), 0.3);
             }
         }
     }
     
-    .send-conveyance-btn {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
+    // Sort dropdown styling
+    select[field="ad.sort"] {
+        border: 1px solid var(--color-border);
         border-radius: 6px;
-        font-size: 14px;
-        font-weight: 500;
-        padding: 8px 16px;
+        padding: 0.375rem 0.75rem;
+        background-color: white;
         transition: all 0.2s ease;
         
-        &:hover {
-            background-color: rgba(var(--primary-color-rgb), 0.9);
-            border-color: rgba(var(--primary-color-rgb), 0.9);
-            transform: translateY(-1px);
-        }
-        
-        &:active {
-            transform: translateY(0);
-        }
-        
-        &:disabled {
-            background-color: var(--color-disabled);
-            border-color: var(--color-disabled);
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        &.btn-success {
-            background-color: var(--color-success);
-            border-color: var(--color-success);
-        }
-        
-        &.btn-danger {
-            background-color: var(--color-error);
-            border-color: var(--color-error);
+        &:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+            outline: none;
         }
     }
-}
 
-/* FilePond custom styling for escrow */
-.filepond--root {
-    margin-bottom: 0;
-}
+    /* Pagination Styles */
+    .pagination {
+        .page-item {
+            margin: 0 2px;
 
-.filepond--drop-label {
-    color: var(--secondary-text-color);
-    font-size: 14px;
-}
+            .page-link {
+                border-radius: 8px;
+                border: 1px solid #dee2e6;
+                padding: 0.5rem 0.75rem;
+                color: #495057;
+                background-color: white;
+                transition: all 0.2s ease;
 
-.filepond--panel-root {
-    border: 2px dashed var(--color-border);
-    border-radius: 8px;
-    background-color: var(--background-color);
-}
+                &:hover {
+                    background-color: #f8f9fa;
+                    border-color: #adb5bd;
+                    color: #212529;
+                }
 
-.filepond--panel-root:hover {
-    border-color: var(--primary-color);
-}
+                &:focus {
+                    box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+                }
+            }
 
-.filepond--file-action-button {
-    background-color: var(--primary-color);
+            &.active .page-link {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+                color: white;
+            }
+
+            &.disabled .page-link {
+                color: #6c757d;
+                pointer-events: none;
+                background-color: #fff;
+                border-color: #dee2e6;
+                opacity: 0.6;
+            }
+        }
+    }
+
+    .pagination-info {
+        font-size: 0.875rem;
+        color: var(--secondary-text-color);
+    }
+
+    .pagination-size {
+        .form-select {
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            background-color: white;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+            &:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(var(--primary-color-rgb), 0.25);
+                outline: none;
+            }
+        }
+    }
 }

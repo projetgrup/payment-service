@@ -169,6 +169,55 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Filters and Sorting -->
+                            <div class="col-12 mb-4">
+                                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                                    <div class="card-body py-3 px-4">
+                                        <div class="row align-items-center">
+                                            <!-- State Filter Tags -->
+                                            <div class="col-lg-8 mb-2 mb-lg-0">
+                                                <div class="d-flex align-items-center flex-wrap">
+                                                    <span class="mr-3 font-weight-600 text-dark" style="font-size: 14px;">Filter by Status:</span>
+                                                    <div class="btn-group btn-group-toggle" role="group" field="ad.state.filter">
+                                                        <button type="button" class="btn btn-outline-secondary filter-btn" data-state="all" field="ad.state.all">
+                                                            <i class="fa fa-list mr-1"></i>All
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-success filter-btn" data-state="new" field="ad.state.new">
+                                                            <i class="fa fa-plus-circle mr-1"></i>New
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-warning filter-btn" data-state="waiting" field="ad.state.waiting">
+                                                            <i class="fa fa-clock-o mr-1"></i>Waiting
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-info filter-btn" data-state="waiting_official_sale_img" field="ad.state.waiting_sale">
+                                                            <i class="fa fa-image mr-1"></i>Pending Sale
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary filter-btn active" data-state="transferred" field="ad.state.transferred">
+                                                            <i class="fa fa-check-circle mr-1"></i>Transferred
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Sorting -->
+                                            <div class="col-lg-4">
+                                                <div class="d-flex align-items-center justify-content-lg-end">
+                                                    <span class="mr-2 font-weight-600 text-dark" style="font-size: 14px;">Sort:</span>
+                                                    <select class="form-control" style="width: 200px; border-radius: 8px;" field="ad.sort">
+                                                        <option value="date_desc">📅 Newest First</option>
+                                                        <option value="date_asc">📅 Oldest First</option>
+                                                        <option value="price_asc">💰 Price: Low to High</option>
+                                                        <option value="price_desc">💰 Price: High to Low</option>
+                                                        <option value="name_asc">🔤 Name: A to Z</option>
+                                                        <option value="name_desc">🔤 Name: Z to A</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="escrow-ad-list list-view" field="ad.view.list">
                                 <div class="escrow-ad-list-header">
                                     <div>AD NAME</div>
@@ -177,15 +226,48 @@
                                     <div>STATE</div>
                                     <div/>
                                 </div>
-                                <t t-foreach="ads" t-as="ad">
-                                    <t t-call="payment_escrow.ad_list_item"/>
-                                </t>
+                                <div class="ad-list-container" field="ad.list.container">
+                                    <t t-foreach="ads" t-as="ad">
+                                        <t t-call="payment_escrow.ad_list_item"/>
+                                    </t>
+                                </div>
                             </div>
                             <div class="escrow-ad-grid grid-view" field="ad.view.grid">
-                                <div class="escrow-ad-grid-container">
+                                <div class="escrow-ad-grid-container" field="ad.grid.container">
                                     <t t-foreach="ads" t-as="ad">
                                         <t t-call="payment_escrow.ad_grid_item"/>
                                     </t>
+                                </div>
+                            </div>
+                            
+                            <!-- Pagination Controls -->
+                            <div class="d-flex justify-content-between align-items-center mt-4 mb-3" field="ad.pagination.container">
+                                <div class="pagination-info">
+                                    <span class="text-muted">Showing <span field="ad.pagination.showing">1-10</span> of <span field="ad.pagination.total">0</span> ads</span>
+                                </div>
+                                <nav aria-label="Pagination Navigation">
+                                    <ul class="pagination pagination-sm mb-0">
+                                        <li class="page-item" field="ad.pagination.prev">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <i class="fa fa-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item active">
+                                            <span class="page-link" field="ad.pagination.current">1</span>
+                                        </li>
+                                        <li class="page-item" field="ad.pagination.next">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <i class="fa fa-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <div class="pagination-size">
+                                    <select class="form-select form-select-sm" field="ad.pagination.size" style="width: auto;">
+                                        <option value="10">10 per page</option>
+                                        <option value="20">20 per page</option>
+                                        <option value="50">50 per page</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
