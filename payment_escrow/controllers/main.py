@@ -207,7 +207,7 @@ class PayloxSystemEscrowController(Controller):
                     reference=str(user.partner_id.id), 
                     params={
                         'vat': kwargs.get('vat'),
-                        'card_number': kwargs.get('card_number'),
+                        'number': kwargs.get('card_number'),
                     }, 
                     company=company, 
                     message=True
