@@ -226,7 +226,7 @@
                                     <div>STATE</div>
                                     <div/>
                                 </div>
-                                <div class="ad-list-container" field="ad.list.container">
+                                <div class="ad-list-container w-100" field="ad.list.container">
                                     <t t-foreach="ads" t-as="ad">
                                         <t t-call="payment_escrow.ad_list_item"/>
                                     </t>

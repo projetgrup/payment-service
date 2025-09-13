@@ -395,6 +395,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         };
 
+        this.assignment = {
+            form: {
+                section: new fields.element()
+            }
+        }
+
         this.customer = {
             input: {
                 tc: new fields.string({
