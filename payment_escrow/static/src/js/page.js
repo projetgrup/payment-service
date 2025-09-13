@@ -32,6 +32,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             customer: 0,
             status: '',
             different: false,
+            filterState: 'all',
             pagination: {
                 currentPage: 1,
                 pageSize: 10,
@@ -642,7 +643,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         this.ad = {
-            
             state: {
                 filter: new fields.element(),
                 all: new fields.element({ events: [['click', this._onStateFilterClick]] }),
@@ -862,9 +862,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     return valid;
                 }
             }),
+            number: new fields.string({
+                events: [['input', this._onClickButtonPayment]],
+                mask: '0000 0000 0000 0000',
+            })
         }
 
         this.payment = {
+            button: new fields.element({ events: [['click', this._onClickButtonPayment]] }),
             different: {
                 holder: new fields.boolean({
                     events: [['change', this._onToggleDifferentHolder]]
@@ -1029,7 +1034,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     owner: state.o,
                     status: state.t,
                     customer: state.c,
-                    different: state.d
+                    different: state.d,
+                    filterState: state.f
                 });
             } catch {
                 window.history.replaceState(null, '', window.location.pathname);
@@ -1046,6 +1052,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(() => {
             payloxPage.prototype._setCurrency.apply(this);
             payloxPage.prototype._start.apply(this);
+            console.log(this.state);
             this._parseAds();
             this._startState();
             this._startToggles();
@@ -1131,6 +1138,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _isOtpValidate: async function(field) {
         if (field.value.length === 10) {
             let otp = field._.masked.value;
+            //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/otp/validate',
                 params: { otp },
@@ -1147,6 +1155,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let vat = vatField._.masked.value;
         let iban = ibanField._.masked.value;
         if (this._isIbanValid(iban)) {
+            //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/iban/verify',
                 params: { iban, vat },
@@ -1325,10 +1334,18 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.ad.view.form.$.stop(true, true).hide();
             if (view === 'list') {
                 this.ad.view.grid.$.stop(true, true).hide();
-                this.ad.view.list.$.stop(true, true).fadeIn(400);
+                this.ad.view.list.$.stop(true, true).fadeIn(400, () => {
+                    if (this.state.filterState) {
+                        this._filterAdsByState(this.state.filterState);
+                    }
+                });
             } else {
                 this.ad.view.list.$.stop(true, true).hide();
-                this.ad.view.grid.$.stop(true, true).fadeIn(400);
+                this.ad.view.grid.$.stop(true, true).fadeIn(400, () => {
+                    if (this.state.filterState) {
+                        this._filterAdsByState(this.state.filterState);
+                    }
+                });
             }
             $edit.stop(true, true).fadeOut(400, () => {
                 $read.stop(true, true).fadeIn(400);
@@ -1912,6 +1929,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ('different' in value) {
             this.state.different = value.different;
         }
+        if ('filterState' in value) {
+            this.state.filterState = value.filterState;
+        }
 
         let values = {
             i: this.state.id,
@@ -1920,6 +1940,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             t: this.state.status,
             c: this.state.customer,
             d: this.state.different,
+            f: this.state.filterState,
         }
         let hash = btoa(JSON.stringify(values));
         let url = new URL(window.location); url.searchParams.set('', hash);
@@ -1958,7 +1979,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             this.wizard.otpId = otpRes.otp_id;
                             this._showOtpModal(otpRes.expires_in || 120, true); // Seller için step geçişi yap
                         } else if (otpRes && otpRes.is_otp_verified) {
-                            // OTP already verified, move to next step
                             this._markStepCompleted(this.wizard.currentStep);
                             this._onChangeStep(this.wizard.currentStep + 1);
                         } else {
@@ -2356,8 +2376,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         message: 'Phone number verified successfully' 
                     });
                     if (shouldAdvanceStep) {
-                        self._markStepCompleted(self.wizard.currentStep);
-                        self._onChangeStep(self.wizard.currentStep + 1);
+                    self._markStepCompleted(self.wizard.currentStep);
+                    self._onChangeStep(self.wizard.currentStep + 1);
                     }
                 } else {
                     self.displayNotification({ type:'danger', title:'OTP', message: (res && res.message) || 'Doğrulama başarısız' });
@@ -2458,6 +2478,44 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return data;
     },
 
+    _onClickButtonPayment: function() {
+        const params = {};
+        if (this.card.number.value.length === 16) {
+            if (this.state.different){
+            params.vat = this.payment.different.info.tc.value;
+            params.card_number = this.card.number.value;
+            } else {
+                params.vat = this.customer.input.tc.value;
+                params.card_number = this.card.number.value;
+            }
+
+            this._rpc({
+                route: '/payment/escrow/card/validate',
+                params: {
+                    ...params,
+                },
+            }).then((result) => {
+                let message = (result && result.message) || 'Card validation failed';
+                if (result && result.success) {
+                    this._onFieldValid(this.card.number, true, 'Card is valid');
+                    this.displayNotification({ 
+                        type: 'success', 
+                        title: 'Card Validation',
+                        message: result.data
+                    });
+                } else {
+                    this._onFieldValid(this.card.number, false, message);
+                    this.displayNotification({ 
+                        type: 'danger', 
+                        title: 'Card Validation', 
+                        message: (result && result.message) || 'Card validation failed' 
+                    });
+                }
+            });
+
+        }
+    },
+
     _onToggleDifferentHolder: function(event) {
         this._setState({ different: event.target.checked });
         const isChecked = event.target.checked;
@@ -2478,12 +2536,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _onEditPaymentInfo: function(event) {
         const $card = $('.payment-info-card');
         const $form = $('.payment-info-edit');
+        
+        // Hide display card and show edit form
         $card.slideUp(200, function() {
             $form.slideDown(300);
         });
     },
 
-    _onCancelEditPaymentInfo: function() {
+    _onCancelEditPaymentInfo: function(event) {
         const $card = $('.payment-info-card');
         const $form = $('.payment-info-edit');
         
@@ -2492,7 +2552,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    _onSavePaymentInfo: function() {
+    _onSavePaymentInfo: function(event) {
+        // Validate all payment info fields
         const tcValid = this.payment.different.info.tc.validate();
         const nameValid = this.payment.different.info.name.validate();
         const phoneValid = this.payment.different.info.phone.validate();
@@ -2541,7 +2602,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }).finally(() => {
                     this._enableWizard();
-                    const $card = $('.payment-info-card');
+        const $card = $('.payment-info-card');
                     $card.find('[field="payment.different.info.display.tc"]').text(result.partner.vat || '-');
                     $card.find('[field="payment.different.info.display.name"]').text(result.partner.name || '-');
                     $card.find('[field="payment.different.info.display.phone"]').text(result.partner.phone || '-');
@@ -2759,7 +2820,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             });
         }
     },
-
+    
     _initializeFileUploads: function(transactions) {
         const self = this;
         
@@ -2800,7 +2861,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         </div>
                     </div>
                 `);
-                console.log('test')
                 $uploadedContainer.show();
             }
         
@@ -2847,9 +2907,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                             </div>
                                         `);
                                         $uploadedContainer.show();
-                                    } else {
+            } else {
                                         error(result && result.error || 'Upload failed');
-                                    }
+        }
                                 }).catch(function(err) {
                                     console.error('Upload error:', err);
                                     error('Upload failed');
@@ -2865,7 +2925,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                     abort();
                                 }
                             };
-                        }
+        }
                     }
                 });
                 if (payment.conveyance_attachment) {
@@ -2878,9 +2938,186 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     const blob = new Blob([byteArray], { type: payment.conveyance_attachment.mimetype });
                     const file = new File([blob], payment.conveyance_file_name || 'Conveyance Form', { type: payment.conveyance_attachment.mimetype });
                     pond.addFile(file, {type: 'local'});
-                }
+        }
                 $fileInput.data('pond', pond);
             }
         });
+    },
+
+    _onStateFilterClick: function(e) {
+        const clickedButton = $(e.currentTarget);
+        const state = clickedButton.data('state');
+        
+        this._filterAdsByState(state);
+    },
+    
+    _onSortChange: function(e) {
+        const sortValue = $(e.currentTarget).val();
+        this._sortAds(sortValue);
+    },
+    
+    _filterAdsByState: function(state) {
+        this._setState({ filterState: state });
+        console.log(state);
+        const adRows = this.$('.escrow-ad-list .escrow-ad-list-item, .escrow-ad-grid .escrow-ad-grid-item');
+        
+        const allAdItems = this.$('.escrow-item');
+        
+        adRows.each((i, element) => {
+            const $element = $(element);
+            const adId = $element.data('id');
+            const adState = $element.data('state');
+            const adData = this.values.ads[adId];
+            const dataState = adData?.state || 'waiting';
+            const finalState = adState || dataState;
+            
+            if (state === 'all') {
+                console.log('show all');
+                $element.show();
+            } else if (state === finalState) {
+                $element.show();
+            } else {
+                $element.hide();
+            }
+        });
+        
+        const filterContainer = this.ad?.state?.filter?.$ || this.$('[field="ad.state.filter"]');
+        if (filterContainer && filterContainer.length) {
+            filterContainer.find('.filter-btn').removeClass('active btn-primary btn-success btn-warning btn-info').addClass('btn-outline-secondary');
+            
+            const activeBtn = filterContainer.find(`[data-state="${state}"]`);
+            activeBtn.removeClass('btn-outline-secondary btn-outline-success btn-outline-warning btn-outline-info').addClass('active');
+            
+            if (state === 'new') activeBtn.addClass('btn-success');
+            else if (state === 'waiting') activeBtn.addClass('btn-warning');
+            else if (state === 'waiting_official_sale_img') activeBtn.addClass('btn-info');
+            else if (state === 'transferred') activeBtn.addClass('btn-primary');
+            else activeBtn.addClass('btn-secondary');
+        }
+        
+        this.state.pagination.currentPage = 1;
+        this._updatePagination();
+    },
+    
+    _sortAds: function(sortType) {
+        const listContainer = this.$('.escrow-ad-list .ad-list-container');
+        const gridContainer = this.$('.escrow-ad-grid .escrow-ad-grid-container');
+        
+        const listItems = listContainer.find('.escrow-ad-list-item').get();
+        listItems.sort((a, b) => this._compareAds(a, b, sortType));
+        listContainer.empty().append(listItems);
+        
+        const gridItems = gridContainer.find('.escrow-ad-grid-item').get();
+        gridItems.sort((a, b) => this._compareAds(a, b, sortType));
+        gridContainer.empty().append(gridItems);
+        
+        this._updatePagination();
+    },
+    
+    _compareAds: function(a, b, sortType) {
+        const aEl = $(a);
+        const bEl = $(b);
+        const aId = aEl.data('id');
+        const bId = bEl.data('id');
+        const aData = this.values.ads[aId] || {};
+        const bData = this.values.ads[bId] || {};
+        
+        switch(sortType) {
+            case 'date_desc':
+                return new Date(bData.create_date || 0) - new Date(aData.create_date || 0);
+            case 'date_asc': 
+                return new Date(aData.create_date || 0) - new Date(bData.create_date || 0);
+            case 'price_desc':
+                return (bData.amount || 0) - (aData.amount || 0);
+            case 'price_asc':
+                return (aData.amount || 0) - (bData.amount || 0);
+            case 'name_desc':
+                return (bData.name || '').localeCompare(aData.name || '');
+            case 'name_asc':
+                return (aData.name || '').localeCompare(bData.name || '');
+            default:
+                return 0;
+        }
+    },
+
+    _onPaginationPrev: function(e) {
+        e.preventDefault();
+        if (this.state.pagination.currentPage > 1) {
+            this.state.pagination.currentPage--;
+            this._updatePagination();
+        }
+    },
+
+    _onPaginationNext: function(e) {
+        e.preventDefault();
+        if (this.state.pagination.currentPage < this.state.pagination.totalPages) {
+            this.state.pagination.currentPage++;
+            this._updatePagination();
+        }
+    },
+
+    _onPaginationSizeChange: function(e) {
+        this.state.pagination.pageSize = parseInt($(e.currentTarget).val());
+        this.state.pagination.currentPage = 1;
+        this._updatePagination();
+    },
+
+    _updatePagination: function() {
+        const allAds = this.$('.escrow-ad-list .escrow-ad-list-item, .escrow-ad-grid .escrow-ad-grid-item').filter(':visible');
+        this.state.pagination.totalItems = allAds.length;
+        this.state.pagination.totalPages = Math.ceil(this.state.pagination.totalItems / this.state.pagination.pageSize);
+
+        const startIndex = (this.state.pagination.currentPage - 1) * this.state.pagination.pageSize;
+        const endIndex = startIndex + this.state.pagination.pageSize;
+
+        this.$('.escrow-ad-list .escrow-ad-list-item, .escrow-ad-grid .escrow-ad-grid-item').hide();
+
+        allAds.slice(startIndex, endIndex).show();
+
+        this._updatePaginationUI();
+    },
+
+    _updatePaginationUI: function() {
+        if (!this.ad || !this.ad.pagination) {
+            return;
+        }
+
+        if (this.ad.pagination.current && this.ad.pagination.current.$) {
+            this.ad.pagination.current.$.text(this.state.pagination.currentPage);
+        }
+
+        const startItem = (this.state.pagination.currentPage - 1) * this.state.pagination.pageSize + 1;
+        const endItem = Math.min(this.state.pagination.currentPage * this.state.pagination.pageSize, this.state.pagination.totalItems);
+        
+        if (this.ad.pagination.showing && this.ad.pagination.showing.$) {
+            this.ad.pagination.showing.$.text(`${startItem}-${endItem}`);
+        }
+        
+        if (this.ad.pagination.total && this.ad.pagination.total.$) {
+            this.ad.pagination.total.$.text(this.state.pagination.totalItems);
+        }
+
+        if (this.ad.pagination.prev && this.ad.pagination.prev.$) {
+            this.ad.pagination.prev.$.toggleClass('disabled', this.state.pagination.currentPage <= 1);
+        }
+        
+        if (this.ad.pagination.next && this.ad.pagination.next.$) {
+            this.ad.pagination.next.$.toggleClass('disabled', this.state.pagination.currentPage >= this.state.pagination.totalPages);
+        }
+
+        if (this.ad.pagination.container && this.ad.pagination.container.$) {
+            this.ad.pagination.container.$.toggle(this.state.pagination.totalItems > 0);
+        }
+    },
+    _initializePagination: function() {
+        if (!this.state || !this.state.pagination) {
+            return;
+        }
+        
+        const totalAds = Object.keys(this.values.ads).length;
+        this.state.pagination.totalItems = totalAds;
+        this.state.pagination.totalPages = Math.ceil(totalAds / this.state.pagination.pageSize);
+        
+        this._updatePagination();
     },
 });

@@ -190,10 +190,58 @@ class PayloxSystemEscrowController(Controller):
                 'jetcheckout_approval_ok': True,
             })
         return res
+    
+    @http.route(['/payment/escrow/card/validate'], type='json', auth='user', methods=['POST'], website=True)
+    def validate_card(self, **kwargs):
+        company = request.env.company
+        user = request.env.user
+        customer = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('vat'))], limit=1)
+        if customer and customer.is_card_verified:
+            return {
+                'success': True,
+            }
+        else:
+            try:
+                result, message = request.env['syncops.connector'].sudo()._execute(
+                    'other_get_ozan_cardnumber', 
+                    reference=str(user.partner_id.id), 
+                    params={
+                        'vat': kwargs.get('vat'),
+                        'card_number': kwargs.get('card_number'),
+                    }, 
+                    company=company, 
+                    message=True
+                )
+                
+                if result is None:
+                    return {
+                        'success': False,
+                        'message': message or 'Card validation failed'
+                    }
+                res = result[0]
+                if res.get('ok'):
+                    customer.sudo().write({'is_card_verified': True})
+                    return {
+                        'success': True,
+                        'data': res
+                    }
+                else:
+                    return {
+                        'success': False,
+                        'message': res.get('message') or 'Card validation failed'
+                    }
+            except Exception as e:
+                _logger.error("Error in validate_card: %s", str(e))
+                return {
+                    'success': False,
+                    'message': str(e)
+                }
 
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
+            
+
 
             # if kwargs.get('file'):
             #     for f in kwargs['file']:
@@ -298,7 +346,7 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.country_id.name)
             values.update({
                 'submerchant_external_id': reference_seller,
-                'is_submerchant_payment': True,
+                # 'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
                     "name": fullname[0],

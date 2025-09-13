@@ -180,7 +180,7 @@
                                                 <div class="d-flex align-items-center flex-wrap">
                                                     <span class="mr-3 font-weight-600 text-dark" style="font-size: 14px;">Filter by Status:</span>
                                                     <div class="btn-group btn-group-toggle" role="group" field="ad.state.filter">
-                                                        <button type="button" class="btn btn-outline-secondary filter-btn" data-state="all" field="ad.state.all">
+                                                        <button type="button" class="btn btn-secondary filter-btn active" data-state="all" field="ad.state.all">
                                                             <i class="fa fa-list mr-1"></i>All
                                                         </button>
                                                         <button type="button" class="btn btn-outline-success filter-btn" data-state="new" field="ad.state.new">
@@ -192,7 +192,7 @@
                                                         <button type="button" class="btn btn-outline-info filter-btn" data-state="waiting_official_sale_img" field="ad.state.waiting_sale">
                                                             <i class="fa fa-image mr-1"></i>Pending Sale
                                                         </button>
-                                                        <button type="button" class="btn btn-primary filter-btn active" data-state="transferred" field="ad.state.transferred">
+                                                        <button type="button" class="btn filter-btn" data-state="transferred" field="ad.state.transferred">
                                                             <i class="fa fa-check-circle mr-1"></i>Transferred
                                                         </button>
                                                     </div>
@@ -200,7 +200,7 @@
                                             </div>
                                             
                                             <!-- Sorting -->
-                                            <div class="col-lg-4">
+                                            <!-- <div class="col-lg-4">
                                                 <div class="d-flex align-items-center justify-content-lg-end">
                                                     <span class="mr-2 font-weight-600 text-dark" style="font-size: 14px;">Sort:</span>
                                                     <select class="form-control" style="width: 200px; border-radius: 8px;" field="ad.sort">
@@ -212,7 +212,7 @@
                                                         <option value="name_desc">🔤 Name: Z to A</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
