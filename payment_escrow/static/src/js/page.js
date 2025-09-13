@@ -1027,8 +1027,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let hash = new URLSearchParams(window.location.search).get('');
         if (hash) {
             try {
-                // UTF-8 güvenli Base64 decode
-                let state = JSON.parse(decodeURIComponent(atob(hash)));
+                let state = JSON.parse(atob(hash));
                 Object.assign(this.state, {
                     id: state.i,
                     step: state.s,
