@@ -1277,15 +1277,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         $('[field="ad.item"][data-value]').each((i, e) => {
             const $this = $(e);
             const values = $this.data('value');
-            let imgSrc = $this.find('.escrow-ad-item-image img').attr('src');
-            
-            // Blob URL ise kalıcı URL'e çevir
-            if (imgSrc && imgSrc.startsWith('blob:')) {
-                imgSrc = `/web/image/product.product/${e.dataset.id}/escrow_ad_sale_img`;
-            }
-            
             this.values.ads[e.dataset.id] = {
-                img: imgSrc,
+                img: $this.find('.escrow-ad-item-image img').attr('src'),
                 name: $this.find('.escrow-ad-item-name').text().trim(),
                 price: $this.find('.escrow-ad-item-price').data('value'),
                 ...values
@@ -1545,56 +1538,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (adData.img) {
-            // Blob URL kontrolü - eğer blob URL ise ve geçersizse backend'den al
-            if (adData.img.startsWith('blob:')) {
-                // Blob URL'in hala geçerli olup olmadığını kontrol et
-                fetch(adData.img)
-                    .then(response => {
-                        if (response.ok) {
-                            this.ad.input.fileLicence.value = adData.img;
-                        } else {
-                            // Blob geçersizse backend'den kalıcı URL al
-                            this._loadProductImage(this.state.id);
-                        }
-                    })
-                    .catch(() => {
-                        // Blob geçersizse backend'den kalıcı URL al
-                        this._loadProductImage(this.state.id);
-                    });
-            } else {
-                // Normal URL ise direkt kullan
-                this.ad.input.fileLicence.value = adData.img;
-            }
+            this.ad.input.fileLicence.value = adData.img;
         }
-    },
-
-    _loadProductImage: function(adId) {
-        /**
-         * Backend'den ürün resmini kalıcı URL olarak yükle
-         */
-        this._rpc({
-            route: '/my/ad/image/get',
-            params: { ad_id: adId }
-        }).then((result) => {
-            if (result && result.success && result.image_url) {
-                // Kalıcı URL'i kullan
-                this.ad.input.fileLicence.value = result.image_url;
-                // Cache'i de güncelle
-                if (this.values.ads[adId]) {
-                    this.values.ads[adId].img = result.image_url;
-                }
-            } else if (result && result.image_data) {
-                // Base64 data ise data URI olarak kullan
-                const dataUri = `data:${result.mimetype || 'image/png'};base64,${result.image_data}`;
-                this.ad.input.fileLicence.value = dataUri;
-                // Cache'i güncelle
-                if (this.values.ads[adId]) {
-                    this.values.ads[adId].img = dataUri;
-                }
-            }
-        }).catch((error) => {
-            console.warn('Could not load product image:', error);
-        });
     },
 
     _formatAddress: function(partner) {
