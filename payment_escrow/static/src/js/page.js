@@ -856,6 +856,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     events: [['change', this._onToggleDifferentHolder]]
                 }),
                 info: {
+                    form: new fields.element(),
                     container: new fields.element(),
                     edit: new fields.element({     
                         events: [['click', this._onEditPaymentInfo]]
