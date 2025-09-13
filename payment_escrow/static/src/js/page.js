@@ -1027,7 +1027,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let hash = new URLSearchParams(window.location.search).get('');
         if (hash) {
             try {
-                let state = JSON.parse(atob(hash));
+                // encodeURIComponent ile encode edilmiş veriyi decode et
+                let state = JSON.parse(decodeURIComponent(hash));
                 Object.assign(this.state, {
                     id: state.i,
                     step: state.s,
@@ -1942,7 +1943,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             d: this.state.different,
             f: this.state.filterState,
         }
-        let hash = btoa(JSON.stringify(values));
+        let hash = encodeURIComponent(JSON.stringify(values));
         let url = new URL(window.location); url.searchParams.set('', hash);
         window.history.replaceState({'': hash}, '', url);
     },
