@@ -2425,7 +2425,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onCancelEditPaymentInfo: function(event) {
         const $card = $('.payment-info-card');
-        const $form = $card('.payment-info-edit');
+        const $form = $('.payment-info-edit');
         
         $form.slideUp(200, function() {
             $card.slideDown(300);
