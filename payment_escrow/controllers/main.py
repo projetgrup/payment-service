@@ -196,46 +196,51 @@ class PayloxSystemEscrowController(Controller):
         company = request.env.company
         user = request.env.user
         customer = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('vat'))], limit=1)
-        if customer and customer.is_card_verified:
+        if company.syncops_check_card:
+            if customer and customer.is_card_verified:
+                return {
+                    'success': True,
+                }
+            else:
+                try:
+                    result, message = request.env['syncops.connector'].sudo()._execute(
+                        'other_get_ozan_cardnumber', 
+                        reference=str(user.partner_id.id), 
+                        params={
+                            'vat': kwargs.get('vat'),
+                            'number': kwargs.get('card_number'),
+                        }, 
+                        company=company, 
+                        message=True
+                    )
+                    
+                    if result is None:
+                        return {
+                            'success': False,
+                            'message': message or 'Card validation failed'
+                        }
+                    res = result[0]
+                    if res.get('ok'):
+                        customer.sudo().write({'is_card_verified': True})
+                        return {
+                            'success': True,
+                            'data': res
+                        }
+                    else:
+                        return {
+                            'success': False,
+                            'message': res.get('message') or 'Card validation failed'
+                        }
+                except Exception as e:
+                    _logger.error("Error in validate_card: %s", str(e))
+                    return {
+                        'success': False,
+                        'message': str(e)
+                    }
+        else:
             return {
                 'success': True,
             }
-        else:
-            try:
-                result, message = request.env['syncops.connector'].sudo()._execute(
-                    'other_get_ozan_cardnumber', 
-                    reference=str(user.partner_id.id), 
-                    params={
-                        'vat': kwargs.get('vat'),
-                        'number': kwargs.get('card_number'),
-                    }, 
-                    company=company, 
-                    message=True
-                )
-                
-                if result is None:
-                    return {
-                        'success': False,
-                        'message': message or 'Card validation failed'
-                    }
-                res = result[0]
-                if res.get('ok'):
-                    customer.sudo().write({'is_card_verified': True})
-                    return {
-                        'success': True,
-                        'data': res
-                    }
-                else:
-                    return {
-                        'success': False,
-                        'message': res.get('message') or 'Card validation failed'
-                    }
-            except Exception as e:
-                _logger.error("Error in validate_card: %s", str(e))
-                return {
-                    'success': False,
-                    'message': str(e)
-                }
 
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
