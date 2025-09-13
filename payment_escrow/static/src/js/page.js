@@ -1943,7 +1943,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             d: this.state.different,
             f: this.state.filterState,
         }
-        // UTF-8 güvenli Base64 encoding
         let hash = btoa(encodeURIComponent(JSON.stringify(values)));
         let url = new URL(window.location); url.searchParams.set('', hash);
         window.history.replaceState({'': hash}, '', url);

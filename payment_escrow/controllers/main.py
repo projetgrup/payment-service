@@ -470,7 +470,7 @@ class PayloxSystemEscrowController(Controller):
                 'name': ad.name,
                 'description': ad.description,
                 'price': ad.list_price,
-                'image': image,
+                'image': ad.escrow_ad_official_sale_img and 'data:%s;base64,%s' % (guess_mimetype(base64.b64decode(ad.escrow_ad_official_sale_img)), ad.escrow_ad_official_sale_img.decode('utf-8')) or '',
                 'categ_id': ad.categ_id and {'id': ad.categ_id.id, 'name': ad.categ_id.name} or None,
                 'brand_id': ad.escrow_car_brand_id.id,
                 'model_id': ad.escrow_car_model_id.id,
