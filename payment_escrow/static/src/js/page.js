@@ -2396,16 +2396,18 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onToggleDifferentHolder: function(event) {
-        this.state.different = event.target.checked;
+        this._setState({ different: event.target.checked });
         const isChecked = event.target.checked;
         const $assignmentSection = this.assignment.form.section.$;
         const $infoSection = this.payment.different.info.container.$;
+        const $infoForm = this.payment.different.info.form.$;
         
         if (isChecked) {
             $assignmentSection.slideDown(300);
-            $infoSection.slideDown(300);
+            $infoForm.slideDown(300);
         } else {
             $assignmentSection.slideUp(300);
+            $infoForm.slideUp(300);
             $infoSection.slideUp(300);
         }
     },
