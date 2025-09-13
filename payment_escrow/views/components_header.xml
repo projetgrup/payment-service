@@ -16,11 +16,17 @@
                         </svg>
                     </button>
                 </div>
-                <div t-if="variant == 'ads'" class="header__user">
-                    <div class="user-info">
+                <div t-if="variant == 'ads'" class="header__user d-flex">
+                    <div class="user-info mr-3">
                         <img t-att-src="'/web/image/res.users/%s/image_128' % request.env.user.id" class="user-avatar" alt="User"/>
                         <span class="user-name" t-esc="request.env.user.name"/>
                     </div>
+                    <a href="/web/session/logout" class="header__logout-btn btn btn-outline-secondary btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 16L21 12M21 12L17 8M21 12H9M9 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Çıkış</span>
+                    </a>
                 </div>
             </div>
             <t t-call="payment_escrow.steps_container_template">
