@@ -673,6 +673,42 @@ class PayloxSystemEscrowController(Controller):
             }
         }
 
+    @route(['/my/ad/image/get'], type='json', auth='user', methods=['POST'], website=True)
+    def page_my_ad_image_get(self, **kwargs):
+        """
+        İlan resmini kalıcı URL olarak döndür
+        """
+        try:
+            ad_id = kwargs.get('ad_id')
+            if not ad_id:
+                return {'error': 'Ad ID is required'}
+
+            # Ürünü bul
+            product = request.env['product.product'].sudo().search([
+                ('id', '=', int(ad_id)),
+                ('broker_id', '=', request.env.user.partner_id.id),
+                ('company_id', '=', request.env.company.id),
+            ], limit=1)
+            
+            if not product:
+                return {'error': 'Product not found or access denied'}
+
+            # Resim varsa kalıcı URL döndür
+            if product.escrow_ad_sale_img:
+                # Kalıcı URL oluştur
+                image_url = f'/web/image/product.product/{product.id}/escrow_ad_sale_img'
+                return {
+                    'success': True,
+                    'image_url': image_url,
+                    'product_id': product.id
+                }
+            else:
+                return {'error': 'No image found for this product'}
+
+        except Exception as e:
+            _logger.error(f"Error getting product image: {str(e)}")
+            return {'error': 'An error occurred while retrieving the image'}
+
     @route(['/my/ad/delete'], type='json', auth='user', website=True)
     def page_my_ad_delete(self, **kwargs):
         product = request.env['product.product'].sudo().with_context(system='escrow').search([
