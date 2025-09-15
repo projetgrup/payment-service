@@ -285,6 +285,7 @@
         <xpath expr='//field[@name="company_id"]' position="before">
             <field name="acquirer_branch_id" string="Branch" domain="[('company_id', '=', company_id)]"/>
             <field name="is_company" invisible="1"/>
+            <field name="user_id" invisible="1"/>
         </xpath>
         <xpath expr='//field[@name="mobile"]' position="before">
             <field name="phone" widget="phone"/>

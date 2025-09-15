@@ -6,6 +6,13 @@ from odoo.exceptions import UserError
 class Partner(models.Model):
     _inherit = 'res.partner'
 
+    @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if self.env.context.get('default_system') == 'escrow' and 'user_id' in fields and not res.get('user_id'):
+            res['user_id'] = self.env.user.id
+        return res
+
     system = fields.Selection(selection_add=[('escrow', 'Escrow Payment System')])
     paylox_escrow_type = fields.Selection([
         ('customer', 'Customer'),
@@ -167,16 +174,14 @@ class Partner(models.Model):
         elif view_type in ('form', 'tree', 'kanban'):
             system = self.env.context.get('active_system') or self.env.context.get('system')
             if system == 'escrow':
-                type = self.env.context.get('active_escrow_type', 'owner')  # Varsayılan olarak 'owner' kullan
+                type = self.env.context.get('active_escrow_type', 'owner')
                 try:
                     view_id = self.env.ref('payment_escrow.%s_%s' % (view_type, type)).id
                     self = self.with_context(skip_view_mapping=True)
                 except:
-                    # View bulunamazsa varsayılan owner view'ını dene
                     try:
                         view_id = self.env.ref('payment_escrow.%s_owner' % view_type).id
                         self = self.with_context(skip_view_mapping=True)
                     except:
-                        # Hiçbiri bulunamazsa default view'ı kullan
                         pass
         return super(Partner, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
