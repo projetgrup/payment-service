@@ -7,6 +7,11 @@
         <kanban sample="1">
             <field name="id"/>
             <field name="currency_id"/>
+            <field name="escrow_state"/>
+            <field name="escrow_owner_id"/>
+            <field name="priority"/>
+            <field name="default_code"/>
+            <field name="lst_price"/>
             <templates>
                 <t t-name="kanban-box">
                     <div class="oe_kanban_card oe_kanban_global_click">
@@ -25,6 +30,11 @@
                             <t t-if="record.default_code.value">[<field name="default_code"/>]</t>
                             <div class="o_kanban_tags_section">
                                 <field name="product_template_attribute_value_ids" widget="many2many_tags" options="{'color_field': 'product_attribute_value_color'}"/>
+                            </div>
+                            <div class="o_kanban_tags_section mt-1">
+                                <span class="badge badge-pill" t-att-class="record.escrow_state.raw_value === 'new' ? 'badge-success' : record.escrow_state.raw_value === 'waiting' ? 'badge-warning' : record.escrow_state.raw_value === 'waiting_official_sale_img' ? 'badge-info' : 'badge-secondary'">
+                                    <field name="escrow_state"/>
+                                </span>
                             </div>
                             <div name="product_owner" class="mt-1">
                                 <strong>Owner:</strong>
@@ -52,6 +62,7 @@
             <field name="name" string="Ad Name" decoration-bf="1"/>
             <field name="default_code" optional="show"/>
             <field name="categ_id" optional="hide"/>
+            <field name="escrow_owner_id" string="Owner" optional="show"/>
             <field name="uom_id" readonly="1" optional="hide" groups="uom.group_uom"/>
             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" optional="hide"/>
             <field name="active" invisible="1"/>

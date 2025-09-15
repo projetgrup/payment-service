@@ -293,7 +293,14 @@
         <xpath expr='//field[@name="acquirer_branch_id"]' position="replace"/>
         <xpath expr='//group[@name="communication"]' position="replace"/>
         <xpath expr="//group[@name='payment']" position="replace">
-            <group/>
+            <group name="payment" string="Payment Settings">
+                <field name="campaign_id" string="Campaign" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('campaign_table', '!=', False)]}"/>
+                <field name="campaign_ids" string="Campaigns" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('campaign_table', '=', False)]}" widget="many2many_tags"/>
+                <field name="acquirer_branch_id" string="Branch" domain="[('acquirer_id', 'in', acquirer_ids)]" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('is_internal', '=', False)]}"/>
+                <field name="campaign_table" invisible="1"/>
+                <field name="acquirer_ids" invisible="1"/>
+                <field name="payment_product_categ_ids" domain="[('system', '!=', False), ('company_id', '=', company_id)]" options="{'no_create': True, 'no_open': True}" widget="many2many_tags" groups="payment_system_product.group_product"/>
+            </group>
             <group string="Bank Accounts" name="banks">
                 <field name="bank_ids" nolabel="1" colspan="2" attrs="{'invisible': [('payment_item_bank_token_ok', '!=', False)]}">
                     <tree editable="bottom">
