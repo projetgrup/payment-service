@@ -171,6 +171,8 @@ class ProductProduct(models.Model):
             body += '<ul>' + ''.join(['<li>%s: %s</li>' % (ref, msg) for ref, msg in [
                 (line.split(':', 1)[0], line.split(':', 1)[1].strip() if ':' in line else '') for line in failures
             ]]) + '</ul>'
+        else:
+            self.escrow_state = 'transferred'
         self.message_post(body=body, subtype_xmlid='mail.mt_note')
 
         return {
