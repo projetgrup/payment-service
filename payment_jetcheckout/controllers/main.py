@@ -134,13 +134,12 @@ class PayloxController(http.Controller):
     def _get_campaign(acquirer=None, partner=None, transaction=None):
         campaign = PayloxController._get('campaign')
         if not campaign:
-            if partner and partner.campaign_id:
-                campaign = partner.campaign_id.name
-                raise Exception(campaign)
-            elif acquirer and acquirer.jetcheckout_campaign_id:
+            if acquirer:
                 campaign = acquirer.jetcheckout_campaign_id.name
-            elif transaction and transaction.jetcheckout_campaign_name:
+            elif transaction:
                 campaign = transaction.jetcheckout_campaign_name
+            elif partner:
+                campaign = partner.campaign_id.name
             else:
                 campaign = ''
             PayloxController._set('campaign', campaign)
