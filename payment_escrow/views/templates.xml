@@ -421,6 +421,7 @@
                     </div>
                 </div>
             </div>
+            <input type="hidden" t-att-value="campaign or ''" field="campaign.name"/>
             <input type="hidden" name="partner" t-att-value="partner.id" field="partner"/>
             <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
         </t>

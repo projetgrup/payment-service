@@ -351,7 +351,7 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.country_id.name)
             values.update({
                 'submerchant_external_id': reference_seller,
-                'is_submerchant_payment': True,
+                # 'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
                     "name": fullname[0],
@@ -537,6 +537,7 @@ class PayloxSystemEscrowController(Controller):
         company = request.env.company
         user = request.env.user
         partner = user.partner_id
+        campaign = partner.campaign_id.name if partner and partner.campaign_id else ''
         domain = [('company_id', '=', company.id)]
         if user.share:
             domain.append(('broker_id', '=', partner.id))
@@ -553,6 +554,7 @@ class PayloxSystemEscrowController(Controller):
             'company': company,
             'currency': company.currency_id,
             'agreements': self._get_agreements(),
+            'campaign': campaign,
             'step': step,
         }
         return request.render('payment_escrow.page_ads', values, headers={
