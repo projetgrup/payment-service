@@ -134,7 +134,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 tc: new fields.float({
-                    events: [['input', this._lookupSellerByIdentity]],
+                    events: [['input', () => {
+                        const sellerType = $('input[name="userType"]:checked').val();
+                        this._lookupPartnerByIdentity('seller', sellerType, this.seller.input.tc.value, 11);
+                    }]],
                     mask: '00000000000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -257,6 +260,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 tax_number: new fields.string({
+                    events: [['input', () => {
+                        const sellerType = $('input[name="userType"]:checked').val();
+                        this._lookupPartnerByIdentity('seller', sellerType, this.seller.input.tax_number.value, 10);
+                    }]],
                     mask: '0000000000',
                     validate: () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -399,7 +406,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.customer = {
             input: {
                 tc: new fields.string({
-                    events: [['input', this._lookupCustomerByIdentity]],
+                    events: [['input', () => {
+                        const type = $('input[name="customerUserType"]:checked').val();
+                        this._lookupPartnerByIdentity('customer', type, this.customer.input.tc.value, 11);
+                    }]],
                     mask: '00000000000',
                     validate: () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
@@ -515,6 +525,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 tax_number: new fields.string({
+                    events: [['input', () => {
+                        const type = $('input[name="customerUserType"]:checked').val();
+                        this._lookupPartnerByIdentity('customer', type, this.customer.input.tax_number.value, 10);
+                    }]],
                     mask: '0000000000',
                     validate: () => {
                         const mod = $('input[name="customerUserType"]:checked').val();
@@ -1052,7 +1066,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(() => {
             payloxPage.prototype._setCurrency.apply(this);
             payloxPage.prototype._start.apply(this);
-            console.log(this.state);
             this._parseAds();
             this._startState();
             this._startToggles();
@@ -1396,7 +1409,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 if (customerData.success) {
                     const customer = customerData.partner;
                     if (!customer.is_company) {
-                        $wiz.find('input[name="userType"][value="individual"]').prop('checked', true);
+                        $wiz.find('input[name="customerUserType"][value="individual"]').prop('checked', true);
                         this._bindWizardToggle();
                         this.customer.input.name.value = customer.name || '';
                         this.customer.input.tc.value = customer.vat || '';
@@ -1405,7 +1418,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.customer.input.address_individual.value = this._formatAddress(customer);
                         this._isOtpValidate(this.customer.input.phone_individual);
                     } else {
-                        $wiz.find('input[name="userType"][value="corporate"]').prop('checked', true);
+                        $wiz.find('input[name="customerUserType"][value="corporate"]').prop('checked', true);
                         this._bindWizardToggle();
                         this.customer.input.corporate_title.value = customer.name || '';
                         this.customer.input.tax_number.value = customer.vat || '';
@@ -1421,10 +1434,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
     },
 
-    _prefillSellerFromAd: function(adData) {
+    _prefillSellerFromAd: function() {
         const $wiz = $('.escrow-wizard');
-        
-        let ownerId = adData?.owner_id || this.state.owner;
+
+        let ownerId = this.state.owner;
         if (ownerId) {
             this._rpc({
                 route: '/my/partner/get',
@@ -1435,17 +1448,14 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     if (owner.is_company) {
                         $wiz.find('input[name="userType"][value="corporate"]').prop('checked', true);
                         this._bindWizardToggle();
-                        this.seller.input.corporate_title.$.val(owner.name || '');
-                        this.seller.input.tax_number.$.val(owner.vat || '');
-                        this.seller.input.tax_office.$.val(owner.commercial_partner_id?.name || '');
-                        this.seller.input.wizard_address.$.val(this._formatAddress(owner));
-                        this.seller.input.corporate_person.$.val(owner.name || '');
-                        this.seller.input.phone_corporate.$.val(owner.phone || '');
-                        this.seller.input.email_corporate.$.val(owner.email || '');
-                        this.seller.input.address_corporate.$.val(this._formatAddress(owner));
+                        this.seller.input.corporate_title.value = owner.name || '';
+                        this.seller.input.tax_number.value = owner.vat || '';
+                        this.seller.input.corporate_person.value = owner.name || '';
+                        this.seller.input.phone_corporate.value = owner.phone || '';
+                        this.seller.input.email_corporate.value = owner.email || '';
                         this._isOtpValidate(this.seller.input.phone_corporate);
                         if (owner.bank_ids && owner.bank_ids.length > 0) {
-                            const bankAccount = owner.bank_ids[0];
+                            const bankAccount = owner.bank_ids.at(-1);
                             this.seller.input.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
                             this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || owner.name;
                             this._isIbanVerified(this.seller.input.iban_corporate, this.seller.input.tax_number);
@@ -1467,8 +1477,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }
                 return Promise.resolve();
-            }).catch(() => {
-                console.warn('Could not load owner data for prefill');
+            }).catch((e) => {
+                console.warn('Could not load owner data for prefill form', e);
             });
         }
         $wiz.find('.form__control').removeClass('is-invalid -error just-validate-error-field');
@@ -2089,7 +2099,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 this.displayNotification({
                     type: 'danger',
                     title: 'Error',
-                    message: 'Connection error occurred.',
+                    message: `Connection error occurred. ${error.message || ''}`,
                 });
             }).finally(() => {
                 this._enableWizard();
@@ -2111,7 +2121,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _initializeProductInfoForm: function () {
-        console.log(this.state)
         if (this.state.id > 0) {
             this._getProductData();
             this._prefillProductFromAd();
@@ -2137,7 +2146,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             params: { ad_id: self.state.id },
         }).then((product) => {
             if (product && product.success) {
-                self.state.owner = product.ad.owner_id;
                 self.values.ads[product.ad.id] = {
                     id: product.ad.id,
                     img: product.ad.image,
@@ -2270,7 +2278,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let formData = {
             seller_type: sellerType,
         };
-        
+        const ad = this.state.id
+        if (ad > 0) {
+            formData = {...formData, ad_id: ad };
+        }
         if (sellerType === 'corporate') {
             formData = {
                 ...formData,
@@ -2390,26 +2401,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _saveCustomerInfo: function() {
         const self = this;
-        const userType = $('input[name="userType"]:checked').val();
-        const isCardHolderDifferent = $('#checkPoint').is(':checked');
+        const userType = $('input[name="customerUserType"]:checked').val();
 
         const data = {
             customer_type: userType,
-            is_card_holder_different: isCardHolderDifferent,
             product_id: this.state.id,
         };
-
-        if (isCardHolderDifferent) {
-
-            data.customer_name_surname = this.customer.input.name.$.val();
-            data.customer_identity = this.customer.input.tc.$.val();
-            data.customer_phone = this.customer.input.phone_individual.$.val();
-            data.customer_email = this.customer.input.email_individual.$.val();
-            data.customer_address = this.customer.input.address_individual.$.val();
-            if (this.wizard && this.wizard.customerID) {
-                data.escrow_customer_id = this.wizard.customerID;
-            }
-        }
 
         if (userType === 'individual') {
             data.customer_name_surname = this.customer.input.name.$.val();
@@ -2421,7 +2418,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             data.customer_corporate_title = this.customer.input.corporate_title.$.val();
             data.customer_tax_number = this.customer.input.tax_number.$.val();
             data.customer_tax_office = this.customer.input.tax_office.$.val();
-            data.customer_person = this.customer.input.person.$.val();
             data.customer_phone = this.customer.input.phone_corporate.$.val();
             data.customer_email = this.customer.input.email_corporate.$.val();
             data.customer_address = this.customer.input.address_corporate.$.val();
@@ -2431,11 +2427,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             params: data,
         }).then((result) => {
             if (result.success && result.partner_id) {
-                if (isCardHolderDifferent) {
-                    self.wizard.cardHolderID = result.partner_id;
-                } else {
-                    self.wizard.customerID = result.partner_id;
-                }
+                this._setState({ customer: result.partner_id });
             }
             return result;
         });
@@ -2720,107 +2712,96 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         reader.readAsDataURL(file);
     },
 
-    _lookupSellerByIdentity: function() {
-        let sellerType = $('input[name="userType"]:checked').val();
-        let vat, vatLength;
-        if (sellerType === 'individual') {
-            vat = this.seller.input.tc.value;
-            vatLength = 11;
-        } else {
-            vat = this.seller.input.tax_number.value;
-            vatLength = 10;
+    _lookupPartnerByIdentity: function(partnerType, userType, identityValue, identityLength) {
+        if (!identityValue || identityValue.length !== identityLength) {
+            return;
         }
-        if (vat.length === vatLength) {
-            this._rpc({
-                route: '/my/seller/lookup',
-                params: {
-                    identity: vat,
-                    seller_type: sellerType
+        if (identityLength === 11 && !this._isTcknValid(identityValue)) {
+            return;
+        }
+        if (identityLength === 10 && !this._isVatValid(identityValue)) {
+            return;
+        }
+
+        const route = '/my/partner/lookup'
+        const typeParam = partnerType === 'seller' ? 'seller_type' : 'customer_type';
+        const dataKey = 'data'
+        const lookupType = partnerType === 'seller' ? 'owner' : 'customer';
+
+        this._rpc({
+            route: route,
+            params: {
+                identity: identityValue,
+                type: lookupType,
+                [typeParam]: userType,
+            }
+        }).then((result) => {
+            if (result && result.success && result.found) {
+                const data = result[dataKey];
+                this._fillPartnerData(partnerType, userType, data);
+            }
+        }).catch((error) => {
+            console.error(`Error looking up ${partnerType}:`, error);
+        });
+    },
+
+    _fillPartnerData: function(partnerType, userType, data) {
+        const inputs = partnerType === 'seller' ? this.seller.input : this.customer.input;
+        
+        if (userType === 'corporate') {
+            if (partnerType === 'seller') {
+                this._bindWizardToggle();
+                inputs.corporate_title.value = data.name || '';
+                inputs.tax_number.$.val(data.vat || '');
+                if (inputs.tax_office) inputs.tax_office.value = data.commercial_partner_id?.name || ''
+                if (inputs.wizard_address) inputs.wizard_address.value = this._formatAddress(data);
+                inputs.corporate_person.value = data.name || '';
+                inputs.phone_corporate.value = data.phone || '';
+                inputs.email_corporate.value = data.email || '';
+                if (inputs.address_corporate) inputs.address_corporate.value = this._formatAddress(data);
+                this._isOtpValidate(inputs.phone_corporate);
+                
+                if (data.bank_ids && data.bank_ids.length > 0) {
+                    const bankAccount = data.bank_ids[0];
+                    inputs.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
+                    inputs.iban_name_corporate.value = bankAccount.api_merchant || data.name;
+                    this._isIbanVerified(inputs.iban_corporate, inputs.tax_number);
                 }
-            }).then((result) => {
-                if (result && result.success && result.found) {
-                    const data = result.seller_data;
-                    if (sellerType === 'corporate') {
-                        this._bindWizardToggle();
-                        this.seller.input.corporate_title.$.val(data.name || '');
-                        this.seller.input.tax_number.$.val(data.vat || '');
-                        this.seller.input.tax_office.$.val(data.commercial_partner_id?.name || '');
-                        this.seller.input.wizard_address.$.val(this._formatAddress(data));
-                        this.seller.input.corporate_person.$.val(data.name || '');
-                        this.seller.input.phone_corporate.$.val(data.phone || '');
-                        this.seller.input.email_corporate.$.val(data.email || '');
-                        this.seller.input.address_corporate.$.val(this._formatAddress(data));
-                        this._isOtpValidate(this.seller.input.phone_corporate);
-                        if (data.bank_ids && data.bank_ids.length > 0) {
-                            const bankAccount = data.bank_ids[0];
-                            this.seller.input.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
-                            this.seller.input.iban_name_corporate.value = bankAccount.api_merchant || data.name;
-                            this._isIbanVerified(this.seller.input.iban_corporate, this.seller.input.tax_number);
-                        }
-                    } else {
-                        this._bindWizardToggle();
-                        this.seller.input.name.value = data.name || '';
-                        this.seller.input.tc.value = data.vat || '';
-                        this.seller.input.phone_individual.value = data.phone || '';
-                        this.seller.input.email_individual.value = data.email || '';
-                        this._isOtpValidate(this.seller.input.phone_individual);
-                        if (data.bank_ids && data.bank_ids.length > 0) {
-                            const bankAccount = data.bank_ids[0];
-                            this.seller.input.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
-                            this.seller.input.iban_name_individual.value = bankAccount.api_merchant || data.name;
-                            this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc);
-                        }
-                    }
+            } else {
+                inputs.corporate_title.value = data.name || '';
+                inputs.tax_number.value = data.vat || '';
+                if (inputs.tax_office) inputs.tax_office.value = data.tax_office || '';
+                inputs.phone_corporate.value = data.phone || '';
+                inputs.email_corporate.value = data.email || '';
+                if (inputs.address_corporate) inputs.address_corporate.value = data.address || '';
+                this._isOtpValidate(inputs.phone_corporate);
+            }
+        } else {
+            if (partnerType === 'seller') {
+                this._bindWizardToggle();
+                inputs.name.value = data.name || '';
+                inputs.tc.value = data.vat || '';
+                inputs.phone_individual.value = data.phone || '';
+                inputs.email_individual.value = data.email || '';
+                this._isOtpValidate(inputs.phone_individual);
+                
+                if (data.bank_ids && data.bank_ids.length > 0) {
+                    const bankAccount = data.bank_ids[0];
+                    inputs.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
+                    inputs.iban_name_individual.value = bankAccount.api_merchant || data.name;
+                    this._isIbanVerified(inputs.iban_individual, inputs.tc);
                 }
-            }).catch((error) => {
-                console.error('Error looking up seller:', error);
-            });
+            } else {
+                inputs.name.value = data.name || '';
+                inputs.phone_individual.value = data.phone || '';
+                inputs.email_individual.value = data.email || '';
+                if (inputs.address_individual) inputs.address_individual.value = data.address || '';
+                inputs.tc.value = data.vat || '';
+                this._isOtpValidate(inputs.phone_individual);
+            }
         }
     },
 
-    _lookupCustomerByIdentity: function() {
-        let customerType = $('input[name="customerUserType"]:checked').val();
-        let vat, vatLength;
-        if (customerType === 'individual') {
-            vat = this.customer.input.tc.value;
-            vatLength = 11;
-        } else {
-            vat = this.customer.input.tax_number.value;
-            vatLength = 10;
-        }
-        if (vat.length === vatLength) {
-            this._rpc({
-                route: '/my/customer/lookup',
-                params: {
-                    identity: vat,
-                    customer_type: customerType
-                }
-            }).then((result) => {
-                if (result && result.success && result.found) {
-                    const data = result.customer_data;
-                    if (customerType === 'individual') {
-                        this.customer.input.name.value = data.name || '';
-                        this.customer.input.phone_individual.value = data.phone || '';
-                        this.customer.input.email_individual.value = data.email || '';
-                        this.customer.input.address_individual.value = data.address || '';
-                        this.customer.input.tc.value = data.vat || '';
-                        this._isOtpValidate(this.customer.input.phone_individual);
-                    } else {
-                        this.customer.input.corporate_title.value = data.name || '';
-                        this.customer.input.tax_number.value = data.vat || '';
-                        this.customer.input.tax_office.value = data.tax_office || '';
-                        this.customer.input.phone_corporate.value = data.phone || '';
-                        this.customer.input.email_corporate.value = data.email || '';
-                        this.customer.input.address_corporate.value = data.address || '';
-                        this._isOtpValidate(this.customer.input.phone_corporate);
-                    }
-                }
-            }).catch((error) => {
-                console.error('Error looking up customer:', error);
-            });
-        }
-    },
-    
     _initializeFileUploads: function(transactions) {
         const self = this;
         
@@ -2907,9 +2888,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                             </div>
                                         `);
                                         $uploadedContainer.show();
-            } else {
+                                    } else {
                                         error(result && result.error || 'Upload failed');
-        }
+                                    }
                                 }).catch(function(err) {
                                     console.error('Upload error:', err);
                                     error('Upload failed');
@@ -2958,7 +2939,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     
     _filterAdsByState: function(state) {
         this._setState({ filterState: state });
-        console.log(state);
         const adRows = this.$('.escrow-ad-list .escrow-ad-list-item, .escrow-ad-grid .escrow-ad-grid-item');
         
         const allAdItems = this.$('.escrow-item');
@@ -2972,7 +2952,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const finalState = adState || dataState;
             
             if (state === 'all') {
-                console.log('show all');
                 $element.show();
             } else if (state === finalState) {
                 $element.show();

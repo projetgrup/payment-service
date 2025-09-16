@@ -112,12 +112,12 @@
                     </div>
                     <div id="corporate" class="wizard-section wizard-section-corporate d-none">
                         <div class="form__group">
-                            <label class="form__label" for="corporate_title">Company Title</label>
-                            <input class="form__control -letter" id="corporate_title" name="corporatetitle" type="text" placeholder="Company Title" field="seller.input.corporate_title"/>
-                        </div>
-                        <div class="form__group">
                             <label class="form__label" for="wizard_tax">Tax Number</label>
                             <input class="form__control -letter" id="wizard_tax" name="taxnumber" type="text" placeholder="Tax Number" field="seller.input.tax_number"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="corporate_title">Company Title</label>
+                            <input class="form__control -letter" id="corporate_title" name="corporatetitle" type="text" placeholder="Company Title" field="seller.input.corporate_title"/>
                         </div>
                         <div class="form__group">
                             <label class="form__label -between" for="wizard_iban_corp">

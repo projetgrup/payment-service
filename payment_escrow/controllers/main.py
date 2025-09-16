@@ -351,7 +351,7 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.country_id.name)
             values.update({
                 'submerchant_external_id': reference_seller,
-                # 'is_submerchant_payment': True,
+                'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
                     "name": fullname[0],
@@ -844,7 +844,13 @@ class PayloxSystemEscrowController(Controller):
                     }
                 #else:
                 #    existing.write(bank_vals)
-
+            if kwargs.get('ad_id'):
+                ad = request.env['product.product'].sudo().with_context(system='escrow').search([('id', '=', int(kwargs.get('ad_id'))), ('company_id', '=', company.id)], limit=1)
+                if ad:
+                    ad.escrow_owner_id = partner.id
+                    item = request.env['payment.item'].sudo().search([('product_id', '=', ad.id)], limit=1)
+                    if item:
+                        item.parent_id = partner.id
             return {
                 'success': True,
                 'partner_id': partner.id,
@@ -858,12 +864,13 @@ class PayloxSystemEscrowController(Controller):
                 'message': 'Seller information could not be saved.'
             }
 
-    @route('/my/seller/lookup', type='json', auth='public', methods=['POST'], csrf=False)
-    def lookup_seller_by_identity(self, **kwargs):
+    @route('/my/partner/lookup', type='json', auth='public', methods=['POST'], csrf=False)
+    def lookup_partner_by_identity(self, **kwargs):
         try:
             identity = kwargs.get('identity', '').strip()
-            customer_type = kwargs.get('customer_type', 'individual')
-            
+            customer_type = kwargs.get('seller_type', kwargs.get('customer_type', 'individual'))
+            lookup_type = kwargs.get('type', 'owner') 
+
             if not identity:
                 return {'success': False, 'message': 'Identity number is required'}
             
@@ -872,7 +879,7 @@ class PayloxSystemEscrowController(Controller):
             partner = request.env['res.partner'].sudo().search([
                 (search_field, '=', identity),
                 ('company_id', '=', company.id),
-                ('paylox_escrow_type', '=', 'owner'),
+                ('paylox_escrow_type', '=', lookup_type),
                 ('is_company', '=', customer_type == 'corporate')
             ], limit=1)
             
@@ -880,7 +887,7 @@ class PayloxSystemEscrowController(Controller):
                 return {
                     'success': True,
                     'found': True,
-                    'seller_data': {
+                    'data': {
                         'name': partner.name,
                         'email': partner.email,
                         'phone': partner.mobile or partner.phone,
@@ -897,52 +904,6 @@ class PayloxSystemEscrowController(Controller):
                             'api_state': bank.api_state,
                             'api_message': bank.api_message,
                         } for bank in partner.bank_ids if bank.api_state]
-                    }
-                }
-            else:
-                return {
-                    'success': True,
-                    'found': False,
-                    'message': 'No existing customer found with this identity number'
-                }
-                
-        except Exception as e:
-            return {
-                'success': False,
-                'message': f'Error looking up customer: {str(e)}'
-            }
-
-    @route('/my/customer/lookup', type='json', auth='public', methods=['POST'], csrf=False)
-    def lookup_customer_by_identity(self, **kwargs):
-        try:
-            identity = kwargs.get('identity', '').strip()
-            customer_type = kwargs.get('customer_type', 'individual')
-            
-            if not identity:
-                return {'success': False, 'message': 'Identity number is required'}
-            
-            company = request.env.company
-            search_field = 'vat'
-            partner = request.env['res.partner'].sudo().search([
-                (search_field, '=', identity),
-                ('company_id', '=', company.id),
-                ('paylox_escrow_type', '=', 'customer'),
-                ('is_company', '=', customer_type == 'corporate')
-            ], limit=1)
-            
-            if partner:
-                return {
-                    'success': True,
-                    'found': True,
-                    'customer_data': {
-                        'name': partner.name,
-                        'email': partner.email,
-                        'phone': partner.mobile or partner.phone,
-                        'address': partner.street or '',
-                        'is_otp_verified': partner.is_otp_verified,
-                        'tax_office': getattr(partner, 'paylox_tax_office', '') if customer_type == 'corporate' else '',
-                        'vat': partner.vat,
-                        'contact_person': getattr(partner, 'contact_person', '') if customer_type == 'corporate' else '',
                     }
                 }
             else:
@@ -1006,6 +967,7 @@ class PayloxSystemEscrowController(Controller):
                     'mobile': kwargs.get('customer_phone', ''),
                     'vat': kwargs.get('customer_tax_number', ''),
                     'street': kwargs.get('customer_address', ''),
+                    'paylox_tax_office': kwargs.get('customer_tax_office', ''),
                     'is_company': True,
                 })
             else:
