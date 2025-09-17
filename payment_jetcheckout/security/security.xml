@@ -28,9 +28,9 @@
             <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund')), (4, ref('payment_jetcheckout.group_transaction_postauth'))]"/>
         </record>
  
-        <!-- <record model="res.groups" id="account.group_account_invoice">
+        <record model="res.groups" id="account.group_account_invoice">
             <field name="implied_ids" eval="[(4, ref('payment_jetcheckout.group_transaction_cancel')), (4, ref('payment_jetcheckout.group_transaction_refund')), (4, ref('payment_jetcheckout.group_transaction_postauth'))]"/>
-        </record> -->
+        </record>
  
         <record id="rule_report" model="ir.rule">
             <field name="name">Access only related reports for users</field>
