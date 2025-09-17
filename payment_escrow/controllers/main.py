@@ -131,7 +131,7 @@ class PayloxSystemEscrowController(Controller):
             values['t'] = status
         if customer is not None:
             values['c'] = customer
-            
+        _logger.error(json.dumps(values))
         hash_value = base64.b64encode(json.dumps(values).encode('utf-8')).decode('utf-8')
         return f'/my/ads?={quote(hash_value)}'
 
@@ -166,6 +166,7 @@ class PayloxSystemEscrowController(Controller):
                     url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='partial')
             else:
                 url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='error')
+        _logger.error(url)
         return url, tx, status
 
     def _get_tx_values(self, **kwargs):
@@ -355,7 +356,7 @@ class PayloxSystemEscrowController(Controller):
                 address.append(customer.country_id.name)
             values.update({
                 'submerchant_external_id': reference_seller,
-                'is_submerchant_payment': True,
+                # 'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
                     "name": fullname[0],

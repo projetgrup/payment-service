@@ -1055,6 +1055,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 window.history.replaceState(null, '', window.location.pathname);
             }
         }
+        console.log(this.state);
         this._onChangeStep(this.state.step, { init: true });
     },
 
@@ -1067,8 +1068,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(this);
             payloxPage.prototype._start.apply(this);
             this._parseAds();
-            this._initializePagination();
             this._startState();
+            this._initializePagination();
             this._startToggles();
             $('.escrow-ad-wrapper').removeClass('d-none');
             framework.hideLoading();
@@ -1300,11 +1301,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 price: $this.find('.escrow-ad-item-price').data('value'),
                 ...values
             };
-            console.log(`Parsed ad ${e.dataset.id}:`, this.values.ads[e.dataset.id]);
             $this.data('value', null);
             $this.attr('data-value', null);
         });
-        console.log('Total parsed ads:', Object.keys(this.values.ads).length);
     },
 
     _deleteAds: function (id) {
@@ -2935,7 +2934,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
     
     _filterAdsByState: function(state) {
-        console.log(`Filtering by state: ${state}`);
         this._setState({ filterState: state });
         
         const isListView = this.$('.escrow-ad-list').is(':visible');
@@ -2944,13 +2942,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let adRows;
         if (isListView) {
             adRows = this.$('.escrow-ad-list .escrow-ad-list-item');
-            console.log(`Using list view - found ${adRows.length} items`);
         } else if (isGridView) {
             adRows = this.$('.escrow-ad-grid .escrow-ad-grid-item');
-            console.log(`Using grid view - found ${adRows.length} items`);
         } else {
             adRows = this.$('.escrow-ad-list .escrow-ad-list-item');
-            console.log(`No active view detected, defaulting to list view - found ${adRows.length} items`);
         }
         
         this.state.pagination.filteredAds = [];
@@ -2963,17 +2958,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const dataState = adData?.state || 'waiting';
             const finalState = adState || dataState;
             
-            console.log(`Ad ${adId}: DOM state=${adState}, Data state=${dataState}, Final state=${finalState}`);
             
             if (state === 'all' || state === finalState) {
                 this.state.pagination.filteredAds.push(element);
-                console.log(`✓ Ad ${adId} included in filter`);
             } else {
-                console.log(`✗ Ad ${adId} excluded from filter`);
             }
         });
         
-        console.log(`Filtered ads count: ${this.state.pagination.filteredAds.length}`);
         
         this.state.pagination.currentPage = 1;
         
