@@ -14,7 +14,6 @@
             </div>
             <div class="steps__content" t-if="not is_completed_step">
                 <span t-esc="step_title"/>
-                <a href="#" t-att-data-step="step_number" t-if="show_edit_link">Edit</a>
             </div>
             <span class="steps__content" t-esc="step_title" t-if="is_completed_step"/>
         </div>
@@ -52,7 +51,7 @@
             <!-- Step 1: Seller Information -->
             <t t-call="payment_escrow.step_item_template">
                 <t t-set="step_number" t-value="1"/>
-                <t t-set="step_title" t-value="'Seller Information'"/>
+                <t t-set="step_title">Seller Information</t>
                 <t t-set="step_class" t-value="step_1_class or ''"/>
                 <t t-set="show_edit_link" t-value="step_1_edit or False"/>
             </t>
@@ -60,7 +59,7 @@
             <!-- Step 2: Ads Information -->
             <t t-call="payment_escrow.step_item_template">
                 <t t-set="step_number" t-value="2"/>
-                <t t-set="step_title" t-value="'Ads Information'"/>
+                <t t-set="step_title">Ads Information</t>
                 <t t-set="step_class" t-value="step_2_class or ''"/>
                 <t t-set="show_edit_link" t-value="step_2_edit or False"/>
             </t>
@@ -68,7 +67,7 @@
             <!-- Step 3: Customer Information -->
             <t t-call="payment_escrow.step_item_template">
                 <t t-set="step_number" t-value="3"/>
-                <t t-set="step_title" t-value="'Customer Information'"/>
+                <t t-set="step_title">Customer Information</t>
                 <t t-set="step_class" t-value="step_3_class or ''"/>
                 <t t-set="show_edit_link" t-value="step_3_edit or False"/>
             </t>
@@ -76,7 +75,7 @@
             <!-- Step 4: Payment Information -->
             <t t-call="payment_escrow.step_item_template">
                 <t t-set="step_number" t-value="4"/>
-                <t t-set="step_title" t-value="'Payment Information'"/>
+                <t t-set="step_title">Payment Information</t>
                 <t t-set="step_class" t-value="step_4_class or ''"/>
                 <t t-set="show_edit_link" t-value="step_4_edit or False"/>
             </t>
@@ -84,7 +83,7 @@
             <!-- Step 5: Completion -->
             <t t-call="payment_escrow.step_item_template">
                 <t t-set="step_number" t-value="5"/>
-                <t t-set="step_title" t-value="'Completed'"/>
+                <t t-set="step_title">Completed</t>
                 <t t-set="step_class" t-value="step_5_class or ''"/>
                 <t t-set="show_edit_link" t-value="step_5_edit or False"/>
             </t>
