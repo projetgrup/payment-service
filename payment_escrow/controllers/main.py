@@ -50,6 +50,9 @@ class PayloxSystemEscrowController(Controller):
 
             transaction_list = []
             for tx in transactions:
+                receipt_url = None
+                if tx.conveyance_attachment_id and tx.jetcheckout_order_id:
+                    receipt_url = f"/payment/escrow/attachment/{tx.conveyance_attachment_id.id}/download?token={tx.jetcheckout_order_id}"
 
                 transaction_list.append({
                     'id': tx.id,
@@ -60,7 +63,8 @@ class PayloxSystemEscrowController(Controller):
                     'message': tx.state_message,
                     'payment_method': tx.acquirer_id.name if tx.acquirer_id else 'Unknown',
                     'different_holder': tx.jetcheckout_different_card_holder,
-                    'order_id': tx.jetcheckout_order_id if company.conveyance_show_link else None, 
+                    'order_id': tx.jetcheckout_order_id if company.conveyance_show_link else None,
+                    'receipt_url': receipt_url,
                     'conveyance_attachment': {
                         'name': tx.conveyance_attachment_id.name or '',
                         'mimetype': tx.conveyance_attachment_id.mimetype if tx.conveyance_attachment_id else '',
@@ -1083,6 +1087,43 @@ class PayloxSystemEscrowController(Controller):
                 'error': str(e),
                 'message': 'An error occurred while retrieving partner information.'
             }
+
+    @http.route('/payment/escrow/attachment/<int:attachment_id>/download', type='http', auth='public', csrf=False)
+    def download_attachment_with_token(self, attachment_id, token=None, **kwargs):
+        try:
+            if not token:
+                return request.not_found()
+            
+            transaction = request.env['payment.transaction'].sudo().search([
+                ('jetcheckout_order_id', '=', token),
+                ('conveyance_attachment_id', '=', attachment_id),
+                ('system', '=', 'escrow')
+            ], limit=1)
+            
+            if not transaction.exists():
+                return request.not_found()
+            
+            attachment = request.env['ir.attachment'].sudo().browse(attachment_id)
+            if not attachment.exists():
+                return request.not_found()
+            
+            return request.env['ir.http'].sudo()._get_content_common(
+                xmlid=None,
+                model='ir.attachment',
+                res_id=attachment_id,
+                field='datas',
+                filename=attachment.name,
+                filename_field='name',
+                unique=None,
+                mimetype=attachment.mimetype,
+                download=True,
+                token=None,
+                access_token=None
+            )
+            
+        except Exception as e:
+            _logger.error(f"Error downloading attachment with token: {str(e)}")
+            return request.not_found()
 
     @http.route('/payment/escrow/upload-conveyance', type='json', auth='user', methods=['POST'])
     def upload_conveyance_file(self, **kwargs):

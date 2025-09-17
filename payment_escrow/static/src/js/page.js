@@ -2195,15 +2195,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         function setMode(mode) {
             const isInd = mode === 'individual';
 
-            // Section toggle
             if ($ind.length) $ind.toggleClass('d-none', !isInd).toggle(isInd);
             if ($cor.length) $cor.toggleClass('d-none', isInd).toggle(!isInd);
 
-            // Radio toggle
             if ($radioInd.length) $radioInd.prop('checked', isInd);
             if ($radioCor.length) $radioCor.prop('checked', !isInd);
 
-            // Button toggle
             if ($btnInd.length && $btnCor.length) {
                 $btnInd
                     .toggleClass('btn-dark active', isInd)
@@ -2213,19 +2210,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     .toggleClass('btn-outline-dark', isInd);
             }
 
-            // Slider
             if ($slider.length) {
                 $slider.css('transform', isInd ? 'translateX(0%)' : 'translateX(100%)');
             }
         }
 
-        // Eski eventleri temizle
         $btnInd.off('click.userTypeToggle');
         $btnCor.off('click.userTypeToggle');
         $radioInd.off('change.userTypeToggle');
         $radioCor.off('change.userTypeToggle');
 
-        // Yeni eventler
         if ($btnInd.length) {
             $btnInd.on('click.userTypeToggle', (e) => {
                 e.preventDefault();
@@ -2249,7 +2243,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             });
         }
 
-        // Başlangıçta seçili radio’ya göre ayarla
         const selected = $root.find(`input[name="${radioName}"]:checked`).val() || 'individual';
         setMode(selected);
     },
@@ -2833,7 +2826,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             </div>
                         </div>
                         <div class="file-actions">
-                            <a href="/payment/card/report/conveyance/${payment.order_id}" 
+                            <a href="${payment.receipt_url}" 
                                target="_blank" 
                                class="btn btn-sm btn-outline-primary mr-2"
                                title="Download File">
