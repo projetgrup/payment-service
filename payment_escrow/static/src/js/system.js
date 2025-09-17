@@ -18,7 +18,6 @@ payloxPage.include({
         this._getEscrowItems();
         params.system = 'escrow';
         params.products = [{'pid': this.state.id, 'qty': 1}];
-        console.log(this.state);
         if (different) {
             const $card = $('.payment-info-card');
             params.different_holder = {
