@@ -1067,6 +1067,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             payloxPage.prototype._setCurrency.apply(this);
             payloxPage.prototype._start.apply(this);
             this._parseAds();
+            this._initializePagination();
             this._startState();
             this._startToggles();
             $('.escrow-ad-wrapper').removeClass('d-none');
@@ -1075,6 +1076,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 $('div.o_loading').addClass('transparent');
             }, 2000);
         });
+    },
+
+    _initializePagination: function() {
+        this._filterAdsByState('all');
     },
 
     _onFieldValid: function(field, valid, message='') {
@@ -1151,7 +1156,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _isOtpValidate: async function(field) {
         if (field.value.length === 10) {
             let otp = field._.masked.value;
-            //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/otp/validate',
                 params: { otp },
@@ -1168,7 +1172,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         let vat = vatField._.masked.value;
         let iban = ibanField._.masked.value;
         if (this._isIbanValid(iban)) {
-            //this._showFieldLoadingIcon(field);
             let result = await this._rpc({
                 route: '/my/iban/verify',
                 params: { iban, vat },
@@ -1286,6 +1289,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _parseAds: function () {
+        this.values.ads = {};
+        
         $('[field="ad.item"][data-value]').each((i, e) => {
             const $this = $(e);
             const values = $this.data('value');
@@ -1295,9 +1300,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 price: $this.find('.escrow-ad-item-price').data('value'),
                 ...values
             };
+            console.log(`Parsed ad ${e.dataset.id}:`, this.values.ads[e.dataset.id]);
             $this.data('value', null);
             $this.attr('data-value', null);
         });
+        console.log('Total parsed ads:', Object.keys(this.values.ads).length);
     },
 
     _deleteAds: function (id) {
@@ -1881,7 +1888,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 const $container = $('.completion-content');
                 if ($container.length) {
                     $container.empty().append($rendered);
-                    // Initialize file upload for each transaction
                     this._initializeFileUploads(result.transactions || []);
                 }
                 if (result.paid > 0) {
@@ -1987,7 +1993,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     return this._startOtp(result.partner_id).then((otpRes) => {
                         if (otpRes && otpRes.success) {
                             this.wizard.otpId = otpRes.otp_id;
-                            this._showOtpModal(otpRes.expires_in || 120, true); // Seller için step geçişi yap
+                            this._showOtpModal(otpRes.expires_in || 120, true);
                         } else if (otpRes && otpRes.is_otp_verified) {
                             this._markStepCompleted(this.wizard.currentStep);
                             this._onChangeStep(this.wizard.currentStep + 1);
@@ -2076,7 +2082,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     return this._startOtp(result.partner_id).then((otpRes) => {
                         if (otpRes && otpRes.success) {
                             this.wizard.otpId = otpRes.otp_id;
-                            this._showOtpModal({ expiresIn: otpRes.expires_in || 120 }, true); // Customer için step geçişi yap
+                            this._showOtpModal({ expiresIn: otpRes.expires_in || 120 }, true);
                         } else if (otpRes && otpRes.is_otp_verified) {
                             this._markStepCompleted(this.wizard.currentStep);
                             this._onChangeStep(this.wizard.currentStep + 1);
@@ -2522,7 +2528,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         const $card = $('.payment-info-card');
         const $form = $('.payment-info-edit');
         
-        // Hide display card and show edit form
         $card.slideUp(200, function() {
             $form.slideDown(300);
         });
@@ -2538,7 +2543,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onSavePaymentInfo: function(event) {
-        // Validate all payment info fields
         const tcValid = this.payment.different.info.tc.validate();
         const nameValid = this.payment.different.info.name.validate();
         const phoneValid = this.payment.different.info.phone.validate();
@@ -2931,10 +2935,25 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
     
     _filterAdsByState: function(state) {
+        console.log(`Filtering by state: ${state}`);
         this._setState({ filterState: state });
-        const adRows = this.$('.escrow-ad-list .escrow-ad-list-item, .escrow-ad-grid .escrow-ad-grid-item');
         
-        const allAdItems = this.$('.escrow-item');
+        const isListView = this.$('.escrow-ad-list').is(':visible');
+        const isGridView = this.$('.escrow-ad-grid').is(':visible');
+        
+        let adRows;
+        if (isListView) {
+            adRows = this.$('.escrow-ad-list .escrow-ad-list-item');
+            console.log(`Using list view - found ${adRows.length} items`);
+        } else if (isGridView) {
+            adRows = this.$('.escrow-ad-grid .escrow-ad-grid-item');
+            console.log(`Using grid view - found ${adRows.length} items`);
+        } else {
+            adRows = this.$('.escrow-ad-list .escrow-ad-list-item');
+            console.log(`No active view detected, defaulting to list view - found ${adRows.length} items`);
+        }
+        
+        this.state.pagination.filteredAds = [];
         
         adRows.each((i, element) => {
             const $element = $(element);
@@ -2944,14 +2963,19 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             const dataState = adData?.state || 'waiting';
             const finalState = adState || dataState;
             
-            if (state === 'all') {
-                $element.show();
-            } else if (state === finalState) {
-                $element.show();
+            console.log(`Ad ${adId}: DOM state=${adState}, Data state=${dataState}, Final state=${finalState}`);
+            
+            if (state === 'all' || state === finalState) {
+                this.state.pagination.filteredAds.push(element);
+                console.log(`✓ Ad ${adId} included in filter`);
             } else {
-                $element.hide();
+                console.log(`✗ Ad ${adId} excluded from filter`);
             }
         });
+        
+        console.log(`Filtered ads count: ${this.state.pagination.filteredAds.length}`);
+        
+        this.state.pagination.currentPage = 1;
         
         const filterContainer = this.ad?.state?.filter?.$ || this.$('[field="ad.state.filter"]');
         if (filterContainer && filterContainer.length) {
@@ -3035,16 +3059,29 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _updatePagination: function() {
-        const allAds = this.$('.escrow-ad-list .escrow-ad-list-item, .escrow-ad-grid .escrow-ad-grid-item').filter(':visible');
-        this.state.pagination.totalItems = allAds.length;
+        const isListView = this.$('.escrow-ad-list').is(':visible');
+        const isGridView = this.$('.escrow-ad-grid').is(':visible');
+        
+        let allAds;
+        if (isListView) {
+            allAds = this.$('.escrow-ad-list .escrow-ad-list-item');
+        } else if (isGridView) {
+            allAds = this.$('.escrow-ad-grid .escrow-ad-grid-item');
+        } else {
+            allAds = this.$('.escrow-ad-list .escrow-ad-list-item');
+        }
+        
+        const filteredAds = this.state.pagination.filteredAds || [];
+
+        this.state.pagination.totalItems = filteredAds.length;
         this.state.pagination.totalPages = Math.ceil(this.state.pagination.totalItems / this.state.pagination.pageSize);
 
         const startIndex = (this.state.pagination.currentPage - 1) * this.state.pagination.pageSize;
         const endIndex = startIndex + this.state.pagination.pageSize;
 
-        this.$('.escrow-ad-list .escrow-ad-list-item, .escrow-ad-grid .escrow-ad-grid-item').hide();
-
-        allAds.slice(startIndex, endIndex).show();
+        allAds.hide();
+        const itemsToShow = filteredAds.slice(startIndex, endIndex);
+        $(itemsToShow).show();
 
         this._updatePaginationUI();
     },
@@ -3080,16 +3117,5 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (this.ad.pagination.container && this.ad.pagination.container.$) {
             this.ad.pagination.container.$.toggle(this.state.pagination.totalItems > 0);
         }
-    },
-    _initializePagination: function() {
-        if (!this.state || !this.state.pagination) {
-            return;
-        }
-        
-        const totalAds = Object.keys(this.values.ads).length;
-        this.state.pagination.totalItems = totalAds;
-        this.state.pagination.totalPages = Math.ceil(totalAds / this.state.pagination.pageSize);
-        
-        this._updatePagination();
     },
 });
