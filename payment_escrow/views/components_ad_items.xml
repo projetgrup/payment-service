@@ -45,6 +45,7 @@
                 <span t-if="ad.escrow_state == 'new'" class="success">New</span>
                 <span t-elif="ad.escrow_state == 'waiting'" class="warning">Waiting</span>
                 <span t-elif="ad.escrow_state == 'waiting_official_sale_img'" class="info">Pending Sale</span>
+                <span t-elif="ad.escrow_state == 'waiting_transfer_approval'" class="info">Pending Transfer Approval</span>
                 <span t-elif="ad.escrow_state == 'transferred'" class="primary">Transferred</span>
                 <span t-else="" class="secondary">Unknown</span>
             </div>
@@ -75,6 +76,7 @@
                     <span t-if="ad.escrow_state == 'new'" class="badge badge-success">New</span>
                     <span t-elif="ad.escrow_state == 'waiting'" class="badge badge-warning">Waiting</span>
                     <span t-elif="ad.escrow_state == 'waiting_official_sale_img'" class="badge badge-info">Pending Sale</span>
+                    <span t-elif="ad.escrow_state == 'waiting_transfer_approval'" class="badge badge-info">Pending Transfer Approval</span>
                     <span t-elif="ad.escrow_state == 'transferred'" class="badge badge-primary">Transferred</span>
                     <span t-else="" class="badge badge-secondary">Unknown</span>
                 </div>

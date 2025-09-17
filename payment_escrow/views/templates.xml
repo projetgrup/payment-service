@@ -196,6 +196,9 @@
                                                         <button type="button" class="btn btn-outline-info filter-btn" data-state="waiting_official_sale_img" field="ad.state.waiting_sale">
                                                             <i class="fa fa-image mr-1"></i>Pending Sale
                                                         </button>
+                                                        <button type="button" class="btn btn-outline-info filter-btn" data-state="waiting_transfer_approval" field="ad.state.waiting_transfer_approval">
+                                                            <i class="fa fa-check-circle mr-1"></i>Pending Transfer Approval
+                                                        </button>
                                                         <button type="button" class="btn filter-btn" data-state="transferred" field="ad.state.transferred">
                                                             <i class="fa fa-check-circle mr-1"></i>Transferred
                                                         </button>

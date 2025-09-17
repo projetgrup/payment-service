@@ -49,6 +49,7 @@ class ProductProduct(models.Model):
         ('waiting', 'Waiting'),
         ('new', 'New'),
         ('waiting_official_sale_img', 'Waiting Official Sale Image'),
+        ('waiting_transfer_approval', 'Waiting Transfer Approval'),
         ('transferred', 'Transferred'),
     ], string='State', default='waiting', index=True, tracking=True)
 

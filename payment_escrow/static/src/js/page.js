@@ -663,6 +663,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 new: new fields.element({ events: [['click', this._onStateFilterClick]] }),
                 waiting: new fields.element({ events: [['click', this._onStateFilterClick]] }),
                 waiting_sale: new fields.element({ events: [['click', this._onStateFilterClick]] }),
+                waiting_transfer_approval: new fields.element({ events: [['click', this._onStateFilterClick]] }),
                 transferred: new fields.element({ events: [['click', this._onStateFilterClick]] })
             },
             sort: new fields.selection({ 
@@ -1257,7 +1258,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleVehicleHolder: function() {
         const id = this.state.id;
-        if (this.values.ads[id].state === 'waiting_official_sale_img') {
+        if (this.values.ads[id].state === 'waiting_official_sale_img' || this.values.ads[id].state === 'waiting_transfer_approval' || this.values.ads[id].state === 'transferred') {
             this.state.status = 'success';
             this._onChangeStep(5);
         } else {
@@ -1270,7 +1271,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleSellerHolder: function() {
         const id = this.state.id;
-        if (this.values.ads[id].state === 'waiting_official_sale_img') {
+        if (this.values.ads[id].state === 'waiting_official_sale_img' || this.values.ads[id].state === 'waiting_transfer_approval' || this.values.ads[id].state === 'transferred') {
             this.state.status = 'success';
             this._onChangeStep(5);
         } else {
@@ -1670,7 +1671,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             if (value.state === 'new') {
                 stateClass = 'success';
                 stateLabel = _t('New');
-            } else if (value.state === 'waiting_official_sale_img') {
+            } else if (value.state === 'waiting_official_sale_img' || value.state === 'waiting_transfer_approval' || value.state === 'transferred') {
                 stateClass = 'danger';
                 stateLabel = _t('Sold');
             } else {
@@ -2978,6 +2979,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             if (state === 'new') activeBtn.addClass('btn-success');
             else if (state === 'waiting') activeBtn.addClass('btn-warning');
             else if (state === 'waiting_official_sale_img') activeBtn.addClass('btn-info');
+            else if (state === 'waiting_transfer_approval') activeBtn.addClass('btn-info');
             else if (state === 'transferred') activeBtn.addClass('btn-primary');
             else activeBtn.addClass('btn-secondary');
         }

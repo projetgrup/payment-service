@@ -522,6 +522,7 @@ class PayloxSystemEscrowController(Controller):
                 'type': 'binary',
             })
             ad.escrow_ad_official_sale_img = file['data']
+            ad.write ({'escrow_state': 'waiting_transfer_approval'})
             body = _('User has uploaded official sale image. User IP Address is %s') % (request.httprequest.remote_addr,)
             ad.message_post(body=body, attachment_ids=attachment.ids)
             return {'success': True, 'message': 'Official sale image uploaded successfully'}
