@@ -1056,7 +1056,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 window.history.replaceState(null, '', window.location.pathname);
             }
         }
-        console.log(this.state);
         this._onChangeStep(this.state.step, { init: true });
     },
 
