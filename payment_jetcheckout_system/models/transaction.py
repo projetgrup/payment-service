@@ -170,17 +170,18 @@ class PaymentTransaction(models.Model):
                     time = now.replace(hour=hour, minute=0, second=0, microsecond=0)
                     if pre < time <= now:
                         today = now.replace(hour=0, minute=0, second=0, microsecond=0) + tz.utcoffset(now)
+                        txt = self.export_txt([
+                            ('create_date', '>=', today - timedelta(days=1)),
+                            ('create_date', '<', today),
+                            ('company_id', '=', company.id),
+                            ('company_id.parent_id', '=', company.id),
+                        ])
                         context = self.env.context.copy()
                         mail_server = company.mail_server_id
                         email_from = mail_server.email_formatted or company.email_formatted
                         context.update({'server': mail_server, 'from': email_from, 'company': company})
                         mail_template = self.env.ref('payment_jetcheckout_system.mail_template_export_txt')
                         for partner in company.payment_transaction_export_txt_cron_user_ids.mapped('partner_id'):
-                            txt = self.export_txt([
-                                ('create_date', '>=', today - timedelta(days=1)),
-                                ('create_date', '<', today),
-                                ('company_id', 'in', partner.user_ids.mapped('company_ids').ids),
-                            ])
                             context.update({
                                 'partner': partner,
                                 'lang': partner.lang,
