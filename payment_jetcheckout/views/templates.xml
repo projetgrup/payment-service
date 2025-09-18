@@ -614,6 +614,22 @@
         </t>
     </template>
 
+    <template id="page_popup_result" name="PoS Payment Popup Result">
+        <t t-call="web.layout">
+            <script>
+                const x = new URL(window.location.href);
+                const y = x.searchParams.get('');
+                window.parent.location.assign(decodeURIComponent(y));
+            </script>
+            <!--<script>
+                const result = window.<t t-raw="window"/>.document.getElementById('paymentResult');
+                result.value = '<t t-raw="result"/>';
+                result.dispatchEvent(new Event('change'));
+                <t t-if="window == 'opener'">window.close();</t>
+            </script>-->
+        </t>
+    </template>
+
     <template id="page_ledger" name="Paylox Partner Ledger">
         <t t-call="web.frontend_layout">
             <t t-set="title" t-value="website.name"/>

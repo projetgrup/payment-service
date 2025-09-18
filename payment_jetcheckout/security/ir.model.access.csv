@@ -8,6 +8,7 @@ jetcheckout_campaign_manager,jetcheckout_campaign_manager,model_payment_acquirer
 jetcheckout_import_manager,jetcheckout_import_manager,model_payment_transaction_import,account.group_account_manager,1,1,1,1
 jetcheckout_import_manager_line,jetcheckout_import_manager_line,model_payment_transaction_import_line,account.group_account_manager,1,1,1,1
 paylox_refund,paylox_refund,model_payment_acquirer_jetcheckout_refund,base.group_user,1,1,1,1
+paylox_postauth,paylox_postauth,model_payment_acquirer_jetcheckout_postauth,base.group_user,1,1,1,1
 paylox_installment,paylox_installment,model_payment_acquirer_jetcheckout_installment,base.group_user,1,0,0,0
 jetcheckout_status,jetcheckout_status,model_payment_acquirer_jetcheckout_status,base.group_user,1,1,1,1
 jetcheckout_prestatus,jetcheckout_prestatus,model_payment_acquirer_jetcheckout_prestatus,base.group_user,1,1,1,1
@@ -21,6 +22,7 @@ log_user,log_user,model_payment_paylox_log,base.group_user,1,0,0,0
 log_service_user,log_service_user,model_payment_paylox_log_service,base.group_user,1,0,0,0
 
 payment_transaction_product_user,payment_transaction_product_user,model_payment_transaction_product,base.group_user,1,0,0,0
+payment_transaction_basket_user,payment_transaction_basket_user,model_payment_transaction_basket,base.group_user,1,0,0,0
 jetcheckout_credit_product_category_user,jetcheckout_credit_product_category_user,model_product_category_jetcheckout_credit,base.group_user,1,0,0,0
 
 jetcheckout_signin,jetcheckout_signin,model_payment_acquirer_jetcheckout_signin,account.group_account_invoice,1,1,1,1

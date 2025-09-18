@@ -174,8 +174,8 @@ class PaymentTransaction(models.Model):
                             ('create_date', '>=', today - timedelta(days=1)),
                             ('create_date', '<', today),
                             ('company_id', '=', company.id),
+                            ('company_id.parent_id', '=', company.id),
                         ])
-
                         context = self.env.context.copy()
                         mail_server = company.mail_server_id
                         email_from = mail_server.email_formatted or company.email_formatted

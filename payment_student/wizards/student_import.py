@@ -176,7 +176,7 @@ class PaymentStudentImport(models.TransientModel):
                         'code': line.program_code,
                         'company_id': company.id,
                     })
-
+                    
             domain = []
             term = self.env['res.student.term']
             if line.term_name:
@@ -210,7 +210,7 @@ class PaymentStudentImport(models.TransientModel):
             students = self.env['res.partner'].with_context({'no_vat_validation': True, 'active_system': 'student'}).sudo().with_context(**context)
             student = students.search([
                 ('vat', '!=', False),
-                ('vat', '=', line.vat)
+                ('vat', '=', line.vat),
                 ('parent_id', '!=', False),
                 ('company_id', '=', company.id),
             ])
@@ -240,7 +240,7 @@ class PaymentStudentImport(models.TransientModel):
             }
             if self.env.context.get('active_subsystem') not in ('student_university',):
                 parent = self.env['res.partner'].sudo().search([
-                    ('parent_id', '!=', False),
+                    ('parent_id', '=', False),
                     ('company_id', '=', company.id),
                     ('email', '=', line.parent_email)
                 ], limit=1)
@@ -259,7 +259,9 @@ class PaymentStudentImport(models.TransientModel):
                     'parent_id': parent.id,
                 })
             if student:
-                student.write(values)
+                values.pop('parent_id', None)
+                student.with_context(skip_student_vat_check=True).write(values)
+                # student.with_context(skip_student_vat_check=True).write(values)
             else:
                 student = students.create(values)
 

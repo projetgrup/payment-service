@@ -88,6 +88,7 @@ class SmsApi(models.AbstractModel):
 
         response = requests.post(url, data=data.encode('utf-8'), headers=HEADERS)
         code, id, *args = self._process_netgsm_sms(response.text)
+
         if code.startswith('0'):
             return [{'res_id': message['res_id'], 'state': 'success'} for message in messages]
         else:

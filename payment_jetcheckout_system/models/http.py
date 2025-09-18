@@ -44,24 +44,26 @@ class Http(models.AbstractModel):
         self._get_current_system()
         res = super(Http, self).session_info()
 
-        if request.env.user.has_group('base.group_user'):
-            company_ids = request.env.user.company_ids
-            child_ids = self.env['res.company'].sudo().search([('parent_id', 'in', company_ids.ids)])
-            for child in child_ids:
-                if child.id not in res['user_companies']['allowed_companies']:
-                    res['user_companies']['allowed_companies'].update({
-                        child.id: {
-                            'id': child.id,
-                            'name': child.name,
-                            'sequence': child.sequence,
-                        }})
+        if self.env.user.has_group('base.group_user'):
+            company_ids = self.env.user.company_ids
+            companies_ids = self.env['res.company'].sudo()
+            if self.env.user.has_group('payment_jetcheckout_system.group_system_manager'):
+                companies_ids = companies_ids.search([('parent_id', 'in', company_ids.ids)])
+                for company in companies_ids:
+                    if company.id not in res['user_companies']['allowed_companies']:
+                        res['user_companies']['allowed_companies'].update({
+                            company.id: {
+                                'id': company.id,
+                                'name': company.name,
+                                'sequence': company.sequence,
+                            }})
 
-            for company in (company_ids | child_ids):
+            for company in (company_ids | companies_ids):
                 res['user_companies']['allowed_companies'][company.id].update({
                     'is_audit_enabled': company.sec_audit_ok,
                     'parent_id': company.parent_id.id,
                     'disabled': company.id not in company_ids.ids,
-                    'child_ids' : company.env['res.company'].sudo().search([('parent_id', '=', company.id)]).ids
+                    'child_ids' : companies_ids.search([('parent_id', '=', company.id)]).ids
                 })
 
         if res['user_context'].get('system'):

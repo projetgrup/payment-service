@@ -61,6 +61,19 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="conveyance_show_link"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="conveyance_show_link" string="Conveyance Document"/>
+                            <div class="text-muted">
+                                Show Conveyance Document
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </xpath>

@@ -110,7 +110,7 @@
                         <field name="group_show_campaign_button"/>
                         <field name="group_transaction_commission"/>
                         <field name="group_transaction_cancel"/>
-                        <field name="group_transaction_refund"/>
+                        <field name="group_transaction_postauth"/>
                     </group>
                     <group string="Other" name="other">
                         <field name="payment_page_item_priority" invisible="1"/>

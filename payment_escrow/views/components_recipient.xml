@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="customer_corporate" name="Customer Corporate Section">
+        <div class="form__group">
+            <label class="form__label" for="customer_corporate_title">Company Title</label>
+            <input class="form__control -letter" name="customer_corporate_title" id="customer_corporate_title" type="text" placeholder="Company Title" value="" field="customer.input.corporate_title"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_tax_number">Tax Number</label>
+            <input class="form__control -letter" name="customer_tax_number" id="customer_tax_number" type="text" placeholder="Tax Number" value="" field="customer.input.tax_number"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_tax_office">Tax Office</label>
+            <input class="form__control -letter" name="customer_tax_office" id="customer_tax_office" type="text" placeholder="Tax Office" value="" field="customer.input.tax_office"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_address_corporate">Address</label>
+            <textarea class="form__control -letter" name="customer_address" id="customer_address_corporate" placeholder="Address" field="customer.input.address_corporate"></textarea>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_person">Authorized Person</label>
+            <input class="form__control -letter" name="customer_person" id="customer_person" type="text" placeholder="Authorized Person" value="" field="customer.input.corporate_person"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_phone_corporate">Authorized Mobile Phone</label>
+            <input class="form__control -letter" name="customer_phone" id="customer_phone_corporate" type="text" placeholder="e.g: 532 123 3456" value="" field="customer.input.phone_corporate"/>
+            <i class="form__icon fa" aria-hidden="true"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_email_corporate">Authorized Email</label>
+            <input class="form__control -letter" name="customer_email" id="customer_email_corporate" type="email" placeholder="example@mail.com" value="" field="customer.input.email_corporate"/>
+        </div>
+    </template>
+
+    <template id="customer_individual" name="Customer Individual Section">
+        <div class="form__group">
+            <label class="form__label" for="customer_identity">Identity Number</label>
+            <input class="form__control -letter" name="customer_identity" id="customer_identity" type="text" placeholder="T.C. Identity Number" value="" field="customer.input.tc"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_name_surname">Full Name</label>
+            <input class="form__control -letter" name="customer_name_surname" id="customer_name_surname" type="text" placeholder="Full Name" value="" field="customer.input.name"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_phone_individual">Phone Number</label>
+            <input class="form__control -letter" name="customer_phone" id="customer_phone_individual" type="text" placeholder="Exp: 532 123 3456" value="" field="customer.input.phone_individual"/>
+            <i class="form__icon fa" aria-hidden="true"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_email_individual">E-mail</label>
+            <input class="form__control -letter" name="customer_email" id="customer_email_individual" type="email" placeholder="test@mail.com" value="" field="customer.input.email_individual"/>
+        </div>
+        <div class="form__group">
+            <label class="form__label" for="customer_address_individual">Address</label>
+            <textarea class="form__control -letter" name="customer_address" id="customer_address_individual" placeholder="Address" field="customer.input.address_individual"></textarea>
+        </div>
+    </template>
+</odoo>

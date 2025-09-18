@@ -606,7 +606,9 @@ class PayloxController(http.Controller):
                 "campaign_name": campaign or self._get_campaign() or acquirer._get_campaign_name(int(partner))
             })
 
-        values = {'type': type}
+        values = {
+            'type': type,
+        }
         if loggable:
             log = {
                 'partner': client and client.id or None,
@@ -669,6 +671,7 @@ class PayloxController(http.Controller):
                                     'min': installment['min_amount'],
                                     'max': installment['max_amount'],
                                     'plus': installment['plus_installment'],
+                                    'additional_rate': installment['additional_rate'],
                                     'pdesc': installment['plus_installment_description'],
                                     'idesc': self._get_installment_description(installment),
                                     'count': installment['installment_count'] + installment['plus_installment'],'irate': -rate if rate > 0 and installment['installment_count'] == 1 else 0.0,
@@ -1204,7 +1207,6 @@ class PayloxController(http.Controller):
                     tx.message_post(body='\n'.join(map(str, messages)))
             except Exception as e:
                 _logger.error('An error occured when informing transaction %s: %s' % (tx.reference, e))
-
         return url, tx, False
 
     @http.route('/payment/acquirer', type='json', auth='user', website=True)
@@ -1422,6 +1424,7 @@ class PayloxController(http.Controller):
                 'jetcheckout_card_family': 'family' in kwargs['card'] and kwargs['card']['family'].capitalize() or False,
                 'jetcheckout_payment_amount': amount,
                 'jetcheckout_installment_count': installment['count'],
+                'jetcheckout_additional_rate': installment['additional_rate'] * -1,
                 'jetcheckout_installment_plus': installment['plus'],
                 'jetcheckout_installment_description': installment['idesc'],
                 'jetcheckout_installment_amount': amount / installment['count'] if installment['count'] > 0 else amount,
@@ -1563,6 +1566,19 @@ class PayloxController(http.Controller):
                 data.update({'is_preauth': True})
 
             data.update(self._get_data_values(data, tx, **kwargs))
+            if 'customer_basket' in data:
+                tx.write({'paylox_basket_ids': [(0, 0, {
+                    'uid': basket.get('id'),
+                    'name': basket.get('name'),
+                    'description': basket.get('description'),
+                    'qty': basket.get('qty'),
+                    'amount': basket.get('amount'),
+                    'physical': basket.get('is_physical'),
+                    'category': basket.get('category'),
+                    'submerchant_external_id': basket.get('submerchant_external_id'),
+                    'submerchant_price': basket.get('submerchant_price'),
+                }) for basket in data['customer_basket']]})
+
             response = requests.post(url, data=json.dumps(data))
             result = None
 
@@ -1608,7 +1624,10 @@ class PayloxController(http.Controller):
                     if isinstance(result.get('virtual_pos_name'), str):
                         values.update({'jetcheckout_vpos_name': result['virtual_pos_name']})
                     tx.write(values)
-                    return {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
+                    res = {'url': '%s/%s' % (rurl, txid), 'id': tx.id}
+                    if tx.company_id.payment_page_init_popup_ok:
+                        res.update({'popup': True})
+                    return res
                 elif result['response_code'] == "00":
                     url, tx, status = self._process(tx=tx, **result)
                     #company = tx.company_id.root_id
@@ -2429,7 +2448,13 @@ class PayloxController(http.Controller):
         url, tx, status = self._process(**kwargs)
         if not status and tx.jetcheckout_order_id:
             url += '?=%s' % tx.jetcheckout_order_id
+        if tx.company_id.payment_page_init_popup_ok:
+            return werkzeug.utils.redirect('/payment/popup/result?=%s' % quote_plus(url))
         return werkzeug.utils.redirect(url)
+
+    @http.route(['/payment/popup/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
+    def popup_result(self, **kwargs):
+        return request.render('payment_jetcheckout.page_popup_result', {})
 
     @http.route(['/payment/result'], type='http', auth='public', methods=['GET'], website=True, csrf=False, sitemap=False)
     def result(self, **kwargs):
@@ -2515,6 +2540,8 @@ class PayloxController(http.Controller):
         url, tx, status = self._process(**kwargs)
         if not status and tx.jetcheckout_order_id:
             url += '?=%s' % tx.jetcheckout_order_id
+        if tx.company_id.payment_page_init_popup_ok:
+            return werkzeug.utils.redirect('/payment/popup/result?=%s' % quote_plus(url))
         return werkzeug.utils.redirect(url)
 
     @http.route('/payment/card/custom/<int:record>/<string:access_token>', type='http', auth='public', methods=['GET', 'POST'], csrf=False, sitemap=False, save_session=False)

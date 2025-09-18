@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_select_holder_diff" name="Payment Select Holder Different">
+        <div class="selectCartType">
+            <div class="switch -small">
+                <input type="checkbox" name="checkPoint" class="switchControl" id="checkPoint" field="payment.different.holder"/>
+                <label for="checkPoint"></label>
+            </div>
+            <div class="selectCartType__title">
+                <strong>Credit Card Holder and Recipient Information Different</strong>
+                <p>Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and customer information are different.</p>
+            </div>
+        </div>
+        
+        <!-- Payment Info Card Display -->
+        <div class="payment-info-card card border shadow-sm mb-4" style="display:none;" field="payment.different.info.container">
+            <div class="card-header bg-light py-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h6 class="mb-0 text-primary font-weight-bold">
+                        <i class="fa fa-credit-card mr-2"/>
+                        Credit Card Holder Information
+                    </h6>
+                    <button type="button" class="btn btn-sm btn-primary" field="payment.different.info.edit">
+                        <i class="fa fa-edit mr-1"/>
+                        Edit
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-item mb-3">
+                            <span class="text-muted small">Identity Number</span>
+                            <div class="font-weight-bold" field="payment.different.info.display.tc">-</div>
+                        </div>
+                        <div class="info-item mb-3">
+                            <span class="text-muted small">Full Name</span>
+                            <div class="font-weight-bold" field="payment.different.info.display.name">-</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item mb-3">
+                            <span class="text-muted small">Phone Number</span>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="font-weight-bold" field="payment.different.info.display.phone">-</div>
+                                <i class="form__icon fa" aria-hidden="true"/>
+                            </div>
+                        </div>
+                        <div class="info-item mb-3">
+                            <span class="text-muted small">E-mail</span>
+                            <div class="font-weight-bold" field="payment.different.info.display.email">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment Info Edit Form -->
+        <div class="payment-info-edit card border shadow-sm mb-4" style="display:none" field="payment.different.info.form">
+            <div class="card-header bg-light py-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h6 class="mb-0 text-primary font-weight-bold">
+                        <i class="fa fa-edit mr-2"/>
+                        Edit Credit Card Holder Information
+                    </h6>
+                    <button type="button" class="btn btn-sm btn-outline-secondary d-flex align-items-center" field="payment.different.info.cancel">
+                        <i class="fa fa-times mr-1"/>
+                        Cancel
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form__group">
+                            <label class="form__label" for="payment_different_info_tc">Identity Number</label>
+                            <input class="form__control -letter" name="payment_different_info_tc" id="payment_different_info_tc" type="text" placeholder="T.C. Identity Number" value="" field="payment.different.info.tc"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="payment_different_info_name">Full Name</label>
+                            <input class="form__control -letter" name="payment_different_info_name" id="payment_different_info_name" type="text" placeholder="Full Name" value="" field="payment.different.info.name"/>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form__group">
+                            <label class="form__label" for="payment_different_info_phone">Phone Number</label>
+                            <input class="form__control -letter" name="payment_different_info_phone" id="payment_different_info_phone" type="text" placeholder="Exp: 532 123 3456" value="" field="payment.different.info.phone"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="payment_different_info_email">E-mail</label>
+                            <input class="form__control -letter" name="payment_different_info_email" id="payment_different_info_email" type="email" placeholder="test@mail.com" value="" field="payment.different.info.email"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" field="payment.different.info.save">
+                                <i class="fa fa-save mr-1"/>
+                                Save Information
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- <div field="payment.different.info.container" style="display:none">
+            <div class="form__group">
+                <label class="form__label" for="payment_different_info_tc">Identity Number</label>
+                <input class="form__control -letter" name="payment_different_info_tc" id="payment_different_info_tc" type="text" placeholder="T.C. Identity Number" value="" field="payment.different.info.tc"/>
+            </div>
+            <div class="form__group">
+                <label class="form__label" for="payment_different_info_name">Full Name</label>
+                <input class="form__control -letter" name="payment_different_info_name" id="payment_different_info_name" type="text" placeholder="Full Name" value="" field="payment.different.info.name"/>
+            </div>
+            <div class="form__group">
+                <label class="form__label" for="payment_different_info_phone">Phone Number</label>
+                <input class="form__control -letter" name="payment_different_info_phone" id="payment_different_info_phone" type="text" placeholder="Exp: 532 123 3456" value="" field="payment.different.info.phone"/>
+            </div>
+            <div class="form__group">
+                <label class="form__label" for="payment_different_info_email">E-mail</label>
+                <input class="form__control -letter" name="payment_different_info_email" id="payment_different_info_email" type="email" placeholder="test@mail.com" value="" field="payment.different.info.email"/>
+            </div>
+        </div> -->
+    </template>
+    <template id="payment_partial_price" name="Payment Partial Price">
+        <div class="partialPrice">
+            <form id="partialPriceForm">
+                <div class="priceBox">
+                    <div class="form__group">
+                        <label class="form__label" for="paymentAmount">Payment Amount</label>
+                        <input class="form__control" field="amount" name="paymentAmount" id="paymentAmount" type="text" placeholder="Payment Amount"/>
+                    </div>
+                </div>
+                <p>Remaining Balance: <strong id="remainingBalance" field="payment.amount.remaining">1.900.000 TL</strong>
+                </p>
+            </form>
+        </div>
+    </template>
+</odoo>

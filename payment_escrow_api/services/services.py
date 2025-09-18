@@ -333,7 +333,7 @@ class EscrowAPIService(Component):
                 'name': ad.name,
                 'default_code': ad.reference,
                 'description': ad.description,
-                'owner_id': owner.id,
+                'escrow_owner_id': owner.id,
                 'price': getattr(ad, 'price', 0.0),
             }
             if getattr(ad, 'images', []):
@@ -381,7 +381,7 @@ class EscrowAPIService(Component):
                 name=ad.name or '',
                 reference=ad.default_code or '',
                 description=ad.description or '',
-                owner=self._ads_read_owner(ad.owner_id),
+                owner=self._ads_read_owner(ad.escrow_owner_id),
                 price=ad.price or 0.0,
                 images=[base64.b64encode(ad.image_1920)] if ad.image_1920 else [],
             ) for ad in ads
@@ -416,38 +416,38 @@ class EscrowAPIService(Component):
                 values.update({'image_1920': ad.images and ad.images[0] or False})
             if getattr(ad, 'owner', None):
                 values_owner = {}
-                if _ad.owner_id.paylox_escrow_type != 'owner':
+                if _ad.escrow_owner_id.paylox_escrow_type != 'owner':
                     values_owner.update({'paylox_escrow_type': 'owner'})
-                if getattr(ad.owner, 'name', None) and _ad.owner_id.name != ad.owner.name:
+                if getattr(ad.owner, 'name', None) and _ad.escrow_owner_id.name != ad.owner.name:
                     values_owner.update({'name': ad.owner.name})
-                if getattr(ad.owner, 'vat', None) and _ad.owner_id.vat != ad.owner.vat:
+                if getattr(ad.owner, 'vat', None) and _ad.escrow_owner_id.vat != ad.owner.vat:
                     values_owner.update({'vat': ad.owner.vat})
-                if getattr(ad.owner, 'taxOffice', None) and _ad.owner_id.paylox_tax_office != ad.owner.taxOffice:
+                if getattr(ad.owner, 'taxOffice', None) and _ad.escrow_owner_id.paylox_tax_office != ad.owner.taxOffice:
                     values_owner.update({'paylox_tax_office': ad.taxOffice})
-                if getattr(ad.owner, 'email', None) and _ad.owner_id.email != ad.owner.email:
+                if getattr(ad.owner, 'email', None) and _ad.escrow_owner_id.email != ad.owner.email:
                     values_owner.update({'email': ad.owner.email})
-                if getattr(ad.owner, 'phone', None) and _ad.owner_id.phone != ad.owner.phone:
+                if getattr(ad.owner, 'phone', None) and _ad.escrow_owner_id.phone != ad.owner.phone:
                     values_owner.update({'phone': ad.owner.phone})
-                if hasattr(ad.owner, 'country') and _ad.owner_id.country_id.code != ad.owner.country:
+                if hasattr(ad.owner, 'country') and _ad.escrow_owner_id.country_id.code != ad.owner.country:
                     country = self.env['res.country'].sudo().search([('code', '=', ad.owner.country)], limit=1)
                     if not country:
                         raise MissingError(_('Country %s cannot be found') % ad.owner.country)
                     values_owner.update({'country_id': country.id})
-                if hasattr(ad.owner, 'state') and _ad.owner_id.state_id.code != ad.owner.state:
-                    state = self.env['res.country.state'].sudo().search([('country_id', '=', values_owner.get('country_id', _ad.owner_id.country_id.code)), ('code', '=', ad.owner.state)], limit=1)
+                if hasattr(ad.owner, 'state') and _ad.escrow_owner_id.state_id.code != ad.owner.state:
+                    state = self.env['res.country.state'].sudo().search([('country_id', '=', values_owner.get('country_id', _ad.escrow_owner_id.country_id.code)), ('code', '=', ad.owner.state)], limit=1)
                     if not state:
                         raise MissingError(_('State %s cannot be found') % ad.owner.country)
                     values_owner.update({'state_id': state.id})
-                if hasattr(ad.owner, 'city') and _ad.owner_id.city != ad.owner.city:
+                if hasattr(ad.owner, 'city') and _ad.escrow_owner_id.city != ad.owner.city:
                     values_owner.update({'city': ad.owner.city or False})
-                if hasattr(ad.owner, 'address') and _ad.owner_id.street != ad.owner.address:
+                if hasattr(ad.owner, 'address') and _ad.escrow_owner_id.street != ad.owner.address:
                     values_owner.update({'street': ad.owner.address or False})
-                if hasattr(ad.owner, 'zip') and _ad.owner_id.zip != ad.owner.zip:
+                if hasattr(ad.owner, 'zip') and _ad.escrow_owner_id.zip != ad.owner.zip:
                     values_owner.update({'zip': ad.owner.zip or False})
                 if hasattr(ad.owner, 'banks'):
                     values_banks = []
                     for bank in ad.owner.banks:
-                        banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _ad.owner_id.id)])
+                        banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _ad.escrow_owner_id.id)])
                         iban = sanitize_account_number(bank.iban)
                         _bank = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
                         if _bank:
@@ -467,7 +467,7 @@ class EscrowAPIService(Component):
                     if values_banks:
                         values_owner.update({'bank_ids': values_banks})
                 if values_owner:
-                    _ad.owner_id.write(values_owner)
+                    _ad.escrow_owner_id.write(values_owner)
             if values:
                 _ad.write(values)
             ads.append(dict(id=_ad.uid, reference=_ad.default_code))

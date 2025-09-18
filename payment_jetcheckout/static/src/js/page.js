@@ -13,7 +13,7 @@ import cardPrograms from 'paylox.card.programs';
 
 publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     selector: '#payment_card',
-    jsLibs: ['/payment_jetcheckout/static/src/lib/imask.js'],
+    jsLibs: ['/payment_jetcheckout/static/src/lib/imask/imask.js'],
     xmlDependencies: ['/payment_jetcheckout/static/src/xml/templates.xml'],
 
     init: function (parent, options) {
@@ -389,7 +389,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             delete mask.min;
             delete mask.signed;
         }
-        return mask
+        return mask;
     },
 
     _maskDate: function () {
@@ -892,7 +892,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
             this.campaign.name.value = $input.data('campaign');
             this.campaign.name.$.trigger('change');
-        } 
+        }
     },
 
     _onClickInstallmentCredit: function (ev) {
@@ -1048,6 +1048,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                     type: result.type,
                                     cols: result.cols,
                                     s2s: self.payment.s2s.value,
+                                    //hideRate: self.payment.hideRate.value,
                                 });
                             }
                             self.installment.cols = result.cols;
@@ -1060,9 +1061,12 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                                 rows: result.rows,
                                 value: self.amount.value,
                                 s2s: self.payment.s2s.value,
+                                //hideRate: self.payment.hideRate.value,
                                 format: format,
                                 ...self.currency,
                             });
+
+                            self.installment.row.$.find('.installment-selected').trigger('click');
 
                             if (self.installment.summary.exist) {
                                 self.installment.summary.html = qweb.render('paylox.installment.summary', {
@@ -1477,7 +1481,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 const installmentData = this._getInstallmentData();
                 const installmentCount = installmentData.id || 1;
                 const row = this._getInstallmentRow(installmentCount);
-                const installmentRate = row.crate;
+                const installmentRate = row?.crate || 0;
                 if (installmentRate > 0) {
                     const advisor = (advice) => {
                         if (advice === 1) {
@@ -1559,7 +1563,11 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 params: this._getParams(),
             }).then((result) => {
                 if ('url' in result) {
-                    window.location.assign(result.url);
+                    if (result.popup) {
+                        this._openInitPopup(result.url, result.id);
+                    } else {
+                        window.location.assign(result.url);
+                    }
                 } else {
                     this.displayNotification({
                         type: 'danger',
@@ -1584,6 +1592,77 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
             });
         }
         return false;
+    },
+
+    _openInitWindow: function(url, transactionId) {
+        const self = this;
+        
+        const popup = window.open(
+            url,
+            '3DSecurePopup',
+            'width=600,height=500,scrollbars=yes,resizable=yes,status=yes,location=yes'
+        );
+        
+        if (!popup) {
+            window.location.assign(url);
+            return;
+        }
+        const checkPopup = setInterval(() => {
+            if (popup.closed) {
+                clearInterval(checkPopup);
+                rpc.query({
+                    route: '/payment/status/' + transactionId,
+                    params: {}
+                }).then((result) => {
+                    if (result.status === 'done') {
+                        window.location.assign('/my/ads?step=5');
+                    } else if (result.status === 'error' || result.status === 'cancel') {
+                        framework.hideLoading();
+                        self.displayNotification({
+                            type: 'danger',
+                            title: _t('Payment Failed'),
+                            message: _t('Your payment could not be processed. Please try again.'),
+                        });
+                    } else {
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                }).guardedCatch(() => {
+                    framework.hideLoading();
+                    self.displayNotification({
+                        type: 'danger',
+                        title: _t('Error'),
+                        message: _t('An error occurred while checking payment status.'),
+                    });
+                });
+            }
+        }, 1000);
+        
+        setTimeout(() => {
+            if (!popup.closed) {
+                popup.close();
+                clearInterval(checkPopup);
+                framework.hideLoading();
+                self.displayNotification({
+                    type: 'warning',
+                    title: _t('Timeout'),
+                    message: _t('Payment process timed out. Please try again.'),
+                });
+            }
+        }, 600000);
+    },
+
+    _openInitPopup: function(url, txid) {
+        const popup = new dialog(this, {
+            $content: qweb.render('paylox.init.popup', { url }),
+            dialogClass: 'o_payment_init_popup',
+            technical: false,
+        });
+        popup.open();
+        popup.on_detach_callback = () => {
+            framework.hideLoading();
+        };
     },
 
     _onClickPaymentContactless: function() {

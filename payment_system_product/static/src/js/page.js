@@ -322,7 +322,6 @@ publicWidget.registry.payloxSystemProduct = systemPage.extend({
 
         if (this._listenPriceActive) {
             const events = new EventSource('/longpolling/prices');
-            console.log('Price service is active.');
             events.onmessage = (event) => {
                 let changed = false;
                 let $prices = this.product.price.$;

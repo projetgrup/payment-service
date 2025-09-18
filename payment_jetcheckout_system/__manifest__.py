@@ -22,6 +22,8 @@
     ],
     'data': [
         'data/data.xml',
+        'security/security.xml',
+        'security/ir.model.access.csv',
         'views/dashboard.xml',
         'views/company.xml',
         'views/acquirer.xml',
@@ -44,8 +46,6 @@
         'wizards/item.xml',
         'wizards/follower.xml',
         'wizards/item_import.xml',
-        'security/security.xml',
-        'security/ir.model.access.csv',
     ],
     'assets': {
         'web.assets_qweb': [

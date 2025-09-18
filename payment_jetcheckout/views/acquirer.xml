@@ -255,4 +255,29 @@
         </form>
     </field>
     </record>
+
+    <record id="form_postauth" model="ir.ui.view">
+    <field name="name">payment.acquirer.jetcheckout.postauth.form</field>
+    <field name="model">payment.acquirer.jetcheckout.postauth</field>
+    <field name="arch" type="xml">
+        <form string="Post-Authorization">
+            <group>
+                <group>
+                    <p class="h3 text-center">Please enter <strong>post authorization</strong> amount</p>
+                </group>
+                <group>
+                    <field name="total"/>
+                    <field name="amount" required="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="transaction_id" invisible="1"/>
+                </group>
+            </group>
+            <footer>
+                <button name="confirm" type="object" class="btn-primary text-uppercase" string="Confirm" icon="fa-check"/>
+                <button name="draft" type="object" class="btn-secondary text-uppercase" string="Create" icon="fa-plus" groups="base.group_system"/>
+                <button special="cancel" class="btn-secondary text-uppercase" string="Close" icon="fa-times"/>
+            </footer>
+        </form>
+    </field>
+    </record>
 </odoo>

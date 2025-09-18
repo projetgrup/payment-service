@@ -432,6 +432,28 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_init_popup_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_init_popup_ok" string="Open 3D Links in Popup"/>
+                                    <div class="text-muted">
+                                        Redirect 3D links into a popup
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_installment_table_hide_rate"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_installment_table_hide_rate" string="Hide Rate on Installment Table"/>
+                                    <div class="text-muted">
+                                        Hide commission rate column in installment table
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('payment_log_opt', '=', False)]}">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_log_ok"/>

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# Copyright © 2024 Projet (https://bulutkobi.io)
+# Copyright © 2025 Projet (https://bulutkobi.io)
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 # Set nginx settings to 'proxy_cookie_path / "/; secure; SameSite=none";'
 
 {
     'name': 'Paylox Payment Acquirer',
-    'version': '1.14',
+    'version': '1.15',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
@@ -35,7 +35,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_jetcheckout/static/src/lib/imask.js',
+            'payment_jetcheckout/static/src/lib/imask/imask.js',
             'payment_jetcheckout/static/src/scss/payment.scss',
             'payment_jetcheckout/static/src/xml/templates.xml',
             'payment_jetcheckout/static/src/js/tools.js',

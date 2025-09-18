@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright © 2022 Projet (https://bulutkobi.io)
+# Copyright © 2025 Projet (https://bulutkobi.io)
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Escrow Payment System',
@@ -8,23 +8,58 @@
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
     'category': 'Accounting/Payment Acquirers',
-    'depends': ['payment_syncops', 'payment_system_agreement', 'payment_system_sale'],
+    'depends': ['payment_syncops', 'payment_system_agreement', 'payment_system_sale', 'mail'],
     'data': [
         'security/security.xml',
+        'security/ir.model.access.csv',
         'data/data.xml',
-        'views/ad.xml',
+        'views/components_background.xml',
+        'views/components_header.xml',
+        'views/components_recipient.xml',
+        'views/components_payment.xml',
+        'views/components_ad_items.xml',
+        'views/product.xml',
         'views/sale.xml',
         'views/item.xml',
         'views/partner.xml',
+        'views/car_brand.xml',
+        'views/car_model.xml',
+        'views/installment_rate.xml',
         'views/actions.xml',
         'views/menu.xml',
+        'views/step_components.xml',
         'views/templates.xml',
         'views/settings.xml',
+        'wizards/sync.xml',
     ],
     'assets': {
         'web.assets_frontend': [
+            'payment_jetcheckout/static/src/lib/filepond/filepond.css',
+            'payment_jetcheckout/static/src/lib/filepond/filepond.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_image_preview.css',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_image_preview.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_image_edit.css',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_image_edit.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_image_crop.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_image_exif_orientation.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_image_resize.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_image_transform.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_validate_type.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_validate_size.js',
+            'payment_jetcheckout/static/src/lib/filepond/filepond_file_encode.js',
             'payment_escrow/static/src/scss/page.scss',
             'payment_escrow/static/src/js/page.js',
+            'payment_escrow/static/src/js/system.js',
+        ],
+        'web.assets_qweb': [
+            'payment_escrow/static/src/xml/templates.xml',
+            'payment_escrow/static/src/xml/button.xml',
+        ],
+        
+        'web.assets_backend': [
+            'payment_escrow/static/src/js/button.js',
+            'payment_escrow/static/src/js/view.js',
         ],
     },
+    'post_init_hook': 'post_init_hook',
 }

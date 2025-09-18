@@ -2,6 +2,24 @@
 'use strict';
 
 import wysiwygLoader from 'web_editor.loader';
+import { _t } from 'web.core';
+
+let FilePondInitialized = false;
+function initFilePond() {
+    try {
+        FilePond.registerPlugin(
+            FilePondPluginFileEncode,
+            FilePondPluginFileValidateType,
+            FilePondPluginFileValidateSize,
+            FilePondPluginImageExifOrientation,
+            FilePondPluginImagePreview,
+            FilePondPluginImageCrop,
+            FilePondPluginImageResize,
+            FilePondPluginImageTransform,
+            FilePondPluginImageEdit
+        );
+    } catch {}
+}
 
 class fields {
     constructor(options) {
@@ -9,6 +27,7 @@ class fields {
         this.$ = $();
         this._ = undefined;
         this._name = undefined;
+        this.valid = true;
         this.options = options || {};
     }
 
@@ -45,6 +64,16 @@ class fields {
             }
         }
 
+        if (this.validate) {
+            this.valid = false
+            this.$.on('input', () => {
+                this.valid = this.validate();
+            });
+            this.$.on('change', () => {
+                this.valid = this.validate();
+            });
+        }
+
         //this.$.prop('field', undefined);
     }
 
@@ -58,6 +87,10 @@ class fields {
 
     set value(v) {
         this.$.val(v);
+        if (this._) {
+            this._.updateValue();
+            this._.updateControl();
+        }
     }
 
     get checked() {
@@ -103,16 +136,69 @@ class boolean extends fields {}
 
 class element extends fields {}
 
+class file extends fields {
+    async start() {
+        super.start(...arguments);
+        const callbacks = {};
+        const props = {
+            ...callbacks,
+            allowImageEdit: true,
+            credits: false,
+            captureMethod: 'environment',
+            allowFileSizeValidation: false,
+            allowMultiple: this.options.allowMultiple || false,
+        }
+        if (this.options.maxFileSize) {
+            Object.assign(props, {
+                maxFileSize: this.options.maxFileSize,
+                allowFileSizeValidation: true,
+                labelMaxFileSizeExceeded: _t('File is too large'),
+                labelMaxFileSize: _t('Maximum file size is {filesize}'),
+                labelMaxTotalFileSizeExceeded: _t('Maximum total size exceeded'),
+                labelMaxTotalFileSize: _t('Maximum total file size is {filesize}'),
+            })
+        }
+
+        Object.assign(props, this.options);
+        if (!FilePondInitialized) initFilePond();
+        this._ = FilePond.create(this.$[0], props);
+        this.$ = $(this._.element);
+    }
+
+    get value() {
+        const file = this._.getFile();
+        return file ? file.getFileEncodeBase64String() : false;
+    }
+
+    set value(v) {
+        this._.addFile(v);
+    }
+
+    reset() {
+        this._.removeFile();
+    }
+}
 
 class html extends fields {
     async start() {
         super.start(...arguments);
-        wysiwygLoader.loadFromTextarea(this.options.parent, this.$[0], {
+        const wysiwyg = await wysiwygLoader.loadFromTextarea(this.options.parent, this.$[0], {
             resizable: true,
             userGeneratedContent: true,
         });
+        this.$ = wysiwyg.$editable;
+    }
+
+    get value() {
+        return this.$.html();
+    }
+
+    set value(v) {
+        this.$.html(v);
+        this.$.trigger('change');
     }
 }
+
 class selection extends fields {
     async start() {
         super.start(...arguments);
@@ -134,9 +220,13 @@ class selection extends fields {
         }
     }
 
+    get text() {
+        return this.$.data('select2').selection.text().trim();
+    }
+
     get value() {
         let value = this.$.val();
-        if ($.isNumeric(value)) return parseFloat(value);
+        if ($.isNumeric(value)) return parseInt(value);
         return value;
     }
 
@@ -157,6 +247,7 @@ class float extends fields {
 
     set value(v) {
         this.$.val(v);
+        this._.updateValue();
     }
 }
 
@@ -177,6 +268,7 @@ class integer extends float {
 export default {
     field: fields,
     string: string,
+    file: file,
     html: html,
     boolean: boolean,
     integer: integer,

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_transaction_form" model="ir.ui.view">
+    <field name="model">payment.transaction</field>
+    <field name="inherit_id" ref="payment.payment_transaction_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='jetcheckout_payment_amount']" position="after">
+            <label for="jetcheckout_additional_rate" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission"/>
+            <div class="mr-5 float-right" attrs="{'invisible': [('source_transaction_id', '!=', False)]}" groups="payment_jetcheckout.group_transaction_commission">
+                <field name="jetcheckout_additional_rate" class="pr-1"/>%
+            </div>
+            <field name="jetcheckout_different_card_holder" readonly="1" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+            <field name="jetcheckout_different_card_holder_id" readonly="1" attrs="{'invisible': [('source_transaction_id', '!=', False)]}"/>
+        </xpath>
+    </field>
+    </record>
+
+</odoo>

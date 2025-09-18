@@ -145,6 +145,7 @@ class PaymentSettings(models.TransientModel):
     payment_page_init_warning_commission_show_primary_advice = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_primary_advice', readonly=False)
     payment_page_init_warning_commission_show_secondary_advice = fields.Boolean(related='company_id.payment_page_init_warning_commission_show_secondary_advice', readonly=False)
     payment_page_init_warning_commission_description = fields.Html(related='company_id.payment_page_init_warning_commission_description', readonly=False)
+    payment_page_init_popup_ok = fields.Boolean(related='company_id.payment_page_init_popup_ok', readonly=False)
 
     payment_page_due_tag_ok = fields.Boolean(related='company_id.payment_page_due_tag_ok', readonly=False)
     payment_page_due_tag_ids = fields.One2many(related='company_id.payment_page_due_tag_ids', readonly=False)
@@ -153,6 +154,7 @@ class PaymentSettings(models.TransientModel):
     payment_page_campaign_table_ids = fields.Many2many(related='company_id.payment_page_campaign_table_ids', readonly=False)
     payment_page_campaign_table_included = fields.Boolean(related='company_id.payment_page_campaign_table_included', readonly=False)
     payment_page_campaign_table_opt = fields.Selection([('include', 'include'), ('exclude', 'exclude')], compute='_compute_payment_page_campaign_table_opt', inverse='_set_payment_page_campaign_table_opt', string='Campaigns on Campaign Table Included on Payment Page Option')
+    payment_page_installment_table_hide_rate = fields.Boolean(related='company_id.payment_page_installment_table_hide_rate', readonly=False)
 
     payment_page_advance_ok = fields.Boolean(related='company_id.payment_page_advance_ok', readonly=False)
     payment_page_button_access_transaction = fields.Boolean(related='company_id.payment_page_button_access_transaction', readonly=False)

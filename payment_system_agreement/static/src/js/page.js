@@ -132,6 +132,8 @@ payloxPage.include({
                 const popup = new dialog(this, {
                     title: a.name,
                     $content: $('<div/>').html(a.body),
+                    dialogClass: 'o_payment_agreement_popup',
+                    technical: false,
                     buttons: [{
                         text: _t('I have read and confirmed'),
                         classes: 'btn-primary o_btn_preview m-1 flex-fill',
