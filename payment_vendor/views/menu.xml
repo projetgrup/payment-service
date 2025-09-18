@@ -23,11 +23,15 @@
     <menuitem id="menu_mail_messages" action="payment_jetcheckout_system.action_mail_messages" parent="menu_messages" sequence="0"/>
     <menuitem id="menu_sms_messages" action="payment_jetcheckout_system.action_sms_messages" parent="menu_messages" sequence="1"/>-->
 
-    <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="5" groups="group_vendor_manager"/>
+    <menuitem id="menu_logs" name="Logs" parent="menu_main" sequence="5" groups="group_vendor_manager"/>
+    <menuitem id="menu_log_operation" action="payment_jetcheckout.action_log" name="Operation Logs" parent="menu_logs" sequence="0"/>
+    <menuitem id="menu_log_audit" action="sec_audit.action_audit" name="Audit Logs" parent="menu_logs" sequence="1"/>
+    <menuitem id="menu_log_job" action="queue_job.action_queue_job" name="Queue Jobs" parent="menu_logs" sequence="2"/>
+
+    <menuitem id="menu_conf" name="Configuration" parent="menu_main" sequence="6" groups="group_vendor_manager"/>
 
     <menuitem id="menu_companies" name="Company Settings" parent="menu_conf" sequence="1"/>
     <menuitem id="menu_settings" action="action_settings" name="Settings" parent="menu_conf" sequence="0"/>
-    <menuitem id="menu_log" action="payment_jetcheckout.action_log" name="Logs" parent="menu_conf" sequence="0"/>
 
     <menuitem id="menu_company" action="payment_jetcheckout_system.action_company_hierarchy" parent="menu_companies" sequence="1"/>
     <menuitem id="menu_user" action="payment_jetcheckout_system.action_user" parent="menu_companies" sequence="2"/>

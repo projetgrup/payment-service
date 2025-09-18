@@ -388,7 +388,8 @@ class PaymentTransaction(models.Model):
         if self.provider != 'jetcheckout':
             return
 
-        return self._paylox_api_postauth(self.amount)
+        amount = self.env.context.get('amount', 0)
+        return self._paylox_api_postauth(amount)
 
     def _paylox_api_postauth(self, amount):
         url = '%s/api/v1/payment/postauth' % self.acquirer_id._get_paylox_api_url()
