@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-extend="ListView.buttons" t-name="BrandListView.buttons">
+        <t t-jquery="div > t:last-child" t-operation="before">
+            <button type="button" class="btn btn-secondary o_button_sync_brand">
+                Sync Brands
+            </button>
+        </t>
+    </t>
+
+    <t t-name="payment_escrow.sync_buttons">
+        <div class="d-flex" role="toolbar" aria-label="Main actions">
+            <button type="button" class="btn btn-primary o_list_button_sync" title="Sync" accesskey="s">
+                Sync
+            </button>
+            <button type="button" class="btn btn-secondary o_list_button_discard" title="Discard" accesskey="j">
+                Discard
+            </button>
+        </div>
+    </t>
+</templates>

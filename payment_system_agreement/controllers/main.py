@@ -45,14 +45,12 @@ class PayloxAgreementController(Controller):
         else:
             if product_id:
                 domain += [('product_ids', 'in', [product_id])]
-            else:
-                domain += [('product_ids', '=', False)]
 
-            today = date.today()
-            domain += [
-                '|', ('date_start', '=', False), ('date_start', '<=', today),
-                '|', ('date_end', '=', False), ('date_end', '>=', today),
-            ]
+        today = date.today()
+        domain += [
+            '|', ('date_start', '=', False), ('date_start', '<=', today),
+            '|', ('date_end', '=', False), ('date_end', '>=', today),
+        ]
         return request.env['payment.agreement'].sudo().search(domain)
 
     def _get_tx_values(self, **kwargs):

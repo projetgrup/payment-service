@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import hashlib
 import traceback
 import logging
 import pytz
@@ -14,8 +15,50 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
+    jetcheckout_different_card_holder = fields.Boolean('Different Card Holder', readonly=True, copy=False)
+    jetcheckout_different_card_holder_id = fields.Many2one('res.partner', 'Different Card Holder', readonly=True, copy=False)
+
     paylox_notif_mail_state = fields.Boolean('Paylox Email Notification State', readonly=True)
     paylox_notif_sms_state = fields.Boolean('Paylox SMS Notification State', readonly=True)
+
+    conveyance_attachment_id = fields.Many2one('ir.attachment', 'Conveyance Form Attachment', readonly=True, copy=False)
+    conveyance_upload_date = fields.Datetime('Conveyance Upload Date', readonly=True, copy=False)
+
+    # Grouping helper for success vs failure in views
+    escrow_success_group = fields.Selection(
+        selection=[('successful', 'Successful'), ('unsuccessful', 'Unsuccessful')],
+        string='Escrow Success Group',
+        compute='_compute_escrow_success_group',
+        store=True,
+        index=True,
+        readonly=True,
+    )
+
+    @api.depends('state')
+    def _compute_escrow_success_group(self):
+        success_states = {'done'}
+        unsuccessful_states = {'error', 'cancel', 'expired'}
+        for tx in self:
+            if tx.state in success_states:
+                tx.escrow_success_group = 'successful'
+            elif tx.state in unsuccessful_states:
+                tx.escrow_success_group = 'unsuccessful'
+            else:
+                # Leave empty for other transient states (draft, pending, authorized, etc.)
+                tx.escrow_success_group = False
+
+    def _generate_access_token(self):
+        """Generate a secure access token for escrow payment URLs"""
+        self.ensure_one()
+        # Create token based on transaction ID, reference and current time
+        data = f"{self.id}-{self.reference or ''}-{self.create_date}-escrow"
+        return hashlib.sha256(data.encode()).hexdigest()[:32]
+    
+    def _verify_access_token(self, token):
+        """Verify the access token for escrow payment URLs"""
+        self.ensure_one()
+        expected_token = self._generate_access_token()
+        return token == expected_token
 
     def _paylox_done_postprocess(self):
         res = super()._paylox_done_postprocess()

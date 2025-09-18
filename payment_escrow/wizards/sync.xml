@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="escrow_brand_sync_line_view" model="ir.ui.view">
+    <field name="model">escrow.brand.sync.line</field>
+    <field name="name">escrow.brand.sync.line.tree</field>
+    <field name="arch" type="xml">
+        <tree js_class="sync_buttons">
+            <field name="escrow_car_brand_name"/>
+            <field name="escrow_car_brand_id"/>
+        </tree>
+    </field>
+    </record>
+</odoo>

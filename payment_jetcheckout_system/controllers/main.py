@@ -242,6 +242,7 @@ class PayloxSystemController(PayloxController):
         acquirer = self._get_acquirer(False, company)
         installment_type = self._get_type()
         campaign = transaction.jetcheckout_campaign_name if transaction else partner.campaign_id.name if partner else ''
+        raise Exception(partner.id)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         token = partner._get_token()
         tags = partner._get_tags()

@@ -162,6 +162,44 @@
                 </group>
             </group>
         </xpath>
+        <xpath expr="//field[@name='state_message']/.." position="before">
+            <notebook>
+                <page name="basket" string="Basket Items" attrs="{'invisible': [('paylox_basket_ids', '=', False)]}" groups="payment_jetcheckout_system.group_system_manager">
+                    <field name="paylox_basket_ids" readonly="1">
+                        <tree>
+                            <field name="uid"/>
+                            <field name="description"/>
+                            <field name="qty"/>
+                            <field name="amount"/>
+                            <field name="physical" optional="hide"/>
+                            <field name="category" optional="hide"/>
+                            <field name="name"/>
+                            <field name="submerchant_external_id" optional="hide"/>
+                            <field name="submerchant_price"/>
+                        </tree>
+                        <form>
+                            <sheet>
+                                <group>
+                                    <field name="uid"/>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                </group>
+                                <group>
+                                    <field name="qty"/>
+                                    <field name="amount"/>
+                                    <field name="category"/>
+                                    <field name="physical"/>
+                                </group>
+                                <group>
+                                    <field name="submerchant_external_id"/>
+                                    <field name="submerchant_price"/>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </page>
+            </notebook>
+        </xpath>
     </field>
     </record>
 

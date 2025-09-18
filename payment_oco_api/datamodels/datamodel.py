@@ -103,6 +103,18 @@ class OrderCheckoutPaymentQueryRequest(Datamodel):
     id = fields.String(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique number related to your specified record in your database for tracking the payment flow"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
 
 
+class OrderCheckoutReportPowerbiRequest(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "oco.report.powerbi.request"
+    _inherit = "payment.credential.apikey"
+
+    hash = fields.String(required=True, allow_none=False, metadata={"title": _lt("Hash Data"), "description": _lt("Calculated as the following: 'BASE64_ENCODE(SHA_256(APPLICATION_KEY + SECRET_KEY))'."), "example": "LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto="})
+    dateStart = fields.DateTime(required=True, allow_none=False, metadata={"title": _lt("Start Date"), "description": _lt("Filter transactions by start datetime"), "example": "2025-08-01 00:00:00"})
+    dateEnd = fields.DateTime(required=True, allow_none=False, metadata={"title": _lt("End Date"), "description": _lt("Filter transactions by end datetime"), "example": "2025-08-01 23:59:59"})
+
+
 class OrderCheckoutPaymentPostauthRequest(Datamodel):
     class Meta:
         ordered = True
@@ -182,6 +194,36 @@ class OrderCheckoutPaymentQueryResponse(Datamodel):
     service_message = fields.String(required=False, allow_none=True, metadata={"title": _lt("Service Message"), "description": _lt("Service Message"), "example": "Success"})
     receipt_url = fields.String(required=False, allow_none=True, metadata={"title": _lt("Receipt URL"), "description": _lt("Receipt URL Address"), "example": "example.com/receipt"})
     conveyance_url = fields.String(required=False, allow_none=True, metadata={"title": _lt("Conveyance URL"), "description": _lt("Conveyance URL Address"), "example": "example.com/conveyance"})
+
+
+class OrderCheckoutReportPowerbiResult(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "oco.report.powerbi.result"
+
+    logDate = fields.String(required=True, allow_none=True, metadata={"title": _lt("Log Date"), "description": _lt("Log date in YYYYMMDD format"), "example": "20250801"})
+    logTime = fields.String(required=True, allow_none=True, metadata={"title": _lt("Log Time"), "description": _lt("Log time in HHMMSS format"), "example": "120000"})
+    paymentId = fields.String(required=True, allow_none=True, metadata={"title": _lt("Payment ID"), "description": _lt("Payment ID"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
+    postAmount = fields.Float(required=True, allow_none=True, metadata={"title": _lt("Post Amount"), "description": _lt("Post amount"), "example": 15000})
+    bankCode = fields.String(required=True, allow_none=True, metadata={"title": _lt("Bank Code"), "description": _lt("Bank code"), "example": "ZiraatBank"})
+    issuerCode = fields.String(required=True, allow_none=True, metadata={"title": _lt("Issuer Code"), "description": _lt("Issuer code"), "example": "552608XXXXXX0006"})
+    installment = fields.String(required=True, allow_none=True, metadata={"title": _lt("Installment"), "description": _lt("Installment"), "example": "3"})
+    outletNumber = fields.String(required=True, allow_none=True, metadata={"title": _lt("Outlet Number"), "description": _lt("Outlet number"), "example": "123"})
+    channel = fields.String(required=True, allow_none=True, metadata={"title": _lt("Channel"), "description": _lt("Channel"), "example": None})
+    paymentProvider = fields.String(required=True, allow_none=True, metadata={"title": _lt("Payment Provider"), "description": _lt("Payment provider"), "example": "Iyzico"})
+    vkn = fields.String(required=True, allow_none=True, metadata={"title": _lt("VAT"), "description": _lt("VAT nmber"), "example": "1234567890"})
+    distName = fields.String(required=True, allow_none=True, metadata={"title": _lt("Payer Name"), "description": _lt("Payer name"), "example": "John Doe"})
+
+
+class OrderCheckoutReportPowerbiResponse(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "oco.report.powerbi.response"
+    _inherit = "payment.output"
+
+    result = fields.List(NestedModel("oco.report.powerbi.result"), required=True, metadata={"title": _lt("Transaction List"), "description": _lt("List of related transactions")})
 
 
 class OrderCheckoutPaymentWebhook(Datamodel):

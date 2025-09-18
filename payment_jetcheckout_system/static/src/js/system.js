@@ -116,7 +116,7 @@ publicWidget.registry.payloxPaymentCompany = publicWidget.Widget.extend({
 
 publicWidget.registry.payloxSystemPage = publicWidget.Widget.extend({
     selector: '.payment-system',
-    jsLibs: ['/payment_jetcheckout/static/src/lib/imask.js'],
+    jsLibs: ['/payment_jetcheckout/static/src/lib/imask/imask.js'],
     xmlDependencies: ['/payment_jetcheckout_system/static/src/xml/system.xml'],
 
     init: function (parent, options) {

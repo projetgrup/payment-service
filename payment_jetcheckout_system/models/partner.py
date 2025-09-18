@@ -643,6 +643,7 @@ class Partner(models.Model):
                 continue
 
             partner_sudo = partner.sudo()
+            group_user = partner_sudo.env.ref('base.group_user')
             group_portal = partner_sudo.env.ref('base.group_portal')
             group_public = partner_sudo.env.ref('base.group_public')
 
@@ -656,7 +657,10 @@ class Partner(models.Model):
 
             user = user.sudo()
             if not user.active or user.has_group('base.group_public'):
-                user.write({'active': True, 'groups_id': [(4, group_portal.id), (3, group_public.id)]})
+                user.write({'active': True})
+                group_user.write({'users': [(3, user.id)]})
+                group_public.write({'users': [(3, user.id)]})
+                group_portal.write({'users': [(4, user.id)]})
                 partner_sudo.signup_prepare()
 
             partner_sudo.with_context(active_test=True)._send_portal_email()

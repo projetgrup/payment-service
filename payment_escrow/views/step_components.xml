@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Step Item Template Component -->
+    <template id="step_item_template" name="Step Item Template">
+        <div t-att-class="'steps__item ' + (step_class or '')">
+            <div class="steps__icon">
+                <span class="check">
+                    <svg width="14" height="11" viewBox="0 0 14 13" fill="#FFF"
+                        xmlns="http://www.w3.org/2000/svg" icon="check">
+                        <path d="M11.7996 1.25213C12.0393 1.01016 12.3651 0.87292 12.7057 0.870412C13.0463 0.867903 13.3741 1.00032 13.6173 1.23874C13.8606 1.47715 13.9996 1.80217 14.004 2.14276C14.0083 2.48335 13.8777 2.81182 13.6406 3.05638L6.7806 11.6323C6.66275 11.7591 6.52054 11.861 6.36246 11.9317C6.20438 12.0024 6.03367 12.0405 5.86053 12.0438C5.68739 12.047 5.51537 12.0154 5.35474 11.9507C5.1941 11.886 5.04815 11.7896 4.9256 11.6673L0.37735 7.12075C0.135655 6.87894 -8.201e-05 6.55102 3.71739e-08 6.20913C8.20843e-05 5.86724 0.135976 5.53939 0.377787 5.29769C0.619599 5.05599 0.947519 4.92026 1.28941 4.92034C1.6313 4.92042 1.95915 5.05632 2.20085 5.29813L5.79797 8.89613L11.7655 1.29238C11.7763 1.27854 11.788 1.26539 11.8005 1.253L11.7996 1.25213Z"></path>
+                    </svg>
+                </span>
+                <span class="num" t-esc="step_number"/>
+            </div>
+            <div class="steps__content" t-if="not is_completed_step">
+                <span t-esc="step_title"/>
+            </div>
+            <span class="steps__content" t-esc="step_title" t-if="is_completed_step"/>
+        </div>
+    </template>
+
+    <template id="step_5_content" name="Step 5 Content">
+        <div class="section">
+            <div class="panel">
+                <div class="completion-content">
+                
+                </div>
+                <div  class="completion-actions text-center">
+                    <button type="button" class="btn btn-outline-secondary" field="wizard.button.close">
+                        Back to payment page
+                    </button>
+                </div>
+                <div class="form__group d-none -mb-0">
+                    <div class="form__label">Upload Official Sale Photo</div>
+                    <div class="pt-1">
+                        <input type="file" class="filepond" name="fileOfficialSale" accept="image/png, image/jpeg, image/gif" field="payment.different.info.fileOfficialSale"/>
+                    </div>
+                </div>
+                <div class="completion-actions mt-3 d-none text-center">
+                    <button type="button" class="btn btn-outline-secondary" field="wizard.button.submit">
+                        Send to official sale image
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Steps Container Template -->
+    <template id="steps_container_template" name="Steps Container Template">
+        <div t-att-class="'steps ' + (container_class or '')" t-att-id="container_id or ''">
+            <!-- Step 1: Seller Information -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="1"/>
+                <t t-set="step_title">Seller Information</t>
+                <t t-set="step_class" t-value="step_1_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_1_edit or False"/>
+            </t>
+
+            <!-- Step 2: Ads Information -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="2"/>
+                <t t-set="step_title">Ads Information</t>
+                <t t-set="step_class" t-value="step_2_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_2_edit or False"/>
+            </t>
+
+            <!-- Step 3: Customer Information -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="3"/>
+                <t t-set="step_title">Customer Information</t>
+                <t t-set="step_class" t-value="step_3_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_3_edit or False"/>
+            </t>
+
+            <!-- Step 4: Payment Information -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="4"/>
+                <t t-set="step_title">Payment Information</t>
+                <t t-set="step_class" t-value="step_4_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_4_edit or False"/>
+            </t>
+
+            <!-- Step 5: Completion -->
+            <t t-call="payment_escrow.step_item_template">
+                <t t-set="step_number" t-value="5"/>
+                <t t-set="step_title">Completed</t>
+                <t t-set="step_class" t-value="step_5_class or ''"/>
+                <t t-set="show_edit_link" t-value="step_5_edit or False"/>
+            </t>
+        </div>
+    </template>
+    <template id="step_1_content" name="Step 1 Content">
+        <div class="section">
+            <div class="panel">
+                <div class="panel__header">
+                    <h3>Seller Information</h3>
+                </div>
+                <form action="#" id="sellerInfo" class="form">
+                    <div class="radioTabSelector mb-3">
+                        <div class="radioTab">
+                            <label class="radioTab__label">
+                                <input type="radio" class="radioTab__control" name="userType" value="individual" data-type="individual" checked="checked"/>
+                                <span>Individual</span>
+                            </label>
+                            <label class="radioTab__label">
+                                <input type="radio" class="radioTab__control" name="userType" value="corporate" data-type="corporate"/>
+                                <span>Corporate</span>
+                            </label>
+                            <div class="radioTab__slider"></div>
+                        </div>
+                    </div>
+                    <div id="corporate" class="wizard-section wizard-section-corporate d-none">
+                        <div class="form__group">
+                            <label class="form__label" for="wizard_tax">Tax Number</label>
+                            <input class="form__control -letter" id="wizard_tax" name="taxnumber" type="text" placeholder="Tax Number" field="seller.input.tax_number"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="corporate_title">Company Title</label>
+                            <input class="form__control -letter" id="corporate_title" name="corporatetitle" type="text" placeholder="Company Title" field="seller.input.corporate_title"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label -between" for="wizard_iban_corp">
+                                <span>Transfer IBAN</span>
+                            </label>
+                            <input class="form__control -letter" id="wizard_iban_corp" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_corporate"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="ibanaccountname_corporate">Transfer Account Name</label>
+                            <input class="form__control -letter" id="ibanaccountname_corporate" name="ibanaccountname" type="text" placeholder="Transfer Account Name" field="seller.input.iban_name_corporate"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="corporate_person">Authorized Person</label>
+                            <input class="form__control -letter" id="corporate_person" name="person" type="text" placeholder="Authorized Person" field="seller.input.corporate_person"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="phone_corporate">Authorized Mobile Phone</label>
+                            <input class="form__control -letter" id="phone_corporate" name="phone" type="text" placeholder="e.g: 532 123 3456" field="seller.input.phone_corporate"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
+                        <div class="form__group -mb-0">
+                            <label class="form__label" for="email_corporate">Authorized Email</label>
+                            <input class="form__control -letter" id="email_corporate" name="email" type="email" placeholder="example@mail.com" field="seller.input.email_corporate"/>
+                        </div>
+                    </div>
+                    <div id="individual" class="wizard-section wizard-section-individual">
+                        <div class="form__group">
+                            <label class="form__label" for="wizard_tckn">T.C. Identity Number</label>
+                            <input class="form__control -letter" id="wizard_tckn" name="tc" type="text" placeholder="T.C. Identity Number" field="seller.input.tc"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="namesurname">Name Surname</label>
+                            <input class="form__control -letter" id="namesurname" name="namesurname" type="text" placeholder="Name Surname" field="seller.input.name"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="phone_individual">Mobile Phone</label>
+                            <input class="form__control -letter" id="phone_individual" name="phone" type="text" placeholder="E.g.: 532 123 3456" field="seller.input.phone_individual"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="email_individual">E-Mail</label>
+                            <input class="form__control -letter" id="email_individual" name="email" type="email" placeholder="ornek@mail.com" field="seller.input.email_individual"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label -between" for="wizard_iban">
+                                <span>Transfer IBAN</span>
+                            </label>
+                            <input class="form__control -letter" id="wizard_iban" name="iban" type="text" placeholder="TR12 0000 0000 0000 0000 0000 12" maxlength="33" field="seller.input.iban_individual"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
+                        <div class="form__group -mb-0">
+                            <label class="form__label" for="ibanaccountname_individual">Transferring account name</label>
+                            <input class="form__control -letter" id="ibanaccountname_individual" name="ibanaccountname" type="text" placeholder="Transfer Account Name" field="seller.input.iban_name_individual"/>
+                        </div>
+                    </div>
+                    <div class="form__group mt-3">
+                        <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
+                            Continue
+                            <i class="fa fa-chevron-right ml-2"/>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+    <template id="step_2_content" name="Step 2 Content">
+        <div class="section">
+            <form action="#" id="productInfo" class="form">
+                <div class="form__group -mt-lg">
+                    <label class="form__label" for="wizard_category">Sale Category</label>
+                    <select id="wizard_category" class="form__control" name="category" field="ad.input.category" placeholder="Select a category">
+                        <t t-foreach="company.env['product.category'].sudo().with_context(system='escrow').search([('company_id', '=', company.id)])" t-as="categ">
+                            <option t-att-value="categ.id" t-esc="categ.name"/>
+                        </t>
+                    </select>
+                </div>
+                <div class="form__group -mb-0">
+                    <label class="form__label" for="wizard_price">Sale Price</label>
+                    <input id="adInputPrice" type="text" inputmode="decimal" required="required" field="ad.input.price" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" class="form__control"/>
+                </div>
+                <div class="panel mt-3">
+                    <div class="panel__header">
+                        <h3>License Information</h3>
+                    </div>
+                    <div class="panel__body">
+                        <div id="carInfo">
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_vin">Chassis Number</label>
+                                <input id="wizard_vin" class="form__control" type="text" name="vin" maxlength="17" placeholder="Chassis Number (17 characters)" field="ad.input.vin"/>
+                                <i class="fa fa-check text-success state-check d-none"></i>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_plate">License Plate</label>
+                                <input id="wizard_plate" class="form__control" type="text" name="numberplate" placeholder="License Plate (e.g., 34 ABC 123)" field="ad.input.plate"/>
+                                <i class="fa fa-check text-success state-check d-none"></i>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_brand">Brand</label>
+                                <select id="wizard_brand" class="form__control" name="brand" field="ad.input.brand" placeholder="Select a brand">
+                                    <t t-foreach="company.env['escrow.car.brand'].sudo().search([])" t-as="brand">
+                                        <option t-att-value="brand.id" t-esc="brand.name"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label" for="wizard_year">Year</label>
+                                <input id="wizard_year" class="form__control" type="text" name="year" placeholder="Model Year" field="ad.input.year"/>
+                            </div>
+                            <div class="form__group -mb-0">
+                                <div class="form__label">Upload License Photo</div>
+                                <div class="pt-1">
+                                    <input type="file" class="filepond" name="fileLicence" accept="image/png, image/jpeg, image/gif" field="ad.input.fileLicence"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form__group mt-3 d-flex justify-content-between">
+                    <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
+                        Continue
+                        <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
+                            <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </template>
+    <template id="step_3_content" name="Step 3 Content">
+        <div class="section">
+            <div class="panel">
+                <div class="panel__header">
+                    <h3>Recipient Information</h3>
+                </div>
+                <div class="panel__body">
+                    <form action="#" id="customerInfo" class="form">
+                        <div class="radioTabSelector">
+                            <div class="radioTab">
+                                <div class="radioTab__slider"></div>
+                                <label class="radioTab__label">
+                                    <input type="radio" class="radioTab__control" name="customerUserType" value="individual"/>
+                                    <span>Individual</span>
+                                </label>
+                                <label class="radioTab__label">
+                                    <input type="radio" class="radioTab__control" name="customerUserType" value="corporate"/>
+                                    <span>Corporate</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="customerCorporate" style="display: none;">
+                            <t t-call="payment_escrow.customer_corporate"/>
+                        </div>
+                        <div id="customerIndividual">
+                            <t t-call="payment_escrow.customer_individual"/>
+                        </div>
+                        <div class="form__group mt-3 d-flex justify-content-between">
+                            <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
+                                Continue
+                                <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg" class="btn-arrow-right ml-2">
+                                    <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="step_4_content" name="Step 4 Content">
+        <div class="section">
+            <!-- Remaining Payment Info Section -->
+            <div class="remaining-payment-info mb-4 d-none" field="remaining.payment.info">
+                <div class="payment-success-card text-center p-4" style="border-radius: 12px; border: 1px solid #dee2e6;">
+                    <!-- Success Icon -->
+                    <div class="success-icon mb-3">
+                        <div style="width: 80px; height: 80px; background: #28a745; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
+                            <svg width="40" height="30" viewBox="0 0 24 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="white" stroke="white" stroke-width="1"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Success Title -->
+                    <h3 class="text-success font-weight-bold mb-2">Payment Successful</h3>
+
+                    <!-- Payment Details -->
+                    <p class="text-muted mb-3">Your payment has been successfully completed. The remaining amount to finalize your transaction is indicated below.</p>
+
+                    <!-- Order Code -->
+                    <div class="order-code mb-4">
+                        <span class="text-muted">Order Code: </span>
+                        <strong field="payment.transaction.reference" t-esc="transaction and transaction.reference or 'PLX394433'"/>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <button type="button" class="btn px-4" field="payment.button.return">
+                            <i class="fa fa-arrow-left mr-2"></i>
+                            Back to Payment Page
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="payment-panel">
+                <t t-call="payment_escrow.payment_select_holder_diff"/>
+                <div id="payment_type" class="payment-type d-none">
+                    <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtual_pos"/>
+                    <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
+                </div>
+                <t t-call="payment_escrow.payment_partial_price"/>
+                <div class="creditCard">
+                    <h3>Credit Card Information</h3>
+                    <div class="form" id="payment_card">
+                        <div class="form__group">
+                            <label for="card_holder_name" class="form__label">Name Surname</label>
+                            <input type="text" field="card.holder" name="card_holder_name" id="card_holder_name" class="form__control -letter" placeholder="Name Surname"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="card_number"><span>Card Number</span></label>
+                            <input id="card_number" class="form__control -letter" inputmode="numeric" pattern="[0-9\s]*" type="text" required="required" field="card.number" placeholder="---- ---- ---- ----"/>
+                            <div t-attf-class="#{'d-none' if no_card_family else 'cclogo overflow-hidden fade card flex-row justify-content-center'}" field="card.logo"/>
+                            <div t-attf-class="#{'d-none' if no_card_family else 'ccicon overflow-hidden fade card flex-row justify-content-center'}" field="card.icon"/>
+                        </div>
+                        <div class="form__row d-flex">
+                            <div class="form__col p-1">
+                                <div class="form__group">
+                                    <label for="card_expiry" class="form__label">Expiry Date</label>
+                                    <input type="text" field="card.date" name="card_expiry" id="card_expiry" class="form__control -letter" placeholder="AA/YY"/>
+                                </div>
+                            </div>
+                            <div class="form__col -relative p-1">
+                                <div class="form__group">
+                                    <label for="cvv" class="form__label">Security Code</label>
+                                    <input type="text" field="card.code" name="cvv" id="cvv" class="form__control -letter" placeholder="CVC"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form__row mt-3" id="installmentOptionsContainer">
+                            <div class="form__col">
+                                <div class="form__group">
+                                    <div class="form__label">Installment Options</div>
+                                    <div class="installment-table">
+                                        <div class="payment-gradient border card p-3 installment-rows">
+                                            <div>
+                                                <div class="font-weight-bold text-primary text-uppercase installment-line mb-2 installment-header" field="installment.colempty">
+                                                    <t t-call="payment_jetcheckout.payment_installment_header"/>
+                                                </div>
+                                                <div class="d-none font-weight-bold text-primary text-uppercase installment-line installment-header" field="installment.col"/>
+                                            </div>
+                                            <div class="d-none installment-row overflow-auto flex-fill" data-type="i" field="installment.row"/>
+                                            <div class="text-muted small h-100 w-75 text-center mt72 mx-auto flex-fill" field="installment.rowempty">
+                                                <i class="fa fa-info-circle mb-3" t-translation="off"></i>
+                                                <br/>
+                                                Appliable installment options will be displayed here after you enter your credit card number
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form__group" field="assignment.form.section" style="display:none">
+                            <div class="form__label">Assignment Form Information</div>
+                            <p class="form__infoText">You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature.</p>
+                            <!-- <div class="download">
+                                <svg width="30" height="30" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                                    <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                                    <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                                </svg>
+                                <a href="#" class="download__link" field="assignment.form.download">Temlikname Formunu İndir</a>
+                            </div> -->
+                            <!-- <div class="form__label">Upload Assignment Form</div>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileConveyance" accept="image/png, image/jpeg, image/gif, application/pdf" field="customer.input.fileConveyance"/>
+                            </div> -->
+                        </div>
+                        <div class="form__buttons">
+                            <div t-if="agreements" class="field-agreement" field="agreements">
+                                <t t-foreach="agreements" t-as="agreement">
+                                    <div class="btn btn-payment-agreement" t-att-data-id="agreement.id" field="agreement">
+                                        <label class="switch">
+                                            <input type="checkbox" class="d-none" t-att-checked="agreement.checked and 'checked' or None" t-att-required="agreement.required and 'required' or None" t-att-data-options="agreement.get_options()"/>
+                                            <span class="slider round fa"/>
+                                        </label>
+                                        <label t-raw="agreement.text"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="form__group">
+                                <button class="payment__button" field="payment.button">
+                                    <div class="payment__info">
+                                        <span class="label">Payment Amount</span>
+                                        <span class="amount" field="payment.amount.paid"></span>
+                                    </div>
+                                    <div class="payment__action">
+                                        Pay with Credit Card 
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="15" viewBox="0 0 27 15" fill="" class="btn-arrow-right ml-2">
+                                            <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+                            <button type="submit" class="primaryButton d-none" id="btn_pay_now">
+                                <div class="summary__priceBtn">
+                                    <span>Payable Amount</span>
+                                    <strong></strong>
+                                </div>
+                                <span>Pay Now
+                                    <svg width="20" height="15" viewBox="0 0 27 15" fill="" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.9653 12.9913C18.5033 13.4509 18.5033 14.1958 18.9653 14.6554C19.4272 15.1149 20.1762 15.1149 20.6381 14.6554L26.1568 9.1657C27.0806 8.24664 27.0806 6.75667 26.1568 5.8376L20.6346 0.344622C20.1727 -0.114876 19.4239 -0.114876 18.9618 0.344634C18.4999 0.804132 18.4999 1.54914 18.9618 2.00864L23.2983 6.32226H2.03246C1.37919 6.32226 0.849609 6.84904 0.849609 7.49889C0.849609 8.14863 1.37919 8.67552 2.03246 8.67552H23.3038L18.9653 12.9913Z" fill="white"/>
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>
