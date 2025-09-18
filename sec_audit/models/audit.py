@@ -313,7 +313,7 @@ class Import(models.TransientModel):
         res = super().execute_import(fields, columns, options, dryrun=dryrun)        
         model = self.env['ir.model'].sudo().search([('model', '=', self.res_model)], limit=1)
         view = model.name
-        log(request.cr, uid=request.session.uid, action='upload', view=view)
+        log(self.env.cr, uid=self.env.uid, action='upload', view=view)
         return res
 
 
@@ -323,5 +323,5 @@ class MailComposeMessage(models.TransientModel):
     def _action_send_mail(self, **kwargs):
         for wizard in self:
             record = '%s,%s' % (wizard.model, wizard.res_id)
-            log(request.cr, uid=request.session.uid, action='send', record=record)
+            log(self.env.cr, uid=self.env.uid, action='send', record=record)
         return super()._action_send_mail(**kwargs)
