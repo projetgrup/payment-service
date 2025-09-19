@@ -3,8 +3,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo.addons.queue_job.models import enqueue
 
-import logging
-_logger = logging.getLogger(__name__)
 
 class PaymentPayloxSendType(models.Model):
     _name = 'payment.acquirer.jetcheckout.send.type'

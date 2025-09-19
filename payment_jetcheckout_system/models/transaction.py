@@ -209,6 +209,7 @@ class PaymentTransaction(models.Model):
                                 _logger.error('An error occured when sending export txt email to %s: %s' % (partner.name, e))
                             self.env.cr.commit()
             except:
+                _logger.error('An error occured when running export txt cron: %s' % e, exc_info=True)
                 self.env.cr.rollback()
 
     def export_txt(self, domain=[]):
