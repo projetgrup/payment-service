@@ -543,7 +543,7 @@ class OrderCheckoutAPIService(Component):
         auth="public",
         tags=['Reports']
     )
-    def _report_transactions(self, params):
+    def report_transactions(self, params):
         """
         Transaction Reports
         """
@@ -640,7 +640,7 @@ class OrderCheckoutAPIService(Component):
             _logger.error(debug)
             return Response(message, status=status, mimetype="application/json")
 
-    _report_transactions.__doc__ = _lt("Transactions")
+    report_transactions.__doc__ = _lt("Transactions")
 
     #
     # PRIVATE METHODS
