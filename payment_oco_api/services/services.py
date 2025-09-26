@@ -640,7 +640,7 @@ class OrderCheckoutAPIService(Component):
             _logger.error(debug)
             return Response(message, status=status, mimetype="application/json")
 
-    report_transactions.__doc__ = _lt("Transactions")
+    _report_transactions.__doc__ = _lt("Transactions")
 
     #
     # PRIVATE METHODS
