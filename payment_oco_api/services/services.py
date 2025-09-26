@@ -537,25 +537,25 @@ class OrderCheckoutAPIService(Component):
     query_payments.__doc__ = _lt("Query Payment")
 
     @restapi.method(
-        [(["/report/powerbi"], "GET")],
-        input_param=Datamodel("oco.report.powerbi.request"),
-        output_param=Datamodel("oco.report.powerbi.response"),
+        [(["/report/transactions"], "GET")],
+        input_param=Datamodel("oco.report.transactions.request"),
+        output_param=Datamodel("oco.report.transactions.response"),
         auth="public",
         tags=['Reports']
     )
-    def report_powerbi(self, params):
+    def _report_transactions(self, params):
         """
-        PowerBI
+        Transaction Reports
         """
         try:
             log = None
             loggable = self._log_state()
             if loggable:
                 log = {
-                    'service': 'api_oco_report_powerbi',
+                    'service': 'api_oco_report_transactions',
                     'now': time.time(),
                     'method': 'get',
-                    'url': '/oco/report/powerbi',
+                    'url': '/oco/report/transactions',
                     'request': json.dumps(params.dump(), indent=4, default=str, ensure_ascii=False),
                 }
         except:
@@ -602,7 +602,7 @@ class OrderCheckoutAPIService(Component):
                 return Response(message, status=status, mimetype="application/json")
 
             try:
-                result = self._report_powerbi(api, params, log=log)
+                result = self._report_transactions(api, params, log=log)
             except MissingError as e:
                 return Response(str(e), status=404)
             except ValidationError as e:
@@ -621,7 +621,7 @@ class OrderCheckoutAPIService(Component):
                 })
                 self._log(log)
 
-            ResponseOk = self.env.datamodels["oco.report.powerbi.response"]
+            ResponseOk = self.env.datamodels["oco.report.transactions.response"]
             return ResponseOk(**response)
 
         except Exception as e:
@@ -640,7 +640,7 @@ class OrderCheckoutAPIService(Component):
             _logger.error(debug)
             return Response(message, status=status, mimetype="application/json")
 
-    report_powerbi.__doc__ = _lt("PowerBI")
+    report_transactions.__doc__ = _lt("Transactions")
 
     #
     # PRIVATE METHODS
@@ -861,7 +861,7 @@ class OrderCheckoutAPIService(Component):
             })
         return result
 
-    def _report_powerbi(self, api, params, log=None):
+    def _report_transactions(self, api, params, log=None):
         txs = request.env['payment.transaction'].sudo().search([
             ('state', '=', 'done'),
             ('create_date', '>=', params.dateStart),
@@ -879,12 +879,12 @@ class OrderCheckoutAPIService(Component):
                 'logTime': tx.create_date.strftime('%H%M%S') or None,
                 'paymentId': tx.jetcheckout_order_id or None,
                 'postAmount': tx.jetcheckout_postauth_amount or 0.0,
-                'bankCode': 'Iyzico',
-                'issuerCode': 'Iyzico',
+                'bankName': 'iyzico',
+                'cardNumber': tx.jetcheckout_card_number or None,
                 'installment': tx.jetcheckout_installment_description or '0',
                 'outletNumber': tx.partner_ref or None,
-                'channel': 'Indirect',
-                'paymentProvider': 'Iyzico',
+                'channel': 'indirect',
+                'paymentProvider': 'iyzico',
                 'vkn': tx.company_id.vat or None,
                 'distName': tx.company_id.name or None,
             } for tx in txs]
