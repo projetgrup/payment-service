@@ -124,6 +124,7 @@ class OrderCheckoutPaymentPostauthRequest(Datamodel):
 
     id = fields.UUID(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique number related to your specified record in your database for tracking the payment flow"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to be authorized"), "example": 145.3})
+    transactionType = fields.String(required=False, allow_none=False, metadata={"title": _lt("Transaction Type"), "description": _lt("Type of transaction"), "example": "POSTAUTH"})
 
 
 class OrderCheckoutPaymentCreateResponse(Datamodel):
