@@ -61,5 +61,4 @@
             'payment_escrow/static/src/js/view.js',
         ],
     },
-    'post_init_hook': 'post_init_hook',
 }
