@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Broker Registration Page -->
+    <template id="page_broker_register" name="Broker Registration Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-escrow navbar-light broker-registration'"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-call="payment_escrow.background_animation"/>
+
+            <div class="escrow-ad-wrapper">
+                <t t-call="payment_escrow.header">
+                    <t t-set="variant" t-value="'broker'"/>
+                    <t t-set="company" t-value="company"/>
+                </t>
+
+                <!-- Broker Registration Steps -->
+                <t t-call="payment_escrow.broker_steps_container"/>
+
+                <div class="px-lg-5 mx-xl-auto mw-xl-128">
+                    <!-- Step 1: Company Information -->
+                    <div class="broker-step broker-step-1 col-12 col-lg-8 col-xl-6 mx-auto p-2 d-flex justify-content-center pt-5 p-sm-0 position-static">
+                        <t t-call="payment_escrow.broker_step_1_content"/>
+                    </div>
+
+                    <!-- Step 2: Document Upload -->
+                    <div class="broker-step broker-step-2 col-12 col-lg-8 col-xl-6 mx-auto p-2 d-none justify-content-center pt-5 p-sm-0 position-static">
+                        <t t-call="payment_escrow.broker_step_2_content"/>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div class="broker-step broker-step-3 col-12 col-lg-8 col-xl-6 mx-auto p-2 d-none justify-content-center pt-5 p-sm-0 position-static">
+                        <t t-call="payment_escrow.broker_success_content"/>
+                    </div>
+                </div>
+                
+                <!-- OTP Modal -->
+                <t t-call="payment_escrow.broker_otp_modal"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- Broker Steps Container -->
+    <template id="broker_steps_container" name="Broker Steps Container">
+        <div class="steps" id="broker-steps">
+            <!-- Step 1: Company Information -->
+            <div class="steps__item -active">
+                <div class="steps__icon">
+                    <span class="check">
+                        <svg width="14" height="11" viewBox="0 0 14 13" fill="#FFF"
+                            xmlns="http://www.w3.org/2000/svg" icon="check">
+                            <path d="M11.7996 1.25213C12.0393 1.01016 12.3651 0.87292 12.7057 0.870412C13.0463 0.867903 13.3741 1.00032 13.6173 1.23874C13.8606 1.47715 13.9996 1.80217 14.004 2.14276C14.0083 2.48335 13.8777 2.81182 13.6406 3.05638L6.7806 11.6323C6.66275 11.7591 6.52054 11.861 6.36246 11.9317C6.20438 12.0024 6.03367 12.0405 5.86053 12.0438C5.68739 12.047 5.51537 12.0154 5.35474 11.9507C5.1941 11.886 5.04815 11.7896 4.9256 11.6673L0.37735 7.12075C0.135655 6.87894 -8.201e-05 6.55102 3.71739e-08 6.20913C8.20843e-05 5.86724 0.135976 5.53939 0.377787 5.29769C0.619599 5.05599 0.947519 4.92026 1.28941 4.92034C1.6313 4.92042 1.95915 5.05632 2.20085 5.29813L5.79797 8.89613L11.7655 1.29238C11.7763 1.27854 11.788 1.26539 11.8005 1.253L11.7996 1.25213Z"></path>
+                        </svg>
+                    </span>
+                    <span class="num">1</span>
+                </div>
+                <div class="steps__content">
+                    <span>Company Information</span>
+                </div>
+            </div>
+
+            <!-- Step 2: Documents -->
+            <div class="steps__item">
+                <div class="steps__icon">
+                    <span class="check">
+                        <svg width="14" height="11" viewBox="0 0 14 13" fill="#FFF"
+                            xmlns="http://www.w3.org/2000/svg" icon="check">
+                            <path d="M11.7996 1.25213C12.0393 1.01016 12.3651 0.87292 12.7057 0.870412C13.0463 0.867903 13.3741 1.00032 13.6173 1.23874C13.8606 1.47715 13.9996 1.80217 14.004 2.14276C14.0083 2.48335 13.8777 2.81182 13.6406 3.05638L6.7806 11.6323C6.66275 11.7591 6.52054 11.861 6.36246 11.9317C6.20438 12.0024 6.03367 12.0405 5.86053 12.0438C5.68739 12.047 5.51537 12.0154 5.35474 11.9507C5.1941 11.886 5.04815 11.7896 4.9256 11.6673L0.37735 7.12075C0.135655 6.87894 -8.201e-05 6.55102 3.71739e-08 6.20913C8.20843e-05 5.86724 0.135976 5.53939 0.377787 5.29769C0.619599 5.05599 0.947519 4.92026 1.28941 4.92034C1.6313 4.92042 1.95915 5.05632 2.20085 5.29813L5.79797 8.89613L11.7655 1.29238C11.7763 1.27854 11.788 1.26539 11.8005 1.253L11.7996 1.25213Z"></path>
+                        </svg>
+                    </span>
+                    <span class="num">2</span>
+                </div>
+                <div class="steps__content">
+                    <span>Document Upload</span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="broker_step_1_content" name="Broker Step 1 Content">
+        <div class="section">
+            <div class="panel">
+                <div class="panel__header">
+                    <h3>Company Information</h3>
+                </div>
+                <form action="#" id="brokerInfoForm" class="form">
+                    <div class="form__group">
+                        <label class="form__label" for="broker_tax">Tax Number</label>
+                        <input class="form__control -letter" id="broker_tax" name="taxnumber" type="text" placeholder="Tax Number" field="broker.input.tax_number" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="broker_title">Company Title</label>
+                        <input class="form__control -letter" id="broker_title" name="companytitle" type="text" placeholder="Company Title" field="broker.input.company_title" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="broker_sign_name">Sign Name</label>
+                        <input class="form__control -letter" id="broker_sign_name" name="signname" type="text" placeholder="Sign Name" field="broker.input.sign_name" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="broker_state">City</label>
+                        <select id="broker_state" class="form__control" name="state" field="broker.input.state" required="required">
+                            <option value="">Select City</option>
+                            <t t-foreach="states" t-as="state">
+                                <option t-att-value="state.id" t-esc="state.name"/>
+                            </t>
+                        </select>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="broker_city">District</label>
+                        <input class="form__control -letter" id="broker_city" name="city" type="text" placeholder="District" field="broker.input.city" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="broker_person">Authorized Person</label>
+                        <input class="form__control -letter" id="broker_person" name="person" type="text" placeholder="Authorized Person" field="broker.input.person" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="broker_phone">Mobile Phone</label>
+                        <input class="form__control -letter" id="broker_phone" name="phone" type="text" placeholder="e.g: 532 123 3456" field="broker.input.phone" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="broker_email">Email</label>
+                        <input class="form__control -letter" id="broker_email" name="email" type="email" placeholder="example@mail.com" field="broker.input.email" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label" for="broker_iban">IBAN</label>
+                        <input class="form__control -letter" id="broker_iban" name="iban" type="text" placeholder="TR00 0000 0000 0000 0000 0000 00" field="broker.input.iban" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    <div class="form__group -mb-0">
+                        <label class="form__label" for="broker_iban_name">Account Holder Name</label>
+                        <input class="form__control -letter" id="broker_iban_name" name="ibanname" type="text" placeholder="Account Holder Name" field="broker.input.iban_name" required="required"/>
+                        <i class="form__icon fa" aria-hidden="true"/>
+                    </div>
+                    
+                    <div class="form__group mt-3">
+                        <button type="button" class="button button__dark button__medium" data-broker-action="next" field="broker.button.next">
+                            Continue
+                            <i class="fa fa-chevron-right ml-2"/>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- Step 2: Document Upload Form -->
+    <template id="broker_step_2_content" name="Broker Step 2 Content">
+        <div class="section">
+            <div class="panel">
+                <div class="panel__header">
+                    <h3>Required Documents</h3>
+                    <p class="text-muted">Please upload the following documents to complete your registration</p>
+                </div>
+                <form action="#" id="brokerDocsForm" class="form">
+                    <div class="form__group">
+                        <label class="form__label">Tax Plate</label>
+                        <div class="pt-1">
+                            <input type="file" class="filepond" name="fileTaxPlate" accept="image/png, image/jpeg, image/gif, application/pdf" field="broker.input.fileTaxPlate" required="required"/>
+                        </div>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label">Signature Circular</label>
+                        <div class="pt-1">
+                            <input type="file" class="filepond" name="fileSignatureCircular" accept="image/png, image/jpeg, image/gif, application/pdf" field="broker.input.fileSignatureCircular" required="required"/>
+                        </div>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label">Identity Document</label>
+                        <div class="pt-1">
+                            <input type="file" class="filepond" name="fileIdentity" accept="image/png, image/jpeg, image/gif, application/pdf" field="broker.input.fileIdentity" required="required"/>
+                        </div>
+                    </div>
+                    <div class="form__group">
+                        <label class="form__label">Authorization Document</label>
+                        <div class="pt-1">
+                            <input type="file" class="filepond" name="fileAuthorization" accept="image/png, image/jpeg, image/gif, application/pdf" field="broker.input.fileAuthorization" required="required"/>
+                        </div>
+                    </div>
+                    <!-- <div class="form__group">
+                        <label class="form__label">Contract</label>
+                        <div class="pt-1">
+                            <input type="file" class="filepond" name="fileContract" accept="application/pdf" field="broker.input.fileContract" required="required"/>
+                        </div>
+                    </div> -->
+                    
+                    <div t-if="agreements" class="field-agreement mt-4" field="agreements">
+                        <t t-foreach="agreements" t-as="agreement">
+                            <div class="btn btn-payment-agreement mb-2" t-att-data-id="agreement.id" field="agreement">
+                                <label class="switch">
+                                    <input type="checkbox" class="d-none" 
+                                           t-att-checked="agreement.checked and 'checked' or None" 
+                                           t-att-required="agreement.required and 'required' or None" 
+                                           t-att-data-options="agreement.get_options()"/>
+                                    <span class="slider round fa"/>
+                                </label>
+                                <label t-raw="agreement.text"/>
+                            </div>
+                        </t>
+                    </div>
+                    
+                    <div class="form__group mt-4">
+                        <button type="button" class="button button__outline button__medium mr-2" data-broker-action="back" field="broker.button.back">
+                            <i class="fa fa-chevron-left mr-2"/>
+                            Back
+                        </button>
+                        <button type="button" class="button button__dark button__medium" data-broker-action="submit" field="broker.button.submit">
+                            Submit Registration
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <template id="broker_success_content" name="Broker Success Content">
+        <div class="section">
+            <div class="panel">
+                <div class="completion-content text-center">
+                    <div class="success-icon mb-4">
+                        <i class="fa fa-check-circle text-success" style="font-size: 64px;"/>
+                    </div>
+                    <h3 class="text-success mb-3">Registration Submitted Successfully!</h3>
+                    <p class="text-muted mb-4">
+                        Your broker registration has been submitted for approval. 
+                        Our team will review your application and notify you via email once it's approved.
+                    </p>
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle mr-2"/>
+                        You will receive an email notification when your application is reviewed.
+                    </div>
+                </div>
+                <div class="completion-actions text-center mt-4">
+                    <a href="/" class="btn btn-primary">
+                        <i class="fa fa-home mr-2"/>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- OTP Verification Modal -->
+    <template id="broker_otp_modal" name="Broker OTP Modal">
+        <div class="otp-modal" id="brokerOtpModal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:1050;">
+            <div class="otp-modal-content" style="background:#fff;border-radius:12px;padding:32px 24px;max-width:420px;width:90%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.15);">
+                <div class="otp-header mb-3">
+                    <i class="fa fa-mobile text-primary" style="font-size:48px;"/>
+                </div>
+                <h4 class="mb-2">Cep Telefonu Doğrulama</h4>
+                <p class="text-muted mb-4">Lütfen cep telefonunuza gelen 4 haneli doğrulama kodunu giriniz.</p>
+                
+                <div class="otp-inputs d-flex justify-content-center gap-2 mb-3" style="gap:8px;">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-input form-control text-center" 
+                           style="width:56px;height:56px;font-size:24px;font-weight:600;border:2px solid #DDD;border-radius:8px;" 
+                           field="broker.otp.input1"/>
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-input form-control text-center" 
+                           style="width:56px;height:56px;font-size:24px;font-weight:600;border:2px solid #DDD;border-radius:8px;" 
+                           field="broker.otp.input2"/>
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-input form-control text-center" 
+                           style="width:56px;height:56px;font-size:24px;font-weight:600;border:2px solid #DDD;border-radius:8px;" 
+                           field="broker.otp.input3"/>
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-input form-control text-center" 
+                           style="width:56px;height:56px;font-size:24px;font-weight:600;border:2px solid #DDD;border-radius:8px;" 
+                           field="broker.otp.input4"/>
+                </div>
+                
+                <div class="otp-timer mb-4" style="color:#666;font-size:14px;">
+                    Time remaining: <span class="font-weight-bold text-danger" id="brokerOtpTimer">120</span> second
+                </div>
+                
+                <div class="otp-actions d-flex gap-2 justify-content-center" style="gap:8px;">
+                    <button type="button" class="button button__dark button__medium" id="brokerOtpSubmit" field="broker.button.otpSubmit">
+                        <i class="fa fa-check mr-1"/>Verify
+                    </button>
+                    <button type="button" class="button button__outline button__medium" id="brokerOtpResend" field="broker.button.otpResend" style="display:none;">
+                        <i class="fa fa-refresh mr-1"/>Resend
+                    </button>
+                    <button type="button" class="button button__light button__medium" id="brokerOtpCancel" field="broker.button.otpCancel">
+                        <i class="fa fa-times mr-1"/>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="broker_registration_login_link" name="Broker Registration Link" inherit_id="web.login" priority="50">
+        <xpath expr="//div[hasclass('o_login_auth')]" position="inside">
+            <div class="text-center mt-3 mb-3">
+                <div class="small text-muted mb-2">
+                    <i class="fa fa-briefcase mr-1"></i>
+                    Would you like to join the system as a broker?
+                </div>
+                <a href="/broker/register" class="btn btn-link btn-sm">
+                    <i class="fa fa-user-plus mr-1"></i>
+                    Broker Registration Form
+                </a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

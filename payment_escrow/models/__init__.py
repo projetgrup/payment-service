@@ -10,4 +10,5 @@ from . import item
 from . import car_brand
 from . import car_model
 from . import installment_rate
+from . import broker_campaign
 from . import settings

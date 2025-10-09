@@ -18,7 +18,12 @@
             <field name="implied_ids" eval="[(4, ref('payment_jetcheckout_system.group_system_manager')), (4, ref('payment_escrow.group_escrow_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
-
+        <record model="res.groups" id="group_escrow_platform_owner">
+            <field name="name">Platform Owner</field>
+            <field name="category_id" ref="module_category_escrow"/>
+            <field name="comment">Platform owners can approve/reject brokers</field>
+            <field name="implied_ids" eval="[(4, ref('payment_escrow.group_escrow_manager'))]"/>
+        </record>
         <!-- rules -->
     </data>
 </odoo>

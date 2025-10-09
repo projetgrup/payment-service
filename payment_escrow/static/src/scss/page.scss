@@ -2916,4 +2916,257 @@
             }
         }
     }
+
+    .broker-rates-container {
+        min-height: 100vh;
+        padding-bottom: 3rem;
+
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .broker-card-logo {
+            width: 40px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .broker-type-pill {
+            border-radius: 999px;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background-color: transparent;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+
+            &.active {
+                background-color: var(--primary-color);
+                color: #fff;
+                box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.3);
+                transform: translateY(-2px);
+            }
+
+            &:hover:not(.active) {
+                background-color: rgba(var(--primary-color-rgb), 0.1);
+                transform: translateY(-1px);
+            }
+        }
+
+        .broker-card-type-header {
+            h4, h6 {
+                letter-spacing: 0.08em;
+                font-weight: 700;
+            }
+        }
+
+        .broker-family-card {
+            border-radius: 14px;
+            transition: all 0.3s ease;
+            height: 100%;
+
+            &:hover {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+                transform: translateY(-2px);
+            }
+
+            .card-header {
+                padding: 1.25rem 1.5rem 0.75rem;
+                background: linear-gradient(135deg, rgba(var(--primary-color-rgb), 0.05) 0%, transparent 100%);
+                border-bottom: 2px solid rgba(var(--primary-color-rgb), 0.1);
+
+                .font-weight-600 {
+                    font-size: 1.1rem;
+                    color: var(--primary-color);
+                }
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                
+                /* Horizontal scroll için custom scrollbar */
+                &::-webkit-scrollbar {
+                    height: 8px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: #f1f1f1;
+                    border-radius: 10px;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: var(--primary-color);
+                    border-radius: 10px;
+                    
+                    &:hover {
+                        background: rgba(var(--primary-color-rgb), 0.8);
+                    }
+                }
+            }
+
+            .table {
+                margin-bottom: 0;
+                min-width: 1000px; /* Minimum genişlik, scroll için */
+
+                thead th {
+                    text-transform: uppercase;
+                    font-size: 0.7rem;
+                    letter-spacing: 0.08em;
+                    border-top: none;
+                    border-bottom: 2px solid rgba(var(--primary-color-rgb), 0.15);
+                    white-space: nowrap;
+                    padding: 1rem 0.75rem;
+                    font-weight: 700;
+                    color: var(--primary-color);
+                    background-color: rgba(var(--primary-color-rgb), 0.02);
+                    position: sticky;
+                    top: 0;
+                    z-index: 10;
+                }
+
+                tbody {
+                    td {
+                        vertical-align: middle;
+                        padding: 0.85rem 0.75rem;
+                        border-color: rgba(0, 0, 0, 0.05);
+                        font-size: 0.9rem;
+
+                        &.font-weight-semibold {
+                            font-weight: 600;
+                        }
+
+                        &.font-weight-600 {
+                            font-weight: 600;
+                        }
+
+                        &.font-weight-bold {
+                            font-weight: 700;
+                        }
+
+                        .small {
+                            font-size: 0.75rem;
+                            opacity: 0.8;
+                        }
+                    }
+
+                    tr {
+                        transition: all 0.2s ease;
+
+                        &:hover {
+                            background-color: rgba(var(--primary-color-rgb), 0.03);
+                        }
+
+                        &.table-success {
+                            background-color: rgba(74, 198, 67, 0.12) !important;
+                            position: relative;
+
+                            &::before {
+                                content: '';
+                                position: absolute;
+                                left: 0;
+                                top: 0;
+                                bottom: 0;
+                                width: 4px;
+                                background: linear-gradient(180deg, #4AC643 0%, #3BA534 100%);
+                            }
+
+                            td {
+                                border-color: rgba(74, 198, 67, 0.2);
+                                font-weight: 600;
+                            }
+
+                            &:hover {
+                                background-color: rgba(74, 198, 67, 0.18) !important;
+                            }
+                        }
+                    }
+                }
+
+                .text-success {
+                    color: #4AC643 !important;
+                }
+
+                .text-danger {
+                    color: #FF5255 !important;
+                }
+            }
+        }
+
+        .broker-rates-table {
+            thead th {
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                letter-spacing: 0.05em;
+                border-top: none;
+            }
+
+            tbody td {
+                vertical-align: middle;
+            }
+        }
+
+        [data-role="summary"] {
+            .h5 {
+                font-weight: 700;
+                color: var(--primary-color);
+            }
+
+            .text-muted {
+                font-size: 0.85rem;
+            }
+        }
+
+        [data-role="error"] {
+            border-radius: 12px;
+        }
+
+        [data-role="table-card"] {
+            overflow: visible; /* Scroll için */
+        }
+
+        .broker-rates-content {
+            padding: 1.5rem;
+        }
+
+        /* Responsive düzenlemeler */
+        @media (max-width: 1200px) {
+            .broker-family-card .table {
+                min-width: 900px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .broker-family-card {
+                margin-bottom: 1rem;
+
+                .table {
+                    font-size: 0.85rem;
+                    min-width: 800px;
+
+                    thead th {
+                        font-size: 0.65rem;
+                        padding: 0.75rem 0.5rem;
+                    }
+
+                    tbody td {
+                        padding: 0.75rem 0.5rem;
+
+                        .small {
+                            font-size: 0.7rem;
+                        }
+                    }
+                }
+            }
+
+            .broker-type-pill {
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+    }
 }
+
