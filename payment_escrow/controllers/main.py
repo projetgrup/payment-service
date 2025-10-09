@@ -596,20 +596,20 @@ class PayloxSystemEscrowController(Controller):
                     "submerchant_external_id": ref_platform,
                     "submerchant_price": platform_commission
                 })
-            broker_amount = paid - (customer_amount + infra_amount + platform_amount)
-            if transaction.partner_id.broker_default_campaign_id and broker_amount > 0:
-                if broker_amount > 0:
-                    customer_basket.append({
-                        "id": 27,
-                        "name": transaction.partner_id.name,
-                        "description": _("Broker Commission"),
-                        "qty": 1,
-                        "amount": broker_amount,
-                        "category": "Commission",
-                        "is_physical": False,
-                        "submerchant_external_id": reference_seller,
-                        "submerchant_price": broker_amount
-                    })
+            broker_commission = paid - seller_net - infra_commission - platform_commission
+            broker_amount = paid * broker_commission / total_paid if total_paid > 0 else 0.0
+            if transaction.partner_id.broker_default_campaign_id and broker_commission > 0:
+                customer_basket.append({
+                    "id": 27,
+                    "name": transaction.partner_id.name,
+                    "description": _("Broker Commission"),
+                    "qty": 1,
+                    "amount": broker_amount,
+                    "category": "Commission",
+                    "is_physical": False,
+                    "submerchant_external_id": reference_seller,
+                    "submerchant_price": broker_commission
+                })
             fullname = customer.name.split(' ', 1)
             address = []
             if customer.city:
