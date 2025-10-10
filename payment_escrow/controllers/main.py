@@ -559,8 +559,8 @@ class PayloxSystemEscrowController(Controller):
 
             infra_commission = paid * infra_rate
             platform_commission = (paid * additional_rate / 100) - infra_commission
-            broker_commission = (paid * broker_rate / 100) - infra_commission - platform_commission
-            total_paid = seller_net + infra_commission + platform_commission
+            broker_commission = ((paid * broker_rate / 100) - infra_commission - platform_commission) * -1
+            total_paid = seller_net + infra_commission + platform_commission + broker_commission
 
             customer_amount = paid * seller_net / total_paid
             customer_basket.append({
@@ -645,6 +645,7 @@ class PayloxSystemEscrowController(Controller):
                     "country": customer.country_id and customer.country_id.name or "",
                 }
             })
+
         return values
     
     @http.route(['/payment/escrow/get_items'], type='json', auth='user', methods=['POST'], website=True)
