@@ -603,7 +603,7 @@ class PayloxSystemEscrowController(Controller):
             if transaction.partner_id.broker_default_campaign_id:
                 broker_rate = find_broker_rate(transaction.partner_id, installment_count)
                 broker_commission = (paid * broker_rate / 100)
-                total_paid += broker_commission
+                total_paid = seller_net + infra_commission + platform_commission + broker_commission
                 
                 broker_amount = paid * broker_commission / total_paid
                 if broker_amount > 0:
