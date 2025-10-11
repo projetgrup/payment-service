@@ -1328,6 +1328,7 @@ class PayloxSystemEscrowController(Controller):
                     ('sanitized_acc_number', '=', iban_sanitized),
                 ], limit=1)
                 if existing:
+                    raise Exception(existing.acc_holder_name)
                     existing.write(bank_vals)
                 if not existing:
                     existing = bank.create(bank_vals)
