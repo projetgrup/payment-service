@@ -32,8 +32,8 @@ class CustomerPortal(portal.CustomerPortal):
 
 class PayloxSystemEscrowController(Controller):
 
-    def _get_partner(self, pid=None, parent=False, system=None):
-        if system == 'escrow' or request.env.company.system == 'escrow':
+    def _get_partner(self, pid=None, parent=False):
+        if request.env.company.system == 'escrow':
             if pid:
                 try:
                     product_id = int(pid)
@@ -45,7 +45,7 @@ class PayloxSystemEscrowController(Controller):
                 except:
                     pass
         
-        return super()._get_partner(pid, parent, system)
+        return super()._get_partner(pid, parent)
 
     @http.route('/payment/escrow/transaction-data', type='json', auth='user', methods=['POST'])
     def get_transaction_data(self, product_id=None, status=None, **kwargs):
