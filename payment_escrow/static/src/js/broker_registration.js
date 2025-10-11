@@ -47,7 +47,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
             },
             input: {
                 tax_number: new fields.string({
-                    mask: '0000000000',
+                    mask: '00000000000',
                     validate: () => {
                         const field = this.broker.input.tax_number;
                         let message = null;
