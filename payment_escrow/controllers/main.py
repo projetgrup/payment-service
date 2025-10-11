@@ -500,9 +500,6 @@ class PayloxSystemEscrowController(Controller):
     def _get_data_values(self, data, transaction, **kwargs):
         values = super()._get_data_values(data, transaction, **kwargs)
         if transaction and transaction.system == 'escrow':
-            
-
-
             # if kwargs.get('file'):
             #     for f in kwargs['file']:
             #         if f['type'] == 'conveyance':
