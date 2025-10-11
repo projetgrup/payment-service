@@ -1327,6 +1327,8 @@ class PayloxSystemEscrowController(Controller):
                     ('company_id', '=', request.env.company.id),
                     ('sanitized_acc_number', '=', iban_sanitized),
                 ], limit=1)
+                if existing and existing.api_state:
+                    existing.write(bank_vals)
                 if not existing:
                     existing = bank.create(bank_vals)
                 if not existing.api_state:
