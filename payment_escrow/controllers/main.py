@@ -559,7 +559,7 @@ class PayloxSystemEscrowController(Controller):
 
             infra_commission = paid * infra_rate
             platform_commission = (paid * additional_rate / 100) - infra_commission
-            broker_commission = ((paid * broker_rate / 100) - infra_commission - platform_commission) * -1
+            broker_commission = (paid * broker_rate / 100)
             total_paid = seller_net + infra_commission + platform_commission + broker_commission
 
             customer_amount = paid * seller_net / total_paid
@@ -1327,7 +1327,6 @@ class PayloxSystemEscrowController(Controller):
                     ('company_id', '=', request.env.company.id),
                     ('sanitized_acc_number', '=', iban_sanitized),
                 ], limit=1)
-                raise Exception(existing)
                 if not existing:
                     existing = bank.create(bank_vals)
                 if not existing.api_state:
