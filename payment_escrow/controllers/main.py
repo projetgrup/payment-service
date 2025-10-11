@@ -531,6 +531,9 @@ class PayloxSystemEscrowController(Controller):
 
             platform_owner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'platform_owner')], limit=1)
             infrastructure_provider = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'infrastructure_provider')], limit=1)
+            
+            # Get broker from product
+            broker = transaction.paylox_product_ids[0]['product_id'].get('broker_id')
 
             def find_rate(rec, inst):
                 if rec and rec.installment_rate_ids:
@@ -544,6 +547,7 @@ class PayloxSystemEscrowController(Controller):
                     for r in rec.broker_default_campaign_id.line_ids:
                         if int(r.installment_count) == inst:
                             return float(r.broker_additional_rate)
+                return 0.0
 
             installment_count = int(transaction.jetcheckout_installment_count or 1)
             seller_net = float(transaction.jetcheckout_payment_amount or 0.0)
@@ -552,7 +556,7 @@ class PayloxSystemEscrowController(Controller):
 
             platform_rate = find_rate(platform_owner, installment_count)
             infra_rate = find_rate(infrastructure_provider, installment_count)
-            broker_rate = find_broker_rate(transaction.partner_id, installment_count)
+            broker_rate = find_broker_rate(broker, installment_count)
 
             infra_commission = paid * infra_rate
             platform_commission = (paid * additional_rate / 100) - infra_commission
@@ -602,19 +606,18 @@ class PayloxSystemEscrowController(Controller):
                     "submerchant_price": platform_commission
                 })
             broker_amount = paid * broker_commission / total_paid
-            if transaction.partner_id.broker_default_campaign_id and broker_amount > 0:
-                if broker_amount > 0:
-                    customer_basket.append({
-                        "id": 27,
-                        "name": transaction.partner_id.name,
-                        "description": _("Broker Commission"),
-                        "qty": 1,
-                        "amount": broker_amount,
-                        "category": "Commission",
-                        "is_physical": False,
-                        "submerchant_external_id": reference_seller,
-                        "submerchant_price": broker_commission
-                    })
+            if broker and broker.broker_default_campaign_id and broker_amount > 0:
+                customer_basket.append({
+                    "id": 27,
+                    "name": broker.name,
+                    "description": _("Broker Commission"),
+                    "qty": 1,
+                    "amount": broker_amount,
+                    "category": "Commission",
+                    "is_physical": False,
+                    "submerchant_external_id": reference_seller,
+                    "submerchant_price": broker_commission
+                })
             fullname = customer.name.split(' ', 1)
             address = []
             if customer.city:
