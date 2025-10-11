@@ -532,8 +532,7 @@ class PayloxSystemEscrowController(Controller):
             platform_owner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'platform_owner')], limit=1)
             infrastructure_provider = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'infrastructure_provider')], limit=1)
             
-            # Get broker from product
-            broker = transaction.paylox_product_ids[0]['product_id'].get('broker_id')
+            broker = transaction.paylox_product_ids[0]['product_id']['escrow_owner_id']
 
             def find_rate(rec, inst):
                 if rec and rec.installment_rate_ids:
