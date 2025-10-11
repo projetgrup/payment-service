@@ -32,21 +32,6 @@ class CustomerPortal(portal.CustomerPortal):
 
 class PayloxSystemEscrowController(Controller):
 
-    def _get_partner(self, pid=None, parent=False):
-        if request.env.company.system == 'escrow':
-            if pid:
-                try:
-                    product_id = int(pid)
-                    product = request.env['product.product'].sudo().browse(product_id)
-                    if product.exists() and product.escrow_customer_ids:
-                        customer = next((c for c in product.escrow_customer_ids if c.is_escrow_customer), None)
-                        if customer:
-                            return customer
-                except:
-                    pass
-        
-        return super()._get_partner(pid, parent)
-
     @http.route('/payment/escrow/transaction-data', type='json', auth='user', methods=['POST'])
     def get_transaction_data(self, product_id=None, status=None, **kwargs):
         try:
@@ -657,6 +642,7 @@ class PayloxSystemEscrowController(Controller):
                     "country": customer.country_id and customer.country_id.name or "",
                 }
             })
+            transaction.partner_id = customer.id
 
         return values
     
