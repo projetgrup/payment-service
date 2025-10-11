@@ -87,6 +87,19 @@
                     <h3>Company Information</h3>
                 </div>
                 <form action="#" id="brokerInfoForm" class="form">
+                <div class="radioTabSelector mb-3">
+                        <div class="radioTab">
+                            <label class="radioTab__label">
+                                <input type="radio" class="radioTab__control" name="userType" value="individual" data-type="individual" checked="checked"/>
+                                <span>Individual</span>
+                            </label>
+                            <label class="radioTab__label">
+                                <input type="radio" class="radioTab__control" name="userType" value="corporate" data-type="corporate"/>
+                                <span>Corporate</span>
+                            </label>
+                            <div class="radioTab__slider"></div>
+                        </div>
+                    </div>
                     <div class="form__group">
                         <label class="form__label" for="broker_tax">Tax Number</label>
                         <input class="form__control -letter" id="broker_tax" name="taxnumber" type="text" placeholder="Tax Number" field="broker.input.tax_number" required="required"/>
@@ -154,7 +167,6 @@
         </div>
     </template>
 
-    <!-- Step 2: Document Upload Form -->
     <template id="broker_step_2_content" name="Broker Step 2 Content">
         <div class="section">
             <div class="panel">

@@ -1723,7 +1723,7 @@ class PayloxSystemEscrowController(Controller):
                     'state_id': int(kwargs.get('state_id')),
                     'broker_sign_name': kwargs.get('sign_name'),
                     'broker_authorized_person': kwargs.get('person'),
-                    'tax_office': kwargs.get('tax_office', 'Merkez'),
+                    'paylox_tax_office': kwargs.get('tax_office', 'Merkez'),
                     'city': kwargs.get('city'),
                     'is_company': True,
                     'company_id': company.id,
