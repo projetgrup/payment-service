@@ -1805,6 +1805,7 @@ class PayloxSystemEscrowController(Controller):
             
         except Exception as e:
             _logger.error(f"Error in broker registration: {str(e)}")
+            request.env.cr.rollback()
             return {
                 'success': False,
                 'error': str(e),
