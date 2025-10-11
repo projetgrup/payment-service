@@ -552,10 +552,12 @@ class PayloxSystemEscrowController(Controller):
 
             platform_rate = find_rate(platform_owner, installment_count)
             infra_rate = find_rate(infrastructure_provider, installment_count)
+            broker_rate = find_broker_rate(transaction.partner_id, installment_count)
 
             infra_commission = paid * infra_rate
             platform_commission = (paid * additional_rate / 100) - infra_commission
-            total_paid = seller_net + infra_commission + platform_commission
+            broker_commission = (paid * broker_rate / 100)
+            total_paid = seller_net + infra_commission + platform_commission + broker_commission
 
             customer_amount = paid * seller_net / total_paid
             customer_basket.append({
@@ -599,13 +601,8 @@ class PayloxSystemEscrowController(Controller):
                     "submerchant_external_id": ref_platform,
                     "submerchant_price": platform_commission
                 })
-                
-            if transaction.partner_id.broker_default_campaign_id:
-                broker_rate = find_broker_rate(transaction.partner_id, installment_count)
-                broker_commission = (paid * broker_rate / 100)
-                total_paid = seller_net + infra_commission + platform_commission + broker_commission
-                
-                broker_amount = paid * broker_commission / total_paid
+            broker_amount = paid * broker_commission / total_paid
+            if transaction.partner_id.broker_default_campaign_id and broker_amount > 0:
                 if broker_amount > 0:
                     customer_basket.append({
                         "id": 27,
