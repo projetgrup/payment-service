@@ -46,6 +46,20 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 }),
             },
             input: {
+                vat: new fields.element({
+                    mask: '00000000000',
+                    validate: () => {
+                        const field = this.broker.input.vat;
+                        let message = null;
+                        let valid = true;
+                        if (!field._.masked.isComplete) {
+                            message = _t('Vat is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
                 tax_number: new fields.string({
                     mask: '00000000000',
                     validate: () => {
@@ -54,6 +68,21 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                         let valid = true;
                         if (!field._.masked.isComplete) {
                             message = _t('Tax ID is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                name: new fields.string({
+                    mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
+                    prepareChar: str => str.toLocaleUpperCase('tr-TR'),
+                    validate: () => {
+                        const field = this.broker.input.name;
+                        let message = null;
+                        let valid = true;
+                        if (!field._.masked.isComplete) {
+                            message = _t('Name is required');
                             valid = false;
                         }
                         this._onFieldValid(field, valid, message);
