@@ -53,9 +53,12 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                         let message = null;
                         let valid = true;
                         if (!field._.masked.isComplete) {
-                            message = _t('Vat is required');
+                            message = _t('TC Identity Number is required');
                             valid = false;
-                        }
+                        } else if (!this._isTcknValid(field.value)) {
+                            message = _t('Tax ID is not valid');
+                            valid = false;
+                        } 
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -69,7 +72,10 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                         if (!field._.masked.isComplete) {
                             message = _t('Tax ID is required');
                             valid = false;
-                        }
+                        }else if (!this._isVatValid(field.value)) {
+                            message = _t('Tax ID is not valid');
+                            valid = false;
+                        } 
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -81,7 +87,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                         const field = this.broker.input.name;
                         let message = null;
                         let valid = true;
-                        if (!field._.masked.isComplete) {
+                        if (!field.value) {
                             message = _t('Name is required');
                             valid = false;
                         }
@@ -330,7 +336,116 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         const self = this;
         return this._super.apply(this, arguments).then(() => {
             self._initializeOtpInputs();
+            self._initializeUserTypeToggle();
         });
+    },
+
+    _initializeUserTypeToggle: function() {
+        const self = this;
+        const $form = this.$('#brokerInfoForm');
+        const $radioInd = $form.find('input[name="userType"][value="individual"]');
+        const $radioCor = $form.find('input[name="userType"][value="corporate"]');
+        const $individualFields = $form.find('.individual-fields');
+        const $corporateFields = $form.find('.corporate-fields');
+        const $slider = $form.find('.radioTab__slider');
+        
+        function setMode(mode) {
+            const isInd = mode === 'individual';
+            
+            // Toggle visibility
+            $individualFields.toggleClass('d-none', !isInd).toggle(isInd);
+            $corporateFields.toggleClass('d-none', isInd).toggle(!isInd);
+            
+            // Update radio buttons
+            $radioInd.prop('checked', isInd);
+            $radioCor.prop('checked', !isInd);
+            
+            // Move slider
+            if ($slider.length) {
+                $slider.css('transform', isInd ? 'translateX(0%)' : 'translateX(100%)');
+            }
+            
+            // Set required attributes
+            $individualFields.find('input').prop('required', isInd);
+            $corporateFields.find('input').prop('required', !isInd);
+            
+            // Clear errors
+            if (isInd) {
+                $corporateFields.find('.form__group').removeClass('-error');
+                $corporateFields.find('.form__icon').removeClass('fa-times-circle fa-check-circle');
+            } else {
+                $individualFields.find('.form__group').removeClass('-error');
+                $individualFields.find('.form__icon').removeClass('fa-times-circle fa-check-circle');
+            }
+        }
+        
+        // Remove old listeners
+        $radioInd.off('change.userTypeToggle');
+        $radioCor.off('change.userTypeToggle');
+        
+        // Add new listeners
+        if ($radioInd.length) {
+            $radioInd.on('change.userTypeToggle', () => {
+                if ($radioInd.is(':checked')) setMode('individual');
+            });
+        }
+        if ($radioCor.length) {
+            $radioCor.on('change.userTypeToggle', () => {
+                if ($radioCor.is(':checked')) setMode('corporate');
+            });
+        }
+        
+        const selected = $form.find('input[name="userType"]:checked').val() || 'corporate';
+        setMode(selected);
+    },
+
+    _isVatValid: function(value) {
+        if (value.length === 10) {
+            let v = [];
+            let lastDigit = Number(value.charAt(9));
+            for (let i = 0; i < 9; i++) {
+                let tmp = (Number(value.charAt(i)) + (9 - i)) % 10;
+                v[i] = (tmp * 2 ** (9 - i)) % 9;
+                if (tmp !== 0 && v[i] === 0) v[i] = 9;
+            }
+            let sum = v.reduce((a, b) => a + b, 0) % 10;
+            return (10 - (sum % 10)) % 10 === lastDigit;
+        }
+        return false;
+    },
+
+    _isTcknValid: function(value) {
+        if (!/^\d{11}$/.test(value)) {
+            return false;
+        }
+        
+        if (value[0] === '0') {
+            return false;
+        }
+        
+        const digits = value.split('').map(Number);
+        
+        let sum1 = 0, sum2 = 0;
+        for (let i = 0; i < 9; i++) {
+            if (i % 2 === 0) {
+                sum1 += digits[i];
+            } else {
+                sum2 += digits[i];
+            }
+        }
+
+        const check1 = ((sum1 * 7) - sum2) % 10;
+        if (check1 !== digits[9]) {
+            return false;
+        }
+
+        const totalSum = digits.slice(0, 10).reduce((a, b) => a + b, 0);
+        const check2 = totalSum % 10;
+        if (check2 !== digits[10]) {
+            return false;
+        }
+
+        return true;
     },
 
     _isIbanValid: function(iban) {
@@ -547,7 +662,6 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         ev.preventDefault();
         const self = this;
         
-        // Partner ID ile tekrar OTP gönder
         rpc.query({
             route: '/my/otp/start',
             params: { partner_id: self.partner }
@@ -602,18 +716,37 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         ev.preventDefault();
         const self = this;
         
-        const fields = [
-            this.broker.input.tax_number,
-            this.broker.input.company_title,
-            this.broker.input.sign_name,
-            this.broker.input.state,
-            this.broker.input.city,
-            this.broker.input.person,
-            this.broker.input.phone,
-            this.broker.input.email,
-            this.broker.input.iban,
-            this.broker.input.iban_name,
-        ];
+        const userType = this.$('input[name="userType"]:checked').val();
+        const isIndividual = userType === 'individual';
+        
+        let fields = [];
+        
+        if (isIndividual) {
+            fields = [
+                this.broker.input.vat,
+                this.broker.input.name,
+                this.broker.input.state,
+                this.broker.input.city,
+                this.broker.input.person,
+                this.broker.input.phone,
+                this.broker.input.email,
+                this.broker.input.iban,
+                this.broker.input.iban_name,
+            ];
+        } else {
+            fields = [
+                this.broker.input.tax_number,
+                this.broker.input.company_title,
+                this.broker.input.sign_name,
+                this.broker.input.state,
+                this.broker.input.city,
+                this.broker.input.person,
+                this.broker.input.phone,
+                this.broker.input.email,
+                this.broker.input.iban,
+                this.broker.input.iban_name,
+            ];
+        }
 
         let isValid = true;
         fields.forEach(field => {
@@ -625,11 +758,10 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         if (!isValid) {
             return;
         }
+        
         const formData = {
             step: 1,
-            tax_number: this.broker.input.tax_number.value,
-            company_title: this.broker.input.company_title.value,
-            sign_name: this.broker.input.sign_name.value,
+            user_type: userType,
             state_id: this.broker.input.state.value,
             city: this.broker.input.city.value,
             person: this.broker.input.person.value,
@@ -638,6 +770,16 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
             iban: this.broker.input.iban.$.val(),
             iban_name: this.broker.input.iban_name.value,
         };
+        
+        if (isIndividual) {
+            formData.vat = this.broker.input.vat.value;
+            formData.name = this.broker.input.name.value;
+            formData.sign_name = this.broker.input.sign_name.value;
+        } else {
+            formData.tax_number = this.broker.input.tax_number.value;
+            formData.company_title = this.broker.input.company_title.value;
+            formData.sign_name = this.broker.input.sign_name.value;
+        }
 
         this.broker.button.next.$.prop('disabled', true);
 

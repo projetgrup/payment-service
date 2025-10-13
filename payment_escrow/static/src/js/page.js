@@ -775,6 +775,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         return valid;
                     }
                 }),
+                license_serial_no: new fields.string({
+                    mask: /^[A-Z0-9]{0,10}$/,
+                    prepareChar: str => str.toUpperCase(),
+                    validate: () => {
+                        const field = this.ad.input.license_serial_no;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('License Serial No is required');
+                            valid = false;
+                        } else if (field.value.length > 10) {
+                            message = _t('License Serial No must be at most 10 characters');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
                 vin: new fields.string({
                     mask: /^[A-Z0-9]{0,17}$/,
                     prepareChar: str => str.toUpperCase(),
@@ -2010,7 +2028,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (adData.year) {
             this.ad.input.year.value = adData.year;
         }
-
+        if (adData.license_serial_no) {
+            this.ad.input.license_serial_no.value = adData.license_serial_no;
+        }
         if (adData.img) {
             this.ad.input.fileLicence.value = adData.img;
         }
@@ -2046,6 +2066,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             escrow_car_model_year: parseInt(this.ad.input.year.$.val(), 10) || null,
             escrow_ad_sale_img: this.ad.input.fileLicence.value || null,
             escrow_owner_id: this.state.owner || null,
+            escrow_license_serial_no: this.ad.input.license_serial_no.value || null,
         };
 
         return rpc.query({ route: '/my/ad/save', params }).then((result) => {

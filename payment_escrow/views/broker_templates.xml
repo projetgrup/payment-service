@@ -100,21 +100,39 @@
                             <div class="radioTab__slider"></div>
                         </div>
                     </div>
-                    <div class="form__group">
-                        <label class="form__label" for="broker_tax">Tax Number</label>
-                        <input class="form__control -letter" id="broker_tax" name="taxnumber" type="text" placeholder="Tax Number" field="broker.input.tax_number" required="required"/>
-                        <i class="form__icon fa" aria-hidden="true"/>
+                    
+                    <!-- Individual Fields -->
+                    <div class="individual-fields">
+                        <div class="form__group">
+                            <label class="form__label" for="broker_tc_individual">TC Identity Number</label>
+                            <input class="form__control -letter" id="broker_tc_individual" name="vat" type="text" placeholder="TC Identity Number" field="broker.input.vat" maxlength="11"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="broker_name_individual">Name Surname</label>
+                            <input class="form__control -letter" id="broker_name_individual" name="name" type="text" placeholder="Name Surname" field="broker.input.name"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
                     </div>
-                    <div class="form__group">
-                        <label class="form__label" for="broker_title">Company Title</label>
-                        <input class="form__control -letter" id="broker_title" name="companytitle" type="text" placeholder="Company Title" field="broker.input.company_title" required="required"/>
-                        <i class="form__icon fa" aria-hidden="true"/>
+                    
+                    <div class="corporate-fields" style="display: none;">
+                        <div class="form__group">
+                            <label class="form__label" for="broker_tax">Tax Number</label>
+                            <input class="form__control -letter" id="broker_tax" name="taxnumber" type="text" placeholder="Tax Number" field="broker.input.tax_number"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="broker_title">Company Title</label>
+                            <input class="form__control -letter" id="broker_title" name="companytitle" type="text" placeholder="Company Title" field="broker.input.company_title"/>
+                            <i class="form__icon fa" aria-hidden="true"/>
+                        </div>
                     </div>
                     <div class="form__group">
                         <label class="form__label" for="broker_sign_name">Sign Name</label>
-                        <input class="form__control -letter" id="broker_sign_name" name="signname" type="text" placeholder="Sign Name" field="broker.input.sign_name" required="required"/>
+                        <input class="form__control -letter" id="broker_sign_name" name="signname" type="text" placeholder="Sign Name" field="broker.input.sign_name"/>
                         <i class="form__icon fa" aria-hidden="true"/>
                     </div>
+                    <!-- Common Fields -->
                     <div class="form__group">
                         <label class="form__label" for="broker_state">City</label>
                         <select id="broker_state" class="form__control" name="state" field="broker.input.state" required="required">

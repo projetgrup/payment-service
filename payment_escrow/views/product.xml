@@ -152,6 +152,7 @@
                         <group>
                             <group>
                                 <field name="escrow_car_brand_id"/>
+                                <field name="escrow_license_serial_no"/>
                                 <field name="escrow_car_model_id" domain="[('brand_id','=',escrow_car_brand_id)]"/>
                                 <field name="escrow_car_model_year"/>
                                 <field name="escrow_car_vin"/>

@@ -247,26 +247,26 @@ class PayloxSystemEscrowController(Controller):
             
             crate = _to_float(row.get('crate'))
             
-            corate = (crate / (100 + crate)) * 100 if crate > 0 else 0.0
+            corate = round((crate / (100 + crate)) * 100, 2) if crate > 0 else 0.0
             broker_rate = additional_rates.get(count, 0.0)
             
-            customer_rate = crate
+            customer_rate = round(crate, 4)
             customer_amount = float_round(amount_value * customer_rate / 100.0, precision_digits=precision)
             
             combined_rate = corate + broker_rate
-            broker_impact_rate = ((100 / (1 - (combined_rate / 100)) - 100) / 100) * 100 if combined_rate < 100 else 0.0
+            broker_impact_rate = round(((100 / (1 - (combined_rate / 100)) - 100) / 100) * 100, 4) if combined_rate < 100 else 0.0
             broker_impact_amount = float_round(amount_value * broker_impact_rate / 100.0, precision_digits=precision)
             
             total_amount = float_round(amount_value + broker_impact_amount, precision_digits=precision)
-            
-            bank_commission = float_round(total_amount * corate / 100.0, precision_digits=precision)
-            broker_extra = float_round(amount_value * broker_rate / 100.0, precision_digits=precision)
-            paylox_total_commission = float_round(total_amount - amount_value, precision_digits=precision)
-            
-            profit = float_round(total_amount * broker_rate / 100.0, precision_digits=precision)
-            profit_rate = (profit / amount_value * 100) if amount_value > 0 else 0.0  # Yuvarlama YOK
-            
-            monthly_amount = count and float_round(total_amount / count, precision_digits=precision) or total_amount
+
+            bank_commission = round(total_amount * corate / 100.0, 4)
+            broker_extra = round(amount_value * broker_rate / 100.0, 4)
+            paylox_total_commission = round(total_amount - amount_value, 4)
+
+            profit = round(total_amount * broker_rate / 100.0, 4)
+            profit_rate = (profit / amount_value * 100) if amount_value > 0 else 0.0
+
+            monthly_amount = count and round(total_amount / count, 4) or total_amount
 
             lines.append({
                 'card_type': card_type or '',
@@ -1326,6 +1326,8 @@ class PayloxSystemEscrowController(Controller):
                     ('company_id', '=', request.env.company.id),
                     ('sanitized_acc_number', '=', iban_sanitized),
                 ], limit=1)
+                if existing:
+                    existing.write(bank_vals)
                 if not existing:
                     existing = bank.create(bank_vals)
                 if not existing.api_state:
@@ -1334,8 +1336,6 @@ class PayloxSystemEscrowController(Controller):
                         'partner_id': partner.id,
                         'message': existing.api_message
                     }
-                #else:
-                #    existing.write(bank_vals)
             if kwargs.get('ad_id'):
                 ad = request.env['product.product'].sudo().with_context(system='escrow').search([('id', '=', int(kwargs.get('ad_id'))), ('company_id', '=', company.id)], limit=1)
                 if ad:
@@ -1693,9 +1693,14 @@ class PayloxSystemEscrowController(Controller):
         try:
             company = request.env.company
             step = kwargs.get('step', 1)
+            user_type = kwargs.get('user_type', 'corporate')  # Default to corporate for backward compatibility
             
             if step == 1:
-                required_fields = ['tax_number', 'company_title', 'sign_name', 'state_id', 'city', 'person', 'phone', 'email', 'iban', 'iban_name']
+                if user_type == 'individual':
+                    required_fields = ['vat', 'name','sign_name', 'state_id', 'city', 'person', 'phone', 'email', 'iban', 'iban_name']
+                else: 
+                    required_fields = ['tax_number', 'company_title', 'sign_name', 'state_id', 'city', 'person', 'phone', 'email', 'iban', 'iban_name']
+                
                 for field in required_fields:
                     if not kwargs.get(field):
                         return {
@@ -1703,8 +1708,9 @@ class PayloxSystemEscrowController(Controller):
                             'message': f'Missing required field: {field}'
                         }
                 
+                vat_number = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number')
                 existing_broker = request.env['res.partner'].sudo().search([
-                    ('vat', '=', kwargs.get('tax_number')),
+                    ('vat', '=', vat_number),
                     ('paylox_escrow_type', '=', 'broker'),
                     ('company_id', '=', company.id),
                 ], limit=1)
@@ -1712,26 +1718,46 @@ class PayloxSystemEscrowController(Controller):
                     return {
                         'success': True,
                         'partner_id': existing_broker.id,
-                        'message': 'Broker with this tax number already exists. Please proceed to the next step.'
+                        'message': 'Broker with this tax/identity number already exists. Please proceed to the next step.'
                     }
-                partner = request.env['res.partner'].sudo().create({
-                    'name': kwargs.get('company_title'),
-                    'vat': kwargs.get('tax_number'),
-                    'email': kwargs.get('email'),
-                    'mobile': kwargs.get('phone'),
-                    'state_id': int(kwargs.get('state_id')),
-                    'broker_sign_name': kwargs.get('sign_name'),
-                    'broker_authorized_person': kwargs.get('person'),
-                    'paylox_tax_office': kwargs.get('tax_office', 'Merkez'),
-                    'city': kwargs.get('city'),
-                    'is_company': True,
-                    'company_id': company.id,
-                    'paylox_escrow_type': 'broker',
-                    'system': 'escrow',
-                })
+                
+                if user_type == 'individual':
+                    partner_vals = {
+                        'name': kwargs.get('name'),
+                        'vat': kwargs.get('vat'),
+                        'email': kwargs.get('email'),
+                        'broker_sign_name': kwargs.get('sign_name'),
+                        'mobile': kwargs.get('phone'),
+                        'state_id': int(kwargs.get('state_id')),
+                        'broker_authorized_person': kwargs.get('person'),
+                        'paylox_tax_office': kwargs.get('tax_office', 'Merkez'),
+                        'city': kwargs.get('city'),
+                        'is_company': False,
+                        'company_id': company.id,
+                        'paylox_escrow_type': 'broker',
+                        'system': 'escrow',
+                    }
+                else:
+                    partner_vals = {
+                        'name': kwargs.get('company_title'),
+                        'vat': kwargs.get('tax_number'),
+                        'email': kwargs.get('email'),
+                        'mobile': kwargs.get('phone'),
+                        'state_id': int(kwargs.get('state_id')),
+                        'broker_sign_name': kwargs.get('sign_name'),
+                        'broker_authorized_person': kwargs.get('person'),
+                        'paylox_tax_office': kwargs.get('tax_office', 'Merkez'),
+                        'city': kwargs.get('city'),
+                        'is_company': True,
+                        'company_id': company.id,
+                        'paylox_escrow_type': 'broker',
+                        'system': 'escrow',
+                    }
+                
+                partner = request.env['res.partner'].sudo().create(partner_vals)
                 
                 iban = kwargs.get('iban', '')
-                vat = kwargs.get('tax_number', '')
+                vat = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number', '')
                 iban_verified = self.verify_iban(iban, vat)
                 if iban and not iban_verified:
                     iban_raw = kwargs.get('iban', '')
@@ -1753,6 +1779,7 @@ class PayloxSystemEscrowController(Controller):
                         existing_bank = bank.create(bank_vals)
                     
                     if not existing_bank.api_state:
+                        request.env.cr.rollback()
                         return {
                             'success': False,
                             'partner_id': partner.id,

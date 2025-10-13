@@ -52,6 +52,7 @@ class ProductProduct(models.Model):
         ('waiting_transfer_approval', 'Waiting Transfer Approval'),
         ('transferred', 'Transferred'),
     ], string='State', default='waiting', index=True, tracking=True)
+    escrow_license_serial_no = fields.Char(string='License Serial No')
 
     def action_get_customer(self):
         self.ensure_one()

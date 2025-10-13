@@ -521,10 +521,6 @@
                                             <h3 class="h4 mb-1 font-weight-bold text-primary">Broker Installment Rates</h3>
                                             <p class="text-muted mb-0">Preview net margin per installment plan based on the requested amount.</p>
                                         </div>
-                                        <div class="badge badge-light text-primary px-3 py-2 font-weight-600">
-                                            <i class="fa fa-chart-line mr-2"/>
-                                            <span>Beta</span>
-                                        </div>
                                     </div>
 
                                     <div class="row align-items-end">
