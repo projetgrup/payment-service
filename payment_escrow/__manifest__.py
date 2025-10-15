@@ -28,6 +28,8 @@
         'views/car_model.xml',
         'views/installment_rate.xml',
         'views/broker_campaign.xml',
+        'views/broker_transactions.xml',
+        'views/transaction_basket.xml',
         'views/actions.xml',
         'views/menu.xml',
         'views/step_components.xml',
@@ -56,6 +58,7 @@
             'payment_escrow/static/src/js/page.js',
             'payment_escrow/static/src/js/system.js',
             'payment_escrow/static/src/js/broker_registration.js',
+            'payment_escrow/static/src/js/broker_transactions.js',
         ],
         'web.assets_qweb': [
             'payment_escrow/static/src/xml/templates.xml',

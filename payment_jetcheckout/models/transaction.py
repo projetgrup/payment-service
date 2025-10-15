@@ -948,3 +948,4 @@ class PaymentTransactionBasket(models.Model):
     category = fields.Char('Category')
     submerchant_external_id = fields.Char('Submerchant External ID')
     submerchant_price = fields.Float('Submerchant External Price')
+    

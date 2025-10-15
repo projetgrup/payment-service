@@ -326,7 +326,7 @@
 
     <template id="broker_registration_login_link" name="Broker Registration Link" inherit_id="web.login" priority="50">
         <xpath expr="//div[hasclass('o_login_auth')]" position="inside">
-            <div class="text-center mt-3 mb-3">
+            <div t-if="website.company_id.broker_registration_enabled" class="text-center mt-3 mb-3">
                 <div class="small text-muted mb-2">
                     <i class="fa fa-briefcase mr-1"></i>
                     Would you like to join the system as a broker?

@@ -604,6 +604,7 @@ class PayloxSystemEscrowController(Controller):
                 })
             broker_amount = paid * broker_commission / total_paid
             if transaction.partner_id.broker_default_campaign_id and broker_amount > 0:
+                ref_broker = (transaction.partner_id.bank_ids and transaction.partner_id.bank_ids[0]['api_ref']) or reference_seller
                 if broker_amount > 0:
                     customer_basket.append({
                         "id": 27,
@@ -613,7 +614,7 @@ class PayloxSystemEscrowController(Controller):
                         "amount": broker_amount,
                         "category": "Commission",
                         "is_physical": False,
-                        "submerchant_external_id": reference_seller,
+                        "submerchant_external_id": ref_broker,
                         "submerchant_price": broker_commission
                     })
             fullname = customer.name.split(' ', 1)
@@ -1330,12 +1331,12 @@ class PayloxSystemEscrowController(Controller):
                     existing.write(bank_vals)
                 if not existing:
                     existing = bank.create(bank_vals)
-                if not existing.api_state:
-                    return {
-                        'success': False,
-                        'partner_id': partner.id,
-                        'message': existing.api_message
-                    }
+                # if not existing.api_state:
+                #     return {
+                #         'success': False,
+                #         'partner_id': partner.id,
+                #         'message': existing.api_message
+                #     }
             if kwargs.get('ad_id'):
                 ad = request.env['product.product'].sudo().with_context(system='escrow').search([('id', '=', int(kwargs.get('ad_id'))), ('company_id', '=', company.id)], limit=1)
                 if ad:
@@ -1779,7 +1780,6 @@ class PayloxSystemEscrowController(Controller):
                         existing_bank = bank.create(bank_vals)
                     
                     if not existing_bank.api_state:
-                        request.env.cr.rollback()
                         return {
                             'success': False,
                             'partner_id': partner.id,
@@ -1876,4 +1876,86 @@ class PayloxSystemEscrowController(Controller):
         }
         return request.render('payment_escrow.page_broker_register', values)
 
+    @route('/my/broker/transactions', type='http', auth='user', website=True)
+    def broker_transactions_page(self, **kwargs):
+        user = request.env.user
+        partner = user.partner_id
+        
+        if partner.paylox_escrow_type != 'broker':
+            return request.redirect('/my')
+        
+        partner_banks = request.env['res.partner.bank'].sudo().search([
+            ('partner_id', '=', partner.id),
+
+        ])
+        
+        baskets = request.env['payment.transaction.basket'].sudo().search([
+            ('submerchant_external_id', 'in', partner_banks.mapped('api_ref')),
+        ], order='transaction_date desc')
+        
+        values = {
+            'baskets': baskets,
+            'page_name': 'broker_transactions',
+        }
+        return request.render('payment_escrow.broker_transactions_page', values)
+
+    @route('/my/broker/transaction/<int:basket_id>/upload_invoice', type='json', auth='user', website=True, methods=['POST'], csrf=False)
+    def broker_upload_invoice(self, basket_id, **kwargs):
+        basket = request.env['payment.transaction.basket'].sudo().browse(int(basket_id))
+        
+        if not basket.exists():
+            return {'success': False, 'message': 'Transaction basket not found'}
+        
+        invoice_file = kwargs.get('invoice_file')
+        filename = kwargs.get('filename', 'invoice.pdf')
+        mimetype = kwargs.get('mimetype', 'application/pdf')
+        
+        if invoice_file:
+            attachment = request.env['ir.attachment'].sudo().create({
+                'name': filename,
+                'datas': invoice_file,
+                'res_model': 'payment.transaction.basket',
+                'res_id': basket.id,
+                'mimetype': mimetype,
+            })
+            
+            basket.sudo().write({
+                'broker_invoice_id': attachment.id,
+                'broker_invoice_upload_date': fields.Datetime.now(),
+                'transfer_status': 'can_approve',
+            })
+            
+            return {'success': True, 'message': 'Invoice uploaded successfully'}
+        
+        return {'success': False, 'message': 'No file provided'}
+
+    @route('/my/broker/transaction/<int:basket_id>/submit_for_approval', type='http', auth='user', website=True, methods=['POST'], csrf=False)
+    def broker_submit_for_approval(self, basket_id, **kwargs):
+        basket = request.env['payment.transaction.basket'].sudo().browse(basket_id)
+        
+        if not basket.exists():
+            return request.redirect('/my/broker/transactions')
+        
+        approval_group = request.env.ref('payment_escrow.group_escrow_manager', raise_if_not_found=False)
+        
+        if approval_group:
+            for user in approval_group.users:
+                request.env['mail.message'].sudo().create({
+                    'message_type': 'notification',
+                    'subtype_id': request.env.ref('mail.mt_comment').id,
+                    'body': f'Broker transaction pending approval: {basket.ad_number}',
+                    'author_id': request.env.user.partner_id.id,
+                    'model': 'payment.transaction.basket',
+                    'res_id': basket.id,
+                    'partner_ids': [(4, user.partner_id.id)],
+                })
+        
+        basket.sudo().write({
+            'broker_submitted_for_approval': True,
+            'broker_submit_date': fields.Datetime.now(),
+        })
+        
+        return request.redirect('/my/broker/transactions')
+
+    
     

@@ -2505,6 +2505,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (this.wizard.currentStep === 2) {
             for (const input of Object.values(this.ad.input)) {
                 let valid = await input.validate();
+                console.log('Validating input', input, valid);
                 if (!valid) {
                     return this.displayNotification({
                         title: 'Error',

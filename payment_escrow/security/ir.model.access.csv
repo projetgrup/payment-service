@@ -17,6 +17,8 @@ access_escrow_sync_manager,escrow.sync manager,model_escrow_sync,payment_escrow.
 access_escrow_brand_sync_line_user,escrow.brand.sync.line user,model_escrow_brand_sync_line,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_brand_sync_line_manager,escrow.brand.sync.line manager,model_escrow_brand_sync_line,payment_escrow.group_escrow_manager,1,1,1,1
 
-access_broker_rejection_wizard_user,broker.rejection.wizard user,model_broker_rejection_wizard,payment_escrow.group_escrow_user,1,1,1,1
+access_broker_rejection_wizard_user,broker.rejection.wizard user,model_broker_rejection_wizard,payment_escrow.group_escrow_user,1,0,0,0
 access_broker_rejection_wizard_manager,broker.rejection.wizard manager,model_broker_rejection_wizard,payment_escrow.group_escrow_manager,1,1,1,1
 
+access_payment_transaction_basket_user,payment.transaction.basket user,payment_jetcheckout.model_payment_transaction_basket,payment_escrow.group_escrow_user,1,0,0,0
+access_payment_transaction_basket_manager,payment.transaction.basket manager,payment_jetcheckout.model_payment_transaction_basket,payment_escrow.group_escrow_manager,1,1,1,0

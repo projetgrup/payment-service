@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="broker_transactions_page" name="Broker Transactions">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-escrow broker-transactions'"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-call="payment_jetcheckout.payment_loading"/>
+            <t t-call="payment_escrow.background_animation"/>
+            
+            <div class="escrow-ad-wrapper broker-transactions-page">
+                <t t-call="payment_escrow.header">
+                    <t t-set="variant" t-value="'ads'"/>
+                    <t t-set="company" t-value="request.env.company"/>
+                </t>
+                
+                <div class="escrow-ad-container">
+                    <div class="col-12 col-lg-10 mx-auto p-2 escrow-ad-dashboard">
+                        <div class="col-12">
+                            <div class="escrow-ad-nav">
+                                <h3 class="escrow-ad-nav-title">My Transactions</h3>
+                                <div class="escrow-ad-nav-control">
+                                    <a class="btn escrow-ad-nav-button-secondary" href="/my/ads">
+                                        <i class="fa fa-arrow-left mr-2"/>
+                                        Back to My Ads
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mb-4">
+                                <div class="card border-0 shadow-sm filter-card" style="border-radius: 12px;">
+                                    <div class="card-body py-3 px-4">
+                                        <div class="row align-items-center">
+                                            <div class="col-12">
+                                                <div class="d-flex align-items-center flex-wrap">
+                                                    <span class="mr-3 font-weight-600 text-dark" style="font-size: 14px;">Filter by Status:</span>
+                                                    <div class="btn-group btn-group-toggle" role="group">
+                                                        <button type="button" class="btn btn-secondary filter-btn active" data-status="all">
+                                                            <i class="fa fa-list mr-1"></i>All
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-info filter-btn" data-status="can_approve">
+                                                            <i class="fa fa-check-circle mr-1"></i>Can Approve
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-warning filter-btn" data-status="waiting_invoice">
+                                                            <i class="fa fa-file-invoice mr-1"></i>Waiting Invoice
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-success filter-btn" data-status="approved">
+                                                            <i class="fa fa-check mr-1"></i>Approved
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="escrow-ad-list list-view">
+                                <div class="escrow-ad-list-header">
+                                    <div>TRANSACTION</div>
+                                    <div>AD NUMBER</div>
+                                    <div>VEHICLE</div>
+                                    <div>AMOUNT</div>
+                                    <div>STATUS</div>
+                                    <div>INVOICE</div>
+                                    <div>ACTIONS</div>
+                                </div>
+                                
+                                <div class="ad-list-container w-100">
+                                    <t t-if="not baskets">
+                                        <div class="text-center py-5 my-5">
+                                            <i class="fa fa-inbox fa-4x text-muted mb-3"></i>
+                                            <h4 class="text-muted">You have no transactions yet</h4>
+                                        </div>
+                                    </t>
+                                    
+                                    <t t-foreach="baskets" t-as="basket">
+                                        <div class="escrow-ad-list-item" t-att-data-status="basket.transfer_status">
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-bold" t-esc="basket.transaction_id.reference"/>
+                                                    <br/>
+                                                    <small class="text-muted" t-esc="basket.transaction_date.strftime('%d.%m.%Y %H:%M') if basket.transaction_date else '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-600" t-esc="basket.ad_number or '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-esc="basket.vehicle_info or '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-bold text-primary">
+                                                        <t t-esc="'%.2f' % basket.transfer_amount"/>
+                                                        <t t-esc="basket.currency_id.symbol"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-if="basket.transfer_status == 'can_approve'" class="badge badge-info px-3 py-2">
+                                                        <i class="fa fa-check-circle mr-1"></i>Can Approve
+                                                    </span>
+                                                    <span t-elif="basket.transfer_status == 'waiting_invoice'" class="badge badge-warning px-3 py-2">
+                                                        <i class="fa fa-clock mr-1"></i>Waiting Invoice
+                                                    </span>
+                                                    <span t-elif="basket.transfer_status == 'approved'" class="badge badge-success px-3 py-2">
+                                                        <i class="fa fa-check mr-1"></i>Approved
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-if="basket.broker_invoice_id" class="text-success">
+                                                        <i class="fa fa-check-circle mr-1"></i>Uploaded
+                                                        <br/>
+                                                        <small t-esc="basket.broker_invoice_upload_date.strftime('%d.%m.%Y') if basket.broker_invoice_upload_date else ''"/>
+                                                    </span>
+                                                    <span t-else="" class="text-muted">
+                                                        <i class="fa fa-times-circle mr-1"></i>Not uploaded
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <div class="btn-group-vertical btn-group-sm w-100">
+                                                        <button type="button" 
+                                                                class="btn btn-outline-primary mb-1" 
+                                                                data-toggle="modal"
+                                                                t-att-data-target="'#uploadInvoiceModal' + str(basket.id)"
+                                                                t-if="basket.transfer_status == 'waiting_invoice' and not basket.broker_invoice_id">
+                                                            <i class="fa fa-upload mr-1"></i>Upload Invoice
+                                                        </button>
+
+                                                        <form t-att-action="'/my/broker/transaction/%s/submit_for_approval' % basket.id"
+                                                              method="post"
+                                                              t-if="basket.broker_invoice_id and not basket.broker_submitted_for_approval">
+                                                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                                                <i class="fa fa-paper-plane mr-1"></i>Submit for Approval
+                                                            </button>
+                                                        </form>
+                                                        
+                                                        <span t-if="basket.broker_submitted_for_approval" class="badge badge-info py-2">
+                                                            <i class="fa fa-clock mr-1"></i>Waiting for Approval
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="modal fade" 
+                                             t-att-id="'uploadInvoiceModal' + str(basket.id)" 
+                                             tabindex="-1" 
+                                             role="dialog" 
+                                             aria-labelledby="uploadInvoiceModalLabel"
+                                             aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content" style="border-radius: 12px;">
+                                                    <form t-att-action="'/my/broker/transaction/%s/upload_invoice' % basket.id" 
+                                                          method="post" 
+                                                          enctype="multipart/form-data">
+                                                        <div class="modal-header border-0 pb-0">
+                                                            <h5 class="modal-title font-weight-bold">Upload Invoice</h5>
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <span>×</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body pt-2">
+                                                            <div class="mb-3 p-3 bg-light rounded">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <small class="text-muted d-block">Transaction</small>
+                                                                        <strong t-esc="basket.ad_number"/>
+                                                                    </div>
+                                                                    <div class="col-6 text-right">
+                                                                        <small class="text-muted d-block">Amount</small>
+                                                                        <strong class="text-primary">
+                                                                            <t t-esc="'%.2f' % basket.transfer_amount"/> 
+                                                                            <t t-esc="basket.currency_id.symbol"/>
+                                                                        </strong>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="form__label">Invoice File</label>
+                                                                <div class="pt-1">
+                                                                    <input type="file" 
+                                                                           class="filepond" 
+                                                                           name="invoiceFile"
+                                                                           accept="image/*, application/pdf" 
+                                                                           field="transactions.invoiceFile"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer border-0 pt-0">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary" field="transactions.submitButton">
+                                                                <i class="fa fa-upload mr-1"></i>Upload
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

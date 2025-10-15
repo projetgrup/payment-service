@@ -24,7 +24,7 @@ class ProductProduct(models.Model):
     def _compute_is_platform_owner_user(self):
         is_platform_owner = self.env.user.partner_id.paylox_escrow_type == 'platform_owner'
         for rec in self:
-            rec.is_platform_owner_user = True
+            rec.is_platform_owner_user = is_platform_owner
 
     # Escrow Car relations and attributes
     escrow_car_brand_id = fields.Many2one('escrow.car.brand', string='Car Brand')
@@ -128,8 +128,8 @@ class ProductProduct(models.Model):
 
     def action_approve_transfers(self):
         self.ensure_one()
-        # if self.env.user.partner_id.paylox_escrow_type != 'platform_owner':
-        #     raise UserError(_('Only Platform Owner can approve transfers.'))
+        if self.env.user.partner_id.paylox_escrow_type != 'platform_owner':
+            raise UserError(_('Only Platform Owner can approve transfers.'))
 
         if not self.escrow_payment_item_id:
             raise UserError(_('There is no related payment item for this ad.'))
