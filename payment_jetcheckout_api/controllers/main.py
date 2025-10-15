@@ -78,22 +78,17 @@ class PayloxApiController(Controller):
         if not status and tx.jetcheckout_api_hash:
             self._del('hash')
 
-            redirect_url = getattr(tx, 'jetcheckout_api_%s_redirect_url' % tx.jetcheckout_api_method, None)
+            redirect_url = getattr(tx, 'jetcheckout_api_method_%s_redirect_url' % tx.jetcheckout_payment_type, None)
             if redirect_url:
                 status = True
                 url = '%s/%s' % (redirect_url, tx.jetcheckout_order_id)
-            else:
-                result_url = getattr(tx, 'jetcheckout_api_%s_result_url' % tx.jetcheckout_api_method, None)
-                if result_url:
-                    status = True
-                    url = result_url
 
         return url, tx, status
 
     def _get_template(self, path, values):
         if path == '/payment/card':
-            return 'payment_jetcheckout_api.page_card'
-        return 'payment_jetcheckout_api.payment_page'
+            return 'payment_jetcheckout_api.page_payment_virtualpos'
+        return 'payment_jetcheckout_api.page_payment'
 
     @http.route(['/api/payment/success'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api_payment_success(self, **kwargs):
@@ -140,15 +135,15 @@ class PayloxApiController(Controller):
         if not tx:
             raise NotFound()
  
-        company_id = tx.company_id.id or request.env.company.id
-        if company_id != request.website.company_id.id:
-            return self._redirect(company_id=company_id)
+        company = tx.company_id or request.env.company
+        if company.id != request.website.company_id.id:
+            return self._redirect(company_id=company.id)
 
         self._set('company', tx.company_id.id) #TODO Its acquirer bound has been released
         self._set('token', tx.jetcheckout_order_id)
 
-        if tx.jetcheckout_api_method:
-            return werkzeug.utils.redirect('/payment/%s' % tx.jetcheckout_api_method)
+        if len(tx.paylox_api_method_ids) == 1:
+            return werkzeug.utils.redirect('/payment/%s' % fields.first(tx.paylox_api_method_ids).name)
 
         acquirers = Controller._get_acquirer()
         order = request.env['payment.transaction'].sudo().search([
@@ -159,6 +154,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         values = {
             'acquirers': acquirers,
+            'company': company,
             'tx': tx,
             'order': order,
             'system': 'jetcheckout_api'
@@ -180,7 +176,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'card':
+        elif 'card' not in tx.paylox_api_method_ids.mapped('code'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -189,7 +185,7 @@ class PayloxApiController(Controller):
             providers=['jetcheckout'],
             limit=1,
         )
-        values = self._prepare(acquirer=acquirer, company=tx.company_id, partner=tx.partner_id, transaction=tx, balance=False, filters={'type': ['virtual_pos']})
+        values = self._prepare(acquirer=acquirer, company=tx.company_id, partner=tx.partner_id, transaction=tx, balance=False, filters={'type': ['virtualpos']})
         values.update({'tx': tx})
         template = self._get_template('/payment/card', values)
         return request.render(template, values, headers={
@@ -208,7 +204,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'bank':
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
             raise NotFound()
 
         order = request.env['payment.transaction'].sudo().search([
@@ -250,7 +246,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'transfer':
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -282,7 +278,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'wallet':
+        elif 'wallet' not in tx.paylox_api_method_ids.mapped('code'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -313,7 +309,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'credit':
+        elif 'credit' not in tx.paylox_api_method_ids.mapped('code'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -345,7 +341,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'bank':
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -376,7 +372,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             return '/404'
-        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'bank':
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
             return '/404'
 
         self._confirm_bank_webhook(tx)
@@ -391,7 +387,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             return '/404'
-        elif tx.jetcheckout_api_method and tx.jetcheckout_api_method != 'bank':
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
             return '/404'
 
         self._del()

@@ -221,7 +221,7 @@ class PaymentTransaction(models.Model):
 
         domain += [
             ('state', '=', 'done'),
-            ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
+            ('jetcheckout_payment_type', 'in', ('virtualpos', 'transfer')),
         ]
 
         transactions = self.env['payment.transaction'].sudo().search(domain, order='last_state_change desc')

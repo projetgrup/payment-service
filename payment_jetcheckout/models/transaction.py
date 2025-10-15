@@ -34,7 +34,7 @@ class PaymentTransaction(models.Model):
                 installment = int(desc)
                 if installment == 0:
                     desc_long = ''
-                elif installment == 1 and tx.jetcheckout_payment_type in ('virtual_pos', 'physical_pos', 'soft_pos'):
+                elif installment == 1 and tx.jetcheckout_payment_type in ('virtualpos', 'physicalpos', 'softpos'):
                     desc_long = _('Single payment')
                 else:
                     desc_long = _('%s installment') % desc
@@ -87,13 +87,13 @@ class PaymentTransaction(models.Model):
     jetcheckout_postauth_amount = fields.Monetary('Post-Authorization Amount', readonly=True, copy=False)
 
     jetcheckout_payment_type = fields.Selection(selection=[
-        ('virtual_pos', 'Virtual PoS'),
-        ('physical_pos', 'Physical PoS'),
-        ('soft_pos', 'Soft PoS'),
-        ('transfer', 'Wire Transfer'),
+        ('virtualpos', 'Virtual PoS'),
+        ('physicalpos', 'Physical PoS'),
+        ('softpos', 'Soft PoS'),
+        ('transfer', 'Bank Transfer'),
         ('wallet', 'Wallet'),
         ('credit', 'Shopping Credit'),
-    ], string='Paylox Payment Type', default='virtual_pos', readonly=True, copy=False)
+    ], string='Paylox Payment Type', default='virtualpos', readonly=True, copy=False)
     jetcheckout_payment_type_transfer_service_name = fields.Char('Paylox Payment Type Transfer Service Name', readonly=True, copy=False)
     jetcheckout_payment_type_wallet_service_name = fields.Char('Paylox Payment Type Wallet Service Name', readonly=True, copy=False)
     jetcheckout_payment_type_wallet_id = fields.Integer('Paylox Payment Type Wallet ID', readonly=True, copy=False)
@@ -818,7 +818,7 @@ class PaymentTransaction(models.Model):
         domain = [
             ('state', '=', 'pending'),
             ('source_transaction_id', '=', False),
-            ('jetcheckout_payment_type', '=', 'virtual_pos'),
+            ('jetcheckout_payment_type', '=', 'virtualpos'),
             ('acquirer_id.provider', '=', 'jetcheckout'),
             ('create_date', '<=', date)
         ]

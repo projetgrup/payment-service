@@ -392,7 +392,7 @@ class SyncopsSyncWizard(models.TransientModel):
             items = models['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
             for line in self.line_ids:
-                line._sync_with_delay(
+                line._sync_item_invoice_with_delay(
                     company=company,
                     vats=vats,
                     refs=refs,
@@ -511,7 +511,7 @@ class SyncopsSyncWizardLine(models.TransientModel):
     invoice_currency = fields.Many2one('res.currency', readonly=True)
 
     @enqueue
-    def _sync_with_delay(self,
+    def _sync_item_invoice_with_delay(self,
         company,
         vats,
         refs,

@@ -165,11 +165,10 @@ class SupplierAPIService(Component):
             'acquirer_id': acquirer.id,
             'partner_id': supplier.id,
             'currency_id': company.currency_id.id,
-            'jetcheckout_payment_type': 'virtual_pos',
+            'jetcheckout_payment_type': 'virtualpos',
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
-            'jetcheckout_api_method': 'card',
         }
 
         tx = self.env['payment.transaction'].sudo().create(values)

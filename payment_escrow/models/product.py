@@ -73,7 +73,7 @@ class ProductProduct(models.Model):
                 domain = [
                     ('state', '=', 'done'),
                     ('acquirer_id.provider', '=', 'jetcheckout'),
-                    ('jetcheckout_payment_type', '=', 'virtual_pos'),
+                    ('jetcheckout_payment_type', '=', 'virtualpos'),
                     ('jetcheckout_approval_state', '!=', '+'),
                     ('jetcheckout_item_ids', 'in', rec.escrow_payment_item_id.ids),
                 ]
@@ -137,7 +137,7 @@ class ProductProduct(models.Model):
         domain = [
             ('state', '=', 'done'),
             ('acquirer_id.provider', '=', 'jetcheckout'),
-            ('jetcheckout_payment_type', '=', 'virtual_pos'),
+            ('jetcheckout_payment_type', '=', 'virtualpos'),
             ('jetcheckout_approval_state', '!=', '+'),
             ('jetcheckout_item_ids', 'in', self.escrow_payment_item_id.ids),
         ]

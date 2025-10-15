@@ -100,7 +100,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div t-if="tx.paylox_product_ids and tx.jetcheckout_api_method == 'card'" class="row mx-0 my-2 px-3">
+                        <div t-if="tx.paylox_product_ids" class="row mx-0 my-2 px-3">
                             <div class="card table-responsive">
                                 <table class="table">
                                     <thead>

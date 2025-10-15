@@ -109,7 +109,7 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="tx.paylox_product_ids and tx.jetcheckout_api_method == 'card'" class="row mx-0 my-2 px-3">
+                    <div t-if="tx.paylox_product_ids" class="row mx-0 my-2 px-3">
                         <div class="card table-responsive">
                             <table class="table">
                                 <thead>
@@ -149,8 +149,8 @@
     <template id="page_payment" name="Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-options px-3'"/>
-            <t t-set="back_url" t-value="tx.jetcheckout_api_bank_return_url"/>
-            <div t-if="order" class="row mx-0 w-100 my-3 p-3 alert alert-warning">
+            <t t-set="back_url" t-value="tx.jetcheckout_api_url_transfer_redirect"/>
+            <!--<div t-if="order" class="row mx-0 w-100 my-3 p-3 alert alert-warning">
                 <div class="align-self-center text-center col-md-1 py-3 text-center">
                     <i class="fa fa-warning h4"/>
                 </div>
@@ -160,7 +160,7 @@
                         We have seen that you have recorded a Bank Transfer payment before for this order. If you continue with a new payment option, previous transaction will be cancelled.
                     </p>
                 </div>
-            </div>
+            </div>-->
             <div class="row mx-0 w-100 h5 mt-3 px-3 font-weight-bold">
                 Select a Payment Type
             </div>
@@ -197,7 +197,7 @@
         </t>
     </template>
 
-    <template id="page_bank" name="Bank Payment Page">
+    <template id="page_payment_transfer" name="Bank Transfer Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-bank'"/>
             <t t-set="tx_pending" t-value="tx.state == 'pending'"/>
@@ -262,10 +262,10 @@
         </t>
     </template>
 
-    <template id="page_card" name="Credit Card Payment Page">
+    <template id="page_payment_virtualpos" name="Virtual PoS Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-page-card px-3'"/>
-            <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
+            <t t-if="len(tx.paylox_api_method_ids) > 1" t-set="back_url" t-value="'/payment'"/>
             <div class="row w-100 mx-0 my-4 card border shadow p-4">
                 <div class="justify-content-center mx-0 w-100">
                     <input id="system" type="hidden" value="api" field="system"/>
@@ -307,10 +307,10 @@
         </t>
     </template>
 
-    <template id="page_transfer" name="Wire Transfer Payment Page">
+    <template id="page_payment_wiretransfer" name="Wire Transfer Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-page-transfer px-3'"/>
-            <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
+            <t t-if="len(tx.paylox_api_method_ids) > 1" t-set="back_url" t-value="'/payment'"/>
             <div class="row w-100 mx-0 my-4 card border shadow p-4">
                 <div class="justify-content-center mx-0 w-100">
                     <input id="system" type="hidden" value="api" field="system"/>
@@ -330,10 +330,10 @@
         </t>
     </template>
 
-    <template id="page_wallet" name="Wallet Payment Page">
+    <template id="page_payment_wallet" name="Wallet Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-page-wallet px-3'"/>
-            <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
+            <t t-if="len(tx.paylox_api_method_ids) > 1" t-set="back_url" t-value="'/payment'"/>
             <div class="row w-100 mx-0 my-4 card border shadow p-4">
                 <div class="justify-content-center mx-0 w-100">
                     <input id="system" type="hidden" value="api" field="system"/>
@@ -353,10 +353,10 @@
         </t>
     </template>
 
-    <template id="page_credit" name="Shopping Credit Payment Page">
+    <template id="page_payment_credit" name="Shopping Credit Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-page-credit px-3'"/>
-            <t t-if="not tx.jetcheckout_api_method" t-set="back_url" t-value="'/payment'"/>
+            <t t-if="len(tx.paylox_api_method_ids) > 1" t-set="back_url" t-value="'/payment'"/>
             <div class="row w-100 mx-0 my-4 card border shadow p-4">
                 <div class="justify-content-center mx-0 w-100">
                     <input id="system" type="hidden" value="api" field="system"/>

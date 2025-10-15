@@ -329,7 +329,7 @@
             <div class="payment-panel">
                 <t t-call="payment_escrow.payment_select_holder_diff"/>
                 <div id="payment_type" class="payment-type d-none">
-                    <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtual_pos"/>
+                    <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtualpos"/>
                     <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
                 </div>
                 <t t-call="payment_escrow.payment_partial_price"/>

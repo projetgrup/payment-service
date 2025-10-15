@@ -732,7 +732,6 @@ class OrderCheckoutAPIService(Component):
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
-            'jetcheckout_api_method': 'card',
             'jetcheckout_api_order': params.order.name,
             'jetcheckout_api_card_redirect_url': params.url.redirect,
             'jetcheckout_api_card_result_url': 'https://%s/payment/card/result' % request.httprequest.host,

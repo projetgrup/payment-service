@@ -493,7 +493,7 @@ class PayloxSyncopsController(Controller):
                 ('company_id', 'in', connector.get_company_ids()),
                 ('create_date', '>=', date_start - offset),
                 ('create_date', '<=', date_end - offset),
-                ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
+                ('jetcheckout_payment_type', 'in', ('virtualpos', 'transfer')),
             ]
             if 'payment_type' in data:
                 if data['payment_type'] == 'payment':

@@ -152,25 +152,27 @@ class PaymentOrder(Datamodel):
     products = fields.List(NestedModel("payment.product"), required=False, metadata={"title": _lt("Products List"), "description": _lt("List of related products")})
 
 
-class PaymentUrlMethod(Datamodel):
+class PaymentPrepareMethodItem(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "payment.url.method"
+    _name = "payment.prepare.method.item"
 
-    result = fields.String(required=True, allow_none=False, metadata={"title": _lt("Return URL"), "description": _lt("Return URL when user picks suitable payment method"), "example": "https://example.com/method/result"})
+    #priority = fields.Integer(required=False, allow_none=False, metadata={"title": _lt("Priority"), "description": _lt("Payment method priority"), "example": 1})
+    redirect = fields.String(required=True, allow_none=False, metadata={"title": _lt("Redirect URL"), "description": _lt("Redirect URL when user picks suitable payment method"), "example": "https://example.com/method/result"})
     webhook = fields.String(required=False, allow_none=False, metadata={"title": _lt("Webhook URL"), "description": _lt("Webhook URL to send a notification"), "example": "https://example.com/method/webhook"})
 
 
-class PaymentUrl(Datamodel):
+class PaymentPrepareMethod(Datamodel):
     class Meta:
         ordered = True
 
-    _name = "payment.url"
+    _name = "payment.prepare.method"
 
-    card = NestedModel("payment.url.method", required=False, metadata={"title": _lt("Return URLs by card payment method"), "description": _lt("URL addresses when card payment is selected")})
-    bank = NestedModel("payment.url.method", required=False, metadata={"title": _lt("Return URLs by bank payment method"), "description": _lt("URL addresses when bank payment is selected")})
-    credit = NestedModel("payment.url.method", required=False, metadata={"title": _lt("Return URLs by shopping credit method"), "description": _lt("URL addresses when shopping credit is selected")})
+    virtualPos = NestedModel("payment.prepare.method.item", required=False, metadata={"title": _lt("Virtual PoS payment"), "description": _lt("Attributes when card payment is selected")})
+    physicalPos = NestedModel("payment.prepare.method.item", required=False, metadata={"title": _lt("Physical PoS"), "description": _lt("Attributes when physical PoS is selected")})
+    shoppingCredit = NestedModel("payment.prepare.method.item", required=False, metadata={"title": _lt("Shopping credit"), "description": _lt("Attributes when shopping credit is selected")})
+    bankTransfer = NestedModel("payment.prepare.method.item", required=False, metadata={"title": _lt("Bank transfer"), "description": _lt("Attributes when bank payment is selected")})
 
 
 class PaymentInstallmentOption(Datamodel):
@@ -242,10 +244,9 @@ class PaymentPrepareInput(Datamodel):
     campaign = fields.String(metadata={"title": _lt("Campaign Name"), "description": _lt("Name of campaign to be used in getting installment options"), "example": "Standard"})
     partner = NestedModel("payment.partner", required=True, metadata={"title": _lt("Partner information related to request"), "description": _lt("Partner information")})
     order = NestedModel("payment.order", required=True, metadata={"title": _lt("Order information related to request"), "description": _lt("Order details")})
-    url = NestedModel("payment.url", required=True, metadata={"title": _lt("Return URLs by payment method"), "description": _lt("URL addresses")})
     html = fields.String(metadata={"title": _lt("Custom HTML"), "description": _lt("Custom code to be viewed bottom of the page"), "example": "<p>Copyright</p>"})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
-    methods = fields.List(fields.String(), required=False, allow_none=False, metadata={"title": _lt("Method List"), "description": _lt("List of codes of methods. Possible values are 'card' and 'bank'."), "example": ["bank", "card"]})
+    methods = NestedModel("payment.prepare.method", required=True, allow_none=False, metadata={"title": _lt("Method List"), "description": _lt("List of codes of methods. Possible keys are 'virtualPos', 'physicalPos', 'shoppingCredit', 'bankTransfer'.")})
 
 
 class PaymentPrepareOutput(Datamodel):
@@ -256,6 +257,7 @@ class PaymentPrepareOutput(Datamodel):
     _inherit = "payment.output"
 
     hash = fields.String(required=False, allow_none=False, metadata={"title": _lt("Hash Data"), "description": _lt("Encrypted data to check if hash is created successfully"), "example": "LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto="})
+    url = fields.String(required=False, allow_none=False, metadata={"title": _lt("Payment URL"), "description": _lt("Payment URL which redirects to payment page"), "example": "https://example.com/payment?=LkuxD5WGo/81sqn6ZS6/a0qjdSX1cQWl8tHc5NseGto="})
 
 
 class PaymentInstallment(Datamodel):
@@ -296,9 +298,9 @@ class PaymentInitInput(Datamodel):
     id = fields.String(required=True, allow_none=False, metadata={"title": "ID", "description": _lt("Any unique identifier related to your specified record in your database for tracking the payment flow"), "example": '12aaff56a'})
     currency = fields.String(required=False, allow_none=False, metadata={"title": _lt("Currency"), "description": _lt("Payment currency"), "example": "TRY"})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
-    installment_count = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Installment count"), "example": 4})
-    url_success = fields.String(required=True, allow_none=False, metadata={"title": _lt("Success URL"), "description": _lt("If process result is success, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/success"})
-    url_fail = fields.String(required=True, allow_none=False, metadata={"title": _lt("Fail URL"), "description": _lt("If process result is failed, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/fail"})
+    installmentCount = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Installment count"), "example": 4})
+    successUrl = fields.String(required=True, allow_none=False, metadata={"title": _lt("Success URL"), "description": _lt("If process result is success, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/success"})
+    failUrl = fields.String(required=True, allow_none=False, metadata={"title": _lt("Fail URL"), "description": _lt("If process result is failed, it will be posted this url with order id"), "example": "https://api.payment.com/api/v1/fail"})
 
 
 class PaymentInitOutput(Datamodel):

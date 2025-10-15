@@ -287,8 +287,8 @@
                 <div id="payment_card" class="mx-0">
                     <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                     <div id="payment_type" class="d-none">
-                        <span data-name="soft_pos" field="type.all">
-                            <input type="radio" class="d-none" name="payment_type" checked="checked" value="soft_pos"/>
+                        <span data-name="softpos" field="type.all">
+                            <input type="radio" class="d-none" name="payment_type" checked="checked" value="softpos"/>
                         </span>
                     </div>
                     <div class="px-3 py-4 bg-white card shadow-sm">
