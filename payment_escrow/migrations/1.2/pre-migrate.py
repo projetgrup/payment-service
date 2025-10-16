@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
 def migrate(cr, version):
-    cr.execute("UPDATE payment_transaction_basket SET ad_state='transferred' WHERE ad_state='sold'")
+    cr.execute("UPDATE product_product SET escrow_state='transferred' WHERE escrow_state='sold'")
