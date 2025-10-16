@@ -5,7 +5,6 @@
         <field name="model">payment.transaction.basket</field>
         <field name="arch" type="xml">
             <tree string="Transaction Baskets" create="false" edit="false">
-                
                 <field name="currency_id" invisible="1"/>
                 <field name="transaction_id" string="Transaction"/>
                 <field name="ad_number" string="Ad Number"/>
@@ -38,8 +37,12 @@
         <field name="arch" type="xml">
             <form string="Transaction Basket" create="false">
             <header>
-                    <button name="action_recompute_fields" 
+                    <!--<button name="action_recompute_fields" 
                             string="Recompute Fields" 
+                            type="object"
+                            class="btn-primary"/>-->
+                        <button name="action_approve_payment" 
+                            string="Approve Payment" 
                             type="object"
                             class="btn-primary"/>
                 </header>

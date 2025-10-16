@@ -1932,30 +1932,8 @@ class PayloxSystemEscrowController(Controller):
     @route('/my/broker/transaction/<int:basket_id>/submit_for_approval', type='http', auth='user', website=True, methods=['POST'], csrf=False)
     def broker_submit_for_approval(self, basket_id, **kwargs):
         basket = request.env['payment.transaction.basket'].sudo().browse(basket_id)
-        
-        if not basket.exists():
-            return request.redirect('/my/broker/transactions')
-        
-        approval_group = request.env.ref('payment_escrow.group_escrow_manager', raise_if_not_found=False)
-        
-        if approval_group:
-            for user in approval_group.users:
-                request.env['mail.message'].sudo().create({
-                    'message_type': 'notification',
-                    'subtype_id': request.env.ref('mail.mt_comment').id,
-                    'body': f'Broker transaction pending approval: {basket.ad_number}',
-                    'author_id': request.env.user.partner_id.id,
-                    'model': 'payment.transaction.basket',
-                    'res_id': basket.id,
-                    'partner_ids': [(4, user.partner_id.id)],
-                })
-        
-        basket.sudo().write({
+        basket.write({
             'broker_submitted_for_approval': True,
             'broker_submit_date': fields.Datetime.now(),
         })
-        
         return request.redirect('/my/broker/transactions')
-
-    
-    

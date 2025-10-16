@@ -6,8 +6,9 @@ import pytz
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from odoo.tools.misc import formatLang
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -259,6 +260,11 @@ class PaymentTransaction(models.Model):
                             })
                     except Exception as e:
                         _logger.error('Sending daily email for partner %s is failed\n%s' % (context['partner'].name, e))
+
+    def _action_approve(self):
+        if self.paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type == 'broker' and not b.broker_submitted_for_approval):
+            raise ValidationError(_('There are items that are not approved yet. Please check them and try again.'))
+        return super()._action_approve()
 
     #TODO Remove
     @api.model

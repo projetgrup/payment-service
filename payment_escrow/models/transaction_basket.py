@@ -84,7 +84,7 @@ class PaymentTransactionBasket(models.Model):
                     product_line = basket.transaction_id.paylox_product_ids[0]
                     if product_line.product_id:
                         product = product_line.product_id
-            
+
             if product:
                 ad_number = product.default_code or str(product.id)
                 ad_state = product.escrow_state
@@ -106,7 +106,7 @@ class PaymentTransactionBasket(models.Model):
             basket.ad_state = ad_state
             basket.transfer_amount = basket.submerchant_price or 0.0
 
-    @api.depends('approval_state', 'ad_state', 'paylox_escrow_type', 'transaction_id.jetcheckout_approval_state')
+    @api.depends('approval_state', 'ad_state', 'paylox_escrow_type', 'broker_invoice_id', 'transaction_id.jetcheckout_approval_state')
     def _compute_transfer_status(self):
         for basket in self:
             transfer_status = False
@@ -124,7 +124,13 @@ class PaymentTransactionBasket(models.Model):
                 else:
                     transfer_status = 'can_approve'
             else:
-                transfer_status = 'can_approve' if basket.paylox_escrow_type != 'broker' else 'waiting_invoice'
+                if basket.paylox_escrow_type == 'broker':
+                    if basket.broker_invoice_id:
+                        transfer_status = 'can_approve'
+                    else:
+                        transfer_status = 'waiting_invoice'
+                else:
+                    transfer_status = 'can_approve'
 
             basket.transfer_status = transfer_status
 
@@ -146,3 +152,24 @@ class PaymentTransactionBasket(models.Model):
             basket._compute_transfer_status()
             basket._compute_transfer_account()
         return True
+
+    def action_approve_payment(self):
+        self.product_id.action_approve_transfers()
+
+    def write(self, values):
+        res = super().write(values)
+        if values.get('broker_submitted_for_approval'):
+            group = self.env.ref('payment_escrow.group_escrow_manager')
+            for basket in self:
+                users = self.env['res.users'].search([
+                    ('company_id', '=', basket.transaction_id.company_id.id),
+                    ('groups_id', 'in', group.ids)
+                ])
+                template = self.env.ref('payment_escrow.email_template_platform_owner_payment_waiting_approval')
+                url = '%s/web#id=%s&model=%s&view_type=form' % (self.get_base_url(), basket.id, basket._name)
+                for user in users:
+                    user.partner_id.with_context(url=url, skip_queue=True).message_post_with_template(
+                        template.id, composition_mode='comment',
+                        email_layout_xmlid='mail.mail_notification_light',
+                    )
+        return res

@@ -138,5 +138,43 @@
 </div>
         </field>
     </record>
+
+    <!-- Email Template: Ad Approved -->
+    <record id="email_template_platform_owner_payment_waiting_approval" model="mail.template">
+        <field name="name">Platform Owner Payment Waiting Approval</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">Payment is waiting approval</field>
+        <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted }}</field>
+        <field name="email_to">{{ object.email_formatted }}</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <div style="padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div style="background-color: #dc3545; padding: 30px; text-align: center;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">Waiting Approval</h1>
+            </div>
+            <div style="padding: 30px;">
+                <p style="font-size: 16px; color: #333; line-height: 1.6;">
+                    Dear <strong t-out="object.name">Partner</strong>,
+                </p>
+                <p style="font-size: 16px; color: #333; line-height: 1.6;">
+                    You have a payment to be approved.
+                </p>
+                <p style="font-size: 16px; color: #333; line-height: 1.6;">
+                    Click <a t-att-href="ctx['url']">here</a> to see details.
+                </p>
+                <p style="font-size: 16px; color: #333; line-height: 1.6;">
+                    If you have any questions or would like to discuss this decision, please contact us.
+                </p>
+                <p style="font-size: 16px; color: #333; line-height: 1.6;">
+                    Best regards,<br/>
+                    <strong t-out="object.company_id.name">Company</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+        </field>
+    </record>
     </data>
 </odoo>

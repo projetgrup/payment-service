@@ -391,7 +391,11 @@ class SyncopsSyncWizard(models.TransientModel):
 
             items = models['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
-            for line in self.line_ids:
+            if self.env.context.get('ids'):
+                lines = self.env['syncops.sync.wizard.line'].browse(self.env.context.get('ids'))
+            else:
+                lines = self.line_ids
+            for line in lines:
                 line._sync_item_invoice_with_delay(
                     company=company,
                     vats=vats,

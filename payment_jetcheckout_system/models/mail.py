@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, tools
+from odoo.addons.queue_job.models import enqueue
 
 
 class MailTemplate(models.Model):
@@ -96,3 +97,11 @@ class MailThread(models.AbstractModel):
         if self.env.context.get('mail_notracking'):
             return []
         return super(MailThread, self)._message_auto_subscribe_followers(updated_values, default_subtype_ids)
+
+
+class MailMail(models.Model):
+    _inherit = 'mail.mail'
+
+    @enqueue
+    def send(self, auto_commit=False, raise_exception=False):
+        return super().send(auto_commit=auto_commit, raise_exception=raise_exception)
