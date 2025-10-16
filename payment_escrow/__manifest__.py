@@ -3,7 +3,7 @@
 # Part of Paylox License. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Escrow Payment System',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Projet',
     'website': 'https://bulutkobi.io',
     'license': 'LGPL-3',
@@ -13,6 +13,8 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/data.xml',
+        'data/broker_email_templates.xml',
+        'data/broker_campaign_data.xml',
         'views/components_background.xml',
         'views/components_header.xml',
         'views/components_recipient.xml',
@@ -25,12 +27,17 @@
         'views/car_brand.xml',
         'views/car_model.xml',
         'views/installment_rate.xml',
+        'views/broker_campaign.xml',
+        'views/broker_transactions.xml',
+        'views/transaction_basket.xml',
         'views/actions.xml',
         'views/menu.xml',
         'views/step_components.xml',
+        'views/broker_templates.xml',
         'views/templates.xml',
         'views/settings.xml',
         'wizards/sync.xml',
+        'wizards/broker_rejection.xml',
     ],
     'assets': {
         'web.assets_frontend': [
@@ -50,6 +57,8 @@
             'payment_escrow/static/src/scss/page.scss',
             'payment_escrow/static/src/js/page.js',
             'payment_escrow/static/src/js/system.js',
+            'payment_escrow/static/src/js/broker_registration.js',
+            'payment_escrow/static/src/js/broker_transactions.js',
         ],
         'web.assets_qweb': [
             'payment_escrow/static/src/xml/templates.xml',
@@ -61,5 +70,4 @@
             'payment_escrow/static/src/js/view.js',
         ],
     },
-    'post_init_hook': 'post_init_hook',
 }

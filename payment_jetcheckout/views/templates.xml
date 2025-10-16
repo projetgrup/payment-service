@@ -334,7 +334,7 @@
     </template>
 
     <template id="payment_form" name="Paylox Payment Form">
-        <t t-if="not types" t-set="types" t-value="[{'code': 'virtual_pos', 'name': ''}]"/>
+        <t t-if="not types" t-set="types" t-value="[{'code': 'virtualpos', 'name': ''}]"/>
         <t t-call="payment_jetcheckout.payment_loading"/>
         <div t-attf-class="w-100 bg-white my-4 h-fit #{'' if no_border else 'border card'}">
             <t t-call="payment_jetcheckout.payment_smart_button">
@@ -351,7 +351,7 @@
                 </t>
             </div>
             <t t-foreach="types" t-as="ptype">
-                <div t-if="ptype['code'] == 'virtual_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="row justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'virtual_pos' else ''}">
+                <div t-if="ptype['code'] == 'virtualpos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="row justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'virtualpos' else ''}">
                     <div class="payment-table mt-2 p-3 col-md-6">
                         <div t-if="not s2s" class="payment-info">
                             <i class="fa fa-credit-card mr-3" t-translation="off"></i>Card Information
@@ -447,9 +447,9 @@
                     </div>
                     <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
                 </div>
-                <div t-elif="ptype['code'] == 'physical_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physical_pos' else ''}">
+                <div t-elif="ptype['code'] == 'physicalpos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physicalpos' else ''}">
                 </div>
-                <div t-elif="ptype['code'] == 'soft_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'soft_pos' else ''}">
+                <div t-elif="ptype['code'] == 'softpos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'softpos' else ''}">
                 </div>
                 <div t-elif="ptype['code'] == 'transfer'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-transfer px-3 #{'d-none' if types and types[0]['code'] != 'transfer' else ''}">
                     <t t-set="transfer_id" t-value="1"/>

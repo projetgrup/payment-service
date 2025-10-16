@@ -32,6 +32,7 @@
                 'vat': ad.escrow_owner_id.vat,
                 'state': ad.escrow_state,
                 'iban': ad.escrow_owner_id.bank_ids and ad.escrow_owner_id.bank_ids[0]['acc_number'] or '',
+                'license_serial_no': ad.escrow_license_serial_no or '',
             })" field="ad.item" t-att-data-item-id="ad.escrow_payment_item_id.id" t-att-data-product-id="ad.id">
             <div class="escrow-ad-item-info">
                 <div class="escrow-ad-item-image">

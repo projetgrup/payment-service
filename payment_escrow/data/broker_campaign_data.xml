@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Silver Campaign -->
+        <record id="broker_campaign_silver" model="escrow.broker.campaign">
+            <field name="name">Silver</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Silver Campaign Lines -->
+        <record id="broker_campaign_silver_line_1" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">1</field>
+            <field name="broker_additional_rate">0.4</field>
+        </record>
+        <record id="broker_campaign_silver_line_2" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">2</field>
+            <field name="broker_additional_rate">1.0</field>
+        </record>
+        <record id="broker_campaign_silver_line_3" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">3</field>
+            <field name="broker_additional_rate">0.0</field>
+        </record>
+        <record id="broker_campaign_silver_line_4" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">4</field>
+            <field name="broker_additional_rate">1.5</field>
+        </record>
+        <record id="broker_campaign_silver_line_5" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">5</field>
+            <field name="broker_additional_rate">1.5</field>
+        </record>
+        <record id="broker_campaign_silver_line_6" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">6</field>
+            <field name="broker_additional_rate">1.5</field>
+        </record>
+        <record id="broker_campaign_silver_line_7" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">7</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+        <record id="broker_campaign_silver_line_8" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">8</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+        <record id="broker_campaign_silver_line_9" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">9</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+        <record id="broker_campaign_silver_line_10" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">10</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+        <record id="broker_campaign_silver_line_11" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">11</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+        <record id="broker_campaign_silver_line_12" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_silver"/>
+            <field name="installment_count">12</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+
+        <!-- Gold Campaign -->
+        <record id="broker_campaign_gold" model="escrow.broker.campaign">
+            <field name="name">Gold</field>
+            <field name="sequence">20</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Gold Campaign Lines -->
+        <record id="broker_campaign_gold_line_1" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">1</field>
+            <field name="broker_additional_rate">0.5</field>
+        </record>
+        <record id="broker_campaign_gold_line_2" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">2</field>
+            <field name="broker_additional_rate">1.2</field>
+        </record>
+        <record id="broker_campaign_gold_line_3" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">3</field>
+            <field name="broker_additional_rate">0.5</field>
+        </record>
+        <record id="broker_campaign_gold_line_4" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">4</field>
+            <field name="broker_additional_rate">1.8</field>
+        </record>
+        <record id="broker_campaign_gold_line_5" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">5</field>
+            <field name="broker_additional_rate">1.8</field>
+        </record>
+        <record id="broker_campaign_gold_line_6" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">6</field>
+            <field name="broker_additional_rate">1.8</field>
+        </record>
+        <record id="broker_campaign_gold_line_7" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">7</field>
+            <field name="broker_additional_rate">2.5</field>
+        </record>
+        <record id="broker_campaign_gold_line_8" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">8</field>
+            <field name="broker_additional_rate">2.5</field>
+        </record>
+        <record id="broker_campaign_gold_line_9" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">9</field>
+            <field name="broker_additional_rate">2.5</field>
+        </record>
+        <record id="broker_campaign_gold_line_10" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">10</field>
+            <field name="broker_additional_rate">2.5</field>
+        </record>
+        <record id="broker_campaign_gold_line_11" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">11</field>
+            <field name="broker_additional_rate">2.5</field>
+        </record>
+        <record id="broker_campaign_gold_line_12" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_gold"/>
+            <field name="installment_count">12</field>
+            <field name="broker_additional_rate">2.5</field>
+        </record>
+
+        <!-- Platinum Campaign -->
+        <record id="broker_campaign_platinum" model="escrow.broker.campaign">
+            <field name="name">Platinum</field>
+            <field name="sequence">30</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Platinum Campaign Lines -->
+        <record id="broker_campaign_platinum_line_1" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">1</field>
+            <field name="broker_additional_rate">0.6</field>
+        </record>
+        <record id="broker_campaign_platinum_line_2" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">2</field>
+            <field name="broker_additional_rate">1.5</field>
+        </record>
+        <record id="broker_campaign_platinum_line_3" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">3</field>
+            <field name="broker_additional_rate">1.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_4" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">4</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_5" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">5</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_6" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">6</field>
+            <field name="broker_additional_rate">2.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_7" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">7</field>
+            <field name="broker_additional_rate">3.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_8" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">8</field>
+            <field name="broker_additional_rate">3.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_9" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">9</field>
+            <field name="broker_additional_rate">3.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_10" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">10</field>
+            <field name="broker_additional_rate">3.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_11" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">11</field>
+            <field name="broker_additional_rate">3.0</field>
+        </record>
+        <record id="broker_campaign_platinum_line_12" model="escrow.broker.campaign.line">
+            <field name="campaign_id" ref="broker_campaign_platinum"/>
+            <field name="installment_count">12</field>
+            <field name="broker_additional_rate">3.0</field>
+        </record>
+    </data>
+</odoo>

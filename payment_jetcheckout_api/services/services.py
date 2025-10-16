@@ -158,7 +158,9 @@ class PaymentAPIService(Component):
             self._create_transaction(api, hash, params)
 
             ResponseOk = self.env.datamodels["payment.prepare.output"]
-            return ResponseOk(hash=quote(hash), **RESPONSE[200])
+            hash = quote(hash)
+            url = 'https://%s/payment?=%s' % (request.httprequest.host, hash)
+            return ResponseOk(hash=hash, url=url, **RESPONSE[200])
         except Exception as e:
             _logger.error(e)
             return Response("Server Error", status=500, mimetype="application/json")
@@ -446,17 +448,14 @@ class PaymentAPIService(Component):
         else:
             state = False
 
-        type = getattr(params, 'type', False) or 'virtual_pos'
+        type = getattr(params, 'type', False) or 'virtualpos'
         codes = hasattr(params, 'methods') and params.methods or []
-        method = ''
         providers = []
         for code in codes:
             if not type and code == 'bank':
                 providers.append('transfer')
             else:
                 providers.append('jetcheckout')
-        if len(codes) == 1:
-            method = codes[0]
 
         company = api.company_id
         if hasattr(params, 'company'):
@@ -477,7 +476,6 @@ class PaymentAPIService(Component):
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
-            'jetcheckout_api_method': method,
             'jetcheckout_api_order': params.order.name,
             'jetcheckout_api_html': getattr(params, 'html', False) or False,
             'jetcheckout_api_contact': getattr(params.partner, 'contact', False) or False,
@@ -485,20 +483,29 @@ class PaymentAPIService(Component):
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
 
-        if getattr(params.url, 'card', None):
-            values.update({'jetcheckout_api_card_result_url': params.url.card.result})
+        if getattr(params.url, 'virtualPos', None):
+            values.update({'jetcheckout_api_url_virtualpos_redirect': params.url.virtualPos.redirect})
+            if getattr(params.url.virtualPos, 'webhook', None):
+                values.update({'jetcheckout_api_url_virtualpos_webhook': params.url.virtualPos.webhook})
 
-        if getattr(params.url, 'bank', None):
-            values.update({'jetcheckout_api_bank_result_url': params.url.bank.result})
-            if getattr(params.url.bank, 'webhook', None):
-                values.update({'jetcheckout_api_bank_webhook_url': params.url.bank.webhook})
+        if getattr(params.url, 'physicalPos', None):
+            values.update({'jetcheckout_api_url_physicalpos_redirect': params.url.physicalPos.redirect})
+            if getattr(params.url.physicalPos, 'webhook', None):
+                values.update({'jetcheckout_api_url_physicalpos_webhook': params.url.physicalPos.webhook})
 
-        if getattr(params.url, 'credit', None):
-            values.update({'jetcheckout_api_credit_result_url': params.url.credit.result})
+        if getattr(params.url, 'shoppingCredit', None):
+            values.update({'jetcheckout_api_url_credit_redirect': params.url.shoppingCredit.redirect})
+            if getattr(params.url.shoppingCredit, 'webhook', None):
+                values.update({'jetcheckout_api_url_credit_webhook': params.url.shoppingCredit.webhook})
+
+        if getattr(params.url, 'bankTransfer', None):
+            values.update({'jetcheckout_api_url_transfer_redirect': params.url.bankTransfer.redirect})
+            if getattr(params.url.bankTransfer, 'webhook', None):
+                values.update({'jetcheckout_api_url_transfer_webhook': params.url.bankTransfer.webhook})
 
         products = getattr(params.order, 'products', [])
         if products:
-            will_create_product = values['jetcheckout_payment_type'] == 'virtual_pos'
+            will_create_product = values['jetcheckout_payment_type'] == 'virtualpos'
             product_ids = []
             if will_create_product:
                 prods = self.env['product.product'].sudo()
@@ -614,10 +621,10 @@ class PaymentAPIService(Component):
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
-            'jetcheckout_payment_type': 'virtual_pos',
+            'jetcheckout_payment_type': 'virtualpos',
             'jetcheckout_ip_address': params.partner.ip_address,
-            'jetcheckout_api_success_url': params.url_success,
-            'jetcheckout_api_fail_url': params.url_fail,
+            'jetcheckout_api_success_url': params.successUrl,
+            'jetcheckout_api_fail_url': params.failUrl,
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
         tx = self.env['payment.transaction'].sudo().create(values)
@@ -654,7 +661,7 @@ class PaymentAPIService(Component):
             "campaign_name": params.campaign,
             "amount": amount_string,
             "currency": tx.currency_id.name,
-            "installment_count": params.installment_count,
+            "installment_count": params.installmentCount,
             "hash_data": hash,
             "language": "tr",
             "card_number": params.card.number,

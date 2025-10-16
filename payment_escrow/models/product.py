@@ -24,7 +24,7 @@ class ProductProduct(models.Model):
     def _compute_is_platform_owner_user(self):
         is_platform_owner = self.env.user.partner_id.paylox_escrow_type == 'platform_owner'
         for rec in self:
-            rec.is_platform_owner_user = True
+            rec.is_platform_owner_user = is_platform_owner
 
     # Escrow Car relations and attributes
     escrow_car_brand_id = fields.Many2one('escrow.car.brand', string='Car Brand')
@@ -52,6 +52,7 @@ class ProductProduct(models.Model):
         ('waiting_transfer_approval', 'Waiting Transfer Approval'),
         ('transferred', 'Transferred'),
     ], string='State', default='waiting', index=True, tracking=True)
+    escrow_license_serial_no = fields.Char(string='License Serial No')
 
     def action_get_customer(self):
         self.ensure_one()
@@ -72,7 +73,7 @@ class ProductProduct(models.Model):
                 domain = [
                     ('state', '=', 'done'),
                     ('acquirer_id.provider', '=', 'jetcheckout'),
-                    ('jetcheckout_payment_type', '=', 'virtual_pos'),
+                    ('jetcheckout_payment_type', '=', 'virtualpos'),
                     ('jetcheckout_approval_state', '!=', '+'),
                     ('jetcheckout_item_ids', 'in', rec.escrow_payment_item_id.ids),
                 ]
@@ -127,8 +128,8 @@ class ProductProduct(models.Model):
 
     def action_approve_transfers(self):
         self.ensure_one()
-        # if self.env.user.partner_id.paylox_escrow_type != 'platform_owner':
-        #     raise UserError(_('Only Platform Owner can approve transfers.'))
+        if self.env.user.partner_id.paylox_escrow_type != 'platform_owner':
+            raise UserError(_('Only Platform Owner can approve transfers.'))
 
         if not self.escrow_payment_item_id:
             raise UserError(_('There is no related payment item for this ad.'))
@@ -136,7 +137,7 @@ class ProductProduct(models.Model):
         domain = [
             ('state', '=', 'done'),
             ('acquirer_id.provider', '=', 'jetcheckout'),
-            ('jetcheckout_payment_type', '=', 'virtual_pos'),
+            ('jetcheckout_payment_type', '=', 'virtualpos'),
             ('jetcheckout_approval_state', '!=', '+'),
             ('jetcheckout_item_ids', 'in', self.escrow_payment_item_id.ids),
         ]

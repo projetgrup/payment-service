@@ -210,6 +210,11 @@
                                 <i class="fa fa-check text-success state-check d-none"></i>
                             </div>
                             <div class="form__group">
+                                <label class="form__label" for="wizard_license_serial_no">License Serial No</label>
+                                <input id="wizard_license_serial_no" class="form__control" type="text" name="license_serial_no" maxlength="10" placeholder="License Serial No (10 characters)" field="ad.input.license_serial_no"/>
+                                <i class="fa fa-check text-success state-check d-none"></i>
+                            </div>
+                            <div class="form__group">
                                 <label class="form__label" for="wizard_plate">License Plate</label>
                                 <input id="wizard_plate" class="form__control" type="text" name="numberplate" placeholder="License Plate (e.g., 34 ABC 123)" field="ad.input.plate"/>
                                 <i class="fa fa-check text-success state-check d-none"></i>
@@ -324,7 +329,7 @@
             <div class="payment-panel">
                 <t t-call="payment_escrow.payment_select_holder_diff"/>
                 <div id="payment_type" class="payment-type d-none">
-                    <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtual_pos"/>
+                    <input type="radio" class="d-none" name="payment_type" checked="checked" value="virtualpos"/>
                     <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
                 </div>
                 <t t-call="payment_escrow.payment_partial_price"/>

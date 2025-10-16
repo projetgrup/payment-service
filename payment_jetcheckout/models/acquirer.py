@@ -455,7 +455,7 @@ class PaymentAcquirer(models.Model):
         currency = kwargs['currency']
 
         payment_type = kwargs.get('type', '')
-        if payment_type == 'virtual_pos':
+        if payment_type == 'virtualpos':
             rows = kwargs['installment']['rows']
             installment = kwargs['installment']['id']
             campaign = kwargs.get('campaign') or self.jetcheckout_campaign_id.name or ''

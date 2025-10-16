@@ -277,7 +277,7 @@ class PaymentPlan(models.Model):
             url_query = ''
 
         data = {
-            'type': 'virtual_pos',
+            'type': 'virtualpos',
             'payment': False,
             'threed': company.payment_plan_threed_ok,
             'card': {

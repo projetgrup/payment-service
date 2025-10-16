@@ -365,21 +365,21 @@ class PayloxController(http.Controller):
                     if payment_type == 'Virtual':
                         types.insert(0, {
                             'name': _('Pay with Credit Card'),
-                            'code': 'virtual_pos',
+                            'code': 'virtualpos',
                             'id': 1,
                         })
-                    #elif payment_type == 'Physical':
-                    #    types.append({
-                    #        'name': _('Pay with Physical PoS'),
-                    #        'code': 'physical_pos',
-                    #        'id': 2,
-                    #    })
-                    #elif payment_type == 'SoftPOS':
-                    #    types.append({
-                    #        'name': _('Pay with Soft PoS'),
-                    #        'code': 'soft_pos',
-                    #        'id': 3,
-                    #    })
+                    elif payment_type == 'Physical':
+                        types.append({
+                            'name': _('Pay with Physical PoS'),
+                            'code': 'physicalpos',
+                            'id': 2,
+                        })
+                    elif payment_type == 'SoftPOS':
+                        types.append({
+                            'name': _('Pay with Soft PoS'),
+                            'code': 'softpos',
+                            'id': 3,
+                        })
                     elif payment_type == 'WireTransfer':
                         types.append({
                             'name': _('Pay with Wire Transfer'),
@@ -398,6 +398,7 @@ class PayloxController(http.Controller):
                             'code': 'credit',
                             'id': 6,
                         })
+        raise Exception(types)
         return types
 
     def _get_payment_tokens(self, acquirer, partner):
@@ -1316,7 +1317,7 @@ class PayloxController(http.Controller):
         order_id = str(uuid.uuid4())
 
         payment_type = kwargs.get('type', '')
-        if payment_type == 'virtual_pos':
+        if payment_type == 'virtualpos':
             rows = kwargs['installment']['rows']
             installment = kwargs['installment']['id']
             campaign = kwargs.get('campaign') or acquirer.jetcheckout_campaign_id.name or ''
@@ -1672,7 +1673,7 @@ class PayloxController(http.Controller):
                 return {'error': message}
             return {}
 
-        elif payment_type == 'soft_pos':
+        elif payment_type == 'softpos':
             installment_count = 1
             campaign = kwargs.get('campaign', '')
 

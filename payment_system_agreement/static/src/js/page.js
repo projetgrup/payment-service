@@ -60,7 +60,7 @@ payloxPage.include({
         }
 
         const type = this.type.selected;
-        if (['virtual_pos', 'soft_pos'].includes(type) && !this.agreement.confirmed) {
+        if (['virtualpos', 'softpos'].includes(type) && !this.agreement.confirmed) {
             this.displayNotification({
                 type: 'warning',
                 title: _t('Warning'),

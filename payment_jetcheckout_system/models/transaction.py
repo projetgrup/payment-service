@@ -173,8 +173,9 @@ class PaymentTransaction(models.Model):
                         txt = self.export_txt([
                             ('create_date', '>=', today - timedelta(days=1)),
                             ('create_date', '<', today),
-                            ('company_id', '=', company.id),
-                            ('company_id.parent_id', '=', company.id),
+                            '|',
+                                ('company_id', '=', company.id),
+                                ('company_id.parent_id', '=', company.id),
                         ])
                         context = self.env.context.copy()
                         mail_server = company.mail_server_id
@@ -207,8 +208,11 @@ class PaymentTransaction(models.Model):
                                     )
                             except Exception as e:
                                 _logger.error('An error occured when sending export txt email to %s: %s' % (partner.name, e))
-                            self.env.cr.commit()
+                                self.env.cr.rollback()
+                            else:
+                                self.env.cr.commit()
             except:
+                _logger.error('An error occured when sending export txt email: %s' % (e,))
                 self.env.cr.rollback()
 
     def export_txt(self, domain=[]):
@@ -217,7 +221,7 @@ class PaymentTransaction(models.Model):
 
         domain += [
             ('state', '=', 'done'),
-            ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
+            ('jetcheckout_payment_type', 'in', ('virtualpos', 'transfer')),
         ]
 
         transactions = self.env['payment.transaction'].sudo().search(domain, order='last_state_change desc')

@@ -5,6 +5,10 @@ access_escrow_car_model_user,escrow.car.model user,model_escrow_car_model,paymen
 access_escrow_car_model_manager,escrow.car.model manager,model_escrow_car_model,payment_escrow.group_escrow_manager,1,1,1,1
 access_escrow_installment_rate_user,escrow.installment.rate user,model_escrow_installment_rate,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_installment_rate_manager,escrow.installment.rate manager,model_escrow_installment_rate,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_broker_campaign_user,escrow.broker.campaign user,model_escrow_broker_campaign,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_broker_campaign_manager,escrow.broker.campaign manager,model_escrow_broker_campaign,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_broker_campaign_line_user,escrow.broker.campaign.line user,model_escrow_broker_campaign_line,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_broker_campaign_line_manager,escrow.broker.campaign.line manager,model_escrow_broker_campaign_line,payment_escrow.group_escrow_manager,1,1,1,1
 
 
 access_escrow_sync_user,escrow.sync user,model_escrow_sync,payment_escrow.group_escrow_user,1,0,0,0
@@ -13,3 +17,8 @@ access_escrow_sync_manager,escrow.sync manager,model_escrow_sync,payment_escrow.
 access_escrow_brand_sync_line_user,escrow.brand.sync.line user,model_escrow_brand_sync_line,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_brand_sync_line_manager,escrow.brand.sync.line manager,model_escrow_brand_sync_line,payment_escrow.group_escrow_manager,1,1,1,1
 
+access_broker_rejection_wizard_user,broker.rejection.wizard user,model_broker_rejection_wizard,payment_escrow.group_escrow_user,1,0,0,0
+access_broker_rejection_wizard_manager,broker.rejection.wizard manager,model_broker_rejection_wizard,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_payment_transaction_basket_user,payment.transaction.basket user,payment_jetcheckout.model_payment_transaction_basket,payment_escrow.group_escrow_user,1,0,0,0
+access_payment_transaction_basket_manager,payment.transaction.basket manager,payment_jetcheckout.model_payment_transaction_basket,payment_escrow.group_escrow_manager,1,1,1,0

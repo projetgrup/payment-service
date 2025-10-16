@@ -86,11 +86,13 @@
                         string="Approve"
                         class="oe_stat_button"
                         icon="fa-check"
-                        attrs="{'invisible': ['|', ('system','!=','escrow'), ('escrow_state','!=','waiting')]}"/>
+                        group="payment_escrow.group_escrow_manager"
+                        attrs="{'invisible': ['|','|', ('system','!=','escrow'), ('escrow_state','!=','waiting'), ('is_platform_owner_user','!=',True)]}"/>
                     <button name="action_get_customer"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-user"
+                        group="payment_escrow.group_escrow_manager"
                         attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('escrow_customer_ids', '=', False)]}">
                         <field name="escrow_customer_count" widget="statinfo" string="Get Customer"/>
                     </button>
@@ -99,11 +101,13 @@
                         class="oe_stat_button"
                         icon="fa-credit-card"
                         string="Transactions"
+                        group="payment_escrow.group_escrow_manager"
                         attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('is_platform_owner_user', '=', False)]}"/>
                     <button name="action_approve_transfers"
                         type="object"
                         class="oe_stat_button text-success"
                         icon="fa-exchange"
+                        group="payment_escrow.group_escrow_manager"
                         confirm="This will approve ALL wire transfer transactions for this ad. Do you want to continue?"
                         attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('is_platform_owner_user', '=', False)]}">
                         <field name="escrow_transfer_count_display" widget="statinfo" string="Approve Transfers"/>
@@ -152,6 +156,7 @@
                         <group>
                             <group>
                                 <field name="escrow_car_brand_id"/>
+                                <field name="escrow_license_serial_no"/>
                                 <field name="escrow_car_model_id" domain="[('brand_id','=',escrow_car_brand_id)]"/>
                                 <field name="escrow_car_model_year"/>
                                 <field name="escrow_car_vin"/>
