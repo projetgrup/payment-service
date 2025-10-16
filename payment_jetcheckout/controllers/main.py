@@ -368,18 +368,18 @@ class PayloxController(http.Controller):
                             'code': 'virtualpos',
                             'id': 1,
                         })
-                    #elif payment_type == 'Physical':
-                    #    types.append({
-                    #        'name': _('Pay with Physical PoS'),
-                    #        'code': 'physicalpos',
-                    #        'id': 2,
-                    #    })
-                    #elif payment_type == 'SoftPOS':
-                    #    types.append({
-                    #        'name': _('Pay with Soft PoS'),
-                    #        'code': 'softpos',
-                    #        'id': 3,
-                    #    })
+                    elif payment_type == 'Physical':
+                        types.append({
+                            'name': _('Pay with Physical PoS'),
+                            'code': 'physicalpos',
+                            'id': 2,
+                        })
+                    elif payment_type == 'SoftPOS':
+                        types.append({
+                            'name': _('Pay with Soft PoS'),
+                            'code': 'softpos',
+                            'id': 3,
+                        })
                     elif payment_type == 'WireTransfer':
                         types.append({
                             'name': _('Pay with Wire Transfer'),
