@@ -398,6 +398,7 @@ class PayloxController(http.Controller):
                             'code': 'credit',
                             'id': 6,
                         })
+        raise Exception(types)
         return types
 
     def _get_payment_tokens(self, acquirer, partner):
