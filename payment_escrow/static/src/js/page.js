@@ -706,6 +706,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 create: new fields.element({
                     events: [['click', this._onClickButtonCreate]],
                 }),
+                license_serial_no_helper: new fields.element({
+                    events: [['click', this._onClickButtonLicenseSerialNoHelper]],
+                }),
             },
 
             input: {
@@ -1197,6 +1200,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             framework.hideLoading();
             setTimeout(() => $('div.o_loading').addClass('transparent'), 2000);
         });
+    },
+
+    _onClickButtonLicenseSerialNoHelper: function (ev) {
+        ev.stopPropagation();
+        const $tooltip = this.$('.license-serial-tooltip');
+        $tooltip.toggle();
     },
 
     _initBroker: function () {
