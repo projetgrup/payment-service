@@ -70,16 +70,12 @@ class ProductProduct(models.Model):
             unapproved = 0
             approved = 0
             if rec.escrow_payment_item_id:
-                domain = [
-                    ('state', '=', 'done'),
-                    ('acquirer_id.provider', '=', 'jetcheckout'),
-                    ('jetcheckout_payment_type', '=', 'virtualpos'),
-                    ('jetcheckout_approval_state', '!=', '+'),
-                    ('jetcheckout_item_ids', 'in', rec.escrow_payment_item_id.ids),
-                ]
-                unapproved = self.env['payment.transaction'].sudo().search_count(domain)
-                domain[3] = ('jetcheckout_approval_state', '=', '+')
-                approved = self.env['payment.transaction'].sudo().search_count(domain)
+                items = rec.escrow_payment_item_id.mapped('transaction_ids.paylox_basket_ids')
+                for item in items:
+                    if item.approval_state == '+':
+                        approved += 1
+                    else:
+                        unapproved += 1
             rec.escrow_unapproved_transfer_count = unapproved
             rec.escrow_approved_transfer_count = approved
             rec.escrow_transfer_count_display = f"{unapproved}/{approved}"
@@ -97,27 +93,19 @@ class ProductProduct(models.Model):
             if user_partner.paylox_escrow_type != 'platform_owner':
                 raise UserError(_('Only Platform Owner can approve ads.'))
             
-            if not rec.escrow_payment_item_id or not rec.escrow_payment_item_id.paid:
-                raise UserError(_('Payment item must be paid to approve this ad.'))
-            
             if not rec.escrow_ad_sale_img:
                 raise UserError(_('Sale image is required to approve this ad.'))
             rec.escrow_state = 'new'
         return True
 
-    def action_view_transactions(self):
+    def action_view_basket_items(self):
         self.ensure_one()
-        user_partner = self.env.user.partner_id
-        # if user_partner.paylox_escrow_type != 'platform_owner':
-        #     raise UserError(_('Only Platform Owner can view transactions.'))
-
-        action = self.env.ref('payment_jetcheckout_system.action_transaction').sudo().read()[0]
-        domain = [('state', 'in', ['done', 'error', 'cancel', 'expired'])]
-        if self.escrow_payment_item_id:
-            domain.append(('jetcheckout_item_ids', 'in', self.escrow_payment_item_id.ids))
-        else:
-            domain.append(('id', '=', 0))
-        action['domain'] = domain
+        action = self.env.ref('payment_escrow.action_payment_transaction_basket').sudo().read()[0]
+        txs = self.escrow_payment_item_id.transaction_ids
+        action['domain'] = [
+            ('transaction_id', 'in', txs.ids),
+            ('transaction_id.state', 'in', ['done', 'error', 'cancel', 'expired'])
+        ]
         action['context'] = {
             'create': False,
             'edit': False,
@@ -125,68 +113,6 @@ class ProductProduct(models.Model):
             'group_by': 'escrow_success_group',
         }
         return action
-
-    def action_approve_transfers(self):
-        self.ensure_one()
-        if self.env.user.partner_id.paylox_escrow_type != 'platform_owner':
-            raise UserError(_('Only Platform Owner can approve transfers.'))
-
-        if not self.escrow_payment_item_id:
-            raise UserError(_('There is no related payment item for this ad.'))
-
-        domain = [
-            ('state', '=', 'done'),
-            ('acquirer_id.provider', '=', 'jetcheckout'),
-            ('jetcheckout_payment_type', '=', 'virtualpos'),
-            ('jetcheckout_approval_state', '!=', '+'),
-            ('jetcheckout_item_ids', 'in', self.escrow_payment_item_id.ids),
-        ]
-        txs = self.env['payment.transaction'].sudo().search(domain)
-        if not txs:
-            raise UserError(_('No unapproved transfer transactions found.'))
-        success_count = 0
-        failures = []
-        for tx in txs:
-            try:
-                tx.action_approve()
-                if tx.jetcheckout_approval_state == '+':
-                    success_count += 1
-                else:
-                    failures.append('%s: %s' % (
-                        tx.reference or str(tx.id),
-                        tx.jetcheckout_approval_state_message or '-' 
-                    ))
-            except Exception as e:
-                failures.append('%s: %s' % (tx.reference or str(tx.id), str(e)))
-
-        total = len(txs)
-        fail_count = len(failures)
-
-        title = _('Transfer Approval Result')
-        summary = _('Approved %(ok)s of %(total)s transfer transactions. Failures: %(fail)s.') % {
-            'ok': success_count,
-            'total': total,
-            'fail': fail_count,
-        }
-        body = '<p><b>%s</b></p><p>%s</p>' % (title, summary)
-        if fail_count:
-            body += '<ul>' + ''.join(['<li>%s: %s</li>' % (ref, msg) for ref, msg in [
-                (line.split(':', 1)[0], line.split(':', 1)[1].strip() if ':' in line else '') for line in failures
-            ]]) + '</ul>'
-        else:
-            self.escrow_state = 'transferred'
-        self.message_post(body=body, subtype_xmlid='mail.mt_note')
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': title,
-                'message': _('Details have been posted to chatter.'),
-                'type': 'success' if fail_count == 0 else 'warning',
-                'sticky': fail_count > 0,
-            }
-        }
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'

@@ -47,6 +47,24 @@ class PaymentTransactionPayloxApiMethod(models.Model):
             else:
                 method.code = method.type
 
+    @api.depends('type')
+    def _compute_icon(self):
+        for method in self:
+            if method.type == 'virtualpos':
+                method.icon = 'credit-card'
+            elif method.type == 'physicalpos':
+                method.icon = 'fax'
+            elif method.type == 'softpos':
+                method.icon = 'mobile-phone'
+            elif method.type == 'transfer':
+                method.icon = 'bank'
+            elif method.type == 'wallet':
+                method.icon = 'money'
+            elif method.type == 'credit':
+                method.icon = 'shopping-cart'
+            else:
+                method.icon = False
+
     transaction_id = fields.Many2one('payment.transaction')
     type = fields.Selection(selection=[
         ('virtualpos', 'Virtual PoS'),
@@ -56,6 +74,7 @@ class PaymentTransactionPayloxApiMethod(models.Model):
         ('wallet', 'Wallet'),
         ('credit', 'Shopping Credit'),
     ], default='virtualpos')
-    code = fields.Char(compute='_compute_code', store=True)
+    code = fields.Char(compute='_compute_code')
+    icon = fields.Char(compute='_compute_icon')
     redirect_url = fields.Char(string='Redirect URL')
     webhook_url = fields.Char(string='Webhook URL')

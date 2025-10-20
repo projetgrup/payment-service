@@ -647,14 +647,14 @@ class PayloxSystemEscrowController(Controller):
             transaction.partner_id = customer.id
 
         return values
-    
+
     @http.route(['/payment/escrow/get_items'], type='json', auth='user', methods=['POST'], website=True)
     def get_items(self, id,**kwargs):
         item = request.env['payment.item'].sudo().search([('product_id', '=', id)], limit=1)
         if not item:
             return {'error': 'Item not found'}
         return {'item': item.read()[0]}
-    
+
     @http.route(['/my/iban/verify'], type='json', auth='user', methods=['POST'], website=True)
     def verify_iban(self, iban, vat, **kwargs):
         iban = sanitize_account_number(iban)
@@ -665,7 +665,7 @@ class PayloxSystemEscrowController(Controller):
             ('company_id', '=', request.env.company.id),
         ], limit=1)
         return bool(bank_account)
-    
+
     @route('/my/otp/validate', type='json', auth='user', methods=['POST'], website=True)
     def validate_otp(self, otp, **kwargs):
         domain = [('mobile', 'like', '%%%s' % otp)]
@@ -737,7 +737,7 @@ class PayloxSystemEscrowController(Controller):
                 return {'success': False, 'message': 'OTP service unavailable: %s' % str(e)}
         except Exception as e:
             return {'success': False, 'message': str(e)}
-        
+
     @route('/broker/otp/verify', type='json', auth='public', methods=['POST'], website=True)
     def verify_otp_broker(self, otp_id=None, code=None, **kwargs):
         try:
@@ -783,7 +783,7 @@ class PayloxSystemEscrowController(Controller):
             return {'success': True}
         except Exception as e:
             return {'success': False, 'message': str(e)}
-        
+
     @route('/get/ad', type='json', auth='user', methods=['POST'], website=True)
     def get_ad(self, ad_id=None, **kwargs):
         company = request.env.company

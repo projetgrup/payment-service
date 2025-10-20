@@ -283,23 +283,20 @@
     <field name="mode">primary</field>
     <field name="inherit_id" ref="payment_jetcheckout_system.partner_form"/>
     <field name="arch" type="xml">
-        <xpath expr='//header' position="replace">
-            <header>
-                <button name="action_set_to_pending" string="Set to Pending" type="object" 
-                        attrs="{'invisible': [('broker_state', '!=', 'draft')]}" class="btn-primary"/>
-                <button name="action_approve_broker" string="Approve" type="object" 
-                        attrs="{'invisible': ['|', ('broker_state', '!=', 'pending'), ('paylox_escrow_type', '!=', 'broker')]}" 
-                        class="btn-success"
-                        groups="payment_escrow.group_escrow_platform_owner"/>
-                <button name="action_reject_broker" string="Reject" type="object" 
-                        attrs="{'invisible': ['|', ('broker_state', '!=', 'pending'), ('paylox_escrow_type', '!=', 'broker')]}" 
-                        class="btn-danger"
-                        groups="payment_escrow.group_escrow_platform_owner"/>
-                <field name="broker_state" widget="statusbar" statusbar_visible="draft,pending,approved"/>
-                <field name="paylox_escrow_type" invisible="1"/>
-            </header>
+        <xpath expr='//header' position="inside">
+            <button name="action_set_to_pending" string="Set to Pending" type="object" 
+                    attrs="{'invisible': [('broker_state', '!=', 'draft')]}" class="btn-primary"/>
+            <button name="action_approve_broker" string="Approve" type="object" 
+                    attrs="{'invisible': ['|', ('broker_state', '!=', 'pending'), ('paylox_escrow_type', '!=', 'broker')]}" 
+                    class="btn-success"
+                    groups="payment_escrow.group_escrow_platform_owner"/>
+            <button name="action_reject_broker" string="Reject" type="object" 
+                    attrs="{'invisible': ['|', ('broker_state', '!=', 'pending'), ('paylox_escrow_type', '!=', 'broker')]}" 
+                    class="btn-danger"
+                    groups="payment_escrow.group_escrow_platform_owner"/>
+            <field name="broker_state" widget="statusbar" statusbar_visible="draft,pending,approved"/>
+            <field name="paylox_escrow_type" invisible="1"/>
         </xpath>
-        <xpath expr='//div[@name="button_box"]' position="replace"/>
         <!-- <xpath expr='//button[@name="action_share_payment_link"]' position="replace"/>
         <xpath expr='//button[@name="action_share_payment_page"]' position="replace"/>
         <xpath expr='//button[@name="action_send"]' position="replace"/> -->

@@ -149,7 +149,7 @@
     <template id="page_payment" name="Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
             <t t-set="classname" t-value="'payment-options px-3'"/>
-            <t t-set="back_url" t-value="tx.jetcheckout_api_url_transfer_redirect"/>
+            <t t-set="acquirer" t-value="tx.acquirer_id"/>
             <!--<div t-if="order" class="row mx-0 w-100 my-3 p-3 alert alert-warning">
                 <div class="align-self-center text-center col-md-1 py-3 text-center">
                     <i class="fa fa-warning h4"/>
@@ -168,22 +168,22 @@
                 You can continue the transaction with choosing one of the following payment methods.
             </div>
             <div class="row mx-0 w-100 card shadow mt-3">
-                <t t-foreach="acquirers" t-as="acquirer">
-                    <div t-att-name="'bank' if acquirer.provider == 'transfer' else 'card'" class="row mx-0 w-100 payment-option border-bottom">
+                <t t-foreach="tx.paylox_api_method_ids" t-as="method">            
+                    <div t-att-name="method.code" class="row mx-0 w-100 payment-option border-bottom">
                         <div class="align-self-center text-center col-md-1 py-3 text-md-right text-center">
-                            <i t-attf-class="fa text-primary h4 #{acquirer.display_icon}"/>
+                            <i t-attf-class="fa text-primary h4 fa-#{method.icon}"/>
                         </div>
                         <div class="col-md-7 py-3">
                             <div class="row mx-0 w-100 h5">
-                                <t t-esc="acquirer.display_as or acquirer.name"/>
+                                <span t-field="method.type"/>
                                 <span t-if="acquirer.state == 'test'" class="badge badge-warning ml-3">Test</span>
                             </div>
                             <div class="row mx-0 w-100 font-weight-light">
-                                <t t-esc="acquirer.pre_msg"/>
+                                Click here to pay with <span class="ml4 font-italic" t-field="method.type"/>
                             </div>
                         </div>
                         <div class="col-md-4 text-right align-self-center">
-                            <ul class="mb-0 list-inline payment_icon_list">
+                            <ul t-if="method.type == 'virtualpos'" class="mb-0 list-inline payment_icon_list">
                                 <t t-foreach="acquirer.payment_icon_ids" t-as="pm_icon">
                                     <li class="list-inline-item">
                                         <span t-field="pm_icon.image_payment_form" t-options='{"widget": "image", "alt-field": "name"}'/>
@@ -302,6 +302,29 @@
                             </li>
                         </t>
                     </ul>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="page_payment_physicalpos" name="Physical PoS Payment Page">
+        <t t-call="payment_jetcheckout_api.layout">
+            <t t-set="classname" t-value="'payment-page-physicalpos px-3'"/>
+            <t t-if="len(tx.paylox_api_method_ids) > 1" t-set="back_url" t-value="'/payment'"/>
+            <div class="row w-100 mx-0 my-4 card border shadow p-4">
+                <div class="justify-content-center mx-0 w-100">
+                    <input id="system" type="hidden" value="api" field="system"/>
+                    <t t-if="tx.state in ('draft', 'pending', 'error')" t-call="payment_jetcheckout.s2s">
+                        <t t-set="amount" t-value="tx.amount"/>
+                        <t t-set="no_border" t-value="True"/>
+                        <t t-set="no_loading" t-value="True"/>
+                    </t>
+                    <t t-elif="tx.state == 'cancel'">
+                        <div class="alert alert-danger">This payment transaction is cancelled</div>
+                    </t>
+                    <t t-elif="tx.state == 'expired'">
+                        <div class="alert alert-danger">This payment transaction is expired</div>
+                    </t>
                 </div>
             </div>
         </t>

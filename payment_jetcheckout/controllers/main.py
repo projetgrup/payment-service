@@ -296,7 +296,7 @@ class PayloxController(http.Controller):
             elif ptype['code'] == 'wallet':
                 wallets = self._prepare_wallet(acquirer=acquirer)
             elif ptype['code'] == 'transfer':
-                transfers = self._prepare_wiretransfer(acquirer=acquirer)
+                transfers = self._prepare_transfer(acquirer=acquirer)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         currencies = acquirer.currency_ids
         if currencies and currency not in currencies:
@@ -398,7 +398,6 @@ class PayloxController(http.Controller):
                             'code': 'credit',
                             'id': 6,
                         })
-        raise Exception(types)
         return types
 
     def _get_payment_tokens(self, acquirer, partner):
@@ -553,7 +552,7 @@ class PayloxController(http.Controller):
                     index += 1
         return wallets
 
-    def _prepare_wiretransfer(self, acquirer=None):
+    def _prepare_transfer(self, acquirer=None):
         acquirer = self._get_acquirer(acquirer=acquirer)
         url = '%s/api/v1/prepayment/wiretransfer_options' % acquirer._get_paylox_api_url()
         data = {

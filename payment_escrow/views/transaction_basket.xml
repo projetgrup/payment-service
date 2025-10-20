@@ -172,7 +172,6 @@
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_payment_transaction_basket_search"/>
         <field name="context">{
-            'search_default_can_approve_transfer': 1,
             'search_default_group_transaction': 1,
         }</field>
         <field name="help" type="html">

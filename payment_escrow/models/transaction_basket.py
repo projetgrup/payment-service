@@ -40,17 +40,20 @@ class PaymentTransactionBasket(models.Model):
         ('approved', 'Transfer Approved'),
     ], string='Transfer Status', compute='_compute_transfer_status', store=True)
     
-    approval_state = fields.Selection([
-        ('+', 'Approved'),
-        ('-', 'Waiting'),
-        ('0', 'Rejected'),
-    ], string='Approval Status', related='transaction_id.jetcheckout_approval_state', store=True, readonly=True)
-    
     broker_invoice_id = fields.Many2one('ir.attachment', string='Broker Invoice')
     broker_invoice_filename = fields.Char(string='Invoice Filename', compute='_compute_broker_invoice_filename', store=True)
     broker_invoice_upload_date = fields.Datetime(string='Invoice Upload Date')
     broker_submitted_for_approval = fields.Boolean(string='Submitted for Approval', default=False)
     broker_submit_date = fields.Datetime(string='Submit Date')
+
+    escrow_success_group = fields.Selection(
+        selection=[('successful', 'Successful'), ('unsuccessful', 'Unsuccessful')],
+        string='Escrow Success Group',
+        related='transaction_id.escrow_success_group',
+        store=True,
+        index=True,
+        readonly=True,
+    )
 
     @api.depends('broker_invoice_id', 'broker_invoice_id.name')
     def _compute_broker_invoice_filename(self):
@@ -154,7 +157,7 @@ class PaymentTransactionBasket(models.Model):
         return True
 
     def action_approve_payment(self):
-        self.product_id.action_approve_transfers()
+        self.action_approve()
 
     def write(self, values):
         res = super().write(values)
