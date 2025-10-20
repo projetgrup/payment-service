@@ -576,7 +576,7 @@ class PayloxSystemEscrowController(Controller):
             #infra_commission = float_round(charged * (1 - (infra_rate / 100)), 4) if infra_rate else 0.0
             #platform_commission = float_round(charged * (1 - (platform_rate / 100)), 4) if platform_rate else 0.0
             if infra_commission > 0:
-                ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref']) or reference_seller
+                ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref'])
                 customer_basket.append({
                     "id": 25,
                     "name": infrastructure_provider.name,
@@ -590,7 +590,7 @@ class PayloxSystemEscrowController(Controller):
                 })
             platform_amount = paid * platform_commission / total_paid
             if platform_commission > 0:
-                ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref']) or reference_seller
+                ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref'])
                 customer_basket.append({
                     "id": 26,
                     "name": platform_owner.name,
@@ -604,7 +604,7 @@ class PayloxSystemEscrowController(Controller):
                 })
             broker_amount = paid * broker_commission / total_paid
             if transaction.partner_id.broker_default_campaign_id and broker_amount > 0:
-                ref_broker = (transaction.partner_id.bank_ids and transaction.partner_id.bank_ids[0]['api_ref']) or reference_seller
+                ref_broker = (transaction.partner_id.bank_ids and transaction.partner_id.bank_ids[0]['api_ref'])
                 if broker_amount > 0:
                     customer_basket.append({
                         "id": 27,
@@ -1458,6 +1458,7 @@ class PayloxSystemEscrowController(Controller):
                     'name': kwargs.get('customer_corporate_title', ''),
                     'email': kwargs.get('customer_email', ''),
                     'mobile': kwargs.get('customer_phone', ''),
+                    'phone': kwargs.get('customer_phone', ''),
                     'vat': kwargs.get('customer_tax_number', ''),
                     'street': kwargs.get('customer_address', ''),
                     'paylox_tax_office': kwargs.get('customer_tax_office', ''),
@@ -1468,6 +1469,7 @@ class PayloxSystemEscrowController(Controller):
                     'name': kwargs.get('customer_name_surname', ''),
                     'email': kwargs.get('customer_email', ''),
                     'mobile': kwargs.get('customer_phone', ''),
+                    'phone': kwargs.get('customer_phone', ''),
                     'vat': kwargs.get('customer_identity', ''),
                     'street': kwargs.get('customer_address', ''),
                     'is_company': False,

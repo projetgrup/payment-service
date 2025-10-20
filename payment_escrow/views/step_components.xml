@@ -209,10 +209,35 @@
                                 <input id="wizard_vin" class="form__control" type="text" name="vin" maxlength="17" placeholder="Chassis Number (17 characters)" field="ad.input.vin"/>
                                 <i class="fa fa-check text-success state-check d-none"></i>
                             </div>
-                            <div class="form__group">
-                                <label class="form__label" for="wizard_license_serial_no">License Serial No</label>
+                            <div class="form__group position-relative">
+                                <label class="form__label" for="wizard_license_serial_no">
+                                    License Serial No
+                                    <i class="fa fa-search-plus ml-2 text-info license-serial-helper" 
+                                       style="font-size: 14px; cursor: pointer;"
+                                       title="Click to see where to find it on the registration document" field="ad.button.license_serial_no_helper"/>
+                                </label>
                                 <input id="wizard_license_serial_no" class="form__control" type="text" name="license_serial_no" maxlength="10" placeholder="License Serial No (10 characters)" field="ad.input.license_serial_no"/>
                                 <i class="fa fa-check text-success state-check d-none"></i>
+                                
+                                <div class="license-serial-tooltip" style="display: none; position: absolute; z-index: 1000; background: white; border: 2px solid #17a2b8; border-radius: 8px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 400px; top: 100%; left: 0; margin-top: 5px;">
+                                    <div>
+                                        <div class="text-center mb-3">
+                                            <img src="/payment_escrow/static/src/img/license_serial_help.png" 
+                                                 alt="Ruhsat Seri No Konumu" 
+                                                 style="max-width: 300px; border-radius: 4px; border: 1px solid #dee2e6;"/>
+                                        </div>
+                                        <div>
+                                            <h6 class="text-info mb-2 text-center">
+                                                <i class="fa fa-info-circle mr-1"></i>
+                                                where to find the License Serial Number
+                                            </h6>
+                                            <p class="small mb-0 text-muted text-center">
+                                                The License Serial Number is located on the front side of your vehicle's registration document, usually at the top. 
+                                                It is a 10-character alphanumeric code.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form__group">
                                 <label class="form__label" for="wizard_plate">License Plate</label>
