@@ -490,8 +490,8 @@ class PaymentAPIService(Component):
                 method_type = method_types[method_name]
                 method_ids.append((0, 0, {
                     'type': method_type,
-                    'redirect_url': getattr(method_value, 'redirect', False),
-                    'webhook_url': getattr(method_value, 'webhook', False),
+                    'redirect_url': method_value.get('redirect', False),
+                    'webhook_url': method_value.get('webhook', False),
                 }))
 
         if len(method_ids) == 1:
