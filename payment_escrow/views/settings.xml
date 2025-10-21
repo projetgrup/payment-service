@@ -85,6 +85,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="dealer_registration_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="dealer_registration_enabled" string="Dealer Registration"/>
+                            <div class="text-muted">
+                                Enable Dealer Registration
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </xpath>

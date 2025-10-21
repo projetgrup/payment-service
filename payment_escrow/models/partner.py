@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import random
+import string
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
@@ -12,11 +15,21 @@ class Partner(models.Model):
         if self.env.context.get('default_system') == 'escrow' and 'user_id' in fields and not res.get('user_id'):
             res['user_id'] = self.env.user.id
         return res
+    
+    @api.depends()
+    def _compute_dealer_counts(self):
+        for partner in self:
+            partner.dealer_broker_count = self.env['res.partner'].search_count([
+                ('broker_dealer_id', '=', partner.id),
+                ('paylox_escrow_type', '=', 'broker'),
+                ('company_id', '=', partner.company_id.id or self.env.company.id)
+            ])
 
     system = fields.Selection(selection_add=[('escrow', 'Escrow Payment System')])
     paylox_escrow_type = fields.Selection([
         ('customer', 'Customer'),
         ('broker', 'Broker'),
+        ('dealer', 'Dealer'),
         ('owner', 'Owner'),
         ('platform_owner', 'Platform Owner'),
         ('infrastructure_provider', 'Infrastructure Provider'),
@@ -35,29 +48,37 @@ class Partner(models.Model):
     is_otp_verified = fields.Boolean(string='Is OTP Verified')
     is_card_verified = fields.Boolean(string='Is Card Verified')
     
-    broker_campaign_id = fields.Many2many('escrow.broker.campaign', string='Broker Campaign')
-    broker_default_campaign_id = fields.Many2one('escrow.broker.campaign', string='Default Campaign')
-    broker_sign_name = fields.Char(string='Sign Name')
-    broker_authorized_person = fields.Char(string='Authorized Person')
-    broker_state = fields.Selection([
+    sign_name = fields.Char(string='Sign Name')
+    authorized_person = fields.Char(string='Authorized Person')
+    approval_state = fields.Selection([
         ('draft', 'Draft'),
         ('pending', 'Pending Approval'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
-    ], string='Broker Status', default='draft')
-    broker_tax_plate = fields.Binary(string='Tax Plate', attachment=True)
-    broker_tax_plate_filename = fields.Char(string='Tax Plate Filename')
-    broker_signature_circular = fields.Binary(string='Signature Circular', attachment=True)
-    broker_signature_circular_filename = fields.Char(string='Signature Circular Filename')
-    broker_identity_doc = fields.Binary(string='Identity Document', attachment=True)
-    broker_identity_doc_filename = fields.Char(string='Identity Document Filename')
-    broker_authorization_doc = fields.Binary(string='Authorization Document', attachment=True)
-    broker_authorization_doc_filename = fields.Char(string='Authorization Document Filename')
-    broker_contract = fields.Binary(string='Contract', attachment=True)
-    broker_contract_filename = fields.Char(string='Contract Filename')
-    broker_approval_date = fields.Datetime(string='Approval Date', readonly=True)
-    broker_approved_by = fields.Many2one('res.users', string='Approved By', readonly=True)
-    broker_rejection_reason = fields.Text(string='Rejection Reason')
+    ], string='Approval Status', default='draft')
+    tax_plate = fields.Binary(string='Tax Plate', attachment=True)
+    tax_plate_filename = fields.Char(string='Tax Plate Filename')
+    signature_circular = fields.Binary(string='Signature Circular', attachment=True)
+    signature_circular_filename = fields.Char(string='Signature Circular Filename')
+    identity_doc = fields.Binary(string='Identity Document', attachment=True)
+    identity_doc_filename = fields.Char(string='Identity Document Filename')
+    authorization_doc = fields.Binary(string='Authorization Document', attachment=True)
+    authorization_doc_filename = fields.Char(string='Authorization Document Filename')
+    contract_doc = fields.Binary(string='Contract', attachment=True)
+    contract_doc_filename = fields.Char(string='Contract Filename')
+    approval_date = fields.Datetime(string='Approval Date', readonly=True)
+    approved_by = fields.Many2one('res.users', string='Approved By', readonly=True)
+    rejection_reason = fields.Text(string='Rejection Reason')
+    
+    broker_campaign_id = fields.Many2many('escrow.broker.campaign', string='Broker Campaign')
+    broker_default_campaign_id = fields.Many2one('escrow.broker.campaign', string='Default Campaign')
+    broker_dealer_id = fields.Many2one('res.partner', string='Referred By Dealer', domain=[('paylox_escrow_type', '=', 'dealer')])
+    
+    dealer_referral_code = fields.Char(string='Dealer Referral Code', copy=False, readonly=True)
+    dealer_broker_ids = fields.One2many('res.partner', 'broker_dealer_id', string='Referred Brokers', domain=[('paylox_escrow_type', '=', 'broker')])
+    dealer_broker_count = fields.Integer(string='Broker Count', compute='_compute_dealer_counts')
+    dealer_commission_rate_ids = fields.One2many('dealer.commission.rate', 'partner_id', string='Commission Rates')
+
 
     @api.depends()
     def _compute_escrow_counts(self):
@@ -104,6 +125,23 @@ class Partner(models.Model):
             'domain': [('escrow_owner_id', '=', self.id)],
             'context': {
                 'default_escrow_owner_id': self.id,
+                'create': False,
+            }
+        }
+    
+    def action_view_dealer_brokers(self):
+        self.ensure_one()
+        return {
+            'name': _('Referred Brokers'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'res.partner',
+            'view_mode': 'tree,form',
+            'domain': [
+                ('broker_dealer_id', '=', self.id),
+                ('paylox_escrow_type', '=', 'broker')
+            ],
+            'context': {
+                'default_broker_dealer_id': self.id,
                 'create': False,
             }
         }
@@ -191,27 +229,37 @@ class Partner(models.Model):
         current_partner = self.env.user.partner_id
         return current_partner.paylox_escrow_type == 'platform_owner'
 
-    def action_approve_broker(self):
+    def action_approve_registration(self):
         self.ensure_one()
         
         # if not self._is_platform_owner():
         #     raise UserError(_('Only platform owners can approve brokers.'))
         
-        if self.paylox_escrow_type != 'broker':
-            raise UserError(_('This action is only available for brokers.'))
-        
+        if self.paylox_escrow_type != 'broker' and self.paylox_escrow_type != 'dealer':
+            raise UserError(_('This action is only available for brokers and dealers.'))
+
         self.write({
-            'broker_state': 'approved',
-            'broker_approval_date': fields.Datetime.now(),
-            'broker_approved_by': self.env.user.id,
+            'approval_state': 'approved',
+            'approval_date': fields.Datetime.now(),
+            'approved_by': self.env.user.id,
         })
-        
-        self._create_broker_portal_user()
-        self._send_broker_approval_notification()
+
+        if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
+            self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
+
+        self._create_registration_portal_user()
+        self._send_registration_approval_notification()
         
         return True
     
-    def _create_broker_portal_user(self):
+    def _generate_dealer_referral_code(self):
+        self.ensure_one()
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        while self.search([('dealer_referral_code', '=', code)]):
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        return code
+    
+    def _create_registration_portal_user(self):
         self.ensure_one()
         if self.user_ids:
             portal_group = self.env.ref('base.group_portal')
@@ -245,47 +293,43 @@ class Partner(models.Model):
             
         except Exception as e:
             raise UserError(_('Error creating portal user: %s') % str(e))
-    
-    def action_reject_broker(self):
+
+    def action_reject_registration(self):
         self.ensure_one()
         
         if not self._is_platform_owner():
-            raise UserError(_('Only platform owners can reject brokers.'))
-        
-        if self.paylox_escrow_type != 'broker':
-            raise UserError(_('This action is only available for brokers.'))
+            raise UserError(_('Only platform owners can reject registrations.'))
         
         return {
-            'name': _('Reject Broker'),
+            'name': _('Reject Registration'),
             'type': 'ir.actions.act_window',
-            'res_model': 'broker.rejection.wizard',
+            'res_model': 'registration.rejection.wizard',
             'view_mode': 'form',
             'target': 'new',
-            'context': {'default_broker_id': self.id},
+            'context': {'default_partner_id': self.id},
         }
     
     def action_set_to_pending(self):
         self.ensure_one()
-        if self.paylox_escrow_type != 'broker':
-            raise UserError(_('This action is only available for brokers.'))
-        self.write({'broker_state': 'pending'})
-        self._notify_platform_owners_new_broker()
-        
+        if self.paylox_escrow_type != 'broker' and self.paylox_escrow_type != 'dealer':
+            raise UserError(_('This action is only available for brokers and dealers.'))
+        self.write({'approval_state': 'pending'})
+        self._notify_platform_owners_new_registration()
         return True
-    
-    def _send_broker_approval_notification(self):
+
+    def _send_registration_approval_notification(self):
         if self.email:
-            template = self.env.ref('payment_escrow.email_template_broker_approved', raise_if_not_found=False)
+            template = self.env.ref('payment_escrow.email_template_registration_approved', raise_if_not_found=False)
             if template:
                 template.send_mail(self.id, force_send=True)
     
-    def _send_broker_rejection_notification(self):
+    def _send_partner_rejection_notification(self):
         if self.email:
-            template = self.env.ref('payment_escrow.email_template_broker_rejected', raise_if_not_found=False)
+            template = self.env.ref('payment_escrow.email_template_registration_rejected', raise_if_not_found=False)
             if template:
                 template.send_mail(self.id, force_send=True)
-    
-    def _notify_platform_owners_new_broker(self):
+
+    def _notify_platform_owners_new_registration(self):
         platform_owners = self.env['res.partner'].search([
             ('paylox_escrow_type', '=', 'platform_owner'),
             ('company_id', '=', self.company_id.id),
@@ -297,12 +341,12 @@ class Partner(models.Model):
                     'res_id': self.id,
                     'res_model_id': self.env.ref('base.model_res_partner').id,
                     'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
-                    'summary': _('New Broker Registration'),
-                    'note': _('A new broker "%s" has registered and is pending approval.') % self.name,
+                    'summary': _('New Registration'),
+                    'note': _('A new registration "%s" has been submitted and is pending approval.') % self.name,
                     'user_id': owner.user_ids[0].id,
                 })
-        
-        template = self.env.ref('payment_escrow.email_template_broker_new_registration', raise_if_not_found=False)
+
+        template = self.env.ref('payment_escrow.email_template_registration_new', raise_if_not_found=False)
         if template and platform_owners:
             for owner in platform_owners:
                 if owner.email:

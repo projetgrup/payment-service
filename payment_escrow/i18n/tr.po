@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0-20250101\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-16 10:27+0000\n"
-"PO-Revision-Date: 2025-10-16 14:25+0300\n"
+"POT-Creation-Date: 2025-10-21 12:19+0000\n"
+"PO-Revision-Date: 2025-10-21 15:28+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -16,6 +16,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.7\n"
+
+#. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "%s - Official Sale Image"
+msgstr "%s - Resmi Satış Görseli"
 
 #. module: payment_escrow
 #: code:addons/payment_escrow/controllers/main.py:0
@@ -31,7 +37,7 @@ msgstr "1 Taksit"
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_broker_campaign_line__installment_count__10
 msgid "10"
-msgstr "10"
+msgstr ""
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_installment_rate__installment_count__10
@@ -41,7 +47,7 @@ msgstr "10 Taksit"
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_broker_campaign_line__installment_count__11
 msgid "11"
-msgstr "11"
+msgstr ""
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_installment_rate__installment_count__11
@@ -51,7 +57,7 @@ msgstr "11 Taksit"
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_broker_campaign_line__installment_count__12
 msgid "12"
-msgstr "12"
+msgstr ""
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_installment_rate__installment_count__12
@@ -138,37 +144,36 @@ msgstr ""
 "                                                Kredi kartı numaranızı girdikten sonra uygulanabilir taksit seçenekleri burada görüntülenecektir."
 
 #. module: payment_escrow
-#: model:mail.template,body_html:payment_escrow.email_template_broker_new_registration
+#: model:mail.template,body_html:payment_escrow.email_template_registration_new_registration
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;\">\n"
-"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px "
-"rgba(0,0,0,0.1);\">\n"
+"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n"
 "            <div style=\"background-color: #007bff; padding: 30px; text-align: center;\">\n"
-"                <h1 style=\"color: white; margin: 0; font-size: 28px;\">New Broker Registration</h1>\n"
+"                <h1 style=\"color: white; margin: 0; font-size: 28px;\">New Registration</h1>\n"
 "            </div>\n"
 "            <div style=\"padding: 30px;\">\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    A new broker has registered and is awaiting approval.\n"
+"                    A new has registered and is awaiting approval.\n"
 "                </p>\n"
 "                <div style=\"margin: 30px 0; padding: 20px; background-color: #f0f8ff; border-left: 4px solid #007bff; border-radius: 4px;\">\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Company:</strong> ${object.name}\n"
+"                        <strong>Company:</strong> <t t-out=\"object.name\">Company Name</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Tax Number:</strong> ${object.vat or 'N/A'}\n"
+"                        <strong>Tax Number:</strong> <t t-out=\"object.vat or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Sign Name:</strong> ${object.broker_sign_name or 'N/A'}\n"
+"                        <strong>Sign Name:</strong> <t t-out=\"object.sign_name or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Authorized Person:</strong> ${object.broker_authorized_person or 'N/A'}\n"
+"                        <strong>Authorized Person:</strong> <t t-out=\"object.authorized_person or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Email:</strong> ${object.email or 'N/A'}\n"
+"                        <strong>Email:</strong> <t t-out=\"object.email or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Phone:</strong> ${object.mobile or object.phone or 'N/A'}\n"
+"                        <strong>Phone:</strong> <t t-out=\"object.mobile or object.phone or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                </div>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
@@ -182,37 +187,36 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;\">\n"
-"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px "
-"rgba(0,0,0,0.1);\">\n"
+"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n"
 "            <div style=\"background-color: #007bff; padding: 30px; text-align: center;\">\n"
-"                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Yeni Aracı Kaydı</h1>\n"
+"                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Yeni Kayıt</h1>\n"
 "            </div>\n"
 "            <div style=\"padding: 30px;\">\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Yeni bir broker kayıt oldu ve onay bekliyor..\n"
+"                    Yeni biri kayıt oldu ve onay bekliyor.\n"
 "                </p>\n"
 "                <div style=\"margin: 30px 0; padding: 20px; background-color: #f0f8ff; border-left: 4px solid #007bff; border-radius: 4px;\">\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Şirket:</strong> ${object.name}\n"
+"                        <strong>Şirket:</strong> <t t-out=\"object.name\">Şirket Adı</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Vergi Numarası:</strong> ${object.vat or 'N/A'}\n"
+"                        <strong>Vergi Numarası:</strong> <t t-out=\"object.vat or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Tabela Adı:</strong> ${object.broker_sign_name or 'N/A'}\n"
+"                        <strong>Table Adı:</strong> <t t-out=\"object.sign_name or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Yekili Kişi</strong> ${object.broker_authorized_person or 'N/A'}\n"
+"                        <strong>Yetkili Kişi:</strong> <t t-out=\"object.authorized_person or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Email:</strong> ${object.email or 'N/A'}\n"
+"                        <strong>E-Posta:</strong> <t t-out=\"object.email or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Telefon:</strong> ${object.mobile or object.phone or 'N/A'}\n"
+"                        <strong>Telefon:</strong> <t t-out=\"object.mobile or object.phone or 'N/A'\">N/A</t>\n"
 "                    </p>\n"
 "                </div>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Lütfen kaydı inceleyin ve gerekli işlemi yapın.\n"
+"                   Lütfen kaydı inceleyin ve gerekli işlemi yapın..\n"
 "                </p>\n"
 "            </div>\n"
 "        </div>\n"
@@ -221,28 +225,27 @@ msgstr ""
 "        "
 
 #. module: payment_escrow
-#: model:mail.template,body_html:payment_escrow.email_template_broker_approved
+#: model:mail.template,body_html:payment_escrow.email_template_registration_approved
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;\">\n"
-"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px "
-"rgba(0,0,0,0.1);\">\n"
+"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n"
 "            <div style=\"background-color: #28a745; padding: 30px; text-align: center;\">\n"
 "                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Registration Approved!</h1>\n"
 "            </div>\n"
 "            <div style=\"padding: 30px;\">\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Dear <strong>${object.broker_authorized_person or object.name}</strong>,\n"
+"                    Dear <strong t-out=\"object.authorized_person or object.name\">Partner</strong>,\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Congratulations! Your broker registration for <strong>${object.name}</strong> has been approved.\n"
+"                    Congratulations! Your registration for <strong t-out=\"object.name\">Company</strong> has been approved.\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    You can now start using our escrow services as an authorized broker.\n"
+"                    You can now start using our escrow services as an authorized user.\n"
 "                </p>\n"
 "                <div style=\"margin: 30px 0; padding: 20px; background-color: #f0f8f0; border-left: 4px solid #28a745; border-radius: 4px;\">\n"
 "                    <p style=\"margin: 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Approval Date:</strong> ${object.broker_approval_date}\n"
+"                        <strong>Approval Date:</strong> <t t-out=\"format_datetime(object.approval_date, object.tz, 'd MMMM y') if object.approval_date else 'N/A'\">01.01.2023</t>\n"
 "                    </p>\n"
 "                </div>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
@@ -250,7 +253,7 @@ msgid ""
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
 "                    Best regards,<br/>\n"
-"                    <strong>${object.company_id.name}</strong>\n"
+"                    <strong t-out=\"object.company_id.name\">Company</strong>\n"
 "                </p>\n"
 "            </div>\n"
 "        </div>\n"
@@ -260,65 +263,62 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;\">\n"
-"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px "
-"rgba(0,0,0,0.1);\">\n"
+"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n"
 "            <div style=\"background-color: #28a745; padding: 30px; text-align: center;\">\n"
-"                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Kayıt Başarılı!</h1>\n"
+"                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Kayıt Onaylandı!</h1>\n"
 "            </div>\n"
 "            <div style=\"padding: 30px;\">\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Sayın <strong>${object.broker_authorized_person or object.name}</strong>,\n"
+"                    Sayın <strong t-out=\"object.authorized_person or object.name\">Partner</strong>,\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                   Tebrikler! <strong>${object.name}</strong> için broker kaydınız onaylanmıştır.\n"
+"                    Tebrikler! <strong t-out=\"object.name\">Firma</strong> için yaptığınız kayıt onaylandı.\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Artık yetkili bir aracı olarak escrow hizmetlerimizi kullanmaya başlayabilirsiniz.\n"
+"                    Artık escrow hizmetlerimizi yetkili kullanıcı olarak kullanmaya başlayabilirsiniz.\n"
 "                </p>\n"
 "                <div style=\"margin: 30px 0; padding: 20px; background-color: #f0f8f0; border-left: 4px solid #28a745; border-radius: 4px;\">\n"
 "                    <p style=\"margin: 0; color: #555; font-size: 14px;\">\n"
-"                        <strong>Onay Tarihi:</strong> ${object.broker_approval_date}\n"
+"                        <strong>Onay Tarihi:</strong> <t t-out=\"format_datetime(object.approval_date, object.tz, 'd MMMM y') if object.approval_date else 'N/A'\">01.01.2023</t>\n"
 "                    </p>\n"
 "                </div>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Herhangi bir sorunuz varsa, lütfen bizimle iletişime geçmekten çekinmeyin.\n"
+"                    Herhangi bir sorunuz olursa, lütfen bizimle iletişime geçmekten çekinmeyin.\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
 "                    Saygılarımızla,<br/>\n"
-"                    <strong>${object.company_id.name}</strong>\n"
+"                    <strong t-out=\"object.company_id.name\">Firma</strong>\n"
 "                </p>\n"
 "            </div>\n"
 "        </div>\n"
 "    </div>\n"
-"</div>\n"
-"        "
+"</div>"
 
 #. module: payment_escrow
-#: model:mail.template,body_html:payment_escrow.email_template_broker_rejected
+#: model:mail.template,body_html:payment_escrow.email_template_registration_rejected
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;\">\n"
-"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px "
-"rgba(0,0,0,0.1);\">\n"
+"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n"
 "            <div style=\"background-color: #dc3545; padding: 30px; text-align: center;\">\n"
 "                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Registration Update</h1>\n"
 "            </div>\n"
 "            <div style=\"padding: 30px;\">\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Dear <strong>${object.broker_authorized_person or object.name}</strong>,\n"
+"                    Dear <strong t-out=\"object.authorized_person or object.name\">Partner</strong>,\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Thank you for your interest in becoming a broker with <strong>${object.company_id.name}</strong>.\n"
+"                    Thank you for your interest in becoming with <strong t-out=\"object.company_id.name\">Company</strong>.\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    After careful review, we regret to inform you that we are unable to approve your broker registration at this time.\n"
+"                    After careful review, we regret to inform you that we are unable to approve your registration at this time.\n"
 "                </p>\n"
 "                <div style=\"margin: 30px 0; padding: 20px; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;\">\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #856404; font-size: 14px; font-weight: bold;\">\n"
 "                        Reason:\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0; color: #856404; font-size: 14px;\">\n"
-"                        ${object.broker_rejection_reason or 'No specific reason provided.'}\n"
+"                        <t t-out=\"object.rejection_reason or 'No specific reason provided.'\">No specific reason provided.</t>\n"
 "                    </p>\n"
 "                </div>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
@@ -326,7 +326,7 @@ msgid ""
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
 "                    Best regards,<br/>\n"
-"                    <strong>${object.company_id.name}</strong>\n"
+"                    <strong t-out=\"object.company_id.name\">Company</strong>\n"
 "                </p>\n"
 "            </div>\n"
 "        </div>\n"
@@ -336,49 +336,46 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;\">\n"
-"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px "
-"rgba(0,0,0,0.1);\">\n"
+"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n"
 "            <div style=\"background-color: #dc3545; padding: 30px; text-align: center;\">\n"
-"                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Kayıt Güncellendi</h1>\n"
+"                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Kayıt Durumu Güncellemesi</h1>\n"
 "            </div>\n"
 "            <div style=\"padding: 30px;\">\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Dear <strong>${object.broker_authorized_person or object.name}</strong>,\n"
+"                    Sayın <strong t-out=\"object.authorized_person or object.name\">Partner</strong>,\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Aracı olmakla ilgilendiğiniz için teşekkür ederiz. <strong>${object.company_id.name}</strong>.\n"
+"                    <strong t-out=\"object.company_id.name\">Firma</strong> ile çalışmaya gösterdiğiniz ilgi için teşekkür ederiz.\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Detaylı incelemenin ardından, broker kaydınızı şu anda onaylayamadığımızı üzülerek bildirmek isteriz.\n"
+"                    Yapılan detaylı inceleme sonucunda, kaydınızı şu anda onaylayamadığımızı üzülerek bildiririz.\n"
 "                </p>\n"
 "                <div style=\"margin: 30px 0; padding: 20px; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;\">\n"
 "                    <p style=\"margin: 0 0 10px 0; color: #856404; font-size: 14px; font-weight: bold;\">\n"
 "                        Sebep:\n"
 "                    </p>\n"
 "                    <p style=\"margin: 0; color: #856404; font-size: 14px;\">\n"
-"                        ${object.broker_rejection_reason or 'No specific reason provided.'}\n"
+"                        <t t-out=\"object.rejection_reason or 'Herhangi bir neden belirtilmemiştir.'\">Herhangi bir neden belirtilmemiştir.</t>\n"
 "                    </p>\n"
 "                </div>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
-"                    Eğer herhangi bir sorunuz var lütfen bizimle iletişime geçin.\n"
+"                    Bu kararla ilgili sorularınız varsa veya görüşmek isterseniz lütfen bizimle iletişime geçin.\n"
 "                </p>\n"
 "                <p style=\"font-size: 16px; color: #333; line-height: 1.6;\">\n"
 "                    Saygılarımızla,<br/>\n"
-"                    <strong>${object.company_id.name}</strong>\n"
+"                    <strong t-out=\"object.company_id.name\">Firma</strong>\n"
 "                </p>\n"
 "            </div>\n"
 "        </div>\n"
 "    </div>\n"
-"</div>\n"
-"        "
+"</div>"
 
 #. module: payment_escrow
 #: model:mail.template,body_html:payment_escrow.email_template_platform_owner_payment_waiting_approval
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;\">\n"
-"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px "
-"rgba(0,0,0,0.1);\">\n"
+"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n"
 "            <div style=\"background-color: #dc3545; padding: 30px; text-align: center;\">\n"
 "                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Waiting Approval</h1>\n"
 "            </div>\n"
@@ -407,8 +404,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"padding: 20px; background-color: #f9f9f9; font-family: Arial, sans-serif;\">\n"
-"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px "
-"rgba(0,0,0,0.1);\">\n"
+"        <div style=\"max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);\">\n"
 "            <div style=\"background-color: #dc3545; padding: 30px; text-align: center;\">\n"
 "                <h1 style=\"color: white; margin: 0; font-size: 28px;\">Onay Bekliyor</h1>\n"
 "            </div>\n"
@@ -436,7 +432,7 @@ msgstr ""
 "        "
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid ""
 "<i class=\"fa fa-arrow-left mr-2\"/>\n"
 "                                        Back to My Ads"
@@ -454,7 +450,7 @@ msgstr ""
 "                            Ödemeye Sayfasına Dön"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_registration_login_link
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_registration_login_link
 msgid ""
 "<i class=\"fa fa-briefcase mr-1\"/>\n"
 "                    Would you like to join the system as a broker?"
@@ -463,17 +459,26 @@ msgstr ""
 "                    Sisteme broker olarak katılmak ister misiniz?"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_registration_login_link
+msgid ""
+"<i class=\"fa fa-briefcase mr-1\"/>\n"
+"                    Would you like to join the system as a dealer?"
+msgstr ""
+"<i class=\"fa fa-briefcase mr-1\"/>\n"
+"                   Sisteme bayi olarak katılmak ister misiniz?"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "<i class=\"fa fa-check mr-1\"/>Approved"
 msgstr "<i class=\"fa fa-check mr-1\"/>Onaylandı"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_otp_modal
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_otp_modal
 msgid "<i class=\"fa fa-check mr-1\"/>Verify"
 msgstr "<i class=\"fa fa-check mr-1\"/>Doğrula"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "<i class=\"fa fa-check-circle mr-1\"/>Can Approve"
 msgstr "<i class=\"fa fa-check-circle mr-1\"/>Onaylayabilir"
 
@@ -488,7 +493,7 @@ msgid "<i class=\"fa fa-check-circle mr-1\"/>Transferred"
 msgstr "<i class=\"fa fa-check-circle mr-1\"/>Transfer edildi"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid ""
 "<i class=\"fa fa-check-circle mr-1\"/>Uploaded\n"
 "                                                        <br/>"
@@ -506,7 +511,7 @@ msgstr ""
 "                                        Ayarlar başarıyla kaydedildi!"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_2_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_2_content
 msgid ""
 "<i class=\"fa fa-chevron-left mr-2\"/>\n"
 "                            Back"
@@ -524,7 +529,12 @@ msgstr ""
 "                                    <span>Geri</span>"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "<i class=\"fa fa-clock mr-1\"/>Pending"
+msgstr "<i class=\"fa fa-clock mr-1\"/>Bekliyor"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "<i class=\"fa fa-clock mr-1\"/>Waiting Invoice"
 msgstr "<i class=\"fa fa-clock mr-1\"/>Fatura Bekleniyor"
 
@@ -537,6 +547,15 @@ msgstr "<i class=\"fa fa-clock mr-1\"/>Onay Bekleniyor"
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid "<i class=\"fa fa-clock-o mr-1\"/>Waiting"
 msgstr "<i class=\"fa fa-clock-o mr-1\"/>Bekliyor"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid ""
+"<i class=\"fa fa-copy mr-2\"/>\n"
+"                                                                    <span class=\"copy-text\">Copy Link</span>"
+msgstr ""
+"<i class=\"fa fa-copy mr-2\"/>\n"
+"                                                                    <span class=\"copy-text\">Linki Kopyala</span>"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_broker_rates
@@ -580,13 +599,13 @@ msgid "<i class=\"fa fa-file-invoice mr-1\"/>Waiting Invoice"
 msgstr "<i class=\"fa fa-file-invoice mr-1\"/>Fatura Bekleniyor"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_success_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_success_content
 msgid ""
 "<i class=\"fa fa-home mr-2\"/>\n"
 "                        Back to Home"
 msgstr ""
 "<i class=\"fa fa-home mr-2\"/>\n"
-"                        Ana Sayfaya Geri Dön"
+"                        Ana Sayfaya Dön"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
@@ -594,7 +613,16 @@ msgid "<i class=\"fa fa-image mr-1\"/>Pending Sale"
 msgstr "<i class=\"fa fa-image mr-1\"/>Satış Beklemede"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_success_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
+msgid ""
+"<i class=\"fa fa-info-circle mr-1\"/>\n"
+"                                                where to find the License Serial Number"
+msgstr ""
+"<i class=\"fa fa-info-circle mr-1\"/>\n"
+"                                                Lisans Seri Numarasını nerede bulabilirim?"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_success_content
 msgid ""
 "<i class=\"fa fa-info-circle mr-2\"/>\n"
 "                        You will receive an email notification when your application is reviewed."
@@ -615,6 +643,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid "<i class=\"fa fa-list mr-1\"/>All"
 msgstr "<i class=\"fa fa-list mr-1\"/>Hepsi"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "<i class=\"fa fa-list mr-1\"/>All Brokers"
+msgstr "<i class=\"fa fa-list mr-1\"/>Tüm Aracılar"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
@@ -663,7 +696,7 @@ msgstr ""
 "                            <span>Yardım</span>"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_otp_modal
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_otp_modal
 msgid "<i class=\"fa fa-refresh mr-1\"/>Resend"
 msgstr "<i class=\"fa fa-refresh mr-1\"/>Tekrar Gönder"
 
@@ -704,12 +737,12 @@ msgstr ""
 "                        İptal"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_otp_modal
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_otp_modal
 msgid "<i class=\"fa fa-times mr-1\"/>Cancel"
 msgstr "<i class=\"fa fa-times mr-1\"/>İptal"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "<i class=\"fa fa-times-circle mr-1\"/>Not uploaded"
 msgstr "<i class=\"fa fa-times-circle mr-1\"/>Yüklenmedi"
 
@@ -724,7 +757,7 @@ msgid "<i class=\"fa fa-upload mr-1\"/>Upload Invoice"
 msgstr "<i class=\"fa fa-upload mr-1\"/>Fatura Yükle"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_registration_login_link
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_registration_login_link
 msgid ""
 "<i class=\"fa fa-user-plus mr-1\"/>\n"
 "                    Broker Registration Form"
@@ -733,12 +766,39 @@ msgstr ""
 "                    Aracı Kayıt Formu"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_registration_login_link
+msgid ""
+"<i class=\"fa fa-user-plus mr-1\"/>\n"
+"                    Dealer Registration Form"
+msgstr ""
+"<i class=\"fa fa-user-plus mr-1\"/>\n"
+"                    Bayi Kayıt Formu"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid ""
+"<i class=\"fa fa-users fa-3x mb-3 d-block\"/>\n"
+"                                                                No brokers registered yet"
+msgstr ""
+"<i class=\"fa fa-users fa-3x mb-3 d-block\"/>\n"
+"                                                                Henüz kaydolmuş bir aracınız yok"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid ""
+"<i class=\"fa fa-users mr-2 text-primary\"/>\n"
+"                                            My Brokers"
+msgstr ""
+"<i class=\"fa fa-users mr-2 text-primary\"/>\n"
+"                                            Aracılarım"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_broker_rates
 msgid "<option value=\"\">Select Campaign</option>"
 msgstr "<option value=\"\">Kampanya Seç</option>"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "<option value=\"\">Select City</option>"
 msgstr "<option value=\"\">Şehir Seç</option>"
 
@@ -755,8 +815,7 @@ msgid ""
 "    <br/><br/>\n"
 "    If you want to view and pay online, <a t-att-href=\"object._get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">click here.</a>\n"
 "    <br/><br/>\n"
-"    <a t-att-href=\"object._get_payment_url()\" style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:#ffffff;margin:0 30px;"
-"\"><span style=\"margin-right: 10px\">Go to Payment</span>❯</a>\n"
+"    <a t-att-href=\"object._get_payment_url()\" style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Go to Payment</span>❯</a>\n"
 "    <br/><br/>\n"
 "    Have a nice day.\n"
 "    <br/><br/>\n"
@@ -768,13 +827,11 @@ msgstr ""
 "<p>\n"
 "    <strong>Sayın <i t-out=\"object.name\"/></strong>,\n"
 "    <br/><br/>\n"
-"   Online görüntülemek ve ödeme yapmak isterseniz, <a t-att-href=\"object._get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">buraya "
-"tıklayın.</a>\n"
+"    Online görüntüleme ve ödeme yapmak istiyorsanız, <a t-att-href=\"object._get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">buraya tıklayın.</a>\n"
 "    <br/><br/>\n"
-"    <a t-att-href=\"object._get_payment_url()\" style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:#ffffff;margin:0 30px;"
-"\"><span style=\"margin-right: 10px\">Ödemeye git</span>❯</a>\n"
+"    <a t-att-href=\"object._get_payment_url()\" style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Ödemeye Git</span>❯</a>\n"
 "    <br/><br/>\n"
-"    İyi Günler.\n"
+"    İyi günler dileriz.\n"
 "    <br/><br/>\n"
 "    Saygılarımızla...\n"
 "    <br/><br/>\n"
@@ -797,6 +854,19 @@ msgstr ""
 "                                    </select>"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid ""
+"<small class=\"text-muted d-block mt-2\">\n"
+"                                                            <i class=\"fa fa-info-circle mr-1\"/>\n"
+"                                                            Brokers who register with this link will be automatically assigned to you\n"
+"                                                        </small>"
+msgstr ""
+"<small class=\"text-muted d-block mt-2\">\n"
+"                                                            <i class=\"fa fa-info-circle mr-1\"/>\n"
+"                                                            Bu bağlantı ile kayıt olan brokerlar otomatik olarak size atanacaktır\n"
+"                                                        </small>"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
 msgid "<small class=\"text-muted d-block\">Amount</small>"
 msgstr "<small class=\"text-muted d-block\">Tutar</small>"
@@ -805,6 +875,17 @@ msgstr "<small class=\"text-muted d-block\">Tutar</small>"
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
 msgid "<small class=\"text-muted d-block\">Transaction</small>"
 msgstr "<small class=\"text-muted d-block\">İşlem</small>"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid ""
+"<small class=\"text-muted\">\n"
+"                                                        <i class=\"fa fa-eye mr-1\"/>Click to view details\n"
+"                                                    </small>"
+msgstr ""
+"<small class=\"text-muted\">\n"
+"                                                        <i class=\"fa fa-eye mr-1\"/>Detayları görmek için tıklayın\n"
+"                                                    </small>"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
@@ -915,23 +996,27 @@ msgstr ""
 "                                <span class=\"value success\">Tamamlandı</span>"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "<span class=\"mr-3 font-weight-600 text-dark\" style=\"font-size: 14px;\">Filter by Broker:</span>"
+msgstr "<span class=\"mr-3 font-weight-600 text-dark\" style=\"font-size: 14px;\">Aracıları Filtrele:</span>"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid "<span class=\"mr-3 font-weight-600 text-dark\" style=\"font-size: 14px;\">Filter by Status:</span>"
 msgstr "<span class=\"mr-3 font-weight-600 text-dark\" style=\"font-size: 14px;\">Duruma Göre Filtrele:</span>"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_steps_container
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_steps_container
 msgid "<span class=\"num\">1</span>"
-msgstr "<span class=\"num\">1</span>"
+msgstr ""
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_steps_container
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_steps_container
 msgid "<span class=\"num\">2</span>"
-msgstr "<span class=\"num\">2</span>"
+msgstr ""
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
@@ -957,8 +1042,7 @@ msgid "<span class=\"page-link\" field=\"ad.pagination.current\">1</span>"
 msgstr ""
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid ""
 "<span class=\"text-500\" attrs=\"{'invisible': [('is_otp_verified', '=', False)]}\">\n"
 "                        <span class=\"text-monospace font-weight-bold\">OTP</span>\n"
@@ -981,7 +1065,7 @@ msgstr ""
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff
 msgid "<span class=\"text-muted small\">E-mail</span>"
-msgstr "<span class=\"text-muted small\">E-mail</span>"
+msgstr "<span class=\"text-muted small\">E-posta</span>"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff
@@ -1005,11 +1089,8 @@ msgstr "<span class=\"text-muted\">Sipariş Kodu: </span>"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
-msgid ""
-"<span class=\"text-muted\">Showing <span field=\"ad.pagination.showing\">1-10</span> of <span field=\"ad.pagination.total\">0</span> ads</span>"
-msgstr ""
-"<span class=\"text-muted\">Gösteriliyor <span field=\"ad.pagination.showing\">1-10</span> ile <span field=\"ad.pagination.total\">0</span> "
-"İlanlar</span>"
+msgid "<span class=\"text-muted\">Showing <span field=\"ad.pagination.showing\">1-10</span> of <span field=\"ad.pagination.total\">0</span> ads</span>"
+msgstr "<span class=\"text-muted\">Gösteriliyor <span field=\"ad.pagination.showing\">1-10</span> ile <span field=\"ad.pagination.total\">0</span> İlanlar</span>"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_broker_settings
@@ -1032,13 +1113,12 @@ msgid "<span>Collection Amount</span>"
 msgstr "<span>Tahsilat Tutarı</span>"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_steps_container
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_steps_container
 msgid "<span>Company Information</span>"
 msgstr "<span>Şirket Bilgileri</span>"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_3_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_3_content
 msgid "<span>Corporate</span>"
 msgstr "<span>Kurumsal</span>"
 
@@ -1048,7 +1128,7 @@ msgid "<span>Default Campaign</span>"
 msgstr "<span>Varsayılan Kampanya</span>"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_steps_container
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_steps_container
 msgid "<span>Document Upload</span>"
 msgstr "<span>Belge Yükle</span>"
 
@@ -1058,8 +1138,7 @@ msgid "<span>Email</span>"
 msgstr "<span>E-Posta</span>"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_3_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_3_content
 msgid "<span>Individual</span>"
 msgstr "<span>Bireysel</span>"
 
@@ -1095,7 +1174,7 @@ msgstr "<span>Transfer edilecek iban</span>"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
 msgid "<span>×</span>"
-msgstr "<span>×</span>"
+msgstr ""
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_payment
@@ -1153,10 +1232,15 @@ msgid "<strong>View Settings</strong>"
 msgstr "<strong>Ayarları Görüntüle</strong>"
 
 #. module: payment_escrow
+#: model:ir.model.constraint,message:payment_escrow.constraint_dealer_commission_rate_unique_partner_campaign
+msgid "A dealer can only have one commission rate per campaign!"
+msgstr "Bir bayinin, kampanya başına yalnızca bir komisyon oranı olabilir!"
+
+#. module: payment_escrow
 #: code:addons/payment_escrow/models/partner.py:0
 #, python-format
-msgid "A new broker \"%s\" has registered and is pending approval."
-msgstr "Yeni bir broker \"%s\" kayıt oldu ve onay bekliyor."
+msgid "A new registration \"%s\" has been submitted and is pending approval."
+msgstr "Yeni bir “%s” kaydı gönderildi ve onay bekliyor."
 
 #. module: payment_escrow
 #: code:addons/payment_escrow/models/partner.py:0
@@ -1165,9 +1249,15 @@ msgid "A user with email \"%s\" already exists."
 msgstr "\"%s\" e-posta adresine sahip bir kullanıcı zaten mevcut."
 
 #. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "A verification code was sent to your phone"
+msgstr "Telefonunuza bir doğrulama kodu gönderildi."
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_4_content
 msgid "AA/YY"
-msgstr "AA/YY"
+msgstr ""
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
@@ -1180,18 +1270,17 @@ msgid "AD NAME"
 msgstr "İLAN İSMİ"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "AD NUMBER"
 msgstr "İLAN NUMARASI"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "AMOUNT"
 msgstr "TUTAR"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__api_charged_amount
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__api_charged_amount model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "API Charged Amount"
 msgstr "API Ücretlendirilmiş Tutar"
 
@@ -1201,13 +1290,13 @@ msgid "Access All Transactions"
 msgstr "Tüm İşlemleri Gör"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "Account Holder Name"
 msgstr "Hesap Sahibi Adı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Account holder name is required"
 msgstr "Hesap sahibi adı zorunludur."
@@ -1218,12 +1307,9 @@ msgid "Action Needed"
 msgstr "Eylem Gerekiyor"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__active
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__active
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__active
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__active
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__active model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__active
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__active model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__active
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__active model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
 msgid "Active"
 msgstr "Aktif"
 
@@ -1263,15 +1349,13 @@ msgid "Ad Name"
 msgstr "İlan İsmi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__ad_number
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__ad_number model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Ad Number"
 msgstr "İlan Numarası"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__ad_state
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__ad_state model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Ad Status"
 msgstr "İlan Durumu"
@@ -1304,8 +1388,7 @@ msgid "Additional commission rate for broker"
 msgstr "Broker için ek komisyon oranı"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate model_terms:ir.ui.view,arch_db:payment_escrow.customer_individual
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
+#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate model_terms:ir.ui.view,arch_db:payment_escrow.customer_individual model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
 msgid "Address"
 msgstr "Adres"
 
@@ -1317,8 +1400,7 @@ msgid "Address is required"
 msgstr "Adres gereklidir"
 
 #. module: payment_escrow
-#: model:ir.actions.act_window,name:payment_escrow.action_ad model:ir.ui.menu,name:payment_escrow.menu_ad
-#: model_terms:ir.ui.view,arch_db:payment_escrow.tree_ad
+#: model:ir.actions.act_window,name:payment_escrow.action_ad model:ir.ui.menu,name:payment_escrow.menu_ad model_terms:ir.ui.view,arch_db:payment_escrow.tree_ad
 msgid "Ads"
 msgstr "İlanlar"
 
@@ -1328,8 +1410,7 @@ msgid "Ads Information"
 msgstr "İlan Bilgileri"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/partner.py:0 model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_pending_ad_count
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_pending_ad_count
+#: code:addons/payment_escrow/models/partner.py:0 model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_pending_ad_count model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_pending_ad_count
 #, python-format
 msgid "Ads Pending Approval"
 msgstr "İlan onaylanmayı bekliyor"
@@ -1394,42 +1475,42 @@ msgstr "Bir hata meydana geldi. Lütfen sistem yöneticiniz ile irtibata geçini
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "An error occurred"
 msgstr "Bir hata meydana geldi"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "An error occurred during verification"
 msgstr "Doğrulama sırasında bir hata meydana geldi"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "An error occurred while processing your request"
 msgstr "İsteğiniz işlenirken bir hata meydana geldi"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "An error occurred while resending OTP"
 msgstr "OTP tekrar gönderiminde bir hata meydana geldi"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "An error occurred while sending OTP"
 msgstr "OTP gönderiminde bir hata meydana geldi"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "An error occurred while submitting your registration"
 msgstr "Kaydınızı gönderirken bir hata oluştu."
@@ -1447,8 +1528,7 @@ msgid "An installment rate for %s already exists for this infrastructure provide
 msgstr "Bu altyapı sağlayıcısı için %s oranında bir taksit zaten mevcut."
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_approval_date
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_approval_date
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__approval_date model:ir.model.fields,field_description:payment_escrow.field_res_users__approval_date
 msgid "Approval Date"
 msgstr "Onay Tarihi"
 
@@ -1458,8 +1538,7 @@ msgid "Approval Information"
 msgstr "Onay Bilgileri"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__approval_state
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__approval_state model:ir.model.fields,field_description:payment_escrow.field_res_users__approval_state model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Approval Status"
 msgstr "Onay Durumu"
@@ -1475,25 +1554,12 @@ msgid "Approve Payment"
 msgstr "Ödeme Onayla"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_ad
-msgid "Approve Transfers"
-msgstr "Transfer Onayla"
-
-#. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__broker_state__approved
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_broker model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__approval_state__approved model_terms:ir.ui.view,arch_db:payment_escrow.search_broker model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Approved"
 msgstr "Onaylandı"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/product.py:0
-#, python-format
-msgid "Approved %(ok)s of %(total)s transfer transactions. Failures: %(fail)s."
-msgstr "Toplam %(total)s transfer işleminin %(ok)s onaylandı. Başarısız olanlar: %(fail)s."
-
-#. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_approved_by
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_approved_by
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__approved_by model:ir.model.fields,field_description:payment_escrow.field_res_users__approved_by
 msgid "Approved By"
 msgstr "Onaylayan"
 
@@ -1503,11 +1569,8 @@ msgid "Approved Transfers"
 msgstr "Onaylanan Transferler"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_ad model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_form
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_form
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_ad model_terms:ir.ui.view,arch_db:payment_escrow.search_broker model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_form model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_form model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
 msgid "Archived"
 msgstr "Arşivlendi"
 
@@ -1539,21 +1602,18 @@ msgid "Attributes"
 msgstr "Nitelikler"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_authorization_doc
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_authorization_doc
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_2_content
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__authorization_doc model:ir.model.fields,field_description:payment_escrow.field_res_users__authorization_doc model_terms:ir.ui.view,arch_db:payment_escrow.register_step_2_content
 msgid "Authorization Document"
-msgstr "Yetkili Belgesi"
+msgstr "Yeki Belgesi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_authorization_doc_filename
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_authorization_doc_filename
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__authorization_doc_filename model:ir.model.fields,field_description:payment_escrow.field_res_users__authorization_doc_filename
 msgid "Authorization Document Filename"
-msgstr "Yetkili Belgesi Dosya Adı"
+msgstr "Yetki Belgesi Dosya Adı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Authorization Document is required"
 msgstr "Yetkili belgesi zorunludur."
@@ -1574,19 +1634,22 @@ msgid "Authorized Mobile Phone"
 msgstr "Yetkilendirilmiş Cep Telefonu"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_authorized_person
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_authorized_person
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__authorized_person model:ir.model.fields,field_description:payment_escrow.field_res_users__authorized_person model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
 msgid "Authorized Person"
 msgstr "Yetkilendirilmiş Kişi"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Authorized person is required"
 msgstr "Yetkili kişi zorunludur"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "BROKER"
+msgstr "ARACI"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_payment
@@ -1599,8 +1662,7 @@ msgid "Back to payment page"
 msgstr "Ödeme sayfasına geri dön"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Bank Accounts"
 msgstr "Banka Hesapları"
 
@@ -1610,27 +1672,28 @@ msgid "Bank Information"
 msgstr "Banka Bilgileri"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Banks"
 msgstr "Bankalar"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_ad
+msgid "Basket Items"
+msgstr "Sepet Kalemleri"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Branch"
 msgstr "Şube"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__brand_id
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__brand_id model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
 msgid "Brand"
 msgstr "Marka"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__escrow_car_brand_id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__brand_id
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__escrow_car_brand_id model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__brand_id
 msgid "Brand ID"
 msgstr "Marka ID"
 
@@ -1640,8 +1703,7 @@ msgid "Brand Logo"
 msgstr "Marka Logo"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__escrow_car_brand_name
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__name
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__escrow_car_brand_name model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__name
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_escrow_car_brand_form
 msgid "Brand Name"
 msgstr "Marka Adı"
@@ -1659,11 +1721,8 @@ msgid "Brands"
 msgstr "Markalar"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard__broker_id
-#: model:ir.model.fields,field_description:payment_escrow.field_product_product__broker_id
-#: model:ir.model.fields,field_description:payment_escrow.field_product_template__broker_id
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__broker
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__broker
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__broker_id model:ir.model.fields,field_description:payment_escrow.field_product_template__broker_id
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__broker model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__broker
 msgid "Broker"
 msgstr "Aracı"
 
@@ -1673,9 +1732,8 @@ msgid "Broker Additional Rate (%)"
 msgstr "Aracı Ek Oran (%)"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_campaign_id
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_campaign_id
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_form
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_campaign_id model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_campaign_id model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_form
 msgid "Broker Campaign"
 msgstr "Aracı Kampanya"
 
@@ -1690,24 +1748,25 @@ msgid "Broker Campaigns"
 msgstr "Aracı Kampanyaları"
 
 #. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "Broker Commission"
+msgstr "Aracı Komisyonu"
+
+#. module: payment_escrow
 #: model:ir.model,name:payment_escrow.model_escrow_broker_campaign
 msgid "Broker Commission Campaign"
 msgstr "Aracı Komisyon Kampanya"
 
 #. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__dealer_broker_count model:ir.model.fields,field_description:payment_escrow.field_res_users__dealer_broker_count
+msgid "Broker Count"
+msgstr "Aracı Sayısı"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
 msgid "Broker Default Campaign"
 msgstr "Aracı Varsayılan Kampanya"
-
-#. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
-msgid "Broker Documents"
-msgstr "Aracı Belgeleri"
-
-#. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
-msgid "Broker Information"
-msgstr "Aracı Bilgileri"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_broker_rates
@@ -1730,30 +1789,9 @@ msgid "Broker Registration"
 msgstr "Aracı Kaydı"
 
 #. module: payment_escrow
-#: model:mail.template,name:payment_escrow.email_template_broker_approved
-msgid "Broker Registration Approved"
-msgstr "Aracı Kaydı Onaylandı"
-
-#. module: payment_escrow
-#: model:mail.template,name:payment_escrow.email_template_broker_rejected
-msgid "Broker Registration Rejected"
-msgstr "Aracı Kaydı Reddedildi"
-
-#. module: payment_escrow
-#: model:ir.model,name:payment_escrow.model_broker_rejection_wizard
-msgid "Broker Rejection Wizard"
-msgstr "Aracı Reddetme Sihirbazı"
-
-#. module: payment_escrow
 #: model:ir.ui.menu,name:payment_escrow.menu_brokers model_terms:ir.ui.view,arch_db:payment_escrow.page_broker_settings
 msgid "Broker Settings"
 msgstr "Aracı Ayarları"
-
-#. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_state
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_state
-msgid "Broker Status"
-msgstr "Aracı Durumu"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
@@ -1805,8 +1843,7 @@ msgid "Calculating installment scenarios..."
 msgstr "Taksit senaryoları hesaplanıyor..."
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__campaign_id
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__campaign_id model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__campaign_id model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
 msgid "Campaign"
 msgstr "Kampanya"
 
@@ -1827,8 +1864,8 @@ msgstr "Kampanyalar"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/page.js:0 model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_rejection_wizard_form
+#: code:addons/payment_escrow/static/src/js/page.js:0 model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_registration_rejection_wizard_form
 #, python-format
 msgid "Cancel"
 msgstr "İptal"
@@ -1865,16 +1902,13 @@ msgid "Car Model Year"
 msgstr "Araç Model Yılı"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__card_holder
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__card_holder
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__card_holder model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__card_holder
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
 msgid "Card Holder"
 msgstr "Kart Sahibi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__card_holder_ids
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__card_holder_ids
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__card_holder_ids model:ir.model.fields,field_description:payment_escrow.field_res_users__card_holder_ids model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
 msgid "Card Holders"
 msgstr "Kart Sahipleri"
 
@@ -1896,15 +1930,8 @@ msgid "Category is required"
 msgstr "Kategori gereklidir"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_otp_modal
-msgid "Cep Telefonu Doğrulama"
-msgstr "Cep Telefonu Doğrulama"
-
-#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff
-msgid ""
-"Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and customer information are "
-"different."
+msgid "Changes may occur in the payment flow based on this information. Please check this option if the credit card holder and customer information are different."
 msgstr "Bu bilgilere göre ödeme akışında değişiklikler olabilir. Lütfen kredi kartı sahibi ve müşteri bilgileri farklıysa bu seçeneği işaretleyin."
 
 #. module: payment_escrow
@@ -1923,16 +1950,14 @@ msgid "Chassis Number (17 characters)"
 msgstr "Şasi Numarası (17 karakter)"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
 msgid "City"
 msgstr "Şehir"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "City is required"
 msgstr "Şehir zorunlu"
@@ -1953,20 +1978,40 @@ msgid "Commission Campaigns"
 msgstr "Komisyon Kapmanyaları"
 
 #. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__commission_rate
+msgid "Commission Rate (%)"
+msgstr "Komisyon Oranı (%)"
+
+#. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__dealer_commission_rate_ids model:ir.model.fields,field_description:payment_escrow.field_res_users__dealer_commission_rate_ids
+msgid "Commission Rates"
+msgstr "Komisyon Oranları"
+
+#. module: payment_escrow
+#: model:ir.model.fields,help:payment_escrow.field_dealer_commission_rate__commission_rate
+msgid "Commission percentage that dealer will earn from this campaign"
+msgstr "Bu kampanyadan bayinin kazanacağı komisyon yüzdesi"
+
+#. module: payment_escrow
+#: code:addons/payment_escrow/models/dealer_commission_rate.py:0
+#, python-format
+msgid "Commission rate must be between 0 and 100!"
+msgstr "Komisyon oranı 0 ile 100 arasında olmalıdır!"
+
+#. module: payment_escrow
 #: model:ir.model,name:payment_escrow.model_res_company model:ir.ui.menu,name:payment_escrow.menu_company
 msgid "Companies"
 msgstr "Şirketler"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__company_id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__company_id
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_ad model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__company_id model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__company_id
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__company_id model_terms:ir.ui.view,arch_db:payment_escrow.search_ad model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
 msgid "Company"
 msgstr "Şirket"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "Company Information"
 msgstr "Şirket Bilgileri"
 
@@ -1976,14 +2021,13 @@ msgid "Company Settings"
 msgstr "Şirket Ayarları"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
 msgid "Company Title"
 msgstr "Şirket Adı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Company title is required"
 msgstr "Şirket adı zorunludur"
@@ -2019,7 +2063,7 @@ msgid "Continue"
 msgstr "Devam Et"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
 msgid ""
 "Continue\n"
 "                            <i class=\"fa fa-chevron-right ml-2\"/>"
@@ -2033,15 +2077,12 @@ msgid "Continue to My Ads"
 msgstr "İlanlarıma Devam Et"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_contract
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_contract
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__contract_doc model:ir.model.fields,field_description:payment_escrow.field_res_users__contract_doc model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
 msgid "Contract"
 msgstr "Sözleşme"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_contract_filename
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_contract_filename
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__contract_doc_filename model:ir.model.fields,field_description:payment_escrow.field_res_users__contract_doc_filename
 msgid "Contract Filename"
 msgstr "Sözleşme Dosya Adı"
 
@@ -2059,6 +2100,12 @@ msgstr "Temlikname Formu Eki"
 #: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction__conveyance_upload_date
 msgid "Conveyance Upload Date"
 msgstr "Temlikname Yükleme Tarihi"
+
+#. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "Conveyance form has been sent. User IP Address is %s"
+msgstr "Temlikname formu gönderildi. Kullanıcı IP adresi: %s"
 
 #. module: payment_escrow
 #. openerp-web
@@ -2089,8 +2136,7 @@ msgid "Corporate title is required"
 msgstr "Kurumsal ünvanı zorunludur."
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Country"
 msgstr "Ülke"
@@ -2146,14 +2192,11 @@ msgid "Create your first vehicle model"
 msgstr "İlk araç modelinizi oluşturun"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard__create_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__create_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__create_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__create_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__create_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__create_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__create_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__create_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__create_uid model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__create_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__create_uid model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__create_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__create_uid model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__create_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__create_uid model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__create_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
@@ -2163,14 +2206,11 @@ msgid "Created collections are listed here"
 msgstr "Oluşturulan tahsilatlar burada listelenir"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard__create_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__create_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__create_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__create_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__create_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__create_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__create_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__create_date
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__create_date model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__create_date
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__create_date model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__create_date
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__create_date model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__create_date
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__create_date model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__create_date
+#: model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard__create_date
 msgid "Created on"
 msgstr "Oluşturulma tarihi"
 
@@ -2197,16 +2237,13 @@ msgid "Currency"
 msgstr "Para Birimi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_customer_ids
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__customer
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_sale
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_customer_ids model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__customer
+#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__customer model_terms:ir.ui.view,arch_db:payment_escrow.search_sale
 msgid "Customer"
 msgstr "Müşteri"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_customer_ad_count
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_customer_ad_count
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_customer_ad_count model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_customer_ad_count
 msgid "Customer Ads Count"
 msgstr "Müşteri ilan sayısı"
 
@@ -2214,6 +2251,13 @@ msgstr "Müşteri ilan sayısı"
 #: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_customer_count
 msgid "Customer Count"
 msgstr "Müşteri sayısı"
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/xml/templates.xml:0
+#, python-format
+msgid "Customer Impact"
+msgstr "Müşteriye Yansıyan"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.steps_container_template
@@ -2226,8 +2270,7 @@ msgid "Customer Signature"
 msgstr "Müşteri imzası"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/product.py:0 model:ir.actions.act_window,name:payment_escrow.action_customer
-#: model:ir.ui.menu,name:payment_escrow.menu_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_ad
+#: code:addons/payment_escrow/models/product.py:0 model:ir.actions.act_window,name:payment_escrow.action_customer model:ir.ui.menu,name:payment_escrow.menu_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_ad
 #, python-format
 msgid "Customers"
 msgstr "Müşteriler"
@@ -2238,7 +2281,7 @@ msgid "Dark"
 msgstr "Koyu"
 
 #. module: payment_escrow
-#: model:ir.ui.menu,name:payment_escrow.menu_dashboard
+#: model:ir.ui.menu,name:payment_escrow.menu_dashboard model_terms:ir.ui.view,arch_db:payment_escrow.header
 msgid "Dashboard"
 msgstr "Panel"
 
@@ -2250,6 +2293,51 @@ msgid "Date:"
 msgstr "Tarih:"
 
 #. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__partner_id model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__dealer
+msgid "Dealer"
+msgstr "Bayi"
+
+#. module: payment_escrow
+#: model:ir.model,name:payment_escrow.model_dealer_commission_rate model_terms:ir.ui.view,arch_db:payment_escrow.view_dealer_commission_rate_form
+msgid "Dealer Commission Rate"
+msgstr "Bayi Komisyon Oranı"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_dealer_commission_rate_tree
+msgid "Dealer Commission Rates"
+msgstr "Bayi Komisyon Oranları"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "Dealer Dashboard"
+msgstr "Bayi Paneli"
+
+#. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__dealer_referral_code model:ir.model.fields,field_description:payment_escrow.field_res_users__dealer_referral_code
+msgid "Dealer Referral Code"
+msgstr "Bayi Referans Kodu"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.settings_form
+msgid "Dealer Registration"
+msgstr "Bayi Kaydı"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+msgid "Dealer Settings"
+msgstr "Bayi Ayarları"
+
+#. module: payment_escrow
+#: model:ir.actions.act_window,name:payment_escrow.action_dealer model:ir.ui.menu,name:payment_escrow.menu_dealer
+msgid "Dealers"
+msgstr "Bayiler"
+
+#. module: payment_escrow
+#: model_terms:ir.actions.act_window,help:payment_escrow.action_dealer
+msgid "Dealers are registered through the public registration form."
+msgstr "Bayiler, herkese açık kayıt formu üzerinden kaydedilir."
+
+#. module: payment_escrow
 #. openerp-web
 #: code:addons/payment_escrow/controllers/main.py:0 code:addons/payment_escrow/static/src/js/page.js:0
 #, python-format
@@ -2257,8 +2345,7 @@ msgid "Debit Card"
 msgstr "Banka Kartı"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_default_campaign_id
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_default_campaign_id
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_default_campaign_id model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_default_campaign_id
 msgid "Default Campaign"
 msgstr "Varsayılan Kampanya"
 
@@ -2298,14 +2385,7 @@ msgid "Description"
 msgstr "Açıklama"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/product.py:0
-#, python-format
-msgid "Details have been posted to chatter."
-msgstr "Detaylar Chatter’a gönderildi."
-
-#. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction__jetcheckout_different_card_holder
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction__jetcheckout_different_card_holder_id
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction__jetcheckout_different_card_holder model:ir.model.fields,field_description:payment_escrow.field_payment_transaction__jetcheckout_different_card_holder_id
 msgid "Different Card Holder"
 msgstr "Kart Sahibi Farklı"
 
@@ -2327,39 +2407,28 @@ msgid "Discard"
 msgstr "Vazgeç"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard__display_name
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__display_name
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__display_name
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__display_name
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__display_name
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__display_name
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__display_name
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__display_name
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__display_name model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__display_name
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__display_name model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__display_name
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__display_name model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__display_name
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__display_name model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__display_name
+#: model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard__display_name
 msgid "Display Name"
 msgstr "Görünen Ad"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "District"
 msgstr "İlçe"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "District is required"
 msgstr "İlçe zorunludur"
 
 #. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_transactions.js:0
-#, python-format
-msgid "Dosya bulunamadı"
-msgstr "Dosya Bulunamadı"
-
-#. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__broker_state__draft
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
+#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__approval_state__draft model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
 msgid "Draft"
 msgstr "Taslak"
 
@@ -2389,7 +2458,7 @@ msgid "Editable Payment Amount"
 msgstr "Düzenlenebilir Ödeme Tutarı"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "Email"
 msgstr "E-posta"
 
@@ -2405,30 +2474,34 @@ msgstr "Eposta Şablonları"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Email format is not correct"
 msgstr "E-posta formatı doğru değil"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Email is required"
 msgstr "E-posta zorunlu"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_settings__broker_registration_enabled
-#: model:ir.model.fields,field_description:payment_escrow.field_res_company__broker_registration_enabled
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_settings__broker_registration_enabled model:ir.model.fields,field_description:payment_escrow.field_res_company__broker_registration_enabled
 #: model_terms:ir.ui.view,arch_db:payment_escrow.settings_form
 msgid "Enable Broker Registration"
 msgstr "Aracı Kayıtlarını Etkinleştir"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_settings__conveyance_show_link
-#: model:ir.model.fields,field_description:payment_escrow.field_res_company__conveyance_show_link
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_settings__conveyance_show_link model:ir.model.fields,field_description:payment_escrow.field_res_company__conveyance_show_link
 msgid "Enable Conveyance Document Show Link"
 msgstr "Temlikname Gösterme Linkini Etkinleştir"
+
+#. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_settings__dealer_registration_enabled model:ir.model.fields,field_description:payment_escrow.field_res_company__dealer_registration_enabled
+#: model_terms:ir.ui.view,arch_db:payment_escrow.settings_form
+msgid "Enable Dealer Registration"
+msgstr "Bayi Kaydını Etkinleştir"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
@@ -2437,7 +2510,7 @@ msgstr "İngiilzce"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Error"
 msgstr "Hata"
@@ -2449,8 +2522,7 @@ msgid "Error creating portal user: %s"
 msgstr "Portal kullanıcısı oluşturulurken hata oluştu: %s"
 
 #. module: payment_escrow
-#: model:ir.ui.menu,name:payment_escrow.menu_main model_terms:ir.ui.view,arch_db:payment_escrow.search_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_item model_terms:ir.ui.view,arch_db:payment_escrow.tree_item
+#: model:ir.ui.menu,name:payment_escrow.menu_main model_terms:ir.ui.view,arch_db:payment_escrow.search_customer model_terms:ir.ui.view,arch_db:payment_escrow.search_item model_terms:ir.ui.view,arch_db:payment_escrow.tree_item
 msgid "Escrow"
 msgstr "Escrow"
 
@@ -2480,19 +2552,15 @@ msgid "Escrow Payment Email"
 msgstr "Escrow Tahsilat Epostası"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_item__system__escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__product_attribute__system__escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__product_category__system__escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__product_template__system__escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_company__system__escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__system__escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__sale_order__system__escrow
-#: model:ir.module.category,description:payment_escrow.module_category_escrow model:ir.module.category,name:payment_escrow.module_category_escrow
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_item__system__escrow model:ir.model.fields.selection,name:payment_escrow.selection__product_attribute__system__escrow
+#: model:ir.model.fields.selection,name:payment_escrow.selection__product_category__system__escrow model:ir.model.fields.selection,name:payment_escrow.selection__product_template__system__escrow
+#: model:ir.model.fields.selection,name:payment_escrow.selection__res_company__system__escrow model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__system__escrow
+#: model:ir.model.fields.selection,name:payment_escrow.selection__sale_order__system__escrow model:ir.module.category,description:payment_escrow.module_category_escrow model:ir.module.category,name:payment_escrow.module_category_escrow
 msgid "Escrow Payment System"
 msgstr "Escrow Tahsilat Sistemi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction__escrow_success_group
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction__escrow_success_group model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__escrow_success_group
 msgid "Escrow Success Group"
 msgstr "Escrow Başarı Grubu"
 
@@ -2509,7 +2577,7 @@ msgstr "Emanet sistemi transfer işlemleri burada listelenir."
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.settings_form
 msgid "Escrows"
-msgstr "Escrows"
+msgstr "Escrow"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.customer_individual model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff
@@ -2527,42 +2595,46 @@ msgid "Expiry Date"
 msgstr "Son Kullanma Tarihi"
 
 #. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__failed_message_ids
+msgid "Failed Messages"
+msgstr "Hata Mesajları"
+
+#. module: payment_escrow
 #: code:addons/payment_escrow/models/partner.py:0 model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
 #, python-format
 msgid "Failed Payments"
 msgstr "Hatalı Ödemeler"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_failed_payment_count
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_failed_payment_count
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_failed_payment_count model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_failed_payment_count
 msgid "Failed Payments Count"
 msgstr "Hatalı Ödeme Sayısı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Failed to resend OTP"
 msgstr "OTP yeniden gönderilemedi."
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Failed to send OTP"
 msgstr "OTP gönderilemedi"
 
 #. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_transactions.js:0
-#, python-format
-msgid "Fatura yüklenirken hata oluştu"
-msgstr "Fatura yüklenirken hata oluştu"
-
-#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.search_ad
 msgid "Favorites"
 msgstr "Favoriler"
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/js/broker_transactions.js:0
+#, python-format
+msgid "File not found"
+msgstr "Dosya bulunamadı"
 
 #. module: payment_escrow
 #: model:ir.model.fields,field_description:payment_escrow.field_product_product__message_follower_ids
@@ -2580,8 +2652,7 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font awesome ikonları örn. fa-tasks"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_individual model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff
+#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_individual model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff
 msgid "Full Name"
 msgstr "Ad Soyad"
 
@@ -2598,11 +2669,10 @@ msgstr "Müşterileri Getir"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid "Grid"
-msgstr "Kanban"
+msgstr "Izagara"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_sale model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
+#: model_terms:ir.ui.view,arch_db:payment_escrow.search_sale model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Group By"
 msgstr "Grupla"
@@ -2628,11 +2698,6 @@ msgid "Has Message"
 msgstr "Mesaj Var"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.header
-msgid "My Account"
-msgstr "Hesabım"
-
-#. module: payment_escrow
 #. openerp-web
 #: code:addons/payment_escrow/static/src/js/page.js:0
 #, python-format
@@ -2647,21 +2712,20 @@ msgid "Holder name must match the name entered in payment information"
 msgstr "Sahip adı, ödeme bilgilerinde girilen adla eşleşmelidir."
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "IBAN"
 msgstr "İban"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "IBAN is not valid"
 msgstr "İban geçerli değil"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "IBAN is required"
 msgstr "İban zorunlu"
@@ -2681,19 +2745,15 @@ msgid "IBAN name is required"
 msgstr "İban sahibi zorunlu"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard__id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__id
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__id
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__id model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__id
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__id model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__id model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__id
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__id model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__id model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__id
+#: model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard__id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "INVOICE"
 msgstr "FATURA"
 
@@ -2713,21 +2773,18 @@ msgid "Identity & Authorization"
 msgstr "Kimlik ve Yetkilendirme"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_identity_doc
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_identity_doc
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_2_content
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__identity_doc model:ir.model.fields,field_description:payment_escrow.field_res_users__identity_doc model_terms:ir.ui.view,arch_db:payment_escrow.register_step_2_content
 msgid "Identity Document"
 msgstr "Kimlik Belgesi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_identity_doc_filename
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_identity_doc_filename
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__identity_doc_filename model:ir.model.fields,field_description:payment_escrow.field_res_users__identity_doc_filename
 msgid "Identity Document Filename"
 msgstr "Kimlik Belgesi Dosya Adı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Identity Document is required"
 msgstr "Kimlik belgesi gereklidir"
@@ -2743,20 +2800,17 @@ msgid "Identity Number"
 msgstr "Kimlik Numarası"
 
 #. module: payment_escrow
-#: model:ir.model.fields,help:payment_escrow.field_product_product__message_needaction
-#: model:ir.model.fields,help:payment_escrow.field_product_product__message_unread
+#: model:ir.model.fields,help:payment_escrow.field_product_product__message_needaction model:ir.model.fields,help:payment_escrow.field_product_product__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
 #. module: payment_escrow
-#: model:ir.model.fields,help:payment_escrow.field_product_product__message_has_error
-#: model:ir.model.fields,help:payment_escrow.field_product_product__message_has_sms_error
+#: model:ir.model.fields,help:payment_escrow.field_product_product__message_has_error model:ir.model.fields,help:payment_escrow.field_product_product__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__partner_id
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__infrastructure_provider
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__partner_id model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__infrastructure_provider
 #: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__infrastructure_provider
 msgid "Infrastructure Provider"
 msgstr "Altyapı Sağlayıcısı"
@@ -2767,9 +2821,10 @@ msgid "Infrastructure Providers"
 msgstr "Altyapı Sağlayıcıları"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__installment_count
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__installment_count
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
+#. openerp-web
+#: code:addons/payment_escrow/static/src/xml/templates.xml:0 model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__installment_count
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__installment_count model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_search
+#, python-format
 msgid "Installment Count"
 msgstr "Taksit Sayısı"
 
@@ -2784,11 +2839,8 @@ msgid "Installment Rate"
 msgstr "Taksit Oranı"
 
 #. module: payment_escrow
-#: model:ir.actions.act_window,name:payment_escrow.action_escrow_installment_rate
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__line_ids
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__installment_rate_ids
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__installment_rate_ids
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider
+#: model:ir.actions.act_window,name:payment_escrow.action_escrow_installment_rate model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__line_ids
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__installment_rate_ids model:ir.model.fields,field_description:payment_escrow.field_res_users__installment_rate_ids model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_form model_terms:ir.ui.view,arch_db:payment_escrow.view_installment_rate_tree
 msgid "Installment Rates"
 msgstr "Taksit Oranları"
@@ -2798,6 +2850,13 @@ msgstr "Taksit Oranları"
 #, python-format
 msgid "Installment count is required."
 msgstr "Taksit sayısı zorunlu."
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/xml/templates.xml:0
+#, python-format
+msgid "Installment information not found."
+msgstr "Taksit bilgisi bulunamadı"
 
 #. module: payment_escrow
 #: model:ir.ui.menu,name:payment_escrow.menu_integrations
@@ -2811,14 +2870,14 @@ msgid "Invalid amount value."
 msgstr "Geçersiz tutar değeri"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/wizards/broker_rejection.py:0
+#: code:addons/payment_escrow/wizards/broker_rejection.py:0 code:addons/payment_escrow/wizards/registration_rejection.py:0
 #, python-format
-msgid "Invalid broker selected."
-msgstr "Geçersiz aracı seçildi."
+msgid "Invalid partner selected."
+msgstr "Geçersiz iş ortağı seçildi."
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/controllers/main.py:0 code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Invalid verification code"
 msgstr "Geçersiz doğrulama kodu."
@@ -2839,10 +2898,16 @@ msgid "Invoice Filename"
 msgstr "Fatura Dosyası Adı"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__broker_invoice_upload_date
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__broker_invoice_upload_date model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Invoice Upload Date"
 msgstr "Fatura Yükleme Tarihi"
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/js/broker_transactions.js:0
+#, python-format
+msgid "Invoice upload failed"
+msgstr "Fatura yüklemesi başarısız."
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
@@ -2860,14 +2925,12 @@ msgid "Invoicing"
 msgstr "Faturalanıyor"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__is_card_verified
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__is_card_verified
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__is_card_verified model:ir.model.fields,field_description:payment_escrow.field_res_users__is_card_verified
 msgid "Is Card Verified"
 msgstr "Kart Doğrulandı mı?"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__is_escrow_customer
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__is_escrow_customer
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__is_escrow_customer model:ir.model.fields,field_description:payment_escrow.field_res_users__is_escrow_customer
 msgid "Is Escrow Customer"
 msgstr "Escrow Müşterisi"
 
@@ -2877,8 +2940,7 @@ msgid "Is Follower"
 msgstr "Takipçi mi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__is_otp_verified
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__is_otp_verified
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__is_otp_verified model:ir.model.fields,field_description:payment_escrow.field_res_users__is_otp_verified
 msgid "Is OTP Verified"
 msgstr "OTP Doğrulandı mı ?"
 
@@ -2888,52 +2950,29 @@ msgid "Is Platform Owner User"
 msgstr "Platform Sahibi Kullanıcı mı?"
 
 #. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/xml/templates.xml:0
-#, python-format
-msgid "Rate"
-msgstr "Kar"
-
-#. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/xml/templates.xml:0
-#, python-format
-msgid "Profit Rate"
-msgstr "Kar Oranınız"
-
-#. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard____last_update
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line____last_update
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign____last_update
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line____last_update
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand____last_update
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model____last_update
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate____last_update
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_sync____last_update
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate____last_update model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line____last_update
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign____last_update model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line____last_update
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand____last_update model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model____last_update
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate____last_update model:ir.model.fields,field_description:payment_escrow.field_escrow_sync____last_update
+#: model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard____last_update
 msgid "Last Modified on"
 msgstr "Son değiştirilme tarihi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard__write_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__write_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__write_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__write_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__write_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__write_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__write_uid
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__write_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__write_uid model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__write_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__write_uid model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__write_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__write_uid model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__write_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__write_uid model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__write_uid
+#: model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard__write_uid
 msgid "Last Updated by"
 msgstr "Son güncelleyen"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard__write_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__write_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__write_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__write_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__write_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__write_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__write_date
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__write_date
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__write_date model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__write_date
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__write_date model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign_line__write_date
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__write_date model:ir.model.fields,field_description:payment_escrow.field_escrow_car_model__write_date
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_installment_rate__write_date model:ir.model.fields,field_description:payment_escrow.field_escrow_sync__write_date
+#: model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard__write_date
 msgid "Last Updated on"
 msgstr "Son güncellenme tarihi"
 
@@ -2960,8 +2999,7 @@ msgid "License Information"
 msgstr "Ruhsat bilgileri"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_car_plate
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_car_plate model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
 msgid "License Plate"
 msgstr "Ruhsat (araç) plakası"
 
@@ -2972,9 +3010,17 @@ msgstr "Ruhsat (araç) plakası (Örn., 34 ABC 123)"
 
 #. module: payment_escrow
 #: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_license_serial_no
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
 msgid "License Serial No"
 msgstr "Ruhsat Seri No:"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
+msgid ""
+"License Serial No\n"
+"                                    <i class=\"fa fa-search-plus ml-2 text-info license-serial-helper\" style=\"font-size: 14px; cursor: pointer;\" title=\"Click to see where to find it on the registration document\" field=\"ad.button.license_serial_no_helper\"/>"
+msgstr ""
+"Ruhsat Seri No\n"
+"                                    <i class=\"fa fa-search-plus ml-2 text-info license-serial-helper\" style=\"font-size: 14px; cursor: pointer;\" title=\"Click to see where to find it on the registration document\" field=\"ad.button.license_serial_no_helper\"/>"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
@@ -2996,6 +3042,11 @@ msgid "License Serial No must be at most 10 characters"
 msgstr "Lisans Seri No en fazla 10 karakter olmalıdır."
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
+msgid "License Serial Number Location"
+msgstr "Lisans Seri Numarasının Konumu"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid "Light"
 msgstr "Aydınlık"
@@ -3006,8 +3057,7 @@ msgid "Lines"
 msgstr "Satırlar"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Linked"
 msgstr "Bağlantılı"
 
@@ -3027,18 +3077,6 @@ msgid "Logs"
 msgstr "Loglar"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_otp_modal
-msgid "Lütfen cep telefonunuza gelen 4 haneli doğrulama kodunu giriniz."
-msgstr "Lütfen cep telefonunuza gelen 4 haneli doğrulama kodunu giriniz."
-
-#. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_transactions.js:0
-#, python-format
-msgid "Lütfen fatura dosyası seçiniz"
-msgstr "Lütfen fatura dosyası seçiniz"
-
-#. module: payment_escrow
 #: model:ir.ui.menu,name:payment_escrow.menu_mail_server
 msgid "Mail Servers"
 msgstr "Eposta Sunucuları"
@@ -3054,13 +3092,6 @@ msgstr "Ana Ek"
 #, python-format
 msgid "Main actions"
 msgstr "Ana işlemler"
-
-#. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/xml/templates.xml:0
-#, python-format
-msgid "Maliyet Oranınız"
-msgstr "Maliyet Oranınız"
 
 #. module: payment_escrow
 #: model:res.groups,name:payment_escrow.group_escrow_manager
@@ -3090,7 +3121,7 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
 msgid "Mobile Phone"
 msgstr "Cep telefonu"
 
@@ -3115,10 +3146,14 @@ msgid "Model Year"
 msgstr "Model Yılı"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__model_ids model:ir.ui.menu,name:payment_escrow.menu_vehicle_model
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_escrow_car_brand_form
+#: model:ir.model.fields,field_description:payment_escrow.field_escrow_car_brand__model_ids model:ir.ui.menu,name:payment_escrow.menu_vehicle_model model_terms:ir.ui.view,arch_db:payment_escrow.view_escrow_car_brand_form
 msgid "Models"
 msgstr "Modeller"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.header
+msgid "My Account"
+msgstr "Hesabım"
 
 #. module: payment_escrow
 #: model:ir.model.fields,field_description:payment_escrow.field_product_product__my_activity_date_deadline
@@ -3126,8 +3161,7 @@ msgid "My Activity Deadline"
 msgstr "Aktivite Zaman Sınırım"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/partner.py:0 model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
+#: code:addons/payment_escrow/models/partner.py:0 model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 #, python-format
 msgid "My Ads"
 msgstr "İlanlarım"
@@ -3143,42 +3177,25 @@ msgid "My Transactions"
 msgstr "İşlemlerim"
 
 #. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/xml/templates.xml:0
-#, python-format
-msgid "Müşteriden Çekilecek"
-msgstr "Müşteriden Çekilecek"
-
-#. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/xml/templates.xml:0
-#, python-format
-msgid "Müşteriye Yansıyan"
-msgstr "Müşteriye Yansıyan"
-
-#. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.page_payment
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.page_payment
 msgid "Name"
 msgstr "İsim"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_4_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_4_content
 msgid "Name Surname"
 msgstr "Ad Soyadı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Name is required"
 msgstr "İsim zorunlu"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/page.js:0
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__new
-#: model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__new
+#: code:addons/payment_escrow/static/src/js/page.js:0 model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__new model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__new
 #: model_terms:ir.ui.view,arch_db:payment_escrow.ad_grid_item model_terms:ir.ui.view,arch_db:payment_escrow.ad_list_item
 #, python-format
 msgid "New"
@@ -3187,23 +3204,28 @@ msgstr "Yeni"
 #. module: payment_escrow
 #: code:addons/payment_escrow/models/partner.py:0
 #, python-format
-msgid "New Broker Registration"
-msgstr "Yeni Aracı Kaydı"
+msgid "New Registration"
+msgstr "Yeni Kayıt"
 
 #. module: payment_escrow
-#: model:mail.template,subject:payment_escrow.email_template_broker_new_registration
-msgid "New Broker Registration Awaiting Approval"
-msgstr "Yeni Aracı Kaydı Onay Bekliyor"
+#: model:mail.template,subject:payment_escrow.email_template_registration_new_registration
+msgid "New Registration Awaiting Approval"
+msgstr "Onay Bekleyen Yeni Kayıt"
 
 #. module: payment_escrow
-#: model:mail.template,name:payment_escrow.email_template_broker_new_registration
-msgid "New Broker Registration Notification"
-msgstr "Yeni Aracı Kaydı Bildirimi"
+#: model:mail.template,name:payment_escrow.email_template_registration_new_registration
+msgid "New Registration Notification"
+msgstr "Yeni Kayıt Bildirimi"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid "Next"
 msgstr "Sonraki"
+
+#. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Sonraki Aktivite Takvim Etkinliği"
 
 #. module: payment_escrow
 #: model:ir.model.fields,field_description:payment_escrow.field_product_product__activity_date_deadline
@@ -3258,6 +3280,11 @@ msgid "No collections yet"
 msgstr "Henüz bir tahsilat yok"
 
 #. module: payment_escrow
+#: model_terms:ir.actions.act_window,help:payment_escrow.action_dealer
+msgid "No dealers found"
+msgstr "Bayi bulunamadı"
+
+#. module: payment_escrow
 #. openerp-web
 #: code:addons/payment_escrow/static/src/js/page.js:0
 #, python-format
@@ -3272,15 +3299,14 @@ msgid "No payments found"
 msgstr "Ödeme bulunamadı"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "No transactions found"
+msgstr "İşlem bulunamadı"
+
+#. module: payment_escrow
 #: model_terms:ir.actions.act_window,help:payment_escrow.action_payment_transaction_basket
 msgid "No transfer basket records found"
 msgstr "Transfer sepeti kaydı bulunamadı."
-
-#. module: payment_escrow
-#: code:addons/payment_escrow/models/product.py:0
-#, python-format
-msgid "No unapproved transfer transactions found."
-msgstr "Onaylanmamış transfer işlemi bulunamadı."
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
@@ -3336,16 +3362,22 @@ msgid "Only Platform Owner can approve ads."
 msgstr "Yalnızca platform sahibi, ilanları onaylayabilir."
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/product.py:0
+#: code:addons/payment_escrow/controllers/main.py:0
 #, python-format
-msgid "Only Platform Owner can approve transfers."
-msgstr "Yalnızca platform sahipleri transferleri onaylayabilir."
+msgid "Only brokers can access broker rates."
+msgstr "Yalnızca aracılar aracı oranlarına erişebilir."
+
+#. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "Only brokers can access settings."
+msgstr "Yalnızca aracılar ayarlara erişebilir."
 
 #. module: payment_escrow
 #: code:addons/payment_escrow/models/partner.py:0
 #, python-format
-msgid "Only platform owners can reject brokers."
-msgstr "Yalnızca platform sahipleri aracıları reddedebilir."
+msgid "Only platform owners can reject registrations."
+msgstr "Yalnızca platform sahipleri kayıtları reddedebilir."
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.search_sale
@@ -3380,16 +3412,13 @@ msgid "Other Information"
 msgstr "Diğer Bilgiler"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_owner_id
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__owner
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_ad model_terms:ir.ui.view,arch_db:payment_escrow.tree_ad
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_owner_id model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__owner
+#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__owner model_terms:ir.ui.view,arch_db:payment_escrow.form_ad model_terms:ir.ui.view,arch_db:payment_escrow.tree_ad
 msgid "Owner"
 msgstr "Satıcı"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_owner_ad_count
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_owner_ad_count
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_owner_ad_count model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_owner_ad_count
 msgid "Owner Ads Count"
 msgstr "İlandaki satıcı sayısı"
 
@@ -3416,7 +3445,7 @@ msgid "Paid Amount:"
 msgstr "Ödenen Tutar:"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_partner_id
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_partner_id model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard__partner_id
 msgid "Partner"
 msgstr "İş ortağı"
 
@@ -3441,8 +3470,7 @@ msgid "Paylox Email Notification State"
 msgstr "Paylox Eposta Bildirim Durumu"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__paylox_escrow_type
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__paylox_escrow_type
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__paylox_escrow_type model:ir.model.fields,field_description:payment_escrow.field_res_partner__paylox_escrow_type
 #: model:ir.model.fields,field_description:payment_escrow.field_res_users__paylox_escrow_type
 msgid "Paylox Escrow Type"
 msgstr "Paylox Escrow Türü"
@@ -3509,14 +3537,12 @@ msgid "Payment Item Paid"
 msgstr "Ödeme Kalemi Ödendi"
 
 #. module: payment_escrow
-#: model:ir.model,name:payment_escrow.model_payment_item
-#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_payment_item_id
+#: model:ir.model,name:payment_escrow.model_payment_item model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_payment_item_id
 msgid "Payment Items"
 msgstr "Ödeme Kalemleri"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__acquirer_id
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__acquirer_id model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Payment Provider"
 msgstr "Ödeme Sağlayıcısı"
@@ -3527,8 +3553,7 @@ msgid "Payment Reports"
 msgstr "Ödeme Raporları"
 
 #. module: payment_escrow
-#: model:ir.model,name:payment_escrow.model_payment_settings model:ir.ui.menu,name:payment_escrow.menu_acquirers
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+#: model:ir.model,name:payment_escrow.model_payment_settings model:ir.ui.menu,name:payment_escrow.menu_acquirers model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
 msgid "Payment Settings"
 msgstr "Ödeme Ayarları"
 
@@ -3560,19 +3585,12 @@ msgid "Payment is waiting approval"
 msgstr "Ödemenin onayı bekleniyor."
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/product.py:0
-#, python-format
-msgid "Payment item must be paid to approve this ad."
-msgstr "Bu ilanı onaylamak için ödeme kaleminin ödenmiş olması gerekir."
-
-#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Pending Ads"
 msgstr "İlanlar Bekliyor"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__broker_state__pending
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
+#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__approval_state__pending model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
 msgid "Pending Approval"
 msgstr "Onay Bekleniyor"
 
@@ -3587,7 +3605,7 @@ msgid "Pending Transfer Approval"
 msgstr "Transfer Onayı Bekleniyor"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
 msgid "Phone"
 msgstr "Telefon"
 
@@ -3597,15 +3615,20 @@ msgid "Phone Number"
 msgstr "Telefon Numarası"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_otp_modal
+msgid "Phone Verification"
+msgstr "Telefon Doğrulama"
+
+#. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Phone number is required"
 msgstr "Telefon numarası zorunlu"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Phone number verified successfully"
 msgstr "Telefon numarası başarıyla doğrulandı."
@@ -3618,8 +3641,7 @@ msgid "Plate is required"
 msgstr "Plaka zorunlu"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__platform_owner
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__platform_owner
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__paylox_escrow_type__platform_owner model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__paylox_escrow_type__platform_owner
 #: model:res.groups,name:payment_escrow.group_escrow_platform_owner
 msgid "Platform Owner"
 msgstr "Platform Sahibi"
@@ -3648,14 +3670,21 @@ msgstr "Lütfen İmzalı Temlik Formunu Yükleyin"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Please accept all required agreements"
 msgstr "Lütfen tüm gerekli sözleşmeleri kabul edin."
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_transactions.js:0
+#, python-format
+msgid "Please choose a file to upload"
+msgstr "Lütfen yüklemek için bir dosya seçin."
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Please enter 4-digit code"
 msgstr "Lütfen 4 haneli kodu girin."
@@ -3668,14 +3697,25 @@ msgid "Please enter a positive amount to calculate rates."
 msgstr "Oranları hesaplamak için lütfen pozitif bir tutar girin."
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_rejection_wizard_form
-msgid "Please provide a reason for rejection..."
-msgstr "Reddetme nedeni belirtiniz..."
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_otp_modal
+msgid "Please enter the 4-digit verification code sent to your mobile phone."
+msgstr "Lütfen cep telefonunuza gönderilen 4 haneli doğrulama kodunu girin."
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_2_content
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "Please fill all required fields."
+msgstr "Lütfen tüm gerekli alanları doldurun."
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_registration_rejection_wizard_form
+msgid "Please provide a reason for rejection..."
+msgstr "Lütfen reddetme nedeni belirtin..."
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_2_content
 msgid "Please upload the following documents to complete your registration"
-msgstr "Kaydınızı tamamlamak için lütfen aşağıdaki belgeleri yükleyin."
+msgstr "Kaydınızı tamamlamak için lütfen aşağıdaki belgeleri yükleyin"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_broker_rates
@@ -3707,8 +3747,7 @@ msgid "Price must be positive"
 msgstr "Fiyat Pozitif Olmalıdır"
 
 #. module: payment_escrow
-#: model:ir.model,name:payment_escrow.model_product_product model:ir.model.fields,field_description:payment_escrow.field_payment_item__product_id
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale model_terms:ir.ui.view,arch_db:payment_escrow.kanban_ad
+#: model:ir.model,name:payment_escrow.model_product_product model:ir.model.fields,field_description:payment_escrow.field_payment_item__product_id model_terms:ir.ui.view,arch_db:payment_escrow.form_sale model_terms:ir.ui.view,arch_db:payment_escrow.kanban_ad
 #: model_terms:ir.ui.view,arch_db:payment_escrow.search_sale model_terms:ir.ui.view,arch_db:payment_escrow.tree_item
 msgid "Product"
 msgstr "Ürün"
@@ -3737,6 +3776,19 @@ msgstr "Ürün Ayarları"
 #: model:ir.model,name:payment_escrow.model_product_template
 msgid "Product Template"
 msgstr "Ürün Şablonu"
+
+#. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "Product cannot be found, or you are not allowed to save it."
+msgstr "İlan bulunamadı veya kaydetmenize izin verilmiyor."
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/xml/templates.xml:0
+#, python-format
+msgid "Profit"
+msgstr "Kar"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
@@ -3793,50 +3845,89 @@ msgid "Reference:"
 msgstr "Referans"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+msgid "Referral Link"
+msgstr "Yönlendirme Bağlantısı"
+
+#. module: payment_escrow
+#: code:addons/payment_escrow/models/partner.py:0 model:ir.model.fields,field_description:payment_escrow.field_res_partner__dealer_broker_ids model:ir.model.fields,field_description:payment_escrow.field_res_users__dealer_broker_ids
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+#, python-format
+msgid "Referred Brokers"
+msgstr "Yönlendirilen Aracılar"
+
+#. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_dealer_id model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_dealer_id model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+msgid "Referred By Dealer"
+msgstr "Bayi Tarafından Yönlendirilen"
+
+#. module: payment_escrow
 #: code:addons/payment_escrow/models/partner.py:0
 #, python-format
 msgid "Registered Ads"
 msgstr "Kayıtlı İlanlar"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_success_content
+#: model:mail.template,name:payment_escrow.email_template_registration_approved
+msgid "Registration Approved"
+msgstr "Kayıt Onaylandı"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+msgid "Registration Documents"
+msgstr "Kayıt Belgeleri"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+msgid "Registration Information"
+msgstr "Kayıt Bilgileri"
+
+#. module: payment_escrow
+#: model:mail.template,name:payment_escrow.email_template_registration_rejected
+msgid "Registration Rejected"
+msgstr "Kayıt Reddedildi"
+
+#. module: payment_escrow
+#: model:ir.model,name:payment_escrow.model_registration_rejection_wizard
+msgid "Registration Rejection Wizard"
+msgstr "Kayıt Reddetme Sihirbazı"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_success_content
 msgid "Registration Submitted Successfully!"
-msgstr "Kayıt Başarıyla Gönderildi!"
+msgstr "Kayıt Başarıyla Gönderildi"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Registration submitted successfully"
 msgstr "Kayıt başarıyla gönderildi!"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_rejection_wizard_form
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.view_registration_rejection_wizard_form
 msgid "Reject"
 msgstr "Reddet"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/partner.py:0 model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_rejection_wizard_form
+#: code:addons/payment_escrow/models/partner.py:0 model_terms:ir.ui.view,arch_db:payment_escrow.view_registration_rejection_wizard_form
 #, python-format
-msgid "Reject Broker"
-msgstr "Aracıyı Reddet"
+msgid "Reject Registration"
+msgstr "Kaydı Reddet"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__broker_state__rejected
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_broker model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields.selection,name:payment_escrow.selection__res_partner__approval_state__rejected model_terms:ir.ui.view,arch_db:payment_escrow.search_broker model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Rejected"
 msgstr "Reddedildi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_broker_rejection_wizard__rejection_reason
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_rejection_reason
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_rejection_reason
+#: model:ir.model.fields,field_description:payment_escrow.field_registration_rejection_wizard__rejection_reason model:ir.model.fields,field_description:payment_escrow.field_res_partner__rejection_reason
+#: model:ir.model.fields,field_description:payment_escrow.field_res_users__rejection_reason
 msgid "Rejection Reason"
 msgstr "Reddetme Nedeni"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_customer_id
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_customer_id
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_customer_id model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_customer_id
 msgid "Related Customer"
 msgstr "İlişkili Müşteri"
 
@@ -3860,7 +3951,7 @@ msgid "Remove"
 msgstr "Sil"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_2_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_2_content
 msgid "Required Documents"
 msgstr "Zorunlu Belgeler"
 
@@ -3895,7 +3986,7 @@ msgid "STATE"
 msgstr "DURUM"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "STATUS"
 msgstr "DURUM"
 
@@ -3921,8 +4012,7 @@ msgid "Sale image is required to approve this ad."
 msgstr "Bu ilanı onaylamak için satış görseli gereklidir."
 
 #. module: payment_escrow
-#: model:ir.actions.act_window,name:payment_escrow.action_sale model:ir.ui.menu,name:payment_escrow.menu_sale
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
+#: model:ir.actions.act_window,name:payment_escrow.action_sale model:ir.ui.menu,name:payment_escrow.menu_sale model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
 msgid "Sales"
 msgstr "Satışlar"
 
@@ -3937,14 +4027,12 @@ msgid "Sales Order Lines"
 msgstr "Satış Sipariş Satırları"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
 msgid "Sales Person"
 msgstr "Satış Personeli"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner model_terms:ir.ui.view,arch_db:payment_escrow.search_sale
+#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner model_terms:ir.ui.view,arch_db:payment_escrow.search_sale
 msgid "Sales Team"
 msgstr "Satış Takımı"
 
@@ -3994,8 +4082,7 @@ msgid "Select a category"
 msgstr "Bir kategori seç"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
-#: model_terms:ir.ui.view,arch_db:payment_escrow.steps_container_template
+#: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.steps_container_template
 msgid "Seller Information"
 msgstr "Satıcı Bilgileri"
 
@@ -4015,37 +4102,33 @@ msgid "Send to official sale image"
 msgstr "Resmi satış görselini gönder"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
 msgid "Sending Email active"
 msgstr "E-posta gönderimi aktif"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
 msgid "Sending Email passive"
 msgstr "E-posta gönderimi pasif"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
 msgid "Sending SMS active"
 msgstr "SMS gönderimi aktif"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.search_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.search_owner model_terms:ir.ui.view,arch_db:payment_escrow.search_platform_owner
 msgid "Sending SMS passive"
 msgstr "SMS gönderimi pasif"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__sequence
+#: model:ir.model.fields,field_description:payment_escrow.field_dealer_commission_rate__sequence model:ir.model.fields,field_description:payment_escrow.field_escrow_broker_campaign__sequence
 msgid "Sequence"
 msgstr "Sıra"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Session expired. Please start over."
 msgstr "Oturum süresi doldu. Lütfen baştan başlayın."
@@ -4061,10 +4144,14 @@ msgid "Set to Quotation"
 msgstr "Teklife Dönüştür"
 
 #. module: payment_escrow
-#: model:ir.actions.act_window,name:payment_escrow.action_settings model:ir.ui.menu,name:payment_escrow.menu_settings
-#: model_terms:ir.ui.view,arch_db:payment_escrow.header
+#: model:ir.actions.act_window,name:payment_escrow.action_settings model:ir.ui.menu,name:payment_escrow.menu_settings model_terms:ir.ui.view,arch_db:payment_escrow.header
 msgid "Settings"
 msgstr "Ayarlar"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "Share with brokers"
+msgstr "Aracılara paylaş"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.settings_form
@@ -4082,35 +4169,31 @@ msgid "Show all records which has next action date is before today"
 msgstr "Sonraki işlem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_sign_name
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_sign_name
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__sign_name model:ir.model.fields,field_description:payment_escrow.field_res_users__sign_name model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "Sign Name"
 msgstr "Tabela Adı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Sign name is required"
 msgstr "Tabela adı zorunludur"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_signature_circular
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_signature_circular
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_2_content
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__signature_circular model:ir.model.fields,field_description:payment_escrow.field_res_users__signature_circular model_terms:ir.ui.view,arch_db:payment_escrow.register_step_2_content
 msgid "Signature Circular"
 msgstr "İmza Sirküleri"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_signature_circular_filename
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_signature_circular_filename
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__signature_circular_filename model:ir.model.fields,field_description:payment_escrow.field_res_users__signature_circular_filename
 msgid "Signature Circular Filename"
 msgstr "İmza Sirküleri Dosya Adı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Signature Circular is required"
 msgstr "İmza sirküleri zorunludur"
@@ -4123,15 +4206,13 @@ msgid "Sold"
 msgstr "Satıldı"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_state
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__escrow_state model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "State"
 msgstr "Durum"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.search_broker
 msgid "Status"
 msgstr "Durum"
 
@@ -4156,8 +4237,7 @@ msgid "Status:"
 msgstr "Durum:"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Street..."
 msgstr "Cadde.."
@@ -4168,7 +4248,7 @@ msgid "Submit Date"
 msgstr "Gönderme Tarihi"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_2_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_2_content
 msgid "Submit Registration"
 msgstr "Kaydı Gönder"
 
@@ -4178,14 +4258,13 @@ msgid "Submitted"
 msgstr "Gönderildi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__broker_submitted_for_approval
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__broker_submitted_for_approval model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Submitted for Approval"
 msgstr "Onay için Gönderildi"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Success"
 msgstr "Başarılı"
@@ -4202,8 +4281,7 @@ msgid "Successful Payments"
 msgstr "Başarılı Ödemeler"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_successful_payment_count
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_successful_payment_count
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__escrow_successful_payment_count model:ir.model.fields,field_description:payment_escrow.field_res_users__escrow_successful_payment_count
 msgid "Successful Payments Count"
 msgstr "Başarılı Ödeme Sayısı"
 
@@ -4227,15 +4305,10 @@ msgid "Sync Models"
 msgstr "Modelleri Eşle"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_item__system
-#: model:ir.model.fields,field_description:payment_escrow.field_product_attribute__system
-#: model:ir.model.fields,field_description:payment_escrow.field_product_category__system
-#: model:ir.model.fields,field_description:payment_escrow.field_product_product__system
-#: model:ir.model.fields,field_description:payment_escrow.field_product_template__system
-#: model:ir.model.fields,field_description:payment_escrow.field_res_company__system
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__system
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__system
-#: model:ir.model.fields,field_description:payment_escrow.field_sale_order__system model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_item__system model:ir.model.fields,field_description:payment_escrow.field_product_attribute__system model:ir.model.fields,field_description:payment_escrow.field_product_category__system
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__system model:ir.model.fields,field_description:payment_escrow.field_product_template__system model:ir.model.fields,field_description:payment_escrow.field_res_company__system
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__system model:ir.model.fields,field_description:payment_escrow.field_res_users__system model:ir.model.fields,field_description:payment_escrow.field_sale_order__system
+#: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid "System"
 msgstr "Sistem"
 
@@ -4245,13 +4318,12 @@ msgid "System Escrow Ad"
 msgstr "Sistem Escrow İlan"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_individual model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_individual model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
 msgid "T.C. Identity Number"
 msgstr "T.C Kimlik Numarası"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "TC Identity Number"
 msgstr "TC Kimlik Numarası"
 
@@ -4259,11 +4331,18 @@ msgstr "TC Kimlik Numarası"
 #. openerp-web
 #: code:addons/payment_escrow/static/src/js/broker_registration.js:0
 #, python-format
+msgid "TC Identity Number is not valid"
+msgstr "TC kimlik numarası geçerli değil"
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
+#, python-format
 msgid "TC Identity Number is required"
 msgstr "TC kimlik numarası zorunludur."
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "TR00 0000 0000 0000 0000 0000 00"
 msgstr ""
 
@@ -4273,7 +4352,7 @@ msgid "TR12 0000 0000 0000 0000 0000 12"
 msgstr ""
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "TRANSACTION"
 msgstr "İŞLEM"
 
@@ -4283,25 +4362,10 @@ msgid "Tags"
 msgstr "Etiketler"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Tags..."
 msgstr "Etiketler..."
-
-#. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/xml/templates.xml:0
-#, python-format
-msgid "Taksit Sayısı"
-msgstr "Taksit Sayısı"
-
-#. module: payment_escrow
-#. openerp-web
-#: code:addons/payment_escrow/static/src/xml/templates.xml:0
-#, python-format
-msgid "Taksit bilgisi bulunamadı."
-msgstr "Taksit bilgisi bulunamadı."
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
@@ -4310,21 +4374,20 @@ msgstr "Vergi Belgeleri"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Tax ID is not valid"
 msgstr "Vergi kimlik numarası geçerli değil"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Tax ID is required"
 msgstr "Vergi kimlik numarası zorunlu"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.tree_broker
+#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.tree_broker
 msgid "Tax Number"
 msgstr "Vergi kimlik numarası"
 
@@ -4334,21 +4397,18 @@ msgid "Tax Office"
 msgstr "Vergi Dairesi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_tax_plate
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_tax_plate
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_2_content
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__tax_plate model:ir.model.fields,field_description:payment_escrow.field_res_users__tax_plate model_terms:ir.ui.view,arch_db:payment_escrow.register_step_2_content
 msgid "Tax Plate"
 msgstr "Vergi Levhası"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__broker_tax_plate_filename
-#: model:ir.model.fields,field_description:payment_escrow.field_res_users__broker_tax_plate_filename
+#: model:ir.model.fields,field_description:payment_escrow.field_res_partner__tax_plate_filename model:ir.model.fields,field_description:payment_escrow.field_res_users__tax_plate_filename
 msgid "Tax Plate Filename"
 msgstr "Vergi Levhası Dosya Adı"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Tax Plate is required"
 msgstr "Vergi levhası zorunludur"
@@ -4370,7 +4430,7 @@ msgstr "Vergi Dairesi Zorunlu"
 #: code:addons/payment_escrow/static/src/xml/templates.xml:0
 #, python-format
 msgid "Temlikname Formunu İndir"
-msgstr "Temlikname Formunu İndir"
+msgstr ""
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
@@ -4378,16 +4438,19 @@ msgid "Terms and conditions..."
 msgstr "Şartlar ve koşullar..."
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.step_2_content
+msgid ""
+"The License Serial Number is located on the front side of your vehicle's registration document, usually at the top. \n"
+"                                                It is a 10-character alphanumeric code."
+msgstr ""
+"Lisans Seri Numarası, aracınızın tescil belgesinin ön yüzünde, genellikle üst kısımda yer alır.\n"
+"10 karakterlik alfasayısal bir koddur."
+
+#. module: payment_escrow
 #: code:addons/payment_escrow/models/transaction.py:0
 #, python-format
 msgid "There are items that are not approved yet. Please check them and try again."
 msgstr "Henüz onaylanmamış öğeler var. Lütfen bunları kontrol edin ve tekrar deneyin."
-
-#. module: payment_escrow
-#: code:addons/payment_escrow/models/product.py:0
-#, python-format
-msgid "There is no related payment item for this ad."
-msgstr "Bu ilan için ilgili ödeme kalemi bulunmamaktadır."
 
 #. module: payment_escrow
 #. openerp-web
@@ -4399,13 +4462,8 @@ msgstr "Bu işlem geri alınamaz."
 #. module: payment_escrow
 #: code:addons/payment_escrow/models/partner.py:0
 #, python-format
-msgid "This action is only available for brokers."
-msgstr "Bu işlem yalnızca aracılar için kullanılabilir."
-
-#. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_ad
-msgid "This will approve ALL wire transfer transactions for this ad. Do you want to continue?"
-msgstr "Bu işlem bu ilan için TÜM havale işlemlerini onaylayacaktır. Devam etmek istiyor musunuz?"
+msgid "This action is only available for brokers and dealers."
+msgstr "Bu işlem yalnızca aracılar ve bayiler için geçerlidir."
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
@@ -4413,9 +4471,16 @@ msgid "This will update all unit prices based on the currently set pricelist."
 msgstr "Bu işlem, tüm birim fiyatlarını mevcut fiyat listesine göre güncelleyecektir."
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_otp_modal
-msgid "Time remaining: <span class=\"font-weight-bold text-danger\" id=\"brokerOtpTimer\">120</span> second"
-msgstr "Kalan süre: <span class=\"font-weight-bold text-danger\" id=\"brokerOtpTimer\">120</span> saniye"
+#: model_terms:ir.ui.view,arch_db:payment_escrow.escrow_otp_modal
+msgid "Time remaining: <span class=\"font-weight-bold text-danger\" id=\"escrowOtpTimer\" field=\"escrow.otp.timer\">120</span> second"
+msgstr "Kalan Süre: <span class=\"font-weight-bold text-danger\" id=\"escrowOtpTimer\" field=\"escrow.otp.timer\">120</span> saniye"
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/xml/templates.xml:0
+#, python-format
+msgid "To Be Collected From Customer"
+msgstr "Müşteriden Tahsil Edilecek"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.search_sale
@@ -4430,6 +4495,11 @@ msgid "Total Amount:"
 msgstr "Toplam Tutar:"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "Total Brokers"
+msgstr "Toplam Aracılar"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.tree_sale
 msgid "Total Tax Excluded"
 msgstr "Vergiler Hariç Toplam"
@@ -4440,13 +4510,22 @@ msgid "Total Tax Included"
 msgstr "Vergiler Dahil Toplam"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "Total Transactions"
+msgstr "Toplam İşlemler"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "Total Volume"
+msgstr "Toplam Hacim"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
 msgid "Tracking"
 msgstr "Takip"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Transaction"
 msgstr "İşlem"
 
@@ -4461,8 +4540,7 @@ msgid "Transaction Baskets"
 msgstr "İşlem Sepetleri"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__transaction_date
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__transaction_date model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Transaction Date"
 msgstr "İşlem Tarihi"
@@ -4480,14 +4558,12 @@ msgid "Transaction Summary"
 msgstr "İşlem Özeti"
 
 #. module: payment_escrow
-#: model:ir.ui.menu,name:payment_escrow.menu_transaction model_terms:ir.ui.view,arch_db:payment_escrow.form_ad
-#: model_terms:ir.ui.view,arch_db:payment_escrow.header
+#: model:ir.ui.menu,name:payment_escrow.menu_transaction model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.header
 msgid "Transactions"
 msgstr "İşlemler"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__transfer_account
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__transfer_account model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Transfer Account"
 msgstr "Transfer Hesabı"
 
@@ -4497,38 +4573,27 @@ msgid "Transfer Account Name"
 msgstr "Transfer edilecek hesap ismi"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__transfer_amount
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__transfer_amount model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Transfer Amount"
 msgstr "Transfer Tutarı"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/models/product.py:0
-#, python-format
-msgid "Transfer Approval Result"
-msgstr "Transfer Onay Sonucu"
-
-#. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__transfer_status__approved
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__transfer_status__approved model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Transfer Approved"
 msgstr "Transfer Onaylandı"
 
 #. module: payment_escrow
-#: model:ir.actions.act_window,name:payment_escrow.action_payment_transaction_basket
-#: model:ir.ui.menu,name:payment_escrow.menu_payment_transaction_basket
+#: model:ir.actions.act_window,name:payment_escrow.action_payment_transaction_basket model:ir.ui.menu,name:payment_escrow.menu_payment_transaction_basket
 msgid "Transfer Basket"
 msgstr "Transfer Sepeti"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__transfer_status__can_approve
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__transfer_status__can_approve model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Transfer Can Be Approved"
 msgstr "Transfer Onaylanabilir"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Transfer Category"
 msgstr "Transfer Kategorisi"
 
@@ -4538,17 +4603,14 @@ msgid "Transfer Information"
 msgstr "Transfer Bilgileri"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__transfer_status
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__transfer_status model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Transfer Status"
 msgstr "Transfer Durumu"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__transferred
-#: model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__transferred
-#: model_terms:ir.ui.view,arch_db:payment_escrow.ad_grid_item model_terms:ir.ui.view,arch_db:payment_escrow.ad_list_item
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__transferred model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__transferred
+#: model_terms:ir.ui.view,arch_db:payment_escrow.ad_grid_item model_terms:ir.ui.view,arch_db:payment_escrow.ad_list_item model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Transferred"
 msgstr "Transfer Edildi"
 
@@ -4568,8 +4630,7 @@ msgid "Turkish"
 msgstr "Türkçe"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "Type"
 msgstr "Tür"
 
@@ -4637,9 +4698,9 @@ msgid "Update Prices"
 msgstr "Fiyatı Güncelle"
 
 #. module: payment_escrow
-#: model:mail.template,subject:payment_escrow.email_template_broker_rejected
-msgid "Update on Your Broker Registration"
-msgstr "Broker Kaydınızla İlgili Güncelleme"
+#: model:mail.template,subject:payment_escrow.email_template_registration_rejected
+msgid "Update on Your Registration"
+msgstr "Kaydınız Hakkında Güncelleme"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
@@ -4662,6 +4723,12 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "User has uploaded official sale image. User IP Address is %s"
+msgstr "Kullanıcı resmi satış görselini yükledi. Kullanıcı IP adresi: %s"
+
+#. module: payment_escrow
 #: model:ir.ui.menu,name:payment_escrow.menu_user
 msgid "Users"
 msgstr "Kullanıcılar"
@@ -4672,7 +4739,7 @@ msgid "VAT:"
 msgstr "VAT:"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
+#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
 msgid "VEHICLE"
 msgstr "ARAÇ"
 
@@ -4684,6 +4751,12 @@ msgid "VIN is required"
 msgstr "VIN zorunlu"
 
 #. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "VIN is required."
+msgstr "VIN zorunlu."
+
+#. module: payment_escrow
 #. openerp-web
 #: code:addons/payment_escrow/static/src/js/page.js:0
 #, python-format
@@ -4691,14 +4764,12 @@ msgid "VIN must be exactly 17 characters"
 msgstr "Şasi numarası (VIN) tam olarak 17 karakter olmalıdır"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.tree_customer model_terms:ir.ui.view,arch_db:payment_escrow.tree_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.tree_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.tree_customer model_terms:ir.ui.view,arch_db:payment_escrow.tree_owner model_terms:ir.ui.view,arch_db:payment_escrow.tree_platform_owner
 msgid "Vat"
 msgstr "Kimlik Numarası"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
 msgid "Vehicle"
 msgstr "Araç"
 
@@ -4723,11 +4794,23 @@ msgid "Vehicle Settings"
 msgstr "Araç Ayarları"
 
 #. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "Verification code has expired"
+msgstr "Doğrulama kodununun süresi dolmuş"
+
+#. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Verification code sent again"
 msgstr "Doğrulama kodunu tekrar gönder"
+
+#. module: payment_escrow
+#: code:addons/payment_escrow/controllers/main.py:0
+#, python-format
+msgid "Verification request not found or expired"
+msgstr "Doğrulama isteği bulunamadı veya süresi dolmuş"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.payment_step5_completion_modal
@@ -4735,8 +4818,7 @@ msgid "View Transaction Details"
 msgstr "İşlem Detaylarını Görüntüle"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "View accounts detail"
 msgstr "Hesap Detaylarını Görüntüle"
 
@@ -4746,13 +4828,27 @@ msgid "Views"
 msgstr "Görünümler"
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_tree
+msgid "Virtual POS"
+msgstr "Sanal POS"
+
+#. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__vpos_name
+msgid "Virtual POS Name"
+msgstr "Sanal POS Adı"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
 msgid "Void Transaction"
 msgstr "İşlemi Geçersiz Kıl"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__waiting
-#: model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__waiting
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "Volume"
+msgstr "Hacim"
+
+#. module: payment_escrow
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__waiting model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__waiting
 #: model_terms:ir.ui.view,arch_db:payment_escrow.ad_grid_item model_terms:ir.ui.view,arch_db:payment_escrow.ad_list_item
 msgid "Waiting"
 msgstr "Bekliyor"
@@ -4765,28 +4861,25 @@ msgid "Waiting Approval"
 msgstr "Onay Bekleniyor"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__waiting_official_sale_img
-#: model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__waiting_official_sale_img
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__waiting_official_sale_img model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__waiting_official_sale_img
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Waiting Official Sale Image"
 msgstr "Resmi Satış Görseli Bekliyor"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__waiting_transfer_approval
-#: model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__waiting_transfer_approval
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__ad_state__waiting_transfer_approval model:ir.model.fields.selection,name:payment_escrow.selection__product_product__escrow_state__waiting_transfer_approval
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Waiting Transfer Approval"
 msgstr "Transfer Onayı Bekliyor"
 
 #. module: payment_escrow
-#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__transfer_status__waiting_invoice
-#: model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__transfer_status__waiting_invoice model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Waiting for Invoice"
 msgstr "Fatura Bekliyor"
 
 #. module: payment_escrow
 #. openerp-web
-#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0
+#: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/page.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
 msgid "Warning"
 msgstr "Uyarı"
@@ -4810,6 +4903,11 @@ msgstr "Website iletişim geçmişi"
 #: model:ir.ui.menu,name:payment_escrow.menu_website
 msgid "Websites"
 msgstr "Websiteler"
+
+#. module: payment_escrow
+#: model:ir.model.fields,field_description:payment_escrow.field_product_product__message_has_whatsapp_error
+msgid "Whatsapp Delivery error"
+msgstr "Whatsapp gönderiminde hata"
 
 #. module: payment_escrow
 #: model:ir.model.fields,field_description:payment_escrow.field_escrow_brand_sync_line__wizard_id
@@ -4857,23 +4955,42 @@ msgstr "Henüz hiç işleminiz yok"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_4_content
-msgid ""
-"You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature."
+msgid "You need to download the Assignment form prepared according to the information you entered and upload it back to the system with wet signature."
 msgstr "Girdiğiniz bilgilere göre hazırlanmış Temlikname formunu indirmeniz ve ıslak imzalı olarak sisteme tekrar yüklemeniz gerekmektedir."
 
 #. module: payment_escrow
-#: model:mail.template,subject:payment_escrow.email_template_broker_approved
-msgid "Your Broker Registration Has Been Approved"
-msgstr "Broker Kaydınız Onaylandı"
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_success_content
+msgid "Your"
+msgstr "Sizin"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_success_content
-msgid ""
-"Your broker registration has been submitted for approval. \n"
-"                        Our team will review your application and notify you via email once it's approved."
-msgstr ""
-"Aracı kaydınız onay için gönderildi.\n"
-"Ekibimiz başvurunuzu inceleyecek ve onaylandığında size e-posta ile bildirecektir."
+#. openerp-web
+#: code:addons/payment_escrow/static/src/xml/templates.xml:0
+#, python-format
+msgid "Your Cost Rate"
+msgstr "Maliyet Oranınız"
+
+#. module: payment_escrow
+#. openerp-web
+#: code:addons/payment_escrow/static/src/xml/templates.xml:0
+#, python-format
+msgid "Your Profit Rate"
+msgstr "Kar Oranınız"
+
+#. module: payment_escrow
+#: model:mail.template,subject:payment_escrow.email_template_registration_approved
+msgid "Your Registration Has Been Approved"
+msgstr "Kaydınız Onaylandı"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "Your Unique Broker Registration Link"
+msgstr "Benzersiz Aracı Kayıt Bağlantınız"
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid "Your brokers haven't made any transactions yet"
+msgstr "Aracılarınız henüz herhangi bir işlem yapmadı."
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.payment_step5_completion_modal
@@ -4912,8 +5029,7 @@ msgid "Your payment has been successfully completed. The remaining amount to fin
 msgstr "Ödemeniz başarıyla tamamlandı. İşleminizi sonuçlandırmak için kalan tutar aşağıda belirtilmiştir."
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_customer model_terms:ir.ui.view,arch_db:payment_escrow.form_infrastructure_provider model_terms:ir.ui.view,arch_db:payment_escrow.form_owner
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner
 msgid "ZIP"
 msgstr "ZİP"
@@ -4924,16 +5040,14 @@ msgid "days"
 msgstr "günler"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
 msgid "e.g: 532 123 3456"
 msgstr "örn: 532 123 3456"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.broker_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate
-#: model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
+#: model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
 msgid "example@mail.com"
-msgstr "example@mail.com"
+msgstr ""
 
 #. module: payment_escrow
 #. openerp-web
@@ -4945,7 +5059,16 @@ msgstr "isim doğru değil"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content
 msgid "ornek@mail.com"
-msgstr "ornek@mail.com"
+msgstr ""
+
+#. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.register_success_content
+msgid ""
+"registration has been submitted for approval.\n"
+"                        Our team will review your application and notify you via email once it's approved."
+msgstr ""
+"Kaydınız onay için gönderildi.\n"
+"Ekibimiz başvurunuzu inceleyecek ve onaylandığında sizi e-posta ile bilgilendirecektir."
 
 #. module: payment_escrow
 #: model:ir.ui.menu,name:payment_escrow.menu_syncops_connector
@@ -4955,4 +5078,4 @@ msgstr "syncOPS Entegrasyonları"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.customer_individual model_terms:ir.ui.view,arch_db:payment_escrow.payment_select_holder_diff
 msgid "test@mail.com"
-msgstr "test@mail.com"
+msgstr ""

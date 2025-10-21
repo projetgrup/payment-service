@@ -9,6 +9,7 @@
     <menuitem id="menu_owner" action="action_owner" parent="menu_partners" sequence="2"/>
     <menuitem id="menu_platform_owner" action="action_platform_owner" parent="menu_partners" sequence="3"/>
     <menuitem id="menu_infrastructure_provider" action="action_infrastructure_provider" parent="menu_partners" groups="base.group_system" sequence="4"/>
+    <menuitem id="menu_dealer" action="action_dealer" parent="menu_partners" sequence="5"/>
     <menuitem id="menu_sale" action="action_sale" name="Sales" parent="menu_main" sequence="6"/>
     <menuitem id="menu_payment" action="action_item" parent="menu_main" sequence="7"/>
     <menuitem id="menu_transaction" action="payment_jetcheckout_system.action_transaction" parent="menu_main" sequence="8"/>

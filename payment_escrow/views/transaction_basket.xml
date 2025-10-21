@@ -9,12 +9,13 @@
                 <field name="transaction_id" string="Transaction"/>
                 <field name="ad_number" string="Ad Number"/>
                 <field name="vehicle_info" string="Vehicle"/>
-                <field name="acquirer_id" string="Payment Provider"/>
+                <field name="acquirer_id" string="Payment Provider" optional="hide"/>
+                <field name="vpos_name" string="Virtual POS" optional="hide"/>
                 <field name="transaction_date" string="Transaction Date"/>
                 <field name="ad_state" string="Ad Status"/>
                 <field name="paylox_escrow_type" string="Transfer Category"/>
                 <field name="transfer_account" string="Transfer Account"/>
-                <field name="api_charged_amount" string="API Charged Amount" widget="monetary"/>
+                <field name="api_charged_amount" string="API Charged Amount" widget="monetary" optional="hide"/>
                 <field name="transfer_amount" string="Transfer Amount" widget="monetary"/>
                 <field name="transfer_status" string="Transfer Status" widget="badge"
                        decoration-info="transfer_status == 'can_approve'"
@@ -171,6 +172,7 @@
         <field name="res_model">payment.transaction.basket</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_payment_transaction_basket_search"/>
+        <field name="domain">[('transaction_id.state', '=', 'done')]</field>
         <field name="context">{
             'search_default_group_transaction': 1,
         }</field>

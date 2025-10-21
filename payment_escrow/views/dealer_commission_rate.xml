@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dealer_commission_rate_tree" model="ir.ui.view">
+        <field name="name">dealer.commission.rate.tree</field>
+        <field name="model">dealer.commission.rate</field>
+        <field name="arch" type="xml">
+            <tree string="Dealer Commission Rates" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
+                <field name="commission_rate"/>
+                <field name="active"/>
+                <field name="company_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_dealer_commission_rate_form" model="ir.ui.view">
+        <field name="name">dealer.commission.rate.form</field>
+        <field name="model">dealer.commission.rate</field>
+        <field name="arch" type="xml">
+            <form string="Dealer Commission Rate">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="commission_rate"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                            <field name="partner_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

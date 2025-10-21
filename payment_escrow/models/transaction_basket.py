@@ -11,6 +11,7 @@ class PaymentTransactionBasket(models.Model):
     vehicle_info = fields.Char(string='Vehicle Info', compute='_compute_escrow_fields', store=True)
     
     acquirer_id = fields.Many2one('payment.acquirer', string='Payment Provider', related='transaction_id.acquirer_id', store=True, readonly=True)
+    vpos_name = fields.Char(string='Virtual POS Name', related='transaction_id.jetcheckout_vpos_name', store=True, readonly=True)
     transaction_date = fields.Datetime(string='Transaction Date', related='transaction_id.create_date', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='transaction_id.currency_id', store=True, readonly=True)
     
