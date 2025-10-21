@@ -69,7 +69,7 @@ publicWidget.registry.payloxBrokerTransaction = payloxPage.extend({
         
         // Validate file
         if (!this.transactions.invoiceFile.value) {
-            alert(_t('Lütfen fatura dosyası seçiniz'));
+            alert(_t('Please choose a file to upload'));
             return;
         }
 
@@ -78,7 +78,7 @@ publicWidget.registry.payloxBrokerTransaction = payloxPage.extend({
         const files = this.transactions.invoiceFile._.getFiles();
         
         if (!files || files.length === 0) {
-            alert(_t('Dosya bulunamadı'));
+            alert(_t('File not found'));
             return;
         }
 
@@ -100,11 +100,11 @@ publicWidget.registry.payloxBrokerTransaction = payloxPage.extend({
                 $modal.modal('hide');
                 window.location.reload();
             } else {
-                alert(response.message || _t('Fatura yüklenirken hata oluştu'));
+                alert(response.message || _t('Invoice upload failed'));
                 $button.prop('disabled', false).html('<i class="fa fa-upload mr-1"></i>Upload');
             }
         }).guardedCatch(function() {
-            alert(_t('Fatura yüklenirken hata oluştu'));
+            alert(_t('Invoice upload failed'));
             $button.prop('disabled', false).html('<i class="fa fa-upload mr-1"></i>Upload');
         });
     },

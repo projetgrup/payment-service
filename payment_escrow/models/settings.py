@@ -10,3 +10,4 @@ class PaymentSettings(models.TransientModel):
     )
     conveyance_show_link = fields.Boolean(string='Enable Conveyance Document Show Link', related='company_id.conveyance_show_link', readonly=False)
     broker_registration_enabled = fields.Boolean('Enable Broker Registration', related='company_id.broker_registration_enabled', readonly=False)
+    dealer_registration_enabled = fields.Boolean('Enable Dealer Registration', related='company_id.dealer_registration_enabled', readonly=False)

@@ -223,7 +223,7 @@
                                     <div>
                                         <div class="text-center mb-3">
                                             <img src="/payment_escrow/static/src/img/license_serial_help.png" 
-                                                 alt="Ruhsat Seri No Konumu" 
+                                                 alt="License Serial Number Location" 
                                                  style="max-width: 300px; border-radius: 4px; border: 1px solid #dee2e6;"/>
                                         </div>
                                         <div>

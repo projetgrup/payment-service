@@ -63,6 +63,30 @@
     ]"/>
     </record>
 
+    <!-- Dealer Action - Inherits from Broker -->
+    <record id="action_dealer" model="ir.actions.act_window">
+        <field name="name">Dealers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('system', '=', 'escrow'), ('paylox_escrow_type', '=', 'dealer'), ('partner_share', '!=', False)]</field>
+        <field name="context">{'active_system': 'escrow', 'active_escrow_type': 'dealer', 'default_system': 'escrow', 'default_paylox_escrow_type': 'dealer', 'default_is_company': True, 'search_default_pending': 1}</field>
+        <field name="search_view_id" ref="search_broker"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No dealers found
+            </p>
+            <p>
+                Dealers are registered through the public registration form.
+            </p>
+        </field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('kanban_broker')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('tree_broker')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('form_dealer')}),
+        ]"/>
+    </record>
+
     <record id="action_owner" model="ir.actions.act_window">
     <field name="name">Owners</field>
     <field name="res_model">res.partner</field>

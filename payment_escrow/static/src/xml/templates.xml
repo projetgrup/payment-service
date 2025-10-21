@@ -164,13 +164,13 @@
                 <table class="table table-hover mb-0 broker-rates-table">
                     <thead>
                         <tr>
-                            <th class="text-center" width="13%">Taksit Sayısı</th>
-                            <th class="text-right" width="13%">Maliyet Oranınız</th>
-                            <th class="text-right" width="14%">Müşteriye Yansıyan</th>
-                            <th class="text-right" width="12%">Kar Oranınız</th>
-                            <th class="text-right" width="14%">Müşteriye Yansıyan</th>
-                            <th class="text-right" width="16%">Müşteriden Çekilecek</th>
-                            <th class="text-right" width="18%">Kar</th>
+                            <th class="text-center" width="13%">Installment Count</th>
+                            <th class="text-right" width="13%">Your Cost Rate</th>
+                            <th class="text-right" width="14%">Customer Impact</th>
+                            <th class="text-right" width="12%">Your Profit Rate</th>
+                            <th class="text-right" width="14%">Customer Impact</th>
+                            <th class="text-right" width="16%">To Be Collected From Customer</th>
+                            <th class="text-right" width="18%">Profit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -178,7 +178,7 @@
                             <tr>
                                 <td colspan="7" class="text-center text-muted py-5">
                                     <i class="fa fa-info-circle mr-2"/>
-                                    <span>Taksit bilgisi bulunamadı.</span>
+                                    <span>Installment information not found.</span>
                                 </td>
                             </tr>
                         </t>

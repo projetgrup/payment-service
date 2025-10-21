@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class PaymentTransactionBasket(models.Model):
@@ -11,6 +12,7 @@ class PaymentTransactionBasket(models.Model):
     vehicle_info = fields.Char(string='Vehicle Info', compute='_compute_escrow_fields', store=True)
     
     acquirer_id = fields.Many2one('payment.acquirer', string='Payment Provider', related='transaction_id.acquirer_id', store=True, readonly=True)
+    vpos_name = fields.Char(string='Virtual POS Name', related='transaction_id.jetcheckout_vpos_name', store=True, readonly=True)
     transaction_date = fields.Datetime(string='Transaction Date', related='transaction_id.create_date', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='transaction_id.currency_id', store=True, readonly=True)
     
@@ -157,6 +159,9 @@ class PaymentTransactionBasket(models.Model):
         return True
 
     def action_approve_payment(self):
+        if self.transfer_status != 'can_approve':
+            self.write({'approval_state_message': _('This payment basket is not eligible for approval.')})
+            raise UserError(_('This payment basket is not eligible for approval.'))
         self.action_approve()
 
     def write(self, values):

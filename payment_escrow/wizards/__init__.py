@@ -1,2 +1,2 @@
 from . import sync
-from . import broker_rejection
+from . import registration_rejection

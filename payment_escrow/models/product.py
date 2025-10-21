@@ -70,7 +70,9 @@ class ProductProduct(models.Model):
             unapproved = 0
             approved = 0
             if rec.escrow_payment_item_id:
-                items = rec.escrow_payment_item_id.mapped('transaction_ids.paylox_basket_ids')
+                items = rec.escrow_payment_item_id.mapped('transaction_ids.paylox_basket_ids').filtered(
+                    lambda b: b.transaction_id.state == 'done'
+                )
                 for item in items:
                     if item.approval_state == '+':
                         approved += 1
