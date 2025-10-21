@@ -35,7 +35,7 @@ def migrate(cr, version):
         cr.execute("UPDATE ir_attachment SET name='contract_doc', res_field='contract_doc' WHERE res_field='broker_contract_doc'")
     if not column_exists(cr, 'res_partner', 'contract_doc_filename'):
         cr.execute("ALTER TABLE res_partner ADD COLUMN contract_doc_filename varchar")
-        cr.execute("UPDATE res_partner SET contract_doc_filename=broker_contract_doc_filename")
+        cr.execute("UPDATE res_partner SET contract_doc_filename=broker_contract_filename")
     if not column_exists(cr, 'res_partner', 'approval_date'):
         cr.execute("ALTER TABLE res_partner ADD COLUMN approval_date timestamp")
         cr.execute("UPDATE res_partner SET approval_date=broker_approval_date")

@@ -88,7 +88,7 @@ class PayloxApiController(Controller):
     def _get_template(self, path, values):
         method = ''
         if values.get('method'):
-            method = f'_{values['method']['type']}'
+            method = f'_{values["method"]["type"]}'
         return 'payment_jetcheckout_api.page_payment%s' % method
 
     @http.route(['/api/payment/success'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)

@@ -57,6 +57,6 @@ class PayloxSystemApiController(Controller):
             if path.startswith('/payment'):
                 method = ''
                 if values.get('method'):
-                    method = f'_{values['method']['type']}'
+                    method = f'_{values["method"]["type"]}'
                 return 'payment_jetcheckout_api.page_payment%s' % method
         return super()._get_template(path, values)
