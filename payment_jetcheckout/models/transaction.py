@@ -563,9 +563,6 @@ class PaymentTransaction(models.Model):
                 for basket in self.paylox_basket_ids:
                     if basket.transfer_status == 'approved':
                         basket._action_disapprove()
-                        self.env.cr.commit()
-                    else:
-                        raise UserError(_('Cannot cancel the transaction because related basket transfer is not approved.'))
             self.write(self._paylox_cancel_postprocess_values())
         if self.payment_id:
             self.payment_id.action_draft()
