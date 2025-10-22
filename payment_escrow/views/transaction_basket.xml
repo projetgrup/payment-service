@@ -166,14 +166,16 @@
                         domain="[('broker_submitted_for_approval', '=', True)]"/>
                 
                 <group expand="0" string="Group By">
+                    <filter string="Vehicle Info" name="group_vehicle_info" 
+                            context="{'group_by': 'vehicle_info'}"/>
+                    <filter string="Transfer Status" name="group_transfer_status" 
+                            context="{'group_by': 'transfer_status'}"/>
                     <filter string="Transaction" name="group_transaction" 
                             context="{'group_by': 'transaction_id'}"/>
                     <filter string="Payment Provider" name="group_acquirer" 
                             context="{'group_by': 'acquirer_id'}"/>
                     <filter string="Ad Status" name="group_ad_state" 
                             context="{'group_by': 'ad_state'}"/>
-                    <filter string="Transfer Status" name="group_transfer_status" 
-                            context="{'group_by': 'transfer_status'}"/>
                     <filter string="Approval Status" name="group_approval" 
                             context="{'group_by': 'approval_state'}"/>
                     <filter string="Transfer Category" name="group_category" 
@@ -192,7 +194,9 @@
         <field name="search_view_id" ref="view_payment_transaction_basket_search"/>
         <field name="domain">[('transaction_id.state', '=', 'done')]</field>
         <field name="context">{
-            'search_default_group_transaction': 1,
+            'search_default_can_approve_transfer': 1,
+            'search_default_group_vehicle_info': 1,
+            'search_default_group_transfer_status': 1,
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

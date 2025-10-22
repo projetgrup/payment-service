@@ -587,7 +587,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if not self.env.user.has_group('payment_jetcheckout.group_transaction_cancel'):
             raise AccessError(_('You do not have any permission to cancel this transaction'))
-        if not self.jetcheckout_approval_state == '-':
+        if not self.approval_state == '-':
             raise UserError(_('Approval state must be rejected before cancelling the transaction.'))
  
         self._paylox_cancel()
@@ -1037,11 +1037,6 @@ class PaymentTransactionBasket(models.Model):
                     tx.write({
                         'jetcheckout_approval_state': '-',
                         'jetcheckout_approval_state_message': _('Disapproved'),
-                    })
-                elif not any(t in ('+', '-') for t in tx.mapped('paylox_basket_ids.approval_state')):
-                    tx.write({
-                        'jetcheckout_approval_state': '-',
-                        'jetcheckout_approval_state_message': False,
                     })
                 else:
                     tx.write({
