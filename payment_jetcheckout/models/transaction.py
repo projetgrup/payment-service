@@ -469,6 +469,11 @@ class PaymentTransaction(models.Model):
             self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
             return
 
+        if self.paylox_basket_ids:
+            for basket in self.paylox_basket_ids:
+                basket._action_approve()
+            return
+
         url = '%s/api/v1/payment/submerchant/approve' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
@@ -959,6 +964,7 @@ class PaymentTransactionBasket(models.Model):
             basket._action_approve()
 
     def _action_approve(self):
+        self.ensure_one()
         if self.approval_state == '+':
             return
 
