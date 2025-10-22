@@ -6,10 +6,15 @@
         <field name="arch" type="xml">
             <tree string="Transaction Baskets" create="false" edit="false">
                 <header>
-                        <button name="action_approve_payment" 
-                            string="Approve Payment" 
-                            type="object"
-                            class="btn-primary"/>
+                    <button name="action_approve_payment" 
+                        string="Approve Payment" 
+                        type="object"
+                        class="btn-primary"/>
+                        
+                    <button name="action_disapprove" 
+                        string="Disapprove Payment" 
+                        type="object"
+                        class="btn-primary"/>
                 </header>
                 <field name="currency_id" invisible="1"/>
                 <field name="transaction_id" string="Transaction"/>
@@ -49,13 +54,15 @@
                             type="object"
                             class="btn-primary"/>-->
                     <button name="action_disapprove" 
-                            string="Disapprove Payment" 
-                            type="object"
-                            class="btn-primary"/>
-                        <button name="action_approve_payment" 
-                            string="Approve Payment" 
-                            type="object"
-                            class="btn-primary"/>
+                        string="Disapprove Payment" 
+                        type="object"
+                        attrs="{'invisible': [('transfer_status', '!=', 'approved')]}"
+                        class="btn-primary"/>
+                    <button name="action_approve_payment" 
+                        string="Approve Payment" 
+                        type="object"
+                        attrs="{'invisible': [('transfer_status', '=', 'approved')]}"
+                        class="btn-primary"/>
                 </header>
                 <sheet>
                     <field name="currency_id" invisible="1"/>
