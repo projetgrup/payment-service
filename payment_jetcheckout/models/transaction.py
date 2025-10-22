@@ -956,8 +956,6 @@ class PaymentTransactionBasket(models.Model):
             basket._action_approve()
 
     def _action_approve(self):
-        self.ensure_one()
-        
         if self.approval_state == '+':
             return
 

@@ -159,6 +159,10 @@ class PaymentTransactionBasket(models.Model):
         return True
 
     def action_approve_payment(self):
+        for basket in self:
+            basket._action_approve_payment()
+    
+    def _action_approve_payment(self):
         if self.transfer_status != 'can_approve':
             self.write({'approval_state_message': _('This payment basket is not eligible for approval.')})
             raise UserError(_('This payment basket is not eligible for approval.'))
