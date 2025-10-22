@@ -1038,6 +1038,11 @@ class PaymentTransactionBasket(models.Model):
                         'jetcheckout_approval_state': '-',
                         'jetcheckout_approval_state_message': _('Disapproved'),
                     })
+                elif not any(t in ('+', '-') for t in tx.mapped('paylox_basket_ids.approval_state')):
+                    tx.write({
+                        'jetcheckout_approval_state': '-',
+                        'jetcheckout_approval_state_message': False,
+                    })
                 else:
                     tx.write({
                         'jetcheckout_approval_state': False,

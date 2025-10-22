@@ -69,6 +69,7 @@ class PaymentTransactionBasket(models.Model):
             ad_number = ''
             vehicle_info = ''
             ad_state = False
+            approval_state = basket.transaction_id.jetcheckout_approval_state if basket.transaction_id else False
             
             if basket.submerchant_external_id:
                 partner_bank = self.env['res.partner.bank'].sudo().search([
