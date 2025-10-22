@@ -559,6 +559,13 @@ class PaymentTransaction(models.Model):
         if not self.state == 'cancel':
             if self.jetcheckout_approval_auto:
                 self._action_disapprove()
+            if self.paylox_basket_ids:
+                for basket in self.paylox_basket_ids:
+                    if basket.transfer_status == 'approved':
+                        basket._action_disapprove()
+                        self.env.cr.commit()
+                    else:
+                        raise UserError(_('Cannot cancel the transaction because related basket transfer is not approved.'))
             self.write(self._paylox_cancel_postprocess_values())
         if self.payment_id:
             self.payment_id.action_draft()
@@ -587,7 +594,6 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if not self.env.user.has_group('payment_jetcheckout.group_transaction_cancel'):
             raise AccessError(_('You do not have any permission to cancel this transaction'))
- 
         self._paylox_cancel()
 
     def _paylox_refund(self, amount):
