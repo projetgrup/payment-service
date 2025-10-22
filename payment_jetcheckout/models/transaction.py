@@ -952,10 +952,12 @@ class PaymentTransactionBasket(models.Model):
     approval_state_message = fields.Text('Approval Message')
 
     def action_approve(self):
-        for tx in self:
-            tx._action_approve()
+        for basket in self:
+            basket._action_approve()
 
     def _action_approve(self):
+        self.ensure_one()
+        
         if self.approval_state == '+':
             return
 
@@ -988,10 +990,12 @@ class PaymentTransactionBasket(models.Model):
             self.env.cr.rollback()
 
     def action_disapprove(self):
-        for tx in self:
-            tx._action_disapprove()
+        for basket in self:
+            basket._action_disapprove()
 
     def _action_disapprove(self):
+        self.ensure_one()
+        
         if self.approval_state == '-':
             return
 
