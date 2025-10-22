@@ -140,9 +140,6 @@ class PayloxSystemEscrowController(Controller):
 
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
-        if status:
-            return url, tx, status
-
         system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
         if system == 'escrow':
             paylox_product_ids = request.env['payment.transaction.product'].sudo().browse(tx.paylox_product_ids.ids)
