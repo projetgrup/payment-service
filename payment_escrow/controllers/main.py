@@ -140,6 +140,9 @@ class PayloxSystemEscrowController(Controller):
 
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
+        if status:
+            return url, tx, status
+
         system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
         if system == 'escrow':
             paylox_product_ids = request.env['payment.transaction.product'].sudo().browse(tx.paylox_product_ids.ids)
@@ -156,13 +159,13 @@ class PayloxSystemEscrowController(Controller):
                             if not payment_item.paid:
                                 payment_items_paid = False
                                 break
-                
+
                 product_id = 0
                 if tx.paylox_transaction_item_ids:
                     first_item = tx.paylox_transaction_item_ids[0]
                     if first_item.item_id and first_item.item_id.product_id:
                         product_id = first_item.item_id.product_id.id
-                
+
                 if payment_items_paid:
                     url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='success')
                 else:

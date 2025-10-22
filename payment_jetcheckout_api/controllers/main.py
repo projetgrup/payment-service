@@ -78,17 +78,17 @@ class PayloxApiController(Controller):
         if not status and tx.jetcheckout_api_hash:
             self._del('hash')
 
-            redirect_url = getattr(tx, 'jetcheckout_api_method_%s_redirect_url' % tx.jetcheckout_payment_type, None)
-            if redirect_url:
+            method = fields.first(tx.paylox_api_method_ids.filtered(lambda m: m.type == 'virtualpos'))
+            if method and method.redirect_url:
                 status = True
-                url = '%s/%s' % (redirect_url, tx.jetcheckout_order_id)
+                url = '%s/%s' % (method.redirect_url, tx.jetcheckout_order_id)
 
         return url, tx, status
 
     def _get_template(self, path, values):
         method = ''
         if values.get('method'):
-            method = f'_{values['method']['type']}'
+            method = f'_{values["method"]["type"]}'
         return 'payment_jetcheckout_api.page_payment%s' % method
 
     @http.route(['/api/payment/success'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
