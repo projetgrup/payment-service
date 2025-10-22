@@ -587,6 +587,8 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if not self.env.user.has_group('payment_jetcheckout.group_transaction_cancel'):
             raise AccessError(_('You do not have any permission to cancel this transaction'))
+        if not self.approval_state == '-':
+            raise UserError(_('Approval state must be rejected before cancelling the transaction.'))
  
         self._paylox_cancel()
 
