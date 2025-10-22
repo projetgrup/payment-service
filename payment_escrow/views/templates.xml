@@ -660,7 +660,7 @@
                                                 <input type="text" id="sign_name" name="sign_name" 
                                                        class="text-center border-primary" required="required"
                                                        field="settings.signName" data-role="sign-name"
-                                                       t-att-value="partner.broker_sign_name or ''"/>
+                                                       t-att-value="partner.sign_name or ''"/>
                                                 <span class="bar-container"/>
                                                 <label for="sign_name" class="text-primary"><span>Sign Name</span></label>
                                             </div>
@@ -670,7 +670,7 @@
                                                 <input type="text" id="authorized_person" name="authorized_person" 
                                                        class="text-center border-primary" required="required"
                                                        field="settings.authorizedPerson" data-role="authorized-person"
-                                                       t-att-value="partner.broker_authorized_person or ''"/>
+                                                       t-att-value="partner.authorized_person or ''"/>
                                                 <span class="bar-container"/>
                                                 <label for="authorized_person" class="text-primary"><span>Authorized Person</span></label>
                                             </div>
