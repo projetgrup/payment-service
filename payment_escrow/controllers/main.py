@@ -1037,8 +1037,8 @@ class PayloxSystemEscrowController(Controller):
 
         partner_sudo = partner.sudo()
         values = {
-            'broker_sign_name': sign_name,
-            'broker_authorized_person': authorized_person,
+            'sign_name': sign_name,
+            'authorized_person': authorized_person,
             'email': email,
             'phone': phone,
         }
