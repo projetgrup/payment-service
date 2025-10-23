@@ -33,6 +33,7 @@ class PaymentTransactionBasket(models.Model):
         ('broker', 'Broker'),
         ('owner', 'Owner'),
         ('customer', 'Customer'),
+        ('dealer', 'Dealer'),
         ('card_holder', 'Card Holder'),
     ], string='Paylox Escrow Type', compute='_compute_escrow_fields', store=True)
 
