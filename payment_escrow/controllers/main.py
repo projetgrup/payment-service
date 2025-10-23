@@ -407,6 +407,8 @@ class PayloxSystemEscrowController(Controller):
                 return result
             
             broker_campaign = partner_obj.broker_default_campaign_id
+            tx_campaign = partner_obj.campaign_id
+            broker_dealer = partner_obj.broker_dealer_id
             if not broker_campaign or not broker_campaign.active:
                 return result
             
@@ -414,6 +416,17 @@ class PayloxSystemEscrowController(Controller):
                 int(line.installment_count): float(line.broker_additional_rate or 0.0)
                 for line in broker_campaign.line_ids
             }
+            
+            dealer_rates = {}
+            if broker_dealer and broker_dealer.dealer_campaign_id:
+                matching_dealer_campaign = broker_dealer.dealer_campaign_id.filtered(
+                    lambda c: c.id == tx_campaign.id and c.active
+                )
+                if matching_dealer_campaign:
+                    dealer_rates = {
+                        int(line.installment_count): float(line.broker_additional_rate or 0.0)
+                        for line in matching_dealer_campaign.line_ids
+                    }
             
             if not additional_rates:
                 return result
@@ -424,20 +437,23 @@ class PayloxSystemEscrowController(Controller):
             for row in result.get('rows', []):
                 installment_count = int(row.get('count', 0))
                 broker_rate = additional_rates.get(installment_count, 0.0)
+                dealer_rate = dealer_rates.get(installment_count, 0.0)
                 
-                if broker_rate <= 0:
+                total_additional_rate = broker_rate + dealer_rate
+                
+                if total_additional_rate <= 0:
                     continue
                 
                 crate = float(row.get('crate', 0.0))
                 corate = (crate / (100 + crate)) * 100 if crate > 0 else 0.0
-                combined_rate = corate + broker_rate
+                combined_rate = corate + total_additional_rate
                 broker_impact_rate = ((100 / (1 - (combined_rate / 100)) - 100) / 100) * 100 if combined_rate < 100 else 0.0
                 broker_impact_amount = float_round(amount_value * broker_impact_rate / 100.0, precision_digits=precision)
                 total_amount = float_round(amount_value + broker_impact_amount, precision_digits=precision)
 
                 row['amount'] = float_round(total_amount / installment_count, precision_digits=precision) if installment_count > 0 else total_amount
                 row['crate'] = broker_impact_rate
-                row['broker_rate'] = broker_rate
+                row['broker_rate'] = total_additional_rate
                 row['total_amount'] = total_amount
             
             return result
@@ -531,6 +547,8 @@ class PayloxSystemEscrowController(Controller):
 
             platform_owner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'platform_owner')], limit=1)
             infrastructure_provider = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'infrastructure_provider')], limit=1)
+            broker = transaction.partner_id
+            dealer = broker.broker_dealer_id if broker else None
 
             def find_rate(rec, inst):
                 if rec and rec.installment_rate_ids:
@@ -545,20 +563,36 @@ class PayloxSystemEscrowController(Controller):
                         if int(r.installment_count) == inst:
                             return float(r.broker_additional_rate)
                 return 0.0
+            
+            def find_dealer_rate(dealer_partner, campaign_id):
+                if dealer_partner and campaign_id:
+                    dealer_commission = request.env['dealer.commission.rate'].sudo().search([
+                        ('partner_id', '=', dealer_partner.id),
+                        ('campaign_id', '=', campaign_id),
+                        ('active', '=', True)
+                    ], limit=1)
+                    if dealer_commission:
+                        return float(dealer_commission.commission_rate or 0.0)
+                return 0.0
 
             installment_count = int(transaction.jetcheckout_installment_count or 1)
             seller_net = float(transaction.jetcheckout_payment_amount or 0.0)
             paid = transaction.jetcheckout_payment_paid
             additional_rate = transaction.jetcheckout_additional_rate
 
-            platform_rate = find_rate(platform_owner, installment_count)
             infra_rate = find_rate(infrastructure_provider, installment_count)
-            broker_rate = find_broker_rate(transaction.partner_id, installment_count)
+            broker_rate = find_broker_rate(broker, installment_count)
+            
+            dealer_rate = 0.0
+            if dealer and broker and broker.campaign_id:
+                dealer_rate = find_dealer_rate(dealer, broker.campaign_id.id)
 
             infra_commission = paid * infra_rate
             platform_commission = (paid * additional_rate / 100) - infra_commission
             broker_commission = (paid * broker_rate / 100)
-            total_paid = seller_net + infra_commission + platform_commission + broker_commission
+            dealer_commission = (paid * dealer_rate / 100)
+            
+            total_paid = seller_net + infra_commission + platform_commission + broker_commission + dealer_commission
 
             customer_amount = paid * seller_net / total_paid
             customer_basket.append({
@@ -573,8 +607,6 @@ class PayloxSystemEscrowController(Controller):
                 "submerchant_price": seller_net
             })
             infra_amount = paid * infra_commission / total_paid
-            #infra_commission = float_round(charged * (1 - (infra_rate / 100)), 4) if infra_rate else 0.0
-            #platform_commission = float_round(charged * (1 - (platform_rate / 100)), 4) if platform_rate else 0.0
             if infra_commission > 0:
                 ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref'])
                 customer_basket.append({
@@ -594,7 +626,7 @@ class PayloxSystemEscrowController(Controller):
                 customer_basket.append({
                     "id": 26,
                     "name": platform_owner.name,
-                    "description": _(f"Platform commission (%{platform_rate})"),
+                    "description": _(f"Platform commission (%{platform_commission})"),
                     "qty": 1,
                     "amount": platform_amount,
                     "category": "Commission",
@@ -603,12 +635,12 @@ class PayloxSystemEscrowController(Controller):
                     "submerchant_price": platform_commission
                 })
             broker_amount = paid * broker_commission / total_paid
-            if transaction.partner_id.broker_default_campaign_id and broker_amount > 0:
-                ref_broker = (transaction.partner_id.bank_ids and transaction.partner_id.bank_ids[0]['api_ref'])
+            if broker and broker.broker_default_campaign_id and broker_amount > 0:
+                ref_broker = (broker.bank_ids and broker.bank_ids[0]['api_ref'])
                 if broker_amount > 0:
                     customer_basket.append({
                         "id": 27,
-                        "name": transaction.partner_id.name,
+                        "name": broker.name,
                         "description": _("Broker Commission"),
                         "qty": 1,
                         "amount": broker_amount,
@@ -616,6 +648,22 @@ class PayloxSystemEscrowController(Controller):
                         "is_physical": False,
                         "submerchant_external_id": ref_broker,
                         "submerchant_price": broker_commission
+                    })
+            
+            dealer_amount = paid * dealer_commission / total_paid
+            if dealer and dealer_commission > 0:
+                ref_dealer = (dealer.bank_ids and dealer.bank_ids[0]['api_ref'])
+                if dealer_amount > 0:
+                    customer_basket.append({
+                        "id": 28,
+                        "name": dealer.name,
+                        "description": _("Dealer Commission"),
+                        "qty": 1,
+                        "amount": dealer_amount,
+                        "category": "Commission",
+                        "is_physical": False,
+                        "submerchant_external_id": ref_dealer,
+                        "submerchant_price": dealer_commission
                     })
             fullname = customer.name.split(' ', 1)
             address = []
