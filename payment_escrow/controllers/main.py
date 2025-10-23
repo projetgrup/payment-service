@@ -1730,7 +1730,7 @@ class PayloxSystemEscrowController(Controller):
                 vat_number = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number')
                 existing_broker = request.env['res.partner'].sudo().search([
                     ('vat', '=', vat_number),
-                    ('paylox_escrow_type', '=', 'broker'),
+                    ('paylox_escrow_type', '=', kwargs.get('user_register_type')),
                     ('company_id', '=', company.id),
                 ], limit=1)
                 if existing_broker:
