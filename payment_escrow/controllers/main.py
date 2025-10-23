@@ -419,13 +419,9 @@ class PayloxSystemEscrowController(Controller):
             
             dealer_rate = 0.0
             if broker_dealer and tx_campaign:
-                dealer_commission = request.env['dealer.commission.rate'].sudo().search([
-                    ('partner_id', '=', broker_dealer.id),
-                    ('campaign_id', '=', tx_campaign.id),
-                    ('active', '=', True)
-                ], limit=1)
+                dealer_commission = broker_dealer.dealer_commission_rate_ids.filtered(lambda c: c.campaign_id == tx_campaign and c.active)
                 if dealer_commission:
-                    dealer_rate = float(dealer_commission.commission_rate or 0.0)
+                    dealer_rate = dealer_commission.commission_rate or 0.0
             
             if not additional_rates:
                 return result
