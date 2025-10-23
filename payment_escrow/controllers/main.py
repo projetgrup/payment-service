@@ -418,6 +418,7 @@ class PayloxSystemEscrowController(Controller):
             }
             
             dealer_rate = 0.0
+            raise Exception(broker_dealer, tx_campaign)
             if broker_dealer and tx_campaign:
                 dealer_commission = broker_dealer.dealer_commission_rate_ids.filtered(lambda c: c.campaign_id.id == tx_campaign.id and c.active)
                 raise Exception(dealer_commission)
@@ -455,6 +456,7 @@ class PayloxSystemEscrowController(Controller):
             
         except Exception as e:
             _logger.error("Error applying broker rates in _prepare_installment: %s", str(e))
+            return result
     
     @http.route(['/payment/escrow/card/validate'], type='json', auth='user', methods=['POST'], website=True)
     def validate_card(self, **kwargs):
