@@ -42,6 +42,7 @@
                                                 <input id="broker_amount" name="broker_amount" type="text" inputmode="decimal" 
                                                        class="text-center border-primary" required="required" 
                                                        field="broker.amount" data-role="amount"
+                                                       value="1000000"
                                                        t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
                                                 <span class="bar-container"/>
                                                 <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
