@@ -168,7 +168,6 @@
                             <th class="text-right" width="13%">Your Cost Rate</th>
                             <th t-if="detailedMode" class="text-right" width="14%">Customer Impact</th>
                             <th t-if="detailedMode" class="text-right" width="12%">Your Profit Rate</th>
-                            <th t-if="!detailedMode" class="text-right" width="14%">Total Impact</th>
                             <th class="text-right" width="14%">Customer Impact</th>
                             <th class="text-right" width="16%">To Be Collected From Customer</th>
                             <th t-if="detailedMode" class="text-right" width="18%">Profit</th>
@@ -194,16 +193,13 @@
                                         <div class="font-weight-semibold" t-esc="line.installment_label || line.installment_count || '-'"/>
                                     </td>
                                     <td class="text-right">
-                                        <span class="font-weight-600" t-esc="format.percent(line.bank_commission_rate)"/>
+                                        <span t-attf-class="font-weight-600 {{detailedMode ? '' : 'text-primary font-weight-bold'}}" t-esc="format.percent(detailedMode ? line.bank_commission_rate : combinedRate)"/>
                                     </td>
                                     <td t-if="detailedMode" class="text-right">
                                         <div class="font-weight-600" t-esc="format.percent(line.customer_rate)"/>
                                     </td>
                                     <td t-if="detailedMode" class="text-right">
                                         <span class="font-weight-bold text-primary" t-esc="format.percent(line.broker_rate)"/>
-                                    </td>
-                                    <td t-if="!detailedMode" class="text-right">
-                                        <span class="font-weight-bold text-primary" t-esc="format.percent(combinedRate)"/>
                                     </td>
                                     <td class="text-right">
                                         <div class="font-weight-600" t-esc="format.percent(line.broker_impact_rate)"/>
