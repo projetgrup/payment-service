@@ -417,16 +417,15 @@ class PayloxSystemEscrowController(Controller):
                 for line in broker_campaign.line_ids
             }
             
-            dealer_rates = {}
-            if broker_dealer and broker_dealer.dealer_campaign_id:
-                matching_dealer_campaign = broker_dealer.dealer_campaign_id.filtered(
-                    lambda c: c.id == tx_campaign.id and c.active
-                )
-                if matching_dealer_campaign:
-                    dealer_rates = {
-                        int(line.installment_count): float(line.broker_additional_rate or 0.0)
-                        for line in matching_dealer_campaign.line_ids
-                    }
+            dealer_rate = 0.0
+            if broker_dealer and tx_campaign:
+                dealer_commission = request.env['dealer.commission.rate'].sudo().search([
+                    ('partner_id', '=', broker_dealer.id),
+                    ('campaign_id', '=', tx_campaign.id),
+                    ('active', '=', True)
+                ], limit=1)
+                if dealer_commission:
+                    dealer_rate = float(dealer_commission.commission_rate or 0.0)
             
             if not additional_rates:
                 return result
@@ -437,7 +436,6 @@ class PayloxSystemEscrowController(Controller):
             for row in result.get('rows', []):
                 installment_count = int(row.get('count', 0))
                 broker_rate = additional_rates.get(installment_count, 0.0)
-                dealer_rate = dealer_rates.get(installment_count, 0.0)
                 
                 total_additional_rate = broker_rate + dealer_rate
                 
