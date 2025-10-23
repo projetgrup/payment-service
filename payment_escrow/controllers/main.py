@@ -455,7 +455,7 @@ class PayloxSystemEscrowController(Controller):
             return result
             
         except Exception as e:
-            _logger.error("Error applying broker rates in _prepare_installment: %s", str(e))
+            _logger.info("Error applying broker rates in _prepare_installment: %s", str(e))
             return result
     
     @http.route(['/payment/escrow/card/validate'], type='json', auth='user', methods=['POST'], website=True)
