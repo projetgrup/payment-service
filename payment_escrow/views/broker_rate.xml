@@ -203,7 +203,7 @@
                                                 <input type="tel" id="phone" name="phone" 
                                                        class="text-center border-primary" required="required"
                                                        field="settings.phone" data-role="phone"
-                                                       t-att-value="partner.phone or ''"/>
+                                                       t-att-value="partner.mobile or ''"/>
                                                 <span class="bar-container"/>
                                                 <label for="phone" class="text-primary"><span>Phone</span></label>
                                             </div>

@@ -32,10 +32,6 @@
                                         <i class="fa fa-file-invoice mr-2"/>
                                         Invoice Information
                                     </button>
-                                    <a class="btn escrow-ad-nav-button-secondary" href="/my/ads">
-                                        <i class="fa fa-arrow-left mr-2"/>
-                                        Back to My Ads
-                                    </a>
                                 </div>
                             </div>
 

@@ -301,7 +301,7 @@
                                                                 </div>
                                                             </td>
                                                             <td class="px-4 py-3" t-esc="broker.email or '-'"/>
-                                                            <td class="px-4 py-3" t-esc="broker.phone or '-'"/>
+                                                            <td class="px-4 py-3" t-esc="broker.mobile or '-'"/>
                                                             <td class="px-4 py-3">
                                                                 <span t-if="broker.approval_state == 'approved'" class="badge badge-success px-3 py-1">
                                                                     <i class="fa fa-check mr-1"></i>Approved

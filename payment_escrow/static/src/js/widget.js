@@ -10,7 +10,7 @@ import fields from 'paylox.fields';
 import { format } from 'paylox.tools';
 
 publicWidget.registry.payloxSystemEscrowBrokerRates = publicWidget.Widget.extend({
-    selector: '.broker-rates #wrapwrap',
+    selector: '.payment-escrow #wrapwrap',
     jsLibs: [
         '/payment_jetcheckout/static/src/lib/imask/imask.js',
         '/payment_jetcheckout/static/src/lib/filepond/filepond.js',
@@ -207,6 +207,7 @@ publicWidget.registry.payloxSystemEscrowBrokerRates = publicWidget.Widget.extend
     },
 
     _onSettingsSave: function () {
+        console.log('Saving broker settings...');
         const campaignId = parseInt(this.settings.campaign.$.val(), 10) || null;
         const signName = this.settings.signName.$.val().trim();
         const authorizedPerson = this.settings.authorizedPerson.$.val().trim();
