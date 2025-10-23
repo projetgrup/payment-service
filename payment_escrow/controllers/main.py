@@ -420,6 +420,7 @@ class PayloxSystemEscrowController(Controller):
             dealer_rate = 0.0
             if broker_dealer and tx_campaign:
                 dealer_commission = broker_dealer.dealer_commission_rate_ids.filtered(lambda c: c.campaign_id.id == tx_campaign.id and c.active)
+                raise Exception(dealer_commission)
                 if dealer_commission:
                     dealer_rate = dealer_commission.commission_rate or 0.0
             
