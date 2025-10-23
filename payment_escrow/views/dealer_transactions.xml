@@ -34,31 +34,7 @@
                             
                             <div class="row mb-4">
                                 <div class="col-md-4 mb-3">
-                                    <div class="card active-card border-0 shadow-sm h-100 view-toggle-card active-card" 
-                                        style="border-radius: 12px; cursor: pointer; transition: transform 0.2s;" 
-                                        data-view="transactions"
-                                        field="transaction.button.showTransactionDetails"
-                                        onmouseover="this.style.transform='translateY(-4px)'"
-                                        onmouseout="this.style.transform='translateY(0)'">
-                                        <div class="card-body p-4">
-                                            <div class="d-flex align-items-center">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="text-muted mb-1">Total Transactions</h6>
-                                                    <h2 class="mb-0 font-weight-bold text-success" t-esc="broker_stats['total_transactions']"/>
-                                                    <small class="text-muted">
-                                                        <i class="fa fa-eye mr-1"></i>Click to view details
-                                                    </small>
-                                                </div>
-                                                <div class="ml-3">
-                                                    <i class="fa fa-exchange-alt fa-2x text-success opacity-75"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <div class="card border-0 shadow-sm h-100 view-toggle-card" 
+                                    <div class="card border-0 shadow-sm h-100 view-toggle-card active-card" 
                                          style="border-radius: 12px; cursor: pointer; transition: transform 0.2s;" 
                                          data-view="brokers"
                                          field="transaction.button.showBrokerDetails"
@@ -80,7 +56,29 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+                                <div class="col-md-4 mb-3">
+                                    <div class="card border-0 shadow-sm h-100 view-toggle-card" 
+                                        style="border-radius: 12px; cursor: pointer; transition: transform 0.2s;" 
+                                        data-view="transactions"
+                                        field="transaction.button.showTransactionDetails"
+                                        onmouseover="this.style.transform='translateY(-4px)'"
+                                        onmouseout="this.style.transform='translateY(0)'">
+                                        <div class="card-body p-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="text-muted mb-1">Total Transactions</h6>
+                                                    <h2 class="mb-0 font-weight-bold text-success" t-esc="broker_stats['total_transactions']"/>
+                                                    <small class="text-muted">
+                                                        <i class="fa fa-eye mr-1"></i>Click to view details
+                                                    </small>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <i class="fa fa-exchange-alt fa-2x text-success opacity-75"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-4 mb-3">
                                     <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
                                         <div class="card-body p-4">
@@ -101,7 +99,7 @@
                                 </div>
                             </div>
                             
-                            <div class="col-12 mb-4 view-section" id="transactionsSection" field="transaction.transactionSection">
+                            <div class="col-12 mb-4 view-section" id="transactionsSection" field="transaction.transactionSection" style="display: none;">
                                 <div class="card border-0 shadow-sm filter-card" style="border-radius: 12px;">
                                     <div class="card-body py-3 px-4">
                                         <div class="row align-items-center">
@@ -219,7 +217,7 @@
                             </div>
                             </div>
                             
-                            <div class="col-12 mb-4 view-section" field="transaction.brokerSection" style="display: none;">
+                            <div class="col-12 mb-4 view-section" field="transaction.brokerSection">
                                 <!-- Referral Code Card -->
                                 <t t-if="dealer_referral_code">
                                     <div class="card border-0 mb-4 referral-card">

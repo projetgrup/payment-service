@@ -38,7 +38,6 @@ publicWidget.registry.payloxDealerTransaction = payloxPage.extend({
             payloxPage.prototype._start.apply(this);
             this._initBrokerFilter();
             framework.hideLoading();
-            console.log('Dealer Transactions page loaded');
             setTimeout(() => $('div.o_loading').addClass('transparent'), 2000);
         });
     },
@@ -89,8 +88,7 @@ publicWidget.registry.payloxDealerTransaction = payloxPage.extend({
      */
     _onShowBrokerDetails: function(ev) {
         ev.preventDefault();
-        console.log('show broker details');
-        
+
         const $brokersSection = this.transaction.brokerSection.$;
         const $transactionsSection = this.transaction.transactionSection.$;
         const $cards = $('.view-toggle-card');
@@ -110,8 +108,7 @@ publicWidget.registry.payloxDealerTransaction = payloxPage.extend({
      */
     _onShowTransactionDetails: function(ev) {
         ev.preventDefault();
-        console.log('show transaction details');
-        
+
         const $brokersSection = this.transaction.brokerSection.$;
         const $transactionsSection = this.transaction.transactionSection.$;
         const $cards = $('.view-toggle-card');

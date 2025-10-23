@@ -37,6 +37,7 @@
         'views/step_components.xml',
         'views/register_templates.xml',
         'views/templates.xml',
+        'views/broker_rate.xml',
         'views/settings.xml',
         'wizards/sync.xml',
         'wizards/registration_rejection.xml',
@@ -62,6 +63,7 @@
             'payment_escrow/static/src/js/registration.js',
             'payment_escrow/static/src/js/broker_transactions.js',
             'payment_escrow/static/src/js/dealer_transactions.js',
+            'payment_escrow/static/src/js/widget.js',
         ],
         'web.assets_qweb': [
             'payment_escrow/static/src/xml/templates.xml',

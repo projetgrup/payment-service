@@ -857,6 +857,12 @@ class PayloxSystemEscrowController(Controller):
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_my_ads(self, **kwargs):
+        user = request.env.user
+        partner = user.partner_id
+        
+        if partner.paylox_escrow_type == 'dealer':
+            return request.redirect('/my/dealer/transactions')
+        
         hash = kwargs.get('')
         values = {}
         if hash:
@@ -1730,8 +1736,9 @@ class PayloxSystemEscrowController(Controller):
                 if existing_broker:
                     return {
                         'success': True,
+                        'registered': True,
                         'partner_id': existing_broker.id,
-                        'message': 'Broker with this tax/identity number already exists. Please proceed to the next step.'
+                        'message': _('Broker with this tax/identity number already exists. Please proceed to the next step.')
                     }
                 
                 if user_type == 'individual':
@@ -1770,35 +1777,41 @@ class PayloxSystemEscrowController(Controller):
                     }
                 
                 partner = request.env['res.partner'].sudo().create(partner_vals)
-                
-                iban = kwargs.get('iban', '')
-                vat = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number', '')
-                iban_verified = self.verify_iban(iban, vat)
-                if iban and not iban_verified:
-                    iban_raw = kwargs.get('iban', '')
-                    iban_sanitized = sanitize_account_number(iban_raw)
-                    bank = request.env['res.partner.bank'].sudo()
-                    bank_vals = {
-                        'partner_id': partner.id,
-                        'acc_number': iban_raw.replace(' ', ''),
-                        'api_merchant': kwargs.get('iban_name', ''),
-                        'currency_id': company.currency_id.id,
-                        'acc_holder_name': kwargs.get('iban_name', ''),
-                    }
-                    existing_bank = bank.search([
-                        ('partner_id.vat', '=', vat),
-                        ('company_id', '=', company.id),
-                        ('sanitized_acc_number', '=', iban_sanitized),
-                    ], limit=1)
-                    if not existing_bank:
-                        existing_bank = bank.create(bank_vals)
-                    
-                    if not existing_bank.api_state:
-                        return {
-                            'success': False,
+                try:
+                    iban = kwargs.get('iban', '')
+                    vat = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number', '')
+                    iban_verified = self.verify_iban(iban, vat)
+                    if iban and not iban_verified:
+                        iban_raw = kwargs.get('iban', '')
+                        iban_sanitized = sanitize_account_number(iban_raw)
+                        bank = request.env['res.partner.bank'].sudo()
+                        bank_vals = {
                             'partner_id': partner.id,
-                            'message': existing_bank.api_message or 'Bank account verification failed'
+                            'acc_number': iban_raw.replace(' ', ''),
+                            'api_merchant': kwargs.get('iban_name', ''),
+                            'currency_id': company.currency_id.id,
+                            'acc_holder_name': kwargs.get('iban_name', ''),
                         }
+                        existing_bank = bank.search([
+                            ('partner_id.vat', '=', vat),
+                            ('company_id', '=', company.id),
+                            ('sanitized_acc_number', '=', iban_sanitized),
+                        ], limit=1)
+                        if not existing_bank:
+                            existing_bank = bank.create(bank_vals)
+                        
+                        if not existing_bank.api_state:
+                            return {
+                                'success': False,
+                                'partner_id': partner.id,
+                                'message': existing_bank.api_message or 'Bank account verification failed'
+                            }
+                except Exception as e:
+                    return {
+                        'success': False,
+                        'partner_id': partner.id,
+                        'message': 'Bank account verification error: ' + str(e)
+                    }
                 
                 return {
                     'success': True,

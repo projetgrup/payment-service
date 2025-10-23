@@ -195,20 +195,20 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                 }),
                 iban: new fields.string({
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
-                    validate: () => {
-                        const field = this.user.input.iban;
-                        let message = null;
-                        let valid = true;
-                        if (!field._.masked.isComplete) {
-                            message = _t('IBAN is required');
-                            valid = false;
-                        } else if (!this._isIbanValid(field._.masked.value)) {
-                            message = _t('IBAN is not valid');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
+                    // validate: () => {
+                    //     const field = this.user.input.iban;
+                    //     let message = null;
+                    //     let valid = true;
+                    //     if (!field._.masked.isComplete) {
+                    //         message = _t('IBAN is required');
+                    //         valid = false;
+                    //     } else if (!this._isIbanValid(field._.masked.value)) {
+                    //         message = _t('IBAN is not valid');
+                    //         valid = false;
+                    //     }
+                    //     this._onFieldValid(field, valid, message);
+                    //     return valid;
+                    // }
                 }),
                 iban_name: new fields.string({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ0-9]+[A-Za-zığüşöçĞÜŞÖÇİ0-9\s]*$/,
@@ -797,6 +797,17 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
             if (result.success) {
                 self.partner = result.partner_id || self.tempPartnerId || 0;
                 
+                if (result.registered) {
+                    self._markStepCompleted(1);
+                    self._markStepCompleted(2);
+                    self.displayNotification({
+                        type: 'info',
+                        title: _t('Information'),
+                        message: result.message || _t('This account is already registered.'),
+                    });
+                    return;
+                }
+                
                 if (!self.phoneVerified) {
                     self._showFieldLoadingIcon(self.user.input.phone);
                     
@@ -811,7 +822,11 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         } else if (result && result.is_otp_verified) {
                             self.phoneVerified = true;
                             self._showFieldSuccessIcon(self.user.input.phone);
-                            self._markStepCompleted(2);
+                            self.displayNotification({
+                                type: 'success',
+                                title: _t('Success'),
+                                message: result.message || _t('OTP already verified'),
+                            });
                         } else {
                             self.displayNotification({
                                 type: 'danger',
@@ -831,7 +846,6 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                     });
                     return;
                 }
-                
                 self._markStepCompleted(1);
             } else {
                 self.displayNotification({

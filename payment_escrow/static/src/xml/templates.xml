@@ -166,11 +166,12 @@
                         <tr>
                             <th class="text-center" width="13%">Installment Count</th>
                             <th class="text-right" width="13%">Your Cost Rate</th>
-                            <th class="text-right" width="14%">Customer Impact</th>
-                            <th class="text-right" width="12%">Your Profit Rate</th>
+                            <th t-if="detailedMode" class="text-right" width="14%">Customer Impact</th>
+                            <th t-if="detailedMode" class="text-right" width="12%">Your Profit Rate</th>
+                            <th t-if="!detailedMode" class="text-right" width="14%">Total Impact</th>
                             <th class="text-right" width="14%">Customer Impact</th>
                             <th class="text-right" width="16%">To Be Collected From Customer</th>
-                            <th class="text-right" width="18%">Profit</th>
+                            <th t-if="detailedMode" class="text-right" width="18%">Profit</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -187,6 +188,7 @@
                                 <t t-set="lineProfit" t-value="Number(line.profit) || 0"/>
                                 <t t-set="profitRate" t-value="Number(line.profit_rate) || 0"/>
                                 <t t-set="isBest" t-value="line.is_best_profit || false"/>
+                                <t t-set="combinedRate" t-value="(Number(line.customer_rate) || 0) + (Number(line.broker_rate) || 0)"/>
                                 <tr>
                                     <td class="text-center">
                                         <div class="font-weight-semibold" t-esc="line.installment_label || line.installment_count || '-'"/>
@@ -194,11 +196,14 @@
                                     <td class="text-right">
                                         <span class="font-weight-600" t-esc="format.percent(line.bank_commission_rate)"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td t-if="detailedMode" class="text-right">
                                         <div class="font-weight-600" t-esc="format.percent(line.customer_rate)"/>
                                     </td>
-                                    <td class="text-right">
+                                    <td t-if="detailedMode" class="text-right">
                                         <span class="font-weight-bold text-primary" t-esc="format.percent(line.broker_rate)"/>
+                                    </td>
+                                    <td t-if="!detailedMode" class="text-right">
+                                        <span class="font-weight-bold text-primary" t-esc="format.percent(combinedRate)"/>
                                     </td>
                                     <td class="text-right">
                                         <div class="font-weight-600" t-esc="format.percent(line.broker_impact_rate)"/>
@@ -206,7 +211,7 @@
                                     <td class="text-right">
                                         <span class="font-weight-bold" t-esc="format.currency(line.total_amount, position, symbol, decimal)"/>
                                     </td>
-                                    <td t-attf-class="text-right {{lineProfit >= 0 ? 'text-success' : 'text-danger'}}">
+                                    <td t-if="detailedMode" t-attf-class="text-right {{lineProfit >= 0 ? 'text-success' : 'text-danger'}}">
                                         <div class="font-weight-bold" t-esc="format.currency(lineProfit, position, symbol, decimal)"/>
                                         <div class="small" t-esc="format.percent(profitRate)"/>
                                     </td>

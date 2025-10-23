@@ -17,6 +17,15 @@
                     </button>
                 </div>
                 <div t-if="variant == 'ads'" class="header__user d-flex align-items-center">
+                    <!-- View Mode Switch (Only on Rates Page) -->
+                    <div class="custom-control custom-switch mr-3" t-if="request.httprequest.path == '/my/broker/rates'">
+                        <input type="checkbox" class="custom-control-input" id="header_broker_view_mode" 
+                               data-role="view-mode" checked="checked"/>
+                        <label class="custom-control-label small text-muted" for="header_broker_view_mode">
+                            <span class="font-weight-600">Detailed</span>
+                        </label>
+                    </div>
+                    
                     <!-- User Dropdown -->
                     <div class="dropdown mr-3">
                         <button class="btn btn-link dropdown-toggle user-info p-0 border-0 d-flex align-items-center" type="button" id="userDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-decoration: none;">

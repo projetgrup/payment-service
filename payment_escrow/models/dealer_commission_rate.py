@@ -11,7 +11,7 @@ class DealerCommissionRate(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     partner_id = fields.Many2one('res.partner', string='Dealer', required=True)
     campaign_id = fields.Many2one('payment.acquirer.jetcheckout.campaign', string='Campaign', required=True)
-    commission_rate = fields.Float(string='Commission Rate (%)', required=True, digits=(16, 2), help='Commission percentage that dealer will earn from this campaign')
+    commission_rate = fields.Float(string='Commission Rate (%)', required=True, digits=(16, 6), help='Commission percentage that dealer will earn from this campaign')
     company_id = fields.Many2one('res.company', string='Company', related='partner_id.company_id', store=True, readonly=True)
     active = fields.Boolean(string='Active', default=True)
 
