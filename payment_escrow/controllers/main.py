@@ -409,6 +409,7 @@ class PayloxSystemEscrowController(Controller):
             broker_campaign = partner_obj.broker_default_campaign_id
             tx_campaign = partner_obj.campaign_id
             broker_dealer = partner_obj.broker_dealer_id
+            raise Exception(broker_dealer)
             if not broker_campaign or not broker_campaign.active:
                 return result
             
