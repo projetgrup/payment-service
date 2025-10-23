@@ -45,13 +45,13 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         const field = this.user.input.vat;
                         let message = null;
                         let valid = true;
-                        // if (!field._.masked.isComplete) {
-                        //     message = _t('TC Identity Number is required');
-                        //     valid = false;
-                        // } else if (!this._isTcknValid(field.value)) {
-                        //     message = _t('TC Identity Number is not valid');
-                        //     valid = false;
-                        // } 
+                        if (!field._.masked.isComplete) {
+                            message = _t('TC Identity Number is required');
+                            valid = false;
+                        } else if (!this._isTcknValid(field.value)) {
+                            message = _t('TC Identity Number is not valid');
+                            valid = false;
+                        } 
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -195,20 +195,20 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                 }),
                 iban: new fields.string({
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
-                    // validate: () => {
-                    //     const field = this.user.input.iban;
-                    //     let message = null;
-                    //     let valid = true;
-                    //     if (!field._.masked.isComplete) {
-                    //         message = _t('IBAN is required');
-                    //         valid = false;
-                    //     } else if (!this._isIbanValid(field._.masked.value)) {
-                    //         message = _t('IBAN is not valid');
-                    //         valid = false;
-                    //     }
-                    //     this._onFieldValid(field, valid, message);
-                    //     return valid;
-                    // }
+                    validate: () => {
+                        const field = this.user.input.iban;
+                        let message = null;
+                        let valid = true;
+                        if (!field._.masked.isComplete) {
+                            message = _t('IBAN is required');
+                            valid = false;
+                        } else if (!this._isIbanValid(field._.masked.value)) {
+                            message = _t('IBAN is not valid');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
                 }),
                 iban_name: new fields.string({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ0-9]+[A-Za-zığüşöçĞÜŞÖÇİ0-9\s]*$/,
