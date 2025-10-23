@@ -425,7 +425,6 @@ class PayloxSystemEscrowController(Controller):
             
             if not additional_rates:
                 return result
-            raise Exception(dealer_rate)
             currency_obj = request.env['res.currency'].sudo().browse(int(currency)) if currency else request.env.company.currency_id
             precision = currency_obj.decimal_places or 2
             amount_value = float(amount or 0.0)
