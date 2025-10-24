@@ -416,10 +416,12 @@
                 <field name="payment_item_bank_token_ok" invisible="1"/>
             </group>
             <group string="Dealer Settings" name="dealer_settings" attrs="{'invisible': [('paylox_escrow_type', '!=', 'dealer')]}">
+                <field name="dealer_campaign_ids" invisible="1"/>
                 <field name="dealer_commission_rate_ids" nolabel="1" colspan="2">
                     <tree editable="bottom">
                         <field name="sequence" widget="handle"/>
-                        <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="acquirer_ids" invisible="1"/>
+                        <field name="campaign_id" domain="[('id', 'in', parent.dealer_campaign_ids)]" options="{'no_create': True, 'no_open': True}"/>
                         <field name="commission_rate"/>
                         <field name="active"/>
                     </tree>

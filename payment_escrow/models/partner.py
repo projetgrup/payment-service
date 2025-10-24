@@ -24,6 +24,11 @@ class Partner(models.Model):
                 ('paylox_escrow_type', '=', 'broker'),
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
+    @api.depends('dealer_commission_rate_ids.campaign_id')
+    def _compute_dealer_campaigns(self):
+        for partner in self:
+            campaigns_ids = self.env['payment.acquirer.jetcheckout.campaign'].search([('acquirer_id', 'in', partner.acquirer_ids.ids)])
+            partner.dealer_campaign_ids = (campaigns_ids - partner.dealer_commission_rate_ids.mapped('campaign_id')).ids
 
     system = fields.Selection(selection_add=[('escrow', 'Escrow Payment System')])
     paylox_escrow_type = fields.Selection([
@@ -78,6 +83,7 @@ class Partner(models.Model):
     dealer_broker_ids = fields.One2many('res.partner', 'broker_dealer_id', string='Referred Brokers', domain=[('paylox_escrow_type', '=', 'broker')])
     dealer_broker_count = fields.Integer(string='Broker Count', compute='_compute_dealer_counts')
     dealer_commission_rate_ids = fields.One2many('dealer.commission.rate', 'partner_id', string='Commission Rates')
+    dealer_campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', string='Dealer Campaigns', compute='_compute_dealer_campaigns', readonly=True)
 
 
     @api.depends()
