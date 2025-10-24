@@ -2031,45 +2031,61 @@ class PayloxSystemEscrowController(Controller):
         if partner.paylox_escrow_type != 'dealer':
             return request.redirect('/my')
         
+        # Dealer'a bağlı broker'ları bul
         brokers = request.env['res.partner'].sudo().search([
             ('broker_dealer_id', '=', partner.id),
             ('paylox_escrow_type', '=', 'broker'),
         ])
         
+        # Dealer'ın kendi banka hesaplarını bul (dealer commission için)
+        dealer_banks = request.env['res.partner.bank'].sudo().search([
+            ('partner_id', '=', partner.broker_dealer_id.id),
+        ])
+        dealer_bank_refs = dealer_banks.mapped('api_ref')
+        
+        # Dealer'a ait basket kayıtlarını bul (id=28 olan dealer commission'lar)
+        dealer_baskets = request.env['payment.transaction.basket'].sudo().search([
+            ('submerchant_external_id', 'in', dealer_bank_refs),
+        ], order='transaction_date desc')
+        
+        # Her transaction için broker'ı bul
+        broker_bank_map = {}
         broker_banks = request.env['res.partner.bank'].sudo().search([
             ('partner_id', 'in', brokers.ids),
         ])
-        
-        baskets = request.env['payment.transaction.basket'].sudo().search([
-            ('submerchant_external_id', 'in', broker_banks.mapped('api_ref')),
-        ], order='transaction_date desc')
-        
-        broker_bank_map = {}
         for bank in broker_banks:
             broker_bank_map[bank.api_ref] = bank.partner_id
         
+        # Transaction'dan broker'a mapping - aynı transaction_id'li broker basket'ını bul
         basket_broker_map = {}
-        for basket in baskets:
-            broker = broker_bank_map.get(basket.submerchant_external_id, False)
-            basket_broker_map[basket.id] = broker
+        for dealer_basket in dealer_baskets:
+            # Aynı transaction_id'ye sahip broker basket'ını bul
+            broker_basket = request.env['payment.transaction.basket'].sudo().search([
+                ('transaction_id', '=', dealer_basket.transaction_id.id),
+                ('submerchant_external_id', 'in', broker_bank_map.keys()),
+            ], limit=1)
+            if broker_basket:
+                broker = broker_bank_map.get(broker_basket.submerchant_external_id, False)
+                basket_broker_map[dealer_basket.id] = broker
         
+        # Broker bazında istatistikler
         broker_transactions = {}
         broker_volumes = {}
-        for basket in baskets:
+        for basket in dealer_baskets:
             broker = basket_broker_map.get(basket.id, False)
             broker_id = broker.id if broker else 0
             broker_transactions[broker_id] = broker_transactions.get(broker_id, 0) + 1
             broker_volumes[broker_id] = broker_volumes.get(broker_id, 0.0) + basket.transfer_amount
         
-        total_transactions = len(baskets)
-        total_volume = sum(baskets.mapped('transfer_amount'))
+        total_transactions = len(dealer_baskets)
+        total_volume = sum(dealer_baskets.mapped('transfer_amount'))
         
         currency = request.env.company.currency_id
         
         dealer_referral_code = partner.dealer_referral_code if partner.dealer_referral_code else ''
         
         values = {
-            'baskets': baskets,
+            'baskets': dealer_baskets,
             'brokers': brokers,
             'basket_broker_map': basket_broker_map,
             'broker_transactions': broker_transactions,
