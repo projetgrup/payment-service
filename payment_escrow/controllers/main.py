@@ -407,8 +407,6 @@ class PayloxSystemEscrowController(Controller):
                 return result
             
             broker_campaign = partner_obj.broker_default_campaign_id
-            tx_campaign = partner_obj.campaign_id
-            broker_dealer = partner_obj.broker_dealer_id
             if not broker_campaign or not broker_campaign.active:
                 return result
             
@@ -417,14 +415,9 @@ class PayloxSystemEscrowController(Controller):
                 for line in broker_campaign.line_ids
             }
             
-            dealer_rate = 0.0
-            if broker_dealer and tx_campaign:
-                dealer_commission = broker_dealer.dealer_commission_rate_ids.filtered(lambda c: c.campaign_id.id == tx_campaign.id and c.active)
-                if dealer_commission:
-                    dealer_rate = dealer_commission.commission_rate or 0.0
-            
             if not additional_rates:
                 return result
+            
             currency_obj = request.env['res.currency'].sudo().browse(int(currency)) if currency else request.env.company.currency_id
             precision = currency_obj.decimal_places or 2
             amount_value = float(amount or 0.0)
@@ -432,27 +425,25 @@ class PayloxSystemEscrowController(Controller):
                 installment_count = int(row.get('count', 0))
                 broker_rate = additional_rates.get(installment_count, 0.0)
                 
-                total_additional_rate = broker_rate + dealer_rate
-                
-                if total_additional_rate <= 0:
+                if broker_rate <= 0:
                     continue
                 
                 crate = float(row.get('crate', 0.0))
                 corate = (crate / (100 + crate)) * 100 if crate > 0 else 0.0
-                combined_rate = corate + total_additional_rate
+                combined_rate = corate + broker_rate
                 broker_impact_rate = ((100 / (1 - (combined_rate / 100)) - 100) / 100) * 100 if combined_rate < 100 else 0.0
                 broker_impact_amount = float_round(amount_value * broker_impact_rate / 100.0, precision_digits=precision)
                 total_amount = float_round(amount_value + broker_impact_amount, precision_digits=precision)
 
                 row['amount'] = float_round(total_amount / installment_count, precision_digits=precision) if installment_count > 0 else total_amount
                 row['crate'] = broker_impact_rate
-                row['broker_rate'] = total_additional_rate
+                row['broker_rate'] = broker_rate
                 row['total_amount'] = total_amount
             
             return result
             
         except Exception as e:
-            _logger.info("Error applying broker rates in _prepare_installment: %s", str(e))
+            _logger.error("Error applying broker rates in _prepare_installment: %s", str(e))
             return result
     
     @http.route(['/payment/escrow/card/validate'], type='json', auth='user', methods=['POST'], website=True)
