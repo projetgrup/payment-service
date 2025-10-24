@@ -656,6 +656,200 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         }
 
+        this.insurance = {
+            button: {
+                submit: new fields.element({
+                    events: [['click', this._onInsuranceSubmit]]
+                })
+            },
+            alert: {
+                success: new fields.element(),
+                error: new fields.element()
+            },
+            success: {
+                message: new fields.element()
+            },
+            error: {
+                message: new fields.element()
+            },
+            input: {
+                birth_date: new fields.string({
+                    validate: () => {
+                        const field = this.insurance.input.birth_date;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Birth date is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                vat: new fields.string({
+                    mask: /^\d{0,11}$/,
+                    validate: () => {
+                        const field = this.insurance.input.vat;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('TC Identity Number is required');
+                            valid = false;
+                        } else if (field.value.length !== 11) {
+                            message = _t('TC Identity Number must be 11 digits');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                gsmNo: new fields.string({
+                    mask: /^[0-9]{0,10}$/,
+                    validate: () => {
+                        const field = this.insurance.input.gsmNo;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Mobile number is required');
+                            valid = false;
+                        } else if (field.value.length !== 10) {
+                            message = _t('Mobile number must be 10 digits');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                email: new fields.string({
+                    mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
+                    validate: () => {
+                        const field = this.insurance.input.email;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Email is required');
+                            valid = false;
+                        } else if (!REGEXP_EMAIL.test(field.value)) {
+                            message = _t('Email format is not correct');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                plate: new fields.string({
+                    validate: () => {
+                        const field = this.insurance.input.plate;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('License plate is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                license_no: new fields.string({
+                    mask: /^[A-Z0-9]{0,10}$/,
+                    validate: () => {
+                        const field = this.insurance.input.license_no;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('License serial number is required');
+                            valid = false;
+                        } else if (field.value.length !== 10) {
+                            message = _t('License serial number must be 10 characters');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                chassis_no: new fields.string({
+                    mask: /^[A-Z0-9]{0,17}$/,
+                    validate: () => {
+                        const field = this.insurance.input.chassis_no;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Chassis number is required');
+                            valid = false;
+                        } else if (field.value.length !== 17) {
+                            message = _t('Chassis number must be 17 characters');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                // engine_no: new fields.string({
+                //     validate: () => {
+                //         const field = this.insurance.input.engine_no;
+                //         let message = null;
+                //         let valid = true;
+                //         if (!field.value) {
+                //             message = _t('Engine number is required');
+                //             valid = false;
+                //         }
+                //         this._onFieldValid(field, valid, message);
+                //         return valid;
+                //     }
+                // }),
+                // registration_date: new fields.string({
+                //     validate: () => {
+                //         const field = this.insurance.input.registration_date;
+                //         let message = null;
+                //         let valid = true;
+                //         if (!field.value) {
+                //             message = _t('Registration date is required');
+                //             valid = false;
+                //         }
+                //         this._onFieldValid(field, valid, message);
+                //         return valid;
+                //     }
+                // }),
+                model: new fields.string({
+                    validate: () => {
+                        const field = this.insurance.input.model;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Vehicle model is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                year: new fields.string({
+                    mask: /^\d{0,4}$/,
+                    validate: () => {
+                        const field = this.insurance.input.year;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Model year is required');
+                            valid = false;
+                        } else if (field.value.length !== 4) {
+                            message = _t('Model year must be 4 digits');
+                            valid = false;
+                        } else {
+                            const year = parseInt(field.value);
+                            const currentYear = new Date().getFullYear();
+                            if (year < 1900 || year > currentYear + 1) {
+                                message = _t('Invalid model year');
+                                valid = false;
+                            }
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+            }
+        };
+
         this.ad = {
             state: {
                 filter: new fields.element(),
@@ -3173,5 +3367,75 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (this.ad.pagination.container && this.ad.pagination.container.$) {
             this.ad.pagination.container.$.toggle(this.state.pagination.totalItems > 0);
         }
+    },
+
+    _onInsuranceSubmit: function(e) {
+        e.preventDefault();
+        
+        const isValid = [
+            this.insurance.input.birth_date.validate(),
+            this.insurance.input.vat.validate(),
+            this.insurance.input.gsmNo.validate(),
+            this.insurance.input.email.validate(),
+            this.insurance.input.plate.validate(),
+            this.insurance.input.license_no.validate(),
+            this.insurance.input.chassis_no.validate(),
+            // this.insurance.input.engine_no.validate(),
+            // this.insurance.input.registration_date.validate(),
+            this.insurance.input.model.validate(),
+            this.insurance.input.year.validate(),
+        ].every(Boolean);
+
+        if (!isValid) {
+            return;
+        }
+
+        const data = {
+            birth_date: this.insurance.input.birth_date.value,
+            vat: this.insurance.input.vat.value,
+            gsmNo: this.insurance.input.gsmNo.value,
+            email: this.insurance.input.email.value,
+            plate: this.insurance.input.plate.value,
+            license_no: this.insurance.input.license_no.value,
+            chassis_no: this.insurance.input.chassis_no.value,
+            // engine_no: this.insurance.input.engine_no.value,
+            // registration_date: this.insurance.input.registration_date.value,
+            model: this.insurance.input.model.value,
+            year: this.insurance.input.year.value,
+        };
+
+        this.insurance.button.submit.$.prop('disabled', true);
+        
+        this.insurance.alert.success.$.addClass('d-none');
+        this.insurance.alert.error.$.addClass('d-none');
+
+        rpc.query({
+            route: '/escrow/insurance/quote',
+            params: data
+        }).then((result) => {
+            if (result.success) {
+                this.insurance.success.message.$.text(result.message || _t('Insurance quote request sent successfully!'));
+                this.insurance.alert.success.$.removeClass('d-none');
+                
+                Object.keys(this.insurance.input).forEach(key => {
+                    this.insurance.input[key].$.val('');
+                    this.insurance.input[key].value = '';
+                });
+                
+                setTimeout(() => {
+                    $('#insuranceQuoteModal').modal('hide');
+                    this.insurance.alert.success.$.addClass('d-none');
+                }, 2000);
+            } else {
+                this.insurance.error.message.$.text(result.message || _t('An error occurred. Please try again.'));
+                this.insurance.alert.error.$.removeClass('d-none');
+            }
+        }).catch((error) => {
+            this.insurance.error.message.$.text(_t('An error occurred. Please try again.'));
+            this.insurance.alert.error.$.removeClass('d-none');
+            console.error('Insurance quote error:', error);
+        }).finally(() => {
+            this.insurance.button.submit.$.prop('disabled', false);
+        });
     },
 });

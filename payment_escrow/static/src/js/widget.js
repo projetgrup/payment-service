@@ -1,4 +1,4 @@
-/** @odoo-module alias=paylox.system.escrow **/
+/** @odoo-module alias=paylox.system.widget **/
 'use strict';
 
 import rpc from 'web.rpc';

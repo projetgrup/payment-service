@@ -2025,6 +2025,68 @@ class PayloxSystemEscrowController(Controller):
             'broker_submit_date': fields.Datetime.now(),
         })
         return request.redirect('/my/broker/transactions')
+    
+    @route('/escrow/insurance/quote', type='json', auth='user', website=True, methods=['POST'], csrf=False)
+    def escrow_insurance_quote(self, **kwargs):
+        """Handle insurance quote request from frontend"""
+        try:
+            company = request.env.company
+            if not company.escrow_insurance_quote_enabled:
+                return {
+                    'success': False,
+                    'message': _('Insurance quote feature is not enabled')
+                }
+
+            required_fields = ['birth_date', 'vat', 'gsmNo', 'email', 'plate', 
+                             'license_no', 'chassis_no', 'engine_no', 
+                             'registration_date', 'model', 'year']
+            
+            for field in required_fields:
+                if not kwargs.get(field):
+                    return {
+                        'success': False,
+                        'message': _('Missing required field: %s') % field
+                    }
+
+            partner = request.env.user.partner_id
+
+            quote = request.env['escrow.insurance.quote'].sudo().create({
+                'birth_date': kwargs.get('birth_date'),
+                'vat': kwargs.get('vat'),
+                'mobile': kwargs.get('gsmNo'),
+                'email': kwargs.get('email'),
+                'plate': kwargs.get('plate'),
+                'license_no': kwargs.get('license_no'),
+                'chassis_no': kwargs.get('chassis_no'),
+                # 'engine_no': kwargs.get('engine_no'),
+                # 'registration_date': kwargs.get('registration_date'),
+                'model': kwargs.get('model'),
+                'year': kwargs.get('year'),
+                'partner_id': partner.id,
+                'company_id': company.id,
+                'state': 'draft',
+            })
+
+            quote.message_post(
+                body=_('Insurance quote request created from website by %s') % partner.name,
+                message_type='notification',
+            )
+
+            quote.action_submit_quote()
+
+            return {
+                'success': True,
+                'message': _('Your insurance quote request has been submitted successfully!'),
+                'quote_id': quote.id
+            }
+
+        except Exception as e:
+            _logger.exception('Error creating insurance quote: %s', str(e))
+            return {
+                'success': False,
+                'message': _('An error occurred while processing your request. Please try again later.')
+            }
+
 
     @route('/my/dealer/transactions', type='http', auth='user', website=True)
     def dealer_transactions_page(self, **kwargs):
