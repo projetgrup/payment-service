@@ -129,7 +129,7 @@
                                 <div class="escrow-ad-list-header">
                                     <div>BROKER</div>
                                     <div>TRANSACTION</div>
-                                    <div>AD NUMBER</div>
+                                    <div>CAMPAİGN</div>
                                     <div>VEHICLE</div>
                                     <div>AMOUNT</div>
                                     <div>STATUS</div>
@@ -166,7 +166,7 @@
                                             
                                             <div class="escrow-ad-list-item-info">
                                                 <div class="escrow-ad-list-item-text">
-                                                    <span class="font-weight-600" t-esc="basket.ad_number or '-'"/>
+                                                    <span class="font-weight-600" t-esc="broker.campaign_id.name or '-'"/>
                                                 </div>
                                             </div>
                                             
