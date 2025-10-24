@@ -33,6 +33,7 @@ class PaymentTransactionBasket(models.Model):
         ('broker', 'Broker'),
         ('owner', 'Owner'),
         ('customer', 'Customer'),
+        ('dealer', 'Dealer'),
         ('card_holder', 'Card Holder'),
     ], string='Paylox Escrow Type', compute='_compute_escrow_fields', store=True)
 
@@ -43,6 +44,7 @@ class PaymentTransactionBasket(models.Model):
     ], string='Transfer Status', compute='_compute_transfer_status', store=True)
     
     broker_invoice_id = fields.Many2one('ir.attachment', string='Broker Invoice')
+    broker_invoice_upload_id = fields.Binary(string='Upload Broker Invoice', related='broker_invoice_id.datas', readonly=True)
     broker_invoice_filename = fields.Char(string='Invoice Filename', compute='_compute_broker_invoice_filename', store=True)
     broker_invoice_upload_date = fields.Datetime(string='Invoice Upload Date')
     broker_submitted_for_approval = fields.Boolean(string='Submitted for Approval', default=False)
@@ -69,6 +71,7 @@ class PaymentTransactionBasket(models.Model):
             ad_number = ''
             vehicle_info = ''
             ad_state = False
+            approval_state = basket.transaction_id.jetcheckout_approval_state if basket.transaction_id else False
             
             if basket.submerchant_external_id:
                 partner_bank = self.env['res.partner.bank'].sudo().search([
@@ -159,6 +162,10 @@ class PaymentTransactionBasket(models.Model):
         return True
 
     def action_approve_payment(self):
+        for basket in self:
+            basket._action_approve_payment()
+    
+    def _action_approve_payment(self):
         if self.transfer_status != 'can_approve':
             self.write({'approval_state_message': _('This payment basket is not eligible for approval.')})
             raise UserError(_('This payment basket is not eligible for approval.'))

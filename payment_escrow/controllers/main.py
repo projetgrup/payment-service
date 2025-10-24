@@ -534,6 +534,9 @@ class PayloxSystemEscrowController(Controller):
 
             platform_owner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'platform_owner')], limit=1)
             infrastructure_provider = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'infrastructure_provider')], limit=1)
+            broker = transaction.partner_id
+
+            dealer = broker.broker_dealer_id if broker else None
 
             def find_rate(rec, inst):
                 if rec and rec.installment_rate_ids:
@@ -548,36 +551,46 @@ class PayloxSystemEscrowController(Controller):
                         if int(r.installment_count) == inst:
                             return float(r.broker_additional_rate)
                 return 0.0
+            
+            def find_dealer_rate(dealer_partner, campaign_id):
+                if dealer_partner and campaign_id:
+                    dealer_commission = dealer_partner.dealer_commission_rate_ids.filtered(lambda d: d.campaign_id.id == campaign_id and d.active)
+                    if dealer_commission:
+                        return dealer_commission.commission_rate or 0.0
+                return 0.0
 
             installment_count = int(transaction.jetcheckout_installment_count or 1)
             seller_net = float(transaction.jetcheckout_payment_amount or 0.0)
             paid = transaction.jetcheckout_payment_paid
             additional_rate = transaction.jetcheckout_additional_rate
 
-            platform_rate = find_rate(platform_owner, installment_count)
             infra_rate = find_rate(infrastructure_provider, installment_count)
-            broker_rate = find_broker_rate(transaction.partner_id, installment_count)
+            broker_rate = find_broker_rate(broker, installment_count)
+            
+            dealer_rate = 0.0
+            if dealer and broker and broker.campaign_id:
+                dealer_rate = find_dealer_rate(dealer, broker.campaign_id.id)
 
             infra_commission = paid * infra_rate
-            platform_commission = (paid * additional_rate / 100) - infra_commission
+            dealer_commission = (paid * dealer_rate / 100)
+            platform_commission = (paid * additional_rate / 100) - infra_commission - dealer_commission
             broker_commission = (paid * broker_rate / 100)
-            total_paid = seller_net + infra_commission + platform_commission + broker_commission
 
-            customer_amount = paid * seller_net / total_paid
+            total_paid = seller_net + infra_commission + platform_commission + broker_commission + dealer_commission
+
+            seller_amount = paid * seller_net / total_paid
             customer_basket.append({
                 "id": 24,
                 "name": partner.name,
                 "description": product['name'],
                 "qty": 1,
-                "amount": customer_amount,
+                "amount": seller_amount,
                 "category": product['product_id']['categ_id']['name'],
                 "is_physical": product['product_id']['type'] == 'product',
                 "submerchant_external_id": reference_seller,
                 "submerchant_price": seller_net
             })
             infra_amount = paid * infra_commission / total_paid
-            #infra_commission = float_round(charged * (1 - (infra_rate / 100)), 4) if infra_rate else 0.0
-            #platform_commission = float_round(charged * (1 - (platform_rate / 100)), 4) if platform_rate else 0.0
             if infra_commission > 0:
                 ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref'])
                 customer_basket.append({
@@ -597,7 +610,7 @@ class PayloxSystemEscrowController(Controller):
                 customer_basket.append({
                     "id": 26,
                     "name": platform_owner.name,
-                    "description": _(f"Platform commission (%{platform_rate})"),
+                    "description": _(f"Platform commission (%{platform_commission})"),
                     "qty": 1,
                     "amount": platform_amount,
                     "category": "Commission",
@@ -606,12 +619,12 @@ class PayloxSystemEscrowController(Controller):
                     "submerchant_price": platform_commission
                 })
             broker_amount = paid * broker_commission / total_paid
-            if transaction.partner_id.broker_default_campaign_id and broker_amount > 0:
-                ref_broker = (transaction.partner_id.bank_ids and transaction.partner_id.bank_ids[0]['api_ref'])
+            if broker and broker.broker_default_campaign_id and broker_amount > 0:
+                ref_broker = (broker.bank_ids and broker.bank_ids[0]['api_ref'])
                 if broker_amount > 0:
                     customer_basket.append({
                         "id": 27,
-                        "name": transaction.partner_id.name,
+                        "name": broker.name,
                         "description": _("Broker Commission"),
                         "qty": 1,
                         "amount": broker_amount,
@@ -619,6 +632,22 @@ class PayloxSystemEscrowController(Controller):
                         "is_physical": False,
                         "submerchant_external_id": ref_broker,
                         "submerchant_price": broker_commission
+                    })
+            
+            dealer_amount = paid * dealer_commission / total_paid
+            if dealer and dealer_commission > 0:
+                ref_dealer = (dealer.bank_ids and dealer.bank_ids[0]['api_ref'])
+                if dealer_amount > 0:
+                    customer_basket.append({
+                        "id": 28,
+                        "name": dealer.name,
+                        "description": _("Dealer Commission"),
+                        "qty": 1,
+                        "amount": dealer_amount,
+                        "category": "Commission",
+                        "is_physical": False,
+                        "submerchant_external_id": ref_dealer,
+                        "submerchant_price": dealer_commission
                     })
             fullname = customer.name.split(' ', 1)
             address = []
@@ -860,6 +889,12 @@ class PayloxSystemEscrowController(Controller):
 
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_my_ads(self, **kwargs):
+        user = request.env.user
+        partner = user.partner_id
+        
+        if partner.paylox_escrow_type == 'dealer':
+            return request.redirect('/my/dealer/transactions')
+        
         hash = kwargs.get('')
         values = {}
         if hash:
@@ -1037,8 +1072,8 @@ class PayloxSystemEscrowController(Controller):
 
         partner_sudo = partner.sudo()
         values = {
-            'broker_sign_name': sign_name,
-            'broker_authorized_person': authorized_person,
+            'sign_name': sign_name,
+            'authorized_person': authorized_person,
             'email': email,
             'phone': phone,
         }
@@ -1727,14 +1762,15 @@ class PayloxSystemEscrowController(Controller):
                 vat_number = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number')
                 existing_broker = request.env['res.partner'].sudo().search([
                     ('vat', '=', vat_number),
-                    ('paylox_escrow_type', '=', 'broker'),
+                    ('paylox_escrow_type', '=', kwargs.get('user_register_type')),
                     ('company_id', '=', company.id),
                 ], limit=1)
                 if existing_broker:
                     return {
                         'success': True,
+                        'registered': True,
                         'partner_id': existing_broker.id,
-                        'message': 'Broker with this tax/identity number already exists. Please proceed to the next step.'
+                        'message': _('Broker with this tax/identity number already exists. Please proceed to the next step.')
                     }
                 
                 if user_type == 'individual':
@@ -1773,35 +1809,41 @@ class PayloxSystemEscrowController(Controller):
                     }
                 
                 partner = request.env['res.partner'].sudo().create(partner_vals)
-                
-                iban = kwargs.get('iban', '')
-                vat = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number', '')
-                iban_verified = self.verify_iban(iban, vat)
-                if iban and not iban_verified:
-                    iban_raw = kwargs.get('iban', '')
-                    iban_sanitized = sanitize_account_number(iban_raw)
-                    bank = request.env['res.partner.bank'].sudo()
-                    bank_vals = {
-                        'partner_id': partner.id,
-                        'acc_number': iban_raw.replace(' ', ''),
-                        'api_merchant': kwargs.get('iban_name', ''),
-                        'currency_id': company.currency_id.id,
-                        'acc_holder_name': kwargs.get('iban_name', ''),
-                    }
-                    existing_bank = bank.search([
-                        ('partner_id.vat', '=', vat),
-                        ('company_id', '=', company.id),
-                        ('sanitized_acc_number', '=', iban_sanitized),
-                    ], limit=1)
-                    if not existing_bank:
-                        existing_bank = bank.create(bank_vals)
-                    
-                    if not existing_bank.api_state:
-                        return {
-                            'success': False,
+                try:
+                    iban = kwargs.get('iban', '')
+                    vat = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number', '')
+                    iban_verified = self.verify_iban(iban, vat)
+                    if iban and not iban_verified:
+                        iban_raw = kwargs.get('iban', '')
+                        iban_sanitized = sanitize_account_number(iban_raw)
+                        bank = request.env['res.partner.bank'].sudo()
+                        bank_vals = {
                             'partner_id': partner.id,
-                            'message': existing_bank.api_message or 'Bank account verification failed'
+                            'acc_number': iban_raw.replace(' ', ''),
+                            'api_merchant': kwargs.get('iban_name', ''),
+                            'currency_id': company.currency_id.id,
+                            'acc_holder_name': kwargs.get('iban_name', ''),
                         }
+                        existing_bank = bank.search([
+                            ('partner_id.vat', '=', vat),
+                            ('company_id', '=', company.id),
+                            ('sanitized_acc_number', '=', iban_sanitized),
+                        ], limit=1)
+                        if not existing_bank:
+                            existing_bank = bank.create(bank_vals)
+                        
+                        if not existing_bank.api_state:
+                            return {
+                                'success': False,
+                                'partner_id': partner.id,
+                                'message': existing_bank.api_message or 'Bank account verification failed'
+                            }
+                except Exception as e:
+                    return {
+                        'success': False,
+                        'partner_id': partner.id,
+                        'message': 'Bank account verification error: ' + str(e)
+                    }
                 
                 return {
                     'success': True,
@@ -1997,40 +2039,50 @@ class PayloxSystemEscrowController(Controller):
             ('paylox_escrow_type', '=', 'broker'),
         ])
         
-        broker_banks = request.env['res.partner.bank'].sudo().search([
-            ('partner_id', 'in', brokers.ids),
+        dealer_banks = request.env['res.partner.bank'].sudo().search([
+            ('partner_id', '=', partner.id),
         ])
+        dealer_bank_refs = dealer_banks.mapped('api_ref')
         
-        baskets = request.env['payment.transaction.basket'].sudo().search([
-            ('submerchant_external_id', 'in', broker_banks.mapped('api_ref')),
+        dealer_baskets = request.env['payment.transaction.basket'].sudo().search([
+            ('submerchant_external_id', 'in', dealer_bank_refs),
+            ('transaction_id.state', '=', 'done'),
         ], order='transaction_date desc')
         
         broker_bank_map = {}
+        broker_banks = request.env['res.partner.bank'].sudo().search([
+            ('partner_id', 'in', brokers.ids),
+        ])
         for bank in broker_banks:
             broker_bank_map[bank.api_ref] = bank.partner_id
         
         basket_broker_map = {}
-        for basket in baskets:
-            broker = broker_bank_map.get(basket.submerchant_external_id, False)
-            basket_broker_map[basket.id] = broker
+        for dealer_basket in dealer_baskets:
+            broker_basket = request.env['payment.transaction.basket'].sudo().search([
+                ('transaction_id', '=', dealer_basket.transaction_id.id),
+                ('submerchant_external_id', 'in', list(broker_bank_map.keys())),
+            ], limit=1)
+            if broker_basket:
+                broker = broker_bank_map.get(broker_basket.submerchant_external_id, False)
+                basket_broker_map[dealer_basket.id] = broker
         
         broker_transactions = {}
         broker_volumes = {}
-        for basket in baskets:
+        for basket in dealer_baskets:
             broker = basket_broker_map.get(basket.id, False)
             broker_id = broker.id if broker else 0
             broker_transactions[broker_id] = broker_transactions.get(broker_id, 0) + 1
             broker_volumes[broker_id] = broker_volumes.get(broker_id, 0.0) + basket.transfer_amount
         
-        total_transactions = len(baskets)
-        total_volume = sum(baskets.mapped('transfer_amount'))
+        total_transactions = len(dealer_baskets)
+        total_volume = sum(dealer_baskets.mapped('transfer_amount'))
         
         currency = request.env.company.currency_id
         
         dealer_referral_code = partner.dealer_referral_code if partner.dealer_referral_code else ''
         
         values = {
-            'baskets': baskets,
+            'baskets': dealer_baskets,
             'brokers': brokers,
             'basket_broker_map': basket_broker_map,
             'broker_transactions': broker_transactions,
@@ -2045,3 +2097,4 @@ class PayloxSystemEscrowController(Controller):
             'page_name': 'dealer_transactions',
         }
         return request.render('payment_escrow.dealer_transactions_page', values)
+
