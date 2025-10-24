@@ -159,6 +159,19 @@
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title">My Ads</h3>
                                 <div class="escrow-ad-nav-control">
+                                    <button type="button" 
+                                            class="btn escrow-ad-nav-button-primary mr-1"
+                                            data-toggle="modal" 
+                                            data-target="#insuranceQuoteModal"
+                                            t-if="request.env.company.escrow_insurance_quote_enabled"
+                                            field="insurance.button.open">
+                                        <i class="fa fa-shield-alt mr8"/>
+                                        Request Insurance Quote
+                                    </button>
+                                    <a class="btn escrow-ad-nav-button-primary mr-1" t-if="request.env.user.payment_preview_ok" data-view="form" target="_blank" href="/my/payment/preview">
+                                        <i class="fa fa-plus mr8"/>
+                                        Calculation Module
+                                    </a>
                                     <button class="btn escrow-ad-nav-button-primary" data-view="form" field="ad.button.create">
                                         <i class="fa fa-plus mr8"/>
                                         Receive Payment
@@ -315,6 +328,9 @@
                     </div>
                 </div>
             </div>
+            
+            <t t-call="payment_escrow.insurance_quote_modal"/>
+            
             <div class="escrow-ad-sideback d-none" field="ad.sideback"/>
             <div class="escrow-ad-sidebar" field="ad.sidebar">
                 <button class="btn" field="ad.button.sidebar.toggle">

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="insurance_quote_modal" name="Insurance Quote Modal">
+        <div class="modal fade" 
+             id="insuranceQuoteModal" 
+             tabindex="-1" 
+             role="dialog" 
+             aria-labelledby="insuranceQuoteModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+                    <div class="modal-header border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px 24px;">
+                        <h5 class="modal-title font-weight-bold text-white m-0" style="font-size: 20px;">
+                            <i class="fa fa-shield-alt mr-2"></i>
+                            Request Insurance Quote
+                        </h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity: 1;">
+                            <span style="font-size: 28px; font-weight: 300;">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="padding: 20px; background-color: #f8f9fa;">
+                        <div class="panel mt-3">
+                            <div class="panel__header">
+                                <h3>Personal Information</h3>
+                            </div>
+                            <div class="panel__body">
+                                <form action="#" id="insuranceQuoteForm" class="form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form__group">
+                                                <label class="form__label" for="insurance_birth_date">Birth Date</label>
+                                                <input type="date" 
+                                                       class="form__control" 
+                                                       id="insurance_birth_date" 
+                                                       name="birth_date"
+                                                       field="insurance.input.birth_date"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group">
+                                                <label class="form__label" for="insurance_tc_no">T.C. Identity Number</label>
+                                                <input type="text" 
+                                                       class="form__control" 
+                                                       id="insurance_tc_no" 
+                                                       name="vat"
+                                                       maxlength="11"
+                                                       placeholder="11-digit ID number"
+                                                       field="insurance.input.vat"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group -mb-0">
+                                                <label class="form__label" for="insurance_gsm">Mobile Number</label>
+                                                <input type="tel" 
+                                                       class="form__control" 
+                                                       id="insurance_gsm" 
+                                                       name="gsmNo"
+                                                       placeholder="5XX XXX XX XX"
+                                                       field="insurance.input.gsmNo"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group -mb-0">
+                                                <label class="form__label" for="insurance_email">Email</label>
+                                                <input type="email" 
+                                                       class="form__control" 
+                                                       id="insurance_email" 
+                                                       name="email"
+                                                       placeholder="example@mail.com"
+                                                       field="insurance.input.email"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="panel mt-3">
+                            <div class="panel__header">
+                                <h3>Vehicle Information</h3>
+                            </div>
+                            <div class="panel__body">
+                                <form action="#" class="form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form__group">
+                                                <label class="form__label" for="insurance_plate">License Plate</label>
+                                                <input type="text" 
+                                                       class="form__control" 
+                                                       id="insurance_plate" 
+                                                       name="plate"
+                                                       placeholder="34 ABC 123"
+                                                       field="insurance.input.plate"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group">
+                                                <label class="form__label" for="insurance_license_no">License Serial Number</label>
+                                                <input type="text" 
+                                                       class="form__control" 
+                                                       id="insurance_license_no" 
+                                                       name="licenseNo"
+                                                       maxlength="10"
+                                                       placeholder="10-digit license serial number"
+                                                       field="insurance.input.license_no"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group">
+                                                <label class="form__label" for="insurance_chassis_no">Chassis Number</label>
+                                                <input type="text" 
+                                                       class="form__control" 
+                                                       id="insurance_chassis_no" 
+                                                       name="chassisNo"
+                                                       maxlength="17"
+                                                       placeholder="17-digit chassis number"
+                                                       field="insurance.input.chassis_no"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-md-6">
+                                            <div class="form__group">
+                                                <label class="form__label" for="insurance_engine_no">Engine Number</label>
+                                                <input type="text" 
+                                                       class="form__control" 
+                                                       id="insurance_engine_no" 
+                                                       name="engineNo"
+                                                       placeholder="Engine number"
+                                                       field="insurance.input.engine_no"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group">
+                                                <label class="form__label" for="insurance_registration_date">Registration Date</label>
+                                                <input type="date" 
+                                                       class="form__control" 
+                                                       id="insurance_registration_date" 
+                                                       name="date of registration"
+                                                       field="insurance.input.registration_date"
+                                                       required="required"/>
+                                            </div>
+                                        </div> -->
+                                        <div class="col-md-6">
+                                            <div class="form__group">
+                                                <label class="form__label" for="insurance_vehicle_model">Vehicle Model</label>
+                                                <input type="text" 
+                                                       class="form__control" 
+                                                       id="insurance_vehicle_model" 
+                                                       name="model"
+                                                       placeholder="e.g., Renault Megane"
+                                                       field="insurance.input.model"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group -mb-0">
+                                                <label class="form__label" for="insurance_model_year">Model Year</label>
+                                                <input type="text" 
+                                                       class="form__control" 
+                                                       id="insurance_model_year" 
+                                                       name="Year"
+                                                       maxlength="4"
+                                                       placeholder="2020"
+                                                       field="insurance.input.year"
+                                                       required="required"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-success mt-3 d-none" field="insurance.alert.success">
+                            <i class="fa fa-check-circle mr-2"/>
+                            <span field="insurance.success.message">Insurance quote request sent successfully!</span>
+                        </div>
+                        <div class="alert alert-danger mt-3 d-none" field="insurance.alert.error">
+                            <i class="fa fa-exclamation-circle mr-2"/>
+                            <span field="insurance.error.message"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0" style="background-color: #f8f9fa; padding: 16px 20px;">
+                        <button type="button" 
+                                class="btn btn-light px-4 py-2" 
+                                data-dismiss="modal"
+                                style="border-radius: 6px; font-weight: 500;">
+                            <i class="fa fa-times mr-2"/>
+                            Cancel
+                        </button>
+                        <button type="button" 
+                                class="btn btn-primary px-5 py-2" 
+                                field="insurance.button.submit"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 6px; font-weight: 600; box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);">
+                            <i class="fa fa-paper-plane mr-2"/>
+                            Send Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

@@ -96,6 +96,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="escrow_insurance_quote_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="escrow_insurance_quote_enabled" string="Escrow Insurance Quote"/>
+                            <div class="text-muted">
+                                Enable Escrow Insurance Quote
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </xpath>

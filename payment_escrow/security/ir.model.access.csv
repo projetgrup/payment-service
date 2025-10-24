@@ -24,3 +24,6 @@ access_registration_rejection_wizard_manager,registration.rejection.wizard manag
 
 access_payment_transaction_basket_user,payment.transaction.basket user,payment_jetcheckout.model_payment_transaction_basket,payment_escrow.group_escrow_user,1,0,0,0
 access_payment_transaction_basket_manager,payment.transaction.basket manager,payment_jetcheckout.model_payment_transaction_basket,payment_escrow.group_escrow_manager,1,1,1,0
+
+access_escrow_insurance_quote_user,escrow.insurance.quote user,model_escrow_insurance_quote,payment_escrow.group_escrow_user,1,1,1,0
+access_escrow_insurance_quote_manager,escrow.insurance.quote manager,model_escrow_insurance_quote,payment_escrow.group_escrow_manager,1,1,1,1

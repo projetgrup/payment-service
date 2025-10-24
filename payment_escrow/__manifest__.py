@@ -37,6 +37,8 @@
         'views/step_components.xml',
         'views/register_templates.xml',
         'views/templates.xml',
+        'views/insurance_quote.xml',
+        'views/insurance_quote_views.xml',
         'views/broker_rate.xml',
         'views/settings.xml',
         'wizards/sync.xml',
