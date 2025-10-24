@@ -2043,6 +2043,7 @@ class PayloxSystemEscrowController(Controller):
         
         dealer_baskets = request.env['payment.transaction.basket'].sudo().search([
             ('submerchant_external_id', 'in', dealer_bank_refs),
+            ('transaction_id.state', '=', 'done'),
         ], order='transaction_date desc')
         
         broker_bank_map = {}
