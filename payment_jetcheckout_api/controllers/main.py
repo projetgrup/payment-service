@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import uuid
 import json
 import werkzeug
 import requests
@@ -212,15 +213,136 @@ class PayloxApiController(Controller):
         if not method:
             raise NotFound()
 
-        acquirer = request.env['payment.acquirer']._get_acquirer(
-            company=tx.company_id,
-            website=request.website,
-            providers=['jetcheckout'],
-            limit=1,
-        )
+        acquirer = tx.acquirer_id
         values = self._prepare(acquirer=acquirer, company=tx.company_id, partner=tx.partner_id, transaction=tx, balance=False, filters={'type': ['physicalpos']})
         values.update({'tx': tx, 'method': method})
         template = self._get_template('/payment/pos', values)
+
+        url = acquirer._get_paylox_api_url()
+        apikey = acquirer.jetcheckout_api_key
+        base_url = acquirer.get_base_url()
+        if base_url.endswith('/'):
+            base_url = base_url[:-1]
+        payload = {
+            'application_key': apikey,
+            'order_id': tx.jetcheckout_order_id,
+            'amount': int(tx.amount*100),
+            'currency': tx.company_id.currency_id.name,
+            'store_code': tx.company_id.payment_method_physical_pos_store_code or '',
+            'callback_api_url': '%s/payment/callback' % base_url,
+            'mode': acquirer._get_paylox_env(),
+            #'document_type': 4,
+        }
+        if tx.paylox_product_ids:
+            precision = request.env['decimal.precision'].sudo().precision_get('Product Price')
+            payload.update({
+                'sale_items': [{
+                    'name': product.name or '',
+                    'barcode': product.code or '',
+                    'qty': round(product.qty, precision),
+                    'price': round(product.price, precision),
+                    'amount': round(product.qty*product.price, precision),
+                    'tax_rate': 20
+                } for product in tx.paylox_product_ids]
+            })
+
+        devices = tx.company_id.payment_method_physical_pos_ids
+        device_ids = []
+        device_owner = ''
+        device_name = ''
+        if devices:        
+            device_owner = devices[0].type
+            if device_owner == 'pavo':
+                device_name = devices[0].name
+                device_ids.append(device_name)
+            else:
+                device_name = devices[0].name
+                device_ids.extend(devices.mapped('name'))
+
+        if device_ids:
+            payload.update({'device_ids': device_ids})
+
+        if device_owner:
+            payload.update({'device_owner': device_owner})
+
+        request_count = 0
+        def init_physical_payment():
+            nonlocal request_count
+            if request_count == 5:
+                message = _('Request cycle exceeded. Please contact with system administrator.')
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
+                values.update({'error': message})
+                return
+
+            request_count += 1
+            response = requests.post('%s/api/v1/physical/payment' % url, json=payload)
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == '00158':
+                    response = requests.post('%s/api/v1/physical/pairing' % url, json={
+                        "application_key": apikey,
+                        "device_id": device_name,
+                        "device_owner": device_owner
+                    })
+                    if response.status_code == 200:
+                        result = response.json()
+                        if result['pairing_code']:
+                            values.update({'method_physical_code': result['pairing_code']})
+                        else:
+                            message = _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                            tx.write({
+                                'state': 'error',
+                                'state_message': message,
+                                'last_state_change': fields.Datetime.now(),
+                            })
+                            values.update({'error': message})
+                    else:
+                        message = _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                        tx.write({
+                            'state': 'error',
+                            'state_message': message,
+                            'last_state_change': fields.Datetime.now(),
+                        })
+                        values.update({'error': message})
+
+                elif result['response_code'] == '00202':
+                    tx.write({
+                        'state': 'pending', 
+                        'last_state_change': fields.Datetime.now(),
+                        'jetcheckout_payment_type': 'physicalpos',
+                        'jetcheckout_transaction_id': result['transaction_id']
+                    })
+                    values.update({'name': result['pos_order_number']})
+
+                elif result['response_code'] == '00122':
+                    order_aux_id = 'x%s' % str(uuid.uuid4())
+                    tx.write({'jetcheckout_order_aux_id': order_aux_id})
+                    payload.update({"order_id": order_aux_id})
+                    init_physical_payment()
+
+                else:
+                    message = _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                    tx.write({
+                        'state': 'error',
+                        'state_message': message,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    values.update({'error': message})
+
+            else:
+                message = _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
+                values.update({'error': message})
+
+        init_physical_payment()
         return request.render(template, values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',

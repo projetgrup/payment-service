@@ -45,7 +45,7 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-set="body_classname" t-value="'payment-page payment-api-page'"/>
-            <div class="o_loading">
+            <div t-if="not no_loading" class="o_loading">
                 <i class="fa fa-spin fa-circle-o-notch text-primary h2"/>
             </div>
             <div class="header row mx-0 card border p-2 px-lg-5">
@@ -309,47 +309,35 @@
 
     <template id="page_payment_physicalpos" name="Physical PoS Payment Page">
         <t t-call="payment_jetcheckout_api.layout">
+            <t t-set="no_loading" t-value="True"/>
             <t t-set="classname" t-value="'payment-page-physicalpos px-3'"/>
             <t t-if="len(tx.paylox_api_method_ids) > 1" t-set="back_url" t-value="'/payment'"/>
-            <div class="row w-100 mx-0 my-4 card border shadow p-4">
-                <div class="justify-content-center mx-0 w-100">
-                    <input id="system" type="hidden" value="api" field="system"/>
-                    <t t-if="tx.state in ('draft', 'pending', 'error')" t-call="payment_jetcheckout.s2s">
-                        <t t-set="amount" t-value="tx.amount"/>
-                        <t t-set="no_border" t-value="True"/>
-                        <t t-set="no_loading" t-value="True"/>
-                    </t>
-                    <t t-elif="tx.state == 'cancel'">
-                        <div class="alert alert-danger">This payment transaction is cancelled</div>
-                    </t>
-                    <t t-elif="tx.state == 'expired'">
-                        <div class="alert alert-danger">This payment transaction is expired</div>
-                    </t>
+            <t t-if="error">
+                <div class="alert alert-danger w-100 text-center shadow-lg p-3 border-0" t-esc="error"/>
+                <a onclick="window.location.reload();" class="btn btn-block d-flex font-weight-bold text-center justify-content-center align-items-center"><i class="fa fa-undo mr8"/>Try Again</a>
+            </t>
+            <t t-else="">
+                <div class="row w-100 mx-0 my-4 p-4">
+                    <div class="justify-content-center mx-0 w-100">
+                        <input id="system" type="hidden" value="api" field="system"/>
+                        <t t-if="tx.state in ('draft', 'pending', 'error')">
+                            <div class="payment-card">
+                                <div class="text-center">
+                                    <img width="200" src="/payment_jetcheckout_api/static/src/img/edc.gif" class="payment-card-item-icon shadow-lg rounded-circle m-0" style="opacity: 0.75;"/>
+                                </div>
+                                <h3 class="text-center mt-5">Payment request has been sent to PoS device</h3>
+                                <h5 class="text-center text-500 mt-2"><em>Please check the PoS machine whether if the payment process has begun</em></h5>
+                            </div>
+                        </t>
+                        <t t-elif="tx.state == 'cancel'">
+                            <div class="alert alert-danger">This payment transaction is cancelled</div>
+                        </t>
+                        <t t-elif="tx.state == 'expired'">
+                            <div class="alert alert-danger">This payment transaction is expired</div>
+                        </t>
+                    </div>
                 </div>
-            </div>
-        </t>
-    </template>
-
-    <template id="page_payment_wiretransfer" name="Wire Transfer Payment Page">
-        <t t-call="payment_jetcheckout_api.layout">
-            <t t-set="classname" t-value="'payment-page-transfer px-3'"/>
-            <t t-if="len(tx.paylox_api_method_ids) > 1" t-set="back_url" t-value="'/payment'"/>
-            <div class="row w-100 mx-0 my-4 card border shadow p-4">
-                <div class="justify-content-center mx-0 w-100">
-                    <input id="system" type="hidden" value="api" field="system"/>
-                    <t t-if="tx.state in ('draft', 'pending', 'error')" t-call="payment_jetcheckout.s2s">
-                        <t t-set="amount" t-value="tx.amount"/>
-                        <t t-set="no_border" t-value="True"/>
-                        <t t-set="no_loading" t-value="True"/>
-                    </t>
-                    <t t-elif="tx.state == 'cancel'">
-                        <div class="alert alert-danger">This payment transaction is cancelled</div>
-                    </t>
-                    <t t-elif="tx.state == 'expired'">
-                        <div class="alert alert-danger">This payment transaction is expired</div>
-                    </t>
-                </div>
-            </div>
+            </t>
         </t>
     </template>
 

@@ -469,6 +469,11 @@ class PaymentTransaction(models.Model):
             self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
             return
 
+        if self.paylox_basket_ids:
+            for basket in self.paylox_basket_ids:
+                basket._action_approve()
+            return
+
         url = '%s/api/v1/payment/submerchant/approve' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
@@ -559,6 +564,10 @@ class PaymentTransaction(models.Model):
         if not self.state == 'cancel':
             if self.jetcheckout_approval_auto:
                 self._action_disapprove()
+            if self.paylox_basket_ids:
+                for basket in self.paylox_basket_ids:
+                    if basket.transfer_status == 'approved':
+                        basket._action_disapprove()
             self.write(self._paylox_cancel_postprocess_values())
         if self.payment_id:
             self.payment_id.action_draft()
@@ -587,7 +596,6 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if not self.env.user.has_group('payment_jetcheckout.group_transaction_cancel'):
             raise AccessError(_('You do not have any permission to cancel this transaction'))
- 
         self._paylox_cancel()
 
     def _paylox_refund(self, amount):
@@ -952,10 +960,11 @@ class PaymentTransactionBasket(models.Model):
     approval_state_message = fields.Text('Approval Message')
 
     def action_approve(self):
-        for tx in self:
-            tx._action_approve()
+        for basket in self:
+            basket._action_approve()
 
     def _action_approve(self):
+        self.ensure_one()
         if self.approval_state == '+':
             return
 
@@ -988,10 +997,12 @@ class PaymentTransactionBasket(models.Model):
             self.env.cr.rollback()
 
     def action_disapprove(self):
-        for tx in self:
-            tx._action_disapprove()
+        for basket in self:
+            basket._action_disapprove()
 
     def _action_disapprove(self):
+        self.ensure_one()
+        
         if self.approval_state == '-':
             return
 

@@ -3,7 +3,7 @@
 import base64
 
 from odoo.http import request
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 from odoo.addons.sec_audit.controllers.main import AuditController
 

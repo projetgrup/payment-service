@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
+import json
+import logging
+import requests
 from odoo import fields, models, api
+
+_logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -29,6 +34,20 @@ class PaymentTransaction(models.Model):
         if 'jetcheckout_payment_ok' in values and any(tx.jetcheckout_api_ok for tx in self):
             values['jetcheckout_payment_ok'] = False
         return super().write(values)
+
+    def _paylox_done_postprocess(self):
+        res = super()._paylox_done_postprocess()
+        if self.jetcheckout_payment_type == 'physicalpos':
+            method = fields.first(self.paylox_api_method_ids.filtered(lambda m: m.type == 'physicalpos'))
+            if method.webhook_url:
+                try:
+                    requests.post(method.webhook_url, data=json.dumps({
+                        'success': True,
+                        'id': self.jetcheckout_api_id or None,
+                    }), timeout=15)
+                except:
+                    _logger.error('An error occured when triggering physical PoS webhook.', exc_info=True)
+        return res
 
 
 class PaymentTransactionPayloxApiMethod(models.Model):

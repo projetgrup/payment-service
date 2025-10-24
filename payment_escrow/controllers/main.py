@@ -140,8 +140,8 @@ class PayloxSystemEscrowController(Controller):
 
     def _process(self, **kwargs):
         url, tx, status = super()._process(**kwargs)
-        if status:
-            return url, tx, status
+        #if status:
+        #    return url, tx, status
 
         system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
         if system == 'escrow':

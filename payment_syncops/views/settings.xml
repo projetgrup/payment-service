@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="settings_form" model="ir.ui.view">
-    <field name="name">payment.settings.otp.form</field>
+    <field name="name">payment.settings.form</field>
     <field name="model">payment.settings</field>
-    <field name="priority" eval="10"/>
+    <field name="priority" eval="90"/>
     <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//div[@data-key='general_settings']" position="after">
+        <xpath expr="//div[@class='settings']" position="inside">
             <div class="app_settings_block" data-string="syncOPS" string="syncOPS" data-key="connector_syncops">
-                <h2>syncOPS</h2>
+                <h2><i class="fa fa-address-book-o mr8"/>Partners</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="syncops_check_iban"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_check_iban" string="Check Partners IBAN"/>
+                            <div class="text-muted">
+                                Verify whether your partners' bank IBAN numbers are correct
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="syncops_check_card"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_check_card" string="Check Credit Card Numbers"/>
+                            <div class="text-muted">
+                                Verify whether payment credit card numbers are correct
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2><i class="fa fa-file-photo-o mr8"/>Payment Page</h2>
                 <div class="row mt16 o_settings_container">
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
@@ -18,6 +43,17 @@
                             <label for="syncops_payment_page_partner_required" string="Partner Selection Required"/>
                             <div class="text-muted">
                                 Make partner choice required on payment page for the company
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="syncops_payment_page_repull_partners"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="syncops_payment_page_repull_partners" string="Repull Partners when Searching"/>
+                            <div class="text-muted">
+                                When searching partners on payment page, repull partners all over again
                             </div>
                         </div>
                     </div>
@@ -53,40 +89,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="syncops_check_iban"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="syncops_check_iban" string="Check Partners IBAN"/>
-                            <div class="text-muted">
-                                Verify whether your partners' bank IBAN numbers are correct
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="syncops_payment_page_repull_partners"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="syncops_payment_page_repull_partners" string="Repull Partners when Searching"/>
-                            <div class="text-muted">
-                                When searching partners on payment page, repull partners all over again
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="syncops_check_card"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="syncops_check_card" string="Check Credit Card Numbers"/>
-                            <div class="text-muted">
-                                Verify whether payment credit card numbers are correct
-                            </div>
-                        </div>
-                    </div>
                 </div>
+                <h2><i class="fa fa-list-ul mr8"/>Payment Items</h2>
                 <div class="row mt16 o_settings_container">
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
