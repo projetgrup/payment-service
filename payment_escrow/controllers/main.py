@@ -2031,24 +2031,20 @@ class PayloxSystemEscrowController(Controller):
         if partner.paylox_escrow_type != 'dealer':
             return request.redirect('/my')
         
-        # Dealer'a bağlı broker'ları bul
         brokers = request.env['res.partner'].sudo().search([
             ('broker_dealer_id', '=', partner.id),
             ('paylox_escrow_type', '=', 'broker'),
         ])
         
-        # Dealer'ın kendi banka hesaplarını bul (dealer commission için)
         dealer_banks = request.env['res.partner.bank'].sudo().search([
-            ('partner_id', '=', partner.broker_dealer_id.id),
+            ('partner_id', '=', partner.id),
         ])
         dealer_bank_refs = dealer_banks.mapped('api_ref')
         
-        # Dealer'a ait basket kayıtlarını bul (id=28 olan dealer commission'lar)
         dealer_baskets = request.env['payment.transaction.basket'].sudo().search([
             ('submerchant_external_id', 'in', dealer_bank_refs),
         ], order='transaction_date desc')
         
-        # Her transaction için broker'ı bul
         broker_bank_map = {}
         broker_banks = request.env['res.partner.bank'].sudo().search([
             ('partner_id', 'in', brokers.ids),
@@ -2056,10 +2052,8 @@ class PayloxSystemEscrowController(Controller):
         for bank in broker_banks:
             broker_bank_map[bank.api_ref] = bank.partner_id
         
-        # Transaction'dan broker'a mapping - aynı transaction_id'li broker basket'ını bul
         basket_broker_map = {}
         for dealer_basket in dealer_baskets:
-            # Aynı transaction_id'ye sahip broker basket'ını bul
             broker_basket = request.env['payment.transaction.basket'].sudo().search([
                 ('transaction_id', '=', dealer_basket.transaction_id.id),
                 ('submerchant_external_id', 'in', broker_bank_map.keys()),
@@ -2068,7 +2062,6 @@ class PayloxSystemEscrowController(Controller):
                 broker = broker_bank_map.get(broker_basket.submerchant_external_id, False)
                 basket_broker_map[dealer_basket.id] = broker
         
-        # Broker bazında istatistikler
         broker_transactions = {}
         broker_volumes = {}
         for basket in dealer_baskets:
@@ -2100,3 +2093,4 @@ class PayloxSystemEscrowController(Controller):
             'page_name': 'dealer_transactions',
         }
         return request.render('payment_escrow.dealer_transactions_page', values)
+
