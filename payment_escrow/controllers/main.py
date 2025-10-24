@@ -532,6 +532,7 @@ class PayloxSystemEscrowController(Controller):
             platform_owner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'platform_owner')], limit=1)
             infrastructure_provider = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'infrastructure_provider')], limit=1)
             broker = transaction.partner_id
+
             dealer = broker.broker_dealer_id if broker else None
 
             def find_rate(rec, inst):
@@ -550,13 +551,9 @@ class PayloxSystemEscrowController(Controller):
             
             def find_dealer_rate(dealer_partner, campaign_id):
                 if dealer_partner and campaign_id:
-                    dealer_commission = request.env['dealer.commission.rate'].sudo().search([
-                        ('partner_id', '=', dealer_partner.id),
-                        ('campaign_id', '=', campaign_id),
-                        ('active', '=', True)
-                    ], limit=1)
+                    dealer_commission = dealer_partner.dealer_commission_rate_ids.filtered(lambda d: d.campaign_id.id == campaign_id and d.active)
                     if dealer_commission:
-                        return float(dealer_commission.commission_rate or 0.0)
+                        return dealer_commission.commission_rate or 0.0
                 return 0.0
 
             installment_count = int(transaction.jetcheckout_installment_count or 1)
@@ -572,19 +569,19 @@ class PayloxSystemEscrowController(Controller):
                 dealer_rate = find_dealer_rate(dealer, broker.campaign_id.id)
 
             infra_commission = paid * infra_rate
-            platform_commission = (paid * additional_rate / 100) - infra_commission
-            broker_commission = (paid * broker_rate / 100)
             dealer_commission = (paid * dealer_rate / 100)
-            
+            platform_commission = (paid * additional_rate / 100) - infra_commission - dealer_commission
+            broker_commission = (paid * broker_rate / 100)
+
             total_paid = seller_net + infra_commission + platform_commission + broker_commission + dealer_commission
 
-            customer_amount = paid * seller_net / total_paid
+            seller_amount = paid * seller_net / total_paid
             customer_basket.append({
                 "id": 24,
                 "name": partner.name,
                 "description": product['name'],
                 "qty": 1,
-                "amount": customer_amount,
+                "amount": seller_amount,
                 "category": product['product_id']['categ_id']['name'],
                 "is_physical": product['product_id']['type'] == 'product',
                 "submerchant_external_id": reference_seller,

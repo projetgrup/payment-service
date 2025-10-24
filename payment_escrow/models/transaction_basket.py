@@ -44,6 +44,7 @@ class PaymentTransactionBasket(models.Model):
     ], string='Transfer Status', compute='_compute_transfer_status', store=True)
     
     broker_invoice_id = fields.Many2one('ir.attachment', string='Broker Invoice')
+    broker_invoice_upload_id = fields.Binary(string='Upload Broker Invoice', related='broker_invoice_id.datas', readonly=True)
     broker_invoice_filename = fields.Char(string='Invoice Filename', compute='_compute_broker_invoice_filename', store=True)
     broker_invoice_upload_date = fields.Datetime(string='Invoice Upload Date')
     broker_submitted_for_approval = fields.Boolean(string='Submitted for Approval', default=False)

@@ -99,7 +99,8 @@
                     
                     <group string="Broker Invoice Information" attrs="{'invisible': [('paylox_escrow_type', '!=', 'broker')]}">
                         <group>
-                            <field name="broker_invoice_id" widget="binary" filename="broker_invoice_filename"/>
+                            <field name="broker_invoice_id" invisible="1" filename="broker_invoice_filename"/>
+                            <field name="broker_invoice_upload_id" readonly="1"/>
                             <field name="broker_invoice_filename" invisible="1"/>
                             <field name="broker_invoice_upload_date" readonly="1"/>
                         </group>
