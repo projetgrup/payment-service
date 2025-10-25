@@ -44,6 +44,7 @@ class Users(models.Model):
 
     def _set_privilege(self, privilege=None):
         for user in self:
+            raise Exception(user.groups_id.ids)
             # Portal/public user oluşturulurken veya portal user ise skip et
             if user.share:  # share=True means portal/public user
                 continue
