@@ -2089,7 +2089,7 @@ class PayloxSystemEscrowController(Controller):
             _logger.exception('Error creating insurance quote: %s', str(e))
             return {
                 'success': False,
-                'message': _('An error occurred while processing your request. Please try again later.')
+                'message': _('An error occurred while processing your request. Please try again later. %s' % str(e))
             }
 
 
