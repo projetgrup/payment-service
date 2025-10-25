@@ -294,8 +294,13 @@ class Partner(models.Model):
         }
         
         try:
-            user = self.env['res.users'].sudo().create(user_vals)
-            # user.sudo().with_context(create_user=True).action_reset_password()
+            user = self.env['res.users'].sudo().with_context(
+                no_reset_password=False,
+                mail_create_nosubscribe=True,
+                mail_create_nolog=True,
+                mail_channel_nosubscribe=True,
+            ).create(user_vals)
+            user.sudo().with_context(create_user=True).action_reset_password()
             
         except Exception as e:
             raise UserError(_('Error creating portal user: %s') % str(e))
