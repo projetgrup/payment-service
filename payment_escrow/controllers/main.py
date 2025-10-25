@@ -1778,6 +1778,13 @@ class PayloxSystemEscrowController(Controller):
                         'partner_id': existing_broker.id,
                         'message': _('Broker with this tax/identity number already exists. Please proceed to the next step.')
                     }
+                if existing_broker and existing_broker.approval_state not in ['pending', 'approved']:
+                    return {
+                        'success': True,
+                        'registered': False,
+                        'partner_id': existing_broker.id,
+                        'message': _('Broker with this tax/identity number already exists. Please proceed to the next step.')
+                    }
                 
                 if user_type == 'individual':
                     partner_vals = {
