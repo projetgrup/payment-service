@@ -375,12 +375,3 @@ class Users(models.Model):
 
     def action_set_password(self):
         return self.env.ref('base.change_password_wizard_action').sudo().read()[0]
-    
-    def _check_one_user_type(self):
-        """We check that no users are both portal and users (same with public).
-           This could typically happen because of implied groups.
-        """
-        user_types_category = self.env.ref('base.module_category_user_type', raise_if_not_found=False)
-        user_types_groups = self.env['res.groups'].search(
-            [('category_id', '=', user_types_category.id)]) if user_types_category else False
-        raise Exception(user_types_groups)

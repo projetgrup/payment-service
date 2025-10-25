@@ -651,13 +651,13 @@ class Partner(models.Model):
             user = partner.users_id
             if not user:
                 company = partner.company_id or self.env.company
-                raise Exception("Debug")
                 try:
                     user = partner_sudo.with_company(company.id)._create_portal_user()
                 except SignupError:
                     raise ValidationError(_('You can not have two users with the same login!'))
 
             user = user.sudo()
+            raise Exception(user.groups_id.ids)
             if not user.active or user.has_group('base.group_public'):
                 user.write({'active': True})
                 group_user.write({'users': [(3, user.id)]})
