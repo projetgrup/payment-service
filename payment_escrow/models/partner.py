@@ -303,7 +303,6 @@ class Partner(models.Model):
             ('user_ids.groups_id', 'in', platform_group.id),
             ('company_id', '=', self.company_id.id),
         ])
-        raise Exception(platform_owners.read(['name', 'email']))
         for owner in platform_owners:
             if owner.user_ids:
                 self.env['mail.activity'].create({
