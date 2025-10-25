@@ -44,6 +44,10 @@ class Users(models.Model):
 
     def _set_privilege(self, privilege=None):
         for user in self:
+            # Portal user oluşturulurken skip et
+            if not user.id or (user.groups_id and self.env.ref('base.group_portal') in user.groups_id):
+                continue
+                
             user_privilege = privilege or user.privilege
             if user.login == f'public-user@company-{user.company_id.id}.com':
                 user_privilege = False
@@ -158,7 +162,6 @@ class Users(models.Model):
 
     def _set_group_transaction_cancel(self):
         for user in self:
-            raise Exception("debug")
             code = user.group_transaction_cancel and 4 or 3
             group = self.env.ref('payment_jetcheckout.group_transaction_cancel')
             group.sudo().write({'users': [(code, user.id)]})
