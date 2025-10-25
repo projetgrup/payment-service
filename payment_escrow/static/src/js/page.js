@@ -760,7 +760,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             message = _t('License serial number is required');
                             valid = false;
                         } else if (field.value.length !== 8) {
-                            message = _t('License serial number must be 10 characters');
+                            message = _t('License serial number must be 8 characters');
                             valid = false;
                         }
                         this._onFieldValid(field, valid, message);

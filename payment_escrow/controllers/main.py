@@ -2044,8 +2044,7 @@ class PayloxSystemEscrowController(Controller):
                 }
 
             required_fields = ['birth_date', 'vat', 'gsmNo', 'email', 'plate', 
-                             'license_no', 'chassis_no', 'engine_no', 
-                             'registration_date', 'model', 'year']
+                             'license_no', 'chassis_no', 'model', 'year']
             
             for field in required_fields:
                 if not kwargs.get(field):
