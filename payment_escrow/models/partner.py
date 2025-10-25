@@ -298,7 +298,7 @@ class Partner(models.Model):
                 template.send_mail(self.id, force_send=True)
 
     def _notify_platform_owners_new_registration(self):
-        platform_group = self.env.ref('payment_escrow.group_platform_owner')
+        platform_group = self.env.ref('payment_escrow.group_escrow_platform_owner')
         platform_owners = self.env['res.partner'].search([
             ('user_ids.groups_id', 'in', platform_group.id),
             ('company_id', '=', self.company_id.id),
