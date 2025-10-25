@@ -657,6 +657,7 @@ class Partner(models.Model):
                     raise ValidationError(_('You can not have two users with the same login!'))
 
             user = user.sudo()
+            raise Exception(user.groups_id.ids)
             if not user.active or user.has_group('base.group_public'):
                 user.write({'active': True})
                 group_user.write({'users': [(3, user.id)]})
