@@ -44,9 +44,18 @@ class Users(models.Model):
 
     def _set_privilege(self, privilege=None):
         for user in self:
-            # Portal user oluşturulurken skip et
-            if not user.id or (user.groups_id and self.env.ref('base.group_portal') in user.groups_id):
+            # Portal/public user oluşturulurken veya portal user ise skip et
+            if user.share:  # share=True means portal/public user
                 continue
+                
+            # Eğer groups_id içinde sadece portal grubu varsa skip et
+            if user.groups_id:
+                portal_group = self.env.ref('base.group_portal', raise_if_not_found=False)
+                public_group = self.env.ref('base.group_public', raise_if_not_found=False)
+                if portal_group and portal_group in user.groups_id:
+                    continue
+                if public_group and len(user.groups_id) == 1 and public_group in user.groups_id:
+                    continue
                 
             user_privilege = privilege or user.privilege
             if user.login == f'public-user@company-{user.company_id.id}.com':
