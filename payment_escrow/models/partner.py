@@ -266,38 +266,7 @@ class Partner(models.Model):
         return code
     
     def _create_registration_portal_user(self):
-        self.ensure_one()
-        if self.user_ids:
-            portal_group = self.env.ref('base.group_portal')
-            for user in self.user_ids:
-                if portal_group not in user.groups_id:
-                    user.write({'groups_id': [(4, portal_group.id)]})
-            return
-        
-        if not self.email:
-            raise UserError(_('Cannot create portal user: Broker email is required.'))
-        
-        existing_user = self.env['res.users'].search([('login', '=', self.email)], limit=1)
-        if existing_user:
-            raise UserError(_('A user with email "%s" already exists.') % self.email)
-        
-        portal_group = self.env.ref('base.group_portal')
-        
-        user_vals = {
-            'name': self.name,
-            'login': self.email,
-            'email': self.email,
-            'partner_id': self.id,
-            'groups_id': [(6, 0, [portal_group.id])],
-            'company_id': self.company_id.id or self.env.company.id,
-            'company_ids': [(6, 0, [self.company_id.id or self.env.company.id])],
-        }
-        try:
-            user = self.env['res.users'].sudo().create(user_vals)
-            user.sudo().with_context(create_user=True).action_reset_password()
-            
-        except Exception as e:
-            raise UserError(_('Error creating portal user: %s') % str(e))
+        self.action_grant_access()
 
     def action_reject_registration(self):
         self.ensure_one()
