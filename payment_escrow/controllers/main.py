@@ -1770,6 +1770,7 @@ class PayloxSystemEscrowController(Controller):
                     ('vat', '=', vat_number),
                     ('paylox_escrow_type', '=', kwargs.get('user_register_type')),
                     ('company_id', '=', company.id),
+                    ('approval_state', '=', 'pending'),
                 ], limit=1)
                 if existing_broker:
                     return {
