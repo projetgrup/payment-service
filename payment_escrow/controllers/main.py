@@ -521,14 +521,16 @@ class PayloxSystemEscrowController(Controller):
             product = transaction.paylox_product_ids[0]
             customer_basket = []
 
-            partner = transaction.paylox_product_ids[0]['product_id']['escrow_owner_id']
-            customers = transaction.paylox_product_ids[0]['product_id']['escrow_customer_ids']
-            customer = next((customer for customer in customers if customer.is_escrow_customer), None)
+            product_line = transaction.paylox_product_ids[0]
+            partner = product_line.product_id.escrow_owner_id
+            customers = product_line.product_id.escrow_customer_ids
+            customer = customers.filtered(lambda c: c.is_escrow_customer)[:1]
             
             if not customer:
                 raise ValidationError(_('No active escrow customer found for this transaction.'))
                 
-            reference_seller = partner.bank_ids and partner.bank_ids[0]['api_ref']
+            verified_banks = partner.bank_ids.filtered(lambda b: b.api_ref)
+            reference_seller = verified_banks[0].api_ref if verified_banks else False
             if not reference_seller:
                 raise ValidationError(_('%s must have at least one bank account which is verified.' % partner.name))
 
@@ -581,21 +583,22 @@ class PayloxSystemEscrowController(Controller):
             seller_amount = paid * seller_net / total_paid
             customer_basket.append({
                 "id": 24,
-                "name": partner.name,
-                "description": product['name'],
+                "name": partner.name or '',
+                "description": product_line.name or '',
                 "qty": 1,
                 "amount": seller_amount,
-                "category": product['product_id']['categ_id']['name'],
-                "is_physical": product['product_id']['type'] == 'product',
+                "category": product_line.product_id.categ_id.name if product_line.product_id.categ_id else '',
+                "is_physical": product_line.product_id.type == 'product',
                 "submerchant_external_id": reference_seller,
                 "submerchant_price": seller_net
             })
             infra_amount = paid * infra_commission / total_paid
             if infra_commission > 0:
-                ref_infra = (infrastructure_provider.bank_ids and infrastructure_provider.bank_ids[0]['api_ref'])
+                infra_banks = infrastructure_provider.bank_ids.filtered(lambda b: b.api_ref)
+                ref_infra = infra_banks[0].api_ref if infra_banks else ''
                 customer_basket.append({
                     "id": 25,
-                    "name": infrastructure_provider.name,
+                    "name": infrastructure_provider.name or '',
                     "description": f"Infrastructure Commission (%{infra_rate})",
                     "qty": 1,
                     "amount": infra_amount,
@@ -606,10 +609,11 @@ class PayloxSystemEscrowController(Controller):
                 })
             platform_amount = paid * platform_commission / total_paid
             if platform_commission > 0:
-                ref_platform = (platform_owner.bank_ids and platform_owner.bank_ids[0]['api_ref'])
+                platform_banks = platform_owner.bank_ids.filtered(lambda b: b.api_ref)
+                ref_platform = platform_banks[0].api_ref if platform_banks else ''
                 customer_basket.append({
                     "id": 26,
-                    "name": platform_owner.name,
+                    "name": platform_owner.name or '',
                     "description": _(f"Platform commission (%{platform_commission})"),
                     "qty": 1,
                     "amount": platform_amount,
@@ -620,11 +624,12 @@ class PayloxSystemEscrowController(Controller):
                 })
             broker_amount = paid * broker_commission / total_paid
             if broker and broker.broker_default_campaign_id and broker_amount > 0:
-                ref_broker = (broker.bank_ids and broker.bank_ids[0]['api_ref'])
+                broker_banks = broker.bank_ids.filtered(lambda b: b.api_ref)
+                ref_broker = broker_banks[0].api_ref if broker_banks else ''
                 if broker_amount > 0:
                     customer_basket.append({
                         "id": 27,
-                        "name": broker.name,
+                        "name": broker.name or '',
                         "description": _("Broker Commission"),
                         "qty": 1,
                         "amount": broker_amount,
@@ -636,11 +641,12 @@ class PayloxSystemEscrowController(Controller):
             
             dealer_amount = paid * dealer_commission / total_paid
             if dealer and dealer_commission > 0:
-                ref_dealer = (dealer.bank_ids and dealer.bank_ids[0]['api_ref'])
+                dealer_banks = dealer.bank_ids.filtered(lambda b: b.api_ref)
+                ref_dealer = dealer_banks[0].api_ref if dealer_banks else ''
                 if dealer_amount > 0:
                     customer_basket.append({
                         "id": 28,
-                        "name": dealer.name,
+                        "name": dealer.name or '',
                         "description": _("Dealer Commission"),
                         "qty": 1,
                         "amount": dealer_amount,
@@ -649,7 +655,7 @@ class PayloxSystemEscrowController(Controller):
                         "submerchant_external_id": ref_dealer,
                         "submerchant_price": dealer_commission
                     })
-            fullname = customer.name.split(' ', 1)
+            fullname = customer.name.split(' ', 1) if customer.name else ['', '']
             address = []
             if customer.city:
                 address.append(customer.city)
@@ -662,18 +668,18 @@ class PayloxSystemEscrowController(Controller):
                 'is_submerchant_payment': True,
                 'customer_basket': customer_basket,
                 'customer':{
-                    "name": fullname[0],
-                    "surname": fullname[-1],
-                    "email": customer.email,
+                    "name": fullname[0] or '',
+                    "surname": fullname[-1] if len(fullname) > 1 else '',
+                    "email": customer.email or '',
                     "id": str(customer.id),
-                    "identity_number": customer.vat,
-                    "phone": customer.phone,
+                    "identity_number": customer.vat or '',
+                    "phone": customer.phone or '',
                     "ip_address": transaction.jetcheckout_ip_address or request.httprequest.remote_addr,
-                    "postal_code": customer.zip,
-                    "company": customer.parent_id and customer.parent_id.name or "",
+                    "postal_code": customer.zip or '',
+                    "company": customer.parent_id.name if customer.parent_id else "",
                     "address": ", ".join(address) if address else customer.street or "",
-                    "city": customer.state_id and customer.state_id.name or "",
-                    "country": customer.country_id and customer.country_id.name or "",
+                    "city": customer.state_id.name if customer.state_id else "",
+                    "country": customer.country_id.name if customer.country_id else "",
                 }
             })
             transaction.partner_id = customer.id

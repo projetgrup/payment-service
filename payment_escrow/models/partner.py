@@ -369,7 +369,19 @@ class Partner(models.Model):
         elif view_type in ('form', 'tree', 'kanban'):
             system = self.env.context.get('active_system') or self.env.context.get('system')
             if system == 'escrow':
-                type = self.env.context.get('active_escrow_type', 'owner')
+                # Önce context'ten type'ı al, yoksa 'owner' kullan
+                type = self.env.context.get('active_escrow_type')
+                
+                # Eğer active_id varsa, o partner'ın type'ını kullan
+                if self.env.context.get('active_id'):
+                    partner = self.browse(self.env.context['active_id'])
+                    if partner.exists() and partner.paylox_escrow_type:
+                        type = partner.paylox_escrow_type
+                
+                # Type hala yoksa, 'owner' kullan
+                if not type:
+                    type = 'owner'
+                
                 try:
                     view_id = self.env.ref('payment_escrow.%s_%s' % (view_type, type)).id
                     self = self.with_context(skip_view_mapping=True)

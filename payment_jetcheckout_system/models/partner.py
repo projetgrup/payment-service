@@ -849,13 +849,6 @@ class Partner(models.Model):
         else:
             system = self.env.context.get('active_system') or self.env.context.get('system')
             subsystem = self.env.context.get('active_subsystem') or self.env.context.get('subsystem')
-            
-            # Eğer tek bir kayıt görüntüleniyorsa ve paylox_escrow_type varsa, gerçek type'ını kullan
-            if self.env.context.get('active_id') and system == 'escrow':
-                partner = self.browse(self.env.context['active_id'])
-                if partner.exists() and hasattr(partner, 'paylox_escrow_type') and partner.paylox_escrow_type:
-                    subsystem = 'escrow_' + partner.paylox_escrow_type
-            
             if system:
                 if subsystem:
                     subsystem = subsystem.replace('%s_' % system, '') + '_'
