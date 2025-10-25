@@ -235,29 +235,6 @@ class Partner(models.Model):
         current_partner = self.env.user.partner_id
         return current_partner.paylox_escrow_type == 'platform_owner'
 
-    def action_approve_registration(self):
-        self.ensure_one()
-        
-        # if not self._is_platform_owner():
-        #     raise UserError(_('Only platform owners can approve brokers.'))
-        
-        if self.paylox_escrow_type != 'broker' and self.paylox_escrow_type != 'dealer':
-            raise UserError(_('This action is only available for brokers and dealers.'))
-
-        self.write({
-            'approval_state': 'approved',
-            'approval_date': fields.Datetime.now(),
-            'approved_by': self.env.user.id,
-        })
-
-        if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
-            self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
-
-        self._create_registration_portal_user()
-        self._send_registration_approval_notification()
-        
-        return True
-    
     def _generate_dealer_referral_code(self):
         self.ensure_one()
         code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
@@ -265,8 +242,25 @@ class Partner(models.Model):
             code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
         return code
     
-    def _create_registration_portal_user(self):
-        self.action_grant_access()
+    def action_grant_access(self):
+        system = self.company_id and self.company_id.system or self.env.context.get('active_system')
+        res = super(Partner, self).action_grant_access()
+        if system == 'escrow':
+            if self.paylox_escrow_type != 'broker' and self.paylox_escrow_type != 'dealer':
+                raise UserError(_('This action is only available for brokers and dealers.'))
+
+            self.write({
+                'approval_state': 'approved',
+                'approval_date': fields.Datetime.now(),
+                'approved_by': self.env.user.id,
+            })
+
+            if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
+                self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
+
+            self._send_registration_approval_notification()
+        return res
+
 
     def action_reject_registration(self):
         self.ensure_one()

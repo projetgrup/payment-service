@@ -284,10 +284,6 @@
         <xpath expr='//header' position="inside">
             <button name="action_set_to_pending" string="Set to Pending" type="object" 
                     attrs="{'invisible': ['|', ('approval_state', '!=', 'draft'), ('paylox_escrow_type', 'not in', ['broker', 'dealer'])]}" class="btn-primary"/>
-            <button name="action_approve_registration" string="Approve" type="object" 
-                    attrs="{'invisible': ['|', ('approval_state', '!=', 'pending'), ('paylox_escrow_type', 'not in', ['broker', 'dealer'])]} " 
-                    class="btn-success"
-                    groups="payment_escrow.group_escrow_platform_owner"/>
             <button name="action_reject_registration" string="Reject" type="object" 
                     attrs="{'invisible': ['|', ('approval_state', '!=', 'pending'), ('paylox_escrow_type', 'not in', ['broker', 'dealer'])]} " 
                     class="btn-danger"
