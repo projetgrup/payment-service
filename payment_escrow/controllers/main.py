@@ -24,9 +24,18 @@ class CustomerPortal(portal.CustomerPortal):
 
     @route(['/my', '/my/home'], type='http', auth='user', website=True)
     def home(self, **kwargs):
-        system = kwargs.get('system', request.env.company.system)
+        partner = request.env.user.partner_id
+        company = request.env.company
+        
+        if partner.paylox_escrow_type in ('broker', 'dealer'):
+            if partner.paylox_escrow_type == 'dealer':
+                return request.redirect('/my/dealer/transactions')
+            return request.redirect('/my/ads')
+        
+        system = kwargs.get('system', company.system)
         if system == 'escrow':
             return request.redirect('/my/ads')
+        
         return super().home(**kwargs)
 
 
