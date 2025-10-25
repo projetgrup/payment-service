@@ -584,7 +584,7 @@ class PayloxSystemEscrowController(Controller):
             customer_basket.append({
                 "id": 24,
                 "name": partner.name or '',
-                "description": product_line.name or 'test',
+                "description": product_line.name or 'Owner commission',
                 "qty": 1,
                 "amount": seller_amount,
                 "category": product_line.product_id.categ_id.name if product_line.product_id.categ_id else '',
