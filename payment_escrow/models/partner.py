@@ -292,9 +292,9 @@ class Partner(models.Model):
             'company_id': self.company_id.id or self.env.company.id,
             'company_ids': [(6, 0, [self.company_id.id or self.env.company.id])],
         }
-        raise Exception(portal_group)
         try:
             user = self.env['res.users'].sudo().create(user_vals)
+            raise Exception(user.groups_id.ids)
             user.sudo().with_context(create_user=True).action_reset_password()
             
         except Exception as e:
