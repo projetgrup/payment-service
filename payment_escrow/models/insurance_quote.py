@@ -63,7 +63,7 @@ class EscrowInsuranceQuote(models.Model):
                 'insurance_post_vehicle_quote', 
                 reference=str(user.partner_id.id), 
                 params={
-                    'birth_date': record.birth_date,
+                    'birth_date': str(record.birth_date),
                     'vat': record.vat,
                     'mobile': record.mobile,
                     'email': record.email,
