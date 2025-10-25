@@ -384,5 +384,3 @@ class Users(models.Model):
         user_types_groups = self.env['res.groups'].search(
             [('category_id', '=', user_types_category.id)]) if user_types_category else False
         raise Exception(user_types_groups)
-        if user_types_groups:  # needed at install
-            if self._has_multiple_groups(user_types_groups.ids):
