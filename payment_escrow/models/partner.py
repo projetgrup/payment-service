@@ -302,7 +302,7 @@ class Partner(models.Model):
             ('paylox_escrow_type', '=', 'platform_owner'),
             ('company_id', '=', self.company_id.id),
         ])
-        
+        raise Exception(platform_owners.read(['name', 'email']))
         for owner in platform_owners:
             if owner.user_ids:
                 self.env['mail.activity'].create({
