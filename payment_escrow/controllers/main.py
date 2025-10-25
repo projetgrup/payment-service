@@ -26,9 +26,9 @@ class CustomerPortal(portal.CustomerPortal):
     def home(self, **kwargs):
         partner = request.env.user.partner_id
         company = request.env.company
-        _logger.error("Partner escrow type: %s", partner.paylox_escrow_type)
-        _logger.error("Company system: %s", company.system)
-        
+        _logger.info("Partner escrow type: %s", partner.paylox_escrow_type)
+        _logger.info("Company system: %s", company.system)
+
         if partner.paylox_escrow_type in ('broker', 'dealer'):
             if partner.paylox_escrow_type == 'dealer':
                 return request.redirect('/my/dealer/transactions')
