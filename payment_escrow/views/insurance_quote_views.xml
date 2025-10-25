@@ -52,8 +52,8 @@
                             <field name="plate"/>
                             <field name="license_no"/>
                             <field name="chassis_no"/>
-                            <field name="engine_no"/>
-                            <field name="registration_date"/>
+                            <!-- <field name="engine_no"/>
+                            <field name="registration_date"/> -->
                             <field name="model"/>
                             <field name="year"/>
                         </group>

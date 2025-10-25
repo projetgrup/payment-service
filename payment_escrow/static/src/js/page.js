@@ -751,7 +751,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 license_no: new fields.string({
-                    mask: /^[A-Z0-9]{0,10}$/,
+                    mask: /^[A-Z0-9]{0,6}$/,
                     validate: () => {
                         const field = this.insurance.input.license_no;
                         let message = null;
@@ -969,7 +969,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 license_serial_no: new fields.string({
-                    mask: /^[A-Z0-9]{0,10}$/,
+                    mask: /^[A-Z0-9]{0,6}$/,
                     prepareChar: str => str.toUpperCase(),
                     validate: () => {
                         const field = this.ad.input.license_serial_no;
