@@ -294,7 +294,6 @@ class Partner(models.Model):
         }
         try:
             user = self.env['res.users'].sudo().create(user_vals)
-            raise Exception(user.groups_id.ids)
             user.sudo().with_context(create_user=True).action_reset_password()
             
         except Exception as e:
