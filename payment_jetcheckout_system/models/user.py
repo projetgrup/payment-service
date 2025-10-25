@@ -44,8 +44,6 @@ class Users(models.Model):
 
     def _set_privilege(self, privilege=None):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             user_privilege = privilege or user.privilege
             if user.login == f'public-user@company-{user.company_id.id}.com':
                 user_privilege = False
@@ -150,8 +148,6 @@ class Users(models.Model):
 
     def _set_group_transaction_commission(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_transaction_commission and 4 or 3
             group = self.env.ref('payment_jetcheckout.group_transaction_commission')
             group.sudo().write({'users': [(code, user.id)]})
@@ -162,8 +158,6 @@ class Users(models.Model):
 
     def _set_group_transaction_cancel(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_transaction_cancel and 4 or 3
             group = self.env.ref('payment_jetcheckout.group_transaction_cancel')
             group.sudo().write({'users': [(code, user.id)]})
@@ -174,8 +168,6 @@ class Users(models.Model):
 
     def _set_group_transaction_refund(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_transaction_refund and 4 or 3
             group = self.env.ref('payment_jetcheckout.group_transaction_refund')
             group.sudo().write({'users': [(code, user.id)]})
@@ -186,8 +178,6 @@ class Users(models.Model):
 
     def _set_group_transaction_postauth(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_transaction_postauth and 4 or 3
             group = self.env.ref('payment_jetcheckout.group_transaction_postauth')
             group.sudo().write({'users': [(code, user.id)]})
@@ -198,8 +188,6 @@ class Users(models.Model):
 
     def _set_group_own_partner(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_own_partner and 4 or 3
             group = self.env.ref('payment_jetcheckout_system.group_system_own_partner')
             group.sudo().write({'users': [(code, user.id)]})
@@ -210,8 +198,6 @@ class Users(models.Model):
 
     def _set_group_own_transaction(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_own_transaction and 4 or 3
             group = self.env.ref('payment_jetcheckout_system.group_system_own_transaction')
             group.sudo().write({'users': [(code, user.id)]})
@@ -222,8 +208,6 @@ class Users(models.Model):
 
     def _set_group_create_partner(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_create_partner and 4 or 3
             group = self.env.ref('payment_jetcheckout_system.group_system_create_partner')
             group.sudo().write({'users': [(code, user.id)]})
@@ -234,8 +218,6 @@ class Users(models.Model):
 
     def _set_group_delete_partner(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_delete_partner and 4 or 3
             group = self.env.ref('payment_jetcheckout_system.group_system_delete_partner')
             group.sudo().write({'users': [(code, user.id)]})
@@ -252,8 +234,6 @@ class Users(models.Model):
 
     def _set_group_grant_partner(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_grant_partner and 4 or 3
             group = self.env.ref('payment_jetcheckout_system.group_system_grant_partner')
             group.sudo().write({'users': [(code, user.id)]})
@@ -264,8 +244,6 @@ class Users(models.Model):
 
     def _set_group_show_payment_link(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_show_payment_link and 4 or 3
             group = self.env.ref('payment_jetcheckout_system.group_show_payment_link')
             group.sudo().write({'users': [(code, user.id)]})
@@ -276,8 +254,6 @@ class Users(models.Model):
 
     def _set_group_show_campaign_button(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_show_campaign_button and 4 or 3
             group = self.env.ref('payment_jetcheckout_system.group_show_campaign_button')
             group.sudo().write({'users': [(code, user.id)]})
@@ -288,8 +264,6 @@ class Users(models.Model):
 
     def _set_group_item_manager(self):
         for user in self:
-            if user.share or self.env.context.get('skip_privilege_auto_assign'):
-                continue
             code = user.group_item_manager and 4 or 3
             group = self.env.ref('payment_jetcheckout_system.group_item_manager')
             group.sudo().write({'users': [(code, user.id)]})

@@ -271,7 +271,7 @@ class Partner(models.Model):
             portal_group = self.env.ref('base.group_portal')
             for user in self.user_ids:
                 if portal_group not in user.groups_id:
-                    user.with_context(skip_privilege_auto_assign=True).write({'groups_id': [(4, portal_group.id)]})
+                    user.write({'groups_id': [(4, portal_group.id)]})
             return
         
         if not self.email:
@@ -294,7 +294,7 @@ class Partner(models.Model):
         }
         
         try:
-            user = self.env['res.users'].with_context(skip_privilege_auto_assign=True).sudo().create(user_vals)
+            user = self.env['res.users'].sudo().create(user_vals)
             user.sudo().with_context(create_user=True).action_reset_password()
             
         except Exception as e:
