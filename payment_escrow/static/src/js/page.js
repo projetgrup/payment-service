@@ -751,7 +751,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 license_no: new fields.string({
-                    mask: /^[A-Z0-9]{0,6}$/,
+                    mask: /^[A-Z0-9]{0,8}$/,
                     validate: () => {
                         const field = this.insurance.input.license_no;
                         let message = null;
@@ -759,7 +759,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         if (!field.value) {
                             message = _t('License serial number is required');
                             valid = false;
-                        } else if (field.value.length !== 10) {
+                        } else if (field.value.length !== 8) {
                             message = _t('License serial number must be 10 characters');
                             valid = false;
                         }
