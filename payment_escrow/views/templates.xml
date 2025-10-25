@@ -168,7 +168,7 @@
                                         <i class="fa fa-shield-alt mr8"/>
                                         Request Insurance Quote
                                     </button>
-                                    <a class="btn escrow-ad-nav-button-primary mr-1" t-if="request.env.user.payment_preview_ok" data-view="form" target="_blank" href="/my/payment/preview">
+                                    <a class="btn escrow-ad-nav-button-primary mr-1" t-if="request.env.user.payment_preview_ok" data-view="form" target="_blank" href="/my/broker/rates">
                                         <i class="fa fa-plus mr8"/>
                                         Calculation Module
                                     </a>
