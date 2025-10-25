@@ -1133,7 +1133,6 @@ class Partner(models.Model):
 
         return {'error': _('Unknown sending method')}
 
-    @enqueue
     def _send_from_wizard_with_delay(self,
             mail_server,
             mail_template,

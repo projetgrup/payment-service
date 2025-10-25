@@ -514,7 +514,6 @@ class SyncopsSyncWizardLine(models.TransientModel):
     invoice_amount = fields.Monetary(readonly=True, currency_field='invoice_currency')
     invoice_currency = fields.Many2one('res.currency', readonly=True)
 
-    @enqueue
     def _sync_item_invoice_with_delay(self,
         company,
         vats,

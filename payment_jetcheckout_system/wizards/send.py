@@ -227,7 +227,6 @@ class PaymentPayloxSend(models.TransientModel):
     def onchange_selection(self):
         self.type_ids = self.selection
 
-    @enqueue
     def send(self):
         user = self.env.user
         self = self.sudo()
