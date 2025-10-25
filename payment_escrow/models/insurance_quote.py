@@ -19,8 +19,8 @@ class EscrowInsuranceQuote(models.Model):
     plate = fields.Char(string='License Plate', required=True)
     license_no = fields.Char(string='License Serial Number', size=10, required=True)
     chassis_no = fields.Char(string='Chassis Number', size=17, required=True)
-    engine_no = fields.Char(string='Engine Number', required=True)
-    registration_date = fields.Date(string='Registration Date', required=True)
+    engine_no = fields.Char(string='Engine Number')
+    registration_date = fields.Date(string='Registration Date')
     model = fields.Char(string='Vehicle Model', required=True)
     year = fields.Char(string='Model Year', size=4, required=True)
 
