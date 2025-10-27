@@ -258,7 +258,7 @@ class Partner(models.Model):
             if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
                 self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
 
-            # self._send_registration_approval_notification()
+            self._send_registration_approval_notification()
         return res
 
 

@@ -4255,7 +4255,7 @@ msgstr "Oran negatif olamaz"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.header
 msgid "Rates"
-msgstr "Oranları"
+msgstr "Oranlar"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_3_content
