@@ -235,6 +235,29 @@ class Partner(models.Model):
         current_partner = self.env.user.partner_id
         return current_partner.paylox_escrow_type == 'platform_owner'
 
+    def action_approve_registration(self):
+        self.ensure_one()
+        
+        # if not self._is_platform_owner():
+        #     raise UserError(_('Only platform owners can approve brokers.'))
+        
+        if self.paylox_escrow_type != 'broker' and self.paylox_escrow_type != 'dealer':
+            raise UserError(_('This action is only available for brokers and dealers.'))
+
+        self.write({
+            'approval_state': 'approved',
+            'approval_date': fields.Datetime.now(),
+            'approved_by': self.env.user.id,
+        })
+
+        if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
+            self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
+
+        self._create_registration_portal_user()
+        self._send_registration_approval_notification()
+        
+        return True
+    
     def _generate_dealer_referral_code(self):
         self.ensure_one()
         code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
@@ -242,25 +265,40 @@ class Partner(models.Model):
             code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
         return code
     
-    def action_grant_access(self):
-        system = self.company_id and self.company_id.system or self.env.context.get('active_system')
-        res = super(Partner, self).action_grant_access()
-        if system == 'escrow':
-            if self.paylox_escrow_type != 'broker' and self.paylox_escrow_type != 'dealer':
-                raise UserError(_('This action is only available for brokers and dealers.'))
-
-            self.write({
-                'approval_state': 'approved',
-                'approval_date': fields.Datetime.now(),
-                'approved_by': self.env.user.id,
-            })
-
-            if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
-                self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
-
-            # self._send_registration_approval_notification()
-        return res
-
+    def _create_registration_portal_user(self):
+        self.ensure_one()
+        if self.user_ids:
+            portal_group = self.env.ref('base.group_portal')
+            for user in self.user_ids:
+                if portal_group not in user.groups_id:
+                    user.write({'groups_id': [(4, portal_group.id)]})
+            return
+        
+        if not self.email:
+            raise UserError(_('Cannot create portal user: Broker email is required.'))
+        
+        existing_user = self.env['res.users'].search([('login', '=', self.email)], limit=1)
+        if existing_user:
+            raise UserError(_('A user with email "%s" already exists.') % self.email)
+        
+        portal_group = self.env.ref('base.group_portal')
+        
+        user_vals = {
+            'name': self.name,
+            'login': self.email,
+            'email': self.email,
+            'partner_id': self.id,
+            'groups_id': [(6, 0, [portal_group.id])],
+            'company_id': self.company_id.id or self.env.company.id,
+            'company_ids': [(6, 0, [self.company_id.id or self.env.company.id])],
+        }
+        
+        try:
+            user = self.env['res.users'].sudo().create(user_vals)
+            user.sudo().with_context(create_user=True).action_reset_password()
+            
+        except Exception as e:
+            raise UserError(_('Error creating portal user: %s') % str(e))
 
     def action_reject_registration(self):
         self.ensure_one()
@@ -298,11 +336,11 @@ class Partner(models.Model):
                 template.send_mail(self.id, force_send=True)
 
     def _notify_platform_owners_new_registration(self):
-        platform_group = self.env.ref('payment_escrow.group_escrow_platform_owner')
         platform_owners = self.env['res.partner'].search([
-            ('user_ids.groups_id', 'in', platform_group.id),
+            ('paylox_escrow_type', '=', 'platform_owner'),
             ('company_id', '=', self.company_id.id),
         ])
+        
         for owner in platform_owners:
             if owner.user_ids:
                 self.env['mail.activity'].create({
