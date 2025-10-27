@@ -24,12 +24,12 @@
                         <div class="col-12">
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title">Dealer Dashboard</h3>
-                                <!-- <div class="escrow-ad-nav-control">
+                                <div class="escrow-ad-nav-control">
                                     <a class="btn escrow-ad-nav-button-secondary" href="/my/ads">
                                         <i class="fa fa-arrow-left mr-2"/>
                                         Back to My Ads
                                     </a>
-                                </div> -->
+                                </div>
                             </div>
                             
                             <div class="row mb-4">

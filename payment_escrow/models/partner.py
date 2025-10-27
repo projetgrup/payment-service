@@ -235,23 +235,28 @@ class Partner(models.Model):
         current_partner = self.env.user.partner_id
         return current_partner.paylox_escrow_type == 'platform_owner'
 
-    def action_approve_registration(self):
+    def _generate_dealer_referral_code(self):
         self.ensure_one()
-        
-        # if not self._is_platform_owner():
-        #     raise UserError(_('Only platform owners can approve brokers.'))
-        
-        if self.paylox_escrow_type != 'broker' and self.paylox_escrow_type != 'dealer':
-            raise UserError(_('This action is only available for brokers and dealers.'))
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        while self.search([('dealer_referral_code', '=', code)]):
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        return code
+    
+    def action_grant_access(self):
+        system = self.company_id and self.company_id.system or self.env.context.get('active_system')
+        res = super(Partner, self).action_grant_access()
+        if system == 'escrow':
+            if self.paylox_escrow_type != 'broker' and self.paylox_escrow_type != 'dealer':
+                raise UserError(_('This action is only available for brokers and dealers.'))
 
-        self.write({
-            'approval_state': 'approved',
-            'approval_date': fields.Datetime.now(),
-            'approved_by': self.env.user.id,
-        })
+            self.write({
+                'approval_state': 'approved',
+                'approval_date': fields.Datetime.now(),
+                'approved_by': self.env.user.id,
+            })
 
-        if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
-            self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
+            if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
+                self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
 
             self._send_registration_approval_notification()
         return res
@@ -293,11 +298,11 @@ class Partner(models.Model):
                 template.send_mail(self.id, force_send=True)
 
     def _notify_platform_owners_new_registration(self):
+        platform_group = self.env.ref('payment_escrow.group_escrow_platform_owner')
         platform_owners = self.env['res.partner'].search([
-            ('paylox_escrow_type', '=', 'platform_owner'),
+            ('user_ids.groups_id', 'in', platform_group.id),
             ('company_id', '=', self.company_id.id),
         ])
-        
         for owner in platform_owners:
             if owner.user_ids:
                 self.env['mail.activity'].create({

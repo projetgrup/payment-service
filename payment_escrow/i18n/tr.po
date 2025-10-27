@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-27 14:24+0000\n"
-"PO-Revision-Date: 2025-10-27 17:28+0300\n"
+"POT-Creation-Date: 2025-10-24 14:49+0000\n"
+"PO-Revision-Date: 2025-10-24 18:03+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: tr\n"
@@ -72,7 +72,7 @@ msgstr "11 haneli kimlik numarası"
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_broker_campaign_line__installment_count__12
 msgid "12"
-msgstr ""
+msgstr "12"
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_installment_rate__installment_count__12
@@ -122,7 +122,7 @@ msgstr "2 Taksit"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.insurance_quote_modal
 msgid "2020"
-msgstr ""
+msgstr "2020"
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_installment_rate__installment_count__3
@@ -132,7 +132,7 @@ msgstr "3 Taksit"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.insurance_quote_modal
 msgid "34 ABC 123"
-msgstr ""
+msgstr "34 ABC 123"
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_installment_rate__installment_count__4
@@ -147,7 +147,7 @@ msgstr "5 Taksit"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.insurance_quote_modal
 msgid "5XX XXX XX XX"
-msgstr ""
+msgstr "5XX XXX XX XX"
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__escrow_installment_rate__installment_count__6
@@ -467,6 +467,15 @@ msgstr ""
 "        "
 
 #. module: payment_escrow
+#: model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
+msgid ""
+"<i class=\"fa fa-arrow-left mr-2\"/>\n"
+"                                        Back to My Ads"
+msgstr ""
+"<i class=\"fa fa-arrow-left mr-2\"/>\n"
+"                                        İlanlarıma dön"
+
+#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_4_content
 msgid ""
 "<i class=\"fa fa-arrow-left mr-2\"/>\n"
@@ -497,13 +506,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page
 msgid "<i class=\"fa fa-briefcase mr-2\"/>Company Information"
 msgstr "<i class=\"fa fa-briefcase mr-2\"/>Şirket Bilgileri"
-
-#. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.header
-msgid ""
-"<i class=\"fa fa-chart-line mr-1\"/>\n"
-"                                My Commission Rates"
-msgstr ""
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
@@ -729,13 +731,6 @@ msgstr ""
 "                            İstek Gönder"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.header
-msgid ""
-"<i class=\"fa fa-percentage mr-1\"/>\n"
-"                            Commission Rates"
-msgstr ""
-
-#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid ""
 "<i class=\"fa fa-phone pr-2\"/>\n"
@@ -937,6 +932,19 @@ msgid ""
 "    <span t-out=\"object._get_payment_company()\"/>\n"
 "</p>"
 msgstr ""
+"<p>\n"
+"    <strong>Sayın <i t-out=\"object.name\"/></strong>,\n"
+"    <br/><br/>\n"
+"    Gözatmak ve ödemek için, <a t-att-href=\"object._get_payment_url()\" style=\"color:#3079ed;font-weight:bold;\">buraya tıklayın.</a>\n"
+"    <br/><br/>\n"
+"    <a t-att-href=\"object._get_payment_url()\" style=\"background-color:#3079ed;padding:10px;border-radius:5px;color:#ffffff;margin:0 30px;\"><span style=\"margin-right: 10px\">Go to Payment</span>❯</a>\n"
+"    <br/><br/>\n"
+"    İyi Günler\n"
+"    <br/><br/>\n"
+"    Saygılarımızla...\n"
+"    <br/><br/>\n"
+"    <span t-out=\"object._get_payment_company()\"/>\n"
+"</p>"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
@@ -1640,12 +1648,6 @@ msgid "An error occurred while processing your request"
 msgstr "İsteğiniz işlenirken bir hata meydana geldi"
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/controllers/main.py:0
-#, python-format
-msgid "An error occurred while processing your request. Please try again later. %s"
-msgstr "İsteğiniz işlenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin. %s"
-
-#. module: payment_escrow
 #. openerp-web
 #: code:addons/payment_escrow/static/src/js/broker_registration.js:0 code:addons/payment_escrow/static/src/js/registration.js:0
 #, python-format
@@ -1702,7 +1704,7 @@ msgid "Approval Status"
 msgstr "Onay Durumu"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.form_ad
+#: model_terms:ir.ui.view,arch_db:payment_escrow.form_ad model_terms:ir.ui.view,arch_db:payment_escrow.form_broker
 msgid "Approve"
 msgstr "Onay"
 
@@ -2016,7 +2018,7 @@ msgstr "KATEGORİ"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_4_content
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_broker_rates
@@ -2931,7 +2933,7 @@ msgstr "Müşterileri Getir"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
 msgid "Grid"
-msgstr "Kanban"
+msgstr "Izagara"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.search_sale model_terms:ir.ui.view,arch_db:payment_escrow.view_broker_campaign_search model_terms:ir.ui.view,arch_db:payment_escrow.view_escrow_insurance_quote_search
@@ -2976,7 +2978,7 @@ msgstr "Sahip adı, ödeme bilgilerinde girilen adla eşleşmelidir."
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_broker model_terms:ir.ui.view,arch_db:payment_escrow.form_owner model_terms:ir.ui.view,arch_db:payment_escrow.form_platform_owner model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content
 msgid "IBAN"
-msgstr "İban"
+msgstr "IBAN"
 
 #. module: payment_escrow
 #. openerp-web
@@ -3144,18 +3146,6 @@ msgstr "Sigorta Teklifi Gönder"
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_escrow_insurance_quote_tree
 msgid "Insurance Quotes"
 msgstr "Sigorta Teklifleri"
-
-#. module: payment_escrow
-#: code:addons/payment_escrow/controllers/main.py:0
-#, python-format
-msgid "Insurance quote feature is not enabled"
-msgstr "Sigorta teklif özelliği etkin değil."
-
-#. module: payment_escrow
-#: code:addons/payment_escrow/controllers/main.py:0
-#, python-format
-msgid "Insurance quote request created from website by %s"
-msgstr "Sigorta teklif isteği web sitesinden %s tarafından oluşturuldu."
 
 #. module: payment_escrow
 #. openerp-web
@@ -3393,8 +3383,8 @@ msgstr "Ruhsat seri numarası zorunludur"
 #. openerp-web
 #: code:addons/payment_escrow/static/src/js/page.js:0
 #, python-format
-msgid "License serial number must be 8 characters"
-msgstr "Lisans seri numarası 8 karakter olmalıdır."
+msgid "License serial number must be 10 characters"
+msgstr "Ruhsat seri numarası 10 karakter olmalıdır"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
@@ -3479,12 +3469,6 @@ msgstr "Mesaj:"
 #: model:ir.model.fields,field_description:payment_escrow.field_escrow_insurance_quote__message_ids model:ir.model.fields,field_description:payment_escrow.field_product_product__message_ids
 msgid "Messages"
 msgstr "Mesajlar"
-
-#. module: payment_escrow
-#: code:addons/payment_escrow/controllers/main.py:0
-#, python-format
-msgid "Missing required field: %s"
-msgstr "Gerekli alan eksik: %s"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.view_escrow_insurance_quote_search model_terms:ir.ui.view,arch_db:payment_escrow.view_escrow_insurance_quote_tree
@@ -3689,11 +3673,6 @@ msgid "No collections yet"
 msgstr "Henüz bir tahsilat yok"
 
 #. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.header
-msgid "No commission rates configured"
-msgstr "Komisyon oranları yapılandırılmamış."
-
-#. module: payment_escrow
 #: model_terms:ir.actions.act_window,help:payment_escrow.action_dealer
 msgid "No dealers found"
 msgstr "Bayi bulunamadı"
@@ -3703,7 +3682,7 @@ msgstr "Bayi bulunamadı"
 #: code:addons/payment_escrow/static/src/js/broker_rate.js:0 code:addons/payment_escrow/static/src/js/widget.js:0
 #, python-format
 msgid "No installment data found."
-msgstr "Taksit verisi bulunamadı"
+msgstr "Taksit verisi bulunamadı."
 
 #. module: payment_escrow
 #. openerp-web
@@ -3720,7 +3699,7 @@ msgstr "İşlem bulunamadı"
 #. module: payment_escrow
 #: model_terms:ir.actions.act_window,help:payment_escrow.action_payment_transaction_basket
 msgid "No transfer basket records found"
-msgstr "Transfer sepeti kaydı bulunamadı."
+msgstr "Transfer listesi kaydı bulunamadı."
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
@@ -4276,7 +4255,7 @@ msgstr "Oran negatif olamaz"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.header
 msgid "Rates"
-msgstr "Oranlar"
+msgstr "Oranları"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_3_content
@@ -4921,7 +4900,7 @@ msgstr "Vergi Dairesi Zorunlu"
 #: code:addons/payment_escrow/static/src/xml/templates.xml:0
 #, python-format
 msgid "Temlikname Formunu İndir"
-msgstr ""
+msgstr "Temlikname Formunu İndir"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.form_sale
@@ -5094,7 +5073,7 @@ msgstr "Transfer Onaylandı"
 #. module: payment_escrow
 #: model:ir.actions.act_window,name:payment_escrow.action_payment_transaction_basket model:ir.ui.menu,name:payment_escrow.menu_payment_transaction_basket
 msgid "Transfer Basket"
-msgstr "Transfer Sepeti"
+msgstr "Transfer Listesi"
 
 #. module: payment_escrow
 #: model:ir.model.fields.selection,name:payment_escrow.selection__payment_transaction_basket__transfer_status__can_approve model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
@@ -5250,7 +5229,7 @@ msgstr "Kullanıcılar"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.kanban_infrastructure_provider
 msgid "VAT:"
-msgstr "VERGİ NUMARASI: "
+msgstr "VERGİ NO:"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.broker_transactions_page model_terms:ir.ui.view,arch_db:payment_escrow.dealer_transactions_page
@@ -5556,12 +5535,6 @@ msgstr ""
 "Başarısızlık nedenini aşağıdaki ödeme geçmişinden görebilirsiniz."
 
 #. module: payment_escrow
-#: code:addons/payment_escrow/controllers/main.py:0
-#, python-format
-msgid "Your insurance quote request has been submitted successfully!"
-msgstr "Sigorta teklif isteğiniz başarıyla gönderildi!"
-
-#. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.step_4_content
 msgid "Your payment has been successfully completed. The remaining amount to finalize your transaction is indicated below."
 msgstr "Ödemeniz başarıyla tamamlandı. İşleminizi sonuçlandırmak için kalan tutar aşağıda belirtilmiştir."
@@ -5580,7 +5553,7 @@ msgstr "günler"
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.insurance_quote_modal
 msgid "e.g., Renault Megane"
-msgstr ""
+msgstr "e.g., Renault Megane"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.customer_corporate model_terms:ir.ui.view,arch_db:payment_escrow.register_step_1_content model_terms:ir.ui.view,arch_db:payment_escrow.step_1_content

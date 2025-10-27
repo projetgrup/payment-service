@@ -2155,8 +2155,6 @@ class PayloxSystemEscrowController(Controller):
         
         dealer_referral_code = partner.dealer_referral_code if partner.dealer_referral_code else ''
         
-        commission_rates = partner.dealer_commission_rate_ids.filtered('active')
-        
         values = {
             'baskets': dealer_baskets,
             'brokers': brokers,
@@ -2170,7 +2168,6 @@ class PayloxSystemEscrowController(Controller):
             },
             'currency': currency,
             'dealer_referral_code': dealer_referral_code,
-            'commission_rates': commission_rates,
             'page_name': 'dealer_transactions',
         }
         return request.render('payment_escrow.dealer_transactions_page', values)

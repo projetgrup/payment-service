@@ -83,7 +83,7 @@
                                                     <div class="col-md-6 mb-3">
                                                         <div class="d-flex align-items-start">
                                                             <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
-                                                                <i class="fa fa-home text-info"></i>
+                                                                <i class="fa fa-landmark text-info"></i>
                                                             </div>
                                                             <div class="flex-grow-1">
                                                                 <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Tax Office</small>
@@ -105,7 +105,7 @@
                                                     <div class="col-12">
                                                         <div class="d-flex align-items-start">
                                                             <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
-                                                                <i class="fa fa-map-o text-danger"></i>
+                                                                <i class="fa fa-map-marker-alt text-danger"></i>
                                                             </div>
                                                             <div class="flex-grow-1">
                                                                 <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Address</small>
