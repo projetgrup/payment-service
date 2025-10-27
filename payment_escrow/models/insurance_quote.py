@@ -69,17 +69,20 @@ class EscrowInsuranceQuote(models.Model):
                     'email': record.email,
                     'plate': record.plate,
                     'license_no': record.license_no,
-                    'chassis_no': record.chassis_no,
+                    # 'chassis_no': record.chassis_no,
                     # 'engine_no': record.engine_no,
                     # 'registration_date': record.registration_date,
-                    'model': record.model,
-                    'year': record.year,
+                    # 'model': record.model,
+                    # 'year': record.year,
                 }, 
                 company=company, 
                 message=True
             )
             if not result:
                 raise Exception(_('Failed to submit insurance quote: %s') % message)
-            
-            record.action_set_quoted()
+            res = result[0]
+            if res.get('success'):
+                record.action_set_quoted()
+            else:
+                raise Exception(_('Insurance quote submission failed: %s') % res.get('message', 'Unknown error'))
             

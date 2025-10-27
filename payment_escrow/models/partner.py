@@ -261,7 +261,6 @@ class Partner(models.Model):
             self._send_registration_approval_notification()
         return res
 
-
     def action_reject_registration(self):
         self.ensure_one()
         

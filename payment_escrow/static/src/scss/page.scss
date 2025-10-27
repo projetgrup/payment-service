@@ -628,6 +628,57 @@
             }
         }
 
+        // Commission Rates Dropdown Styles
+        #commissionRatesDropdown {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            
+            &:hover, &:focus {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+                color: white;
+            }
+            
+            .fa-percentage {
+                font-size: 11px;
+            }
+        }
+
+        .dropdown-menu {
+            &[aria-labelledby="commissionRatesDropdown"] {
+                border: 1px solid #e3e6f0;
+                box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+                border-radius: 8px;
+                
+                .dropdown-header {
+                    background-color: #f8f9fc;
+                    color: #5a5c69;
+                    font-weight: 600;
+                    border-bottom: 1px solid #e3e6f0;
+                    padding: 12px 16px;
+                    margin-bottom: 0;
+                }
+                
+                .dropdown-item-text {
+                    &:last-child {
+                        border-bottom: none !important;
+                    }
+                    
+                    &:hover {
+                        background-color: #f8f9fc;
+                    }
+                    
+                    .badge-success {
+                        background-color: #1cc88a;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+
         .header__settingsBtn {
             display: inline-flex;
             width: 36px;
