@@ -658,12 +658,10 @@ class Partner(models.Model):
 
             user = user.sudo()
             if not user.active or user.has_group('base.group_public'):
-                user.sudo().write({'groups_id': [(3, group_user.id), (3, group_public.id), (4, group_portal.id)], 'active': True})
-                #TODO remove following commented lines, if they are unnecessary
-                #user.write({'active': True})
-                #group_user.write({'users': [(3, user.id)]})
-                #group_public.write({'users': [(3, user.id)]})
-                #group_portal.write({'users': [(4, user.id)]})
+                user.write({'active': True})
+                group_user.write({'users': [(3, user.id)]})
+                group_public.write({'users': [(3, user.id)]})
+                group_portal.write({'users': [(4, user.id)]})
                 partner_sudo.signup_prepare()
 
             partner_sudo.with_context(active_test=True)._send_portal_email()
@@ -835,7 +833,7 @@ class Partner(models.Model):
         portal_url = self.with_context(signup_force_type_in_url='', lang=lang)._get_signup_url_for_action()[self.id]
         self.signup_prepare()
 
-        template.with_context(dbname=self._cr.dbname, portal_url=portal_url, skip_queue=True, lang=lang).send_mail(self.id, force_send=True)
+        template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(self.id, force_send=True)
         return True
 
     @api.model

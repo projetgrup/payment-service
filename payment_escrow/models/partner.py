@@ -253,9 +253,52 @@ class Partner(models.Model):
         if self.paylox_escrow_type == 'dealer' and not self.dealer_referral_code:
             self.dealer_referral_code = '%s/escrow/broker/register/%s' % (self.get_base_url(), self._generate_dealer_referral_code())
 
-            self._send_registration_approval_notification()
-        return res
-
+        self._create_registration_portal_user()
+        self._send_registration_approval_notification()
+        
+        return True
+    
+    def _generate_dealer_referral_code(self):
+        self.ensure_one()
+        code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        while self.search([('dealer_referral_code', '=', code)]):
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        return code
+    
+    def _create_registration_portal_user(self):
+        self.ensure_one()
+        if self.user_ids:
+            portal_group = self.env.ref('base.group_portal')
+            for user in self.user_ids:
+                if portal_group not in user.groups_id:
+                    user.write({'groups_id': [(4, portal_group.id)]})
+            return
+        
+        if not self.email:
+            raise UserError(_('Cannot create portal user: Broker email is required.'))
+        
+        existing_user = self.env['res.users'].search([('login', '=', self.email)], limit=1)
+        if existing_user:
+            raise UserError(_('A user with email "%s" already exists.') % self.email)
+        
+        portal_group = self.env.ref('base.group_portal')
+        
+        user_vals = {
+            'name': self.name,
+            'login': self.email,
+            'email': self.email,
+            'partner_id': self.id,
+            'groups_id': [(6, 0, [portal_group.id])],
+            'company_id': self.company_id.id or self.env.company.id,
+            'company_ids': [(6, 0, [self.company_id.id or self.env.company.id])],
+        }
+        
+        try:
+            user = self.env['res.users'].sudo().create(user_vals)
+            user.sudo().with_context(create_user=True).action_reset_password()
+            
+        except Exception as e:
+            raise UserError(_('Error creating portal user: %s') % str(e))
 
     def action_reject_registration(self):
         self.ensure_one()

@@ -781,7 +781,6 @@ class OrderCheckoutAPIService(Component):
         tx.write({
             'partner_name': params.partner.name,
             'partner_vat': params.partner.vat,
-            'partner_ref': params.partner.ref,
             'partner_email': params.partner.email,
             'partner_phone': params.partner.phone,
             'partner_address': getattr(params.partner, 'address', '') or '',

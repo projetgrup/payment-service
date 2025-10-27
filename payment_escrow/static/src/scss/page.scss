@@ -312,15 +312,6 @@
         color: var(--gradient-primary) !important;
     }
 
-    .border-primary {
-        border-color: var(--gradient-primary) !important;
-    }
-
-    .custom-control-input:checked ~ .custom-control-label::before {
-        border-color: var(--gradient-primary) !important;
-        background-color: var(--gradient-primary) !important;
-    }
-
     .header {
         position: sticky;
         top: 0;

@@ -292,6 +292,25 @@ publicWidget.registry.payloxSystemEscrowBrokerRates = publicWidget.Widget.extend
         return Number.isNaN(parsed) ? 0 : parsed;
     },
 
+    _getBrokerFormatHelpers: function () {
+        return {
+            currency: (value, pos, sym, dec) => format.currency(
+                value, 
+                pos || this.currency.position, 
+                sym || this.currency.symbol, 
+                dec !== undefined ? dec : this.currency.decimal
+            ),
+            percent: (value) => {
+                const rate = typeof value === 'number' ? value : parseFloat(value || 0);
+                const percent = Number.isNaN(rate) ? 0 : rate;
+                const numStr = percent.toString();
+                const decimalPart = numStr.split('.')[1] || '';
+                const decimals = Math.min(6, decimalPart.length);
+                return (decimals > 0 ? percent.toFixed(decimals) : percent.toFixed(2)) + '%';
+            },
+        };
+    },
+
     _getCardTypeLabel: function (type) {
         const labels = {
             'Credit': _t('Credit Card'),
@@ -422,13 +441,14 @@ publicWidget.registry.payloxSystemEscrowBrokerRates = publicWidget.Widget.extend
                 .text(_t('No installment data found.'))
             );
         } else {
+            const formatHelpers = this._getBrokerFormatHelpers();
             const detailedMode = this.broker.viewMode.$ ? this.broker.viewMode.$.is(':checked') : true;
             families.forEach(family => {
                 const $col = $('<div/>').addClass('col-12 mb-4');
                 const html = qweb.render('paylox.broker.rates.table', {
                     family: family,
                     baseAmount: amount,
-                    format: format,
+                    format: formatHelpers,
                     position: this.currency.position,
                     symbol: this.currency.symbol,
                     decimal: this.currency.decimal,

@@ -124,19 +124,18 @@
                 <div>Your transaction has been failed. Please try again. If this situation occurs anyway, please contact with system administation.</div>
                 <t t-if="tx.state_message">
                     <br/>
-                    <br/>
-                    <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                    <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
                 </t>
                 <t t-if="tx.jetcheckout_service_message">
                     <br/>
-                    <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                    <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
                     <t t-if="tx.jetcheckout_service_code">
-                        <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                        <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
                     </t>
                 </t>
-                <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion not in ('None', 'none')">
+                <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
                     <br/>
-                    <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                    <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                 </t>
             </div>
             <div t-elif="tx.state == 'done'" t-attf-class="row alert alert-success text-center justify-content-center flex-column mt-4 my-2 #{classes}">
@@ -158,19 +157,18 @@
                 <div>Your transaction status: <span t-field="tx.state"/>. Please try again. If this situation occurs anyway, please contact with system administation.</div>
                 <t t-if="tx.state_message">
                     <br/>
-                    <br/>
-                    <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                    <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
                 </t>
                 <t t-if="tx.jetcheckout_service_message">
                     <br/>
-                    <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                    <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
                     <t t-if="tx.jetcheckout_service_code">
-                        <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                        <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
                     </t>
                 </t>
-                <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion not in ('None', 'none')">
+                <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
                     <br/>
-                    <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                    <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                 </t>
             </div>
         </t>
@@ -767,19 +765,18 @@
                             <span class="font-italic font-weight-light btn-sm">A technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
                             <t t-if="tx.state_message">
                                 <br/>
-                                <br/>
-                                <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                                <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
                             </t>
                             <t t-if="tx.jetcheckout_service_message">
                                 <br/>
-                                <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                                <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
                                 <t t-if="tx.jetcheckout_service_code">
-                                    <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                                    <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
                                 </t>
                             </t>
-                            <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion not in ('None', 'none')">
+                            <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
                                 <br/>
-                                <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                                <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                             </t>
                         </h4>
                     </div>
@@ -803,19 +800,18 @@
                     <input id="redirect" type="hidden" t-att-value="tx.company_id.payment_plan_fullscreen_ok and tx.jetcheckout_url_address or None"/>
                     <t t-if="tx.state_message">
                         <br/>
-                        <br/>
-                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
                     <t t-if="tx.jetcheckout_service_message">
                         <br/>
-                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
                         <t t-if="tx.jetcheckout_service_code">
-                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
                         </t>
                     </t>
-                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion not in ('None', 'none')">
+                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
                         <br/>
-                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
                     <em class="d-block mt-1 text-600"><i class="fa fa-spin fa-circle-o-notch mx-2"/>Redirecting...</em>
                 </div>
@@ -829,19 +825,18 @@
                     <input id="redirect" type="hidden" t-att-value="tx.company_id.payment_plan_fullscreen_ok and tx.jetcheckout_url_address or None"/>
                     <t t-if="tx.state_message">
                         <br/>
-                        <br/>
-                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
                     <t t-if="tx.jetcheckout_service_message">
                         <br/>
-                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
                         <t t-if="tx.jetcheckout_service_code">
-                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
                         </t>
                     </t>
-                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion not in ('None', 'none')">
+                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
                         <br/>
-                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
                     <br/>
                     <em class="d-block mt-1 text-600"><i class="fa fa-spin fa-circle-o-notch mx-2"/>Redirecting...</em>
@@ -852,19 +847,18 @@
                     <div class="w-100 h2 text-danger">Payment status could not be retrieved. Please close the dialog and check the verification again.</div>
                     <t t-if="tx.state_message">
                         <br/>
-                        <br/>
-                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                        <small t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
                     <t t-if="tx.jetcheckout_service_message">
                         <br/>
-                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                        <small t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
                         <t t-if="tx.jetcheckout_service_code">
-                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
+                            <small t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
                         </t>
                     </t>
-                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion not in ('None', 'none')">
+                    <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
                         <br/>
-                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
+                        <small t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
                     </t>
                     <br/>
                     <em class="d-block mt-1 text-600"><i class="fa fa-spin fa-circle-o-notch mx-2"/>Redirecting...</em>
