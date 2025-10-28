@@ -398,8 +398,8 @@ class EscrowRequestInsuranceCallback(Datamodel):
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Insurance Amount"), "description": _lt("Insurance amount"), "example": 1500.50})
     company = fields.String(required=True, allow_none=False, metadata={"title": _lt("Insurance Company"), "description": _lt("Insurance company name"), "example": "ABC Insurance"})
     commission = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Commission"), "description": _lt("Commission amount"), "example": 150.00})
-    policy_pdf = fields.String(required=True, allow_none=False, metadata={"title": _lt("Policy PDF"), "description": _lt("Policy PDF file in base64 format"), "example": "JVBERi0xLjQK..."})
-    policy_number = fields.String(required=False, allow_none=True, metadata={"title": _lt("Policy Number"), "description": _lt("Insurance policy number"), "example": "POL-2025-001"})
+    policyDoc = fields.String(required=True, allow_none=False, metadata={"title": _lt("Policy Document"), "description": _lt("Policy document file in base64 format"), "example": "JVBERi0xLjQK..."})
+    policyNumber = fields.String(required=False, allow_none=True, metadata={"title": _lt("Policy Number"), "description": _lt("Insurance policy number"), "example": "POL-2025-001"})
 
 
 class EscrowResponseInsuranceCallback(Datamodel):
