@@ -385,6 +385,7 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
     },
 
     _initializeUserTypeToggle: function() {
+        const self = this;
         const $form = this.$('#userInfoForm');
         const $radioInd = $form.find('input[name="userType"][value="individual"]');
         const $radioCor = $form.find('input[name="userType"][value="corporate"]');
@@ -422,7 +423,7 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
             }
             
             // Update document requirements
-            this._updateDocumentRequirements();
+            self._updateDocumentRequirements();
         }
         
         // Remove old listeners
