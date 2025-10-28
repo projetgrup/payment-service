@@ -49,6 +49,7 @@ class PaymentTransactionBasket(models.Model):
     broker_invoice_upload_date = fields.Datetime(string='Invoice Upload Date')
     broker_submitted_for_approval = fields.Boolean(string='Submitted for Approval', default=False)
     broker_submit_date = fields.Datetime(string='Submit Date')
+    partner_id = fields.Many2one('res.partner', string='Submerchant', readonly=True)
 
     escrow_success_group = fields.Selection(
         selection=[('successful', 'Successful'), ('unsuccessful', 'Unsuccessful')],

@@ -394,7 +394,7 @@ class EscrowRequestInsuranceCallback(Datamodel):
     class Meta:
         ordered = True
 
-    reference = fields.String(required=True, allow_none=False, metadata={"title": _lt("Quote Reference"), "description": _lt("Insurance quote reference number"), "example": "INS/2025/0001"})
+    reference = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Quote Reference"), "description": _lt("Insurance quote reference number"), "example": 123456})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Insurance Amount"), "description": _lt("Insurance amount"), "example": 1500.50})
     company = fields.String(required=True, allow_none=False, metadata={"title": _lt("Insurance Company"), "description": _lt("Insurance company name"), "example": "ABC Insurance"})
     commission = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Commission"), "description": _lt("Commission amount"), "example": 150.00})

@@ -15,6 +15,7 @@ class EscrowInsuranceQuote(models.Model):
     vat = fields.Char(string='T.C. Identity Number', size=11, required=True)
     mobile = fields.Char(string='Mobile Number', required=True)
     email = fields.Char(string='Email', required=True)
+    person_name = fields.Char(string='Full Name', required=True)
 
     # Vehicle Information
     plate = fields.Char(string='License Plate', required=True)
@@ -26,7 +27,7 @@ class EscrowInsuranceQuote(models.Model):
     year = fields.Char(string='Model Year', size=4)
 
     # System Fields
-    reference = fields.Char(string='Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
+    reference = fields.Integer(string='Reference', required=True, copy=False, readonly=True, index=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     partner_id = fields.Many2one('res.partner', string='Customer')
     state = fields.Selection([
@@ -42,7 +43,7 @@ class EscrowInsuranceQuote(models.Model):
     quote_amount = fields.Monetary(string='Quote Amount', currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     quote_details = fields.Text(string='Quote Details')
-    
+
     # Insurance Callback Fields
     insurance_company = fields.Char(string='Insurance Company', tracking=True)
     insurance_commission = fields.Monetary(string='Insurance Commission', currency_field='currency_id', tracking=True)
@@ -110,9 +111,14 @@ class EscrowInsuranceQuote(models.Model):
                 }
             res = result[0]
             if res.get('success'):
-                record.quote_details = res.get('message', '')
-                record.reference = res.get('teklifId', '')
-                record.action_set_quoted()
+                data = res.get('data', {})
+                quote = data.get('teklifBilgileri', {})
+                
+                record.write({
+                    'quote_details': res.get('message', ''),
+                    'reference': quote.get('teklifId', ''),
+                })
+                record.action_set_sent()
                 return {
                     'success': True,
                     'message': _('Insurance quote submitted successfully.')

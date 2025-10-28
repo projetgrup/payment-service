@@ -611,6 +611,7 @@ class EscrowAPIService(Component):
         - policy_pdf: Policy PDF in base64 format
         - policy_number: Policy number (optional)
         """
+        token = auth(self.env)
         try:
             reference = params.reference
             if not reference:

@@ -592,6 +592,7 @@ class PayloxSystemEscrowController(Controller):
                 "category": product_line.product_id.categ_id.name if product_line.product_id.categ_id else '',
                 "is_physical": product_line.product_id.type == 'product',
                 "submerchant_external_id": reference_seller,
+                "partner_id": partner.id,
                 "submerchant_price": seller_net
             })
             infra_amount = paid * infra_commission / total_paid
@@ -606,6 +607,7 @@ class PayloxSystemEscrowController(Controller):
                     "amount": infra_amount,
                     "category": "Komisyon",
                     "is_physical": False,
+                    "partner_id": infrastructure_provider.id,
                     "submerchant_external_id": ref_infra,
                     "submerchant_price": infra_commission
                 })
@@ -621,6 +623,7 @@ class PayloxSystemEscrowController(Controller):
                     "amount": platform_amount,
                     "category": "Commission",
                     "is_physical": False,
+                    "partner_id": platform_owner.id,
                     "submerchant_external_id": ref_platform,
                     "submerchant_price": platform_commission
                 })
@@ -637,6 +640,7 @@ class PayloxSystemEscrowController(Controller):
                         "amount": broker_amount,
                         "category": "Commission",
                         "is_physical": False,
+                        "partner_id": broker.id,
                         "submerchant_external_id": ref_broker,
                         "submerchant_price": broker_commission
                     })
@@ -655,7 +659,8 @@ class PayloxSystemEscrowController(Controller):
                         "category": "Commission",
                         "is_physical": False,
                         "submerchant_external_id": ref_dealer,
-                        "submerchant_price": dealer_commission
+                        "submerchant_price": dealer_commission,
+                        "partner_id": dealer.id,
                     })
             fullname = customer.name.split(' ', 1) if customer.name else ['', '']
             address = []
@@ -2012,16 +2017,12 @@ class PayloxSystemEscrowController(Controller):
         
         if partner.paylox_escrow_type != 'broker':
             return request.redirect('/my')
-        
-        partner_banks = request.env['res.partner.bank'].sudo().search([
-            ('partner_id', '=', partner.id),
 
-        ])
-        
         baskets = request.env['payment.transaction.basket'].sudo().search([
-            ('submerchant_external_id', 'in', partner_banks.mapped('api_ref')),
+            ('partner_id', '=', partner.id),
+            ('transaction_id.state', '=', 'done'),
         ], order='transaction_date desc')
-        
+
         values = {
             'baskets': baskets,
             'page_name': 'broker_transactions',

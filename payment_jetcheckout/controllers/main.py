@@ -1567,18 +1567,24 @@ class PayloxController(http.Controller):
 
             data.update(self._get_data_values(data, tx, **kwargs))
             if 'customer_basket' in data:
-                tx.write({'paylox_basket_ids': [(0, 0, {
-                    'uid': basket.get('id'),
-                    'name': basket.get('name'),
-                    'description': basket.get('description'),
-                    'qty': basket.get('qty'),
-                    'amount': basket.get('amount'),
-                    'physical': basket.get('is_physical'),
-                    'category': basket.get('category'),
-                    'submerchant_external_id': basket.get('submerchant_external_id'),
-                    'submerchant_price': basket.get('submerchant_price'),
-                }) for basket in data['customer_basket']]})
-
+                basket_ids = []
+                for basket in data['customer_basket']:
+                    basket_ids.append((0, 0, {
+                        'uid': basket.get('id'),
+                        'name': basket.get('name'),
+                        'description': basket.get('description'),
+                        'qty': basket.get('qty'),
+                        'amount': basket.get('amount'),
+                        'physical': basket.get('is_physical'),
+                        'category': basket.get('category'),
+                        'submerchant_external_id': basket.get('submerchant_external_id'),
+                        'submerchant_price': basket.get('submerchant_price'),
+                        'partner_id': basket.get('partner_id'),
+                    }))
+                    if 'partner_id' in basket:
+                        del basket['partner_id']
+                tx.write({'paylox_basket_ids': basket_ids})
+                    
             response = requests.post(url, data=json.dumps(data))
             result = None
 
