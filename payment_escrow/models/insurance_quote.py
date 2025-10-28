@@ -10,6 +10,7 @@ class EscrowInsuranceQuote(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     # Personal Information
+    name = fields.Char(string='Quote Name', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
     birth_date = fields.Date(string='Birth Date', required=True)
     vat = fields.Char(string='T.C. Identity Number', size=11, required=True)
     mobile = fields.Char(string='Mobile Number', required=True)
@@ -25,12 +26,14 @@ class EscrowInsuranceQuote(models.Model):
     year = fields.Char(string='Model Year', size=4)
 
     # System Fields
+    reference = fields.Char(string='Reference', required=True, copy=False, readonly=True, index=True, default=lambda self: _('New'))
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     partner_id = fields.Many2one('res.partner', string='Customer')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('sent', 'Sent'),
         ('quoted', 'Quoted'),
+        ('sold', 'Sold'),
         ('rejected', 'Rejected'),
         ('cancelled', 'Cancelled'),
     ], string='Status', default='draft', required=True, tracking=True)
@@ -39,12 +42,29 @@ class EscrowInsuranceQuote(models.Model):
     quote_amount = fields.Monetary(string='Quote Amount', currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
     quote_details = fields.Text(string='Quote Details')
+    
+    # Insurance Callback Fields
+    insurance_company = fields.Char(string='Insurance Company', tracking=True)
+    insurance_commission = fields.Monetary(string='Insurance Commission', currency_field='currency_id', tracking=True)
+    policy_pdf = fields.Binary(string='Policy PDF', attachment=True)
+    policy_pdf_filename = fields.Char(string='Policy PDF Filename')
+    policy_number = fields.Char(string='Policy Number', tracking=True)
+    sale_date = fields.Datetime(string='Sale Date', tracking=True)
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', _('New')) == _('New'):
+            vals['name'] = self.env['ir.sequence'].next_by_code('escrow.insurance.quote') or _('New')
+        return super(EscrowInsuranceQuote, self).create(vals)
 
     def action_set_sent(self):
         self.write({'state': 'sent'})
 
     def action_set_quoted(self):
         self.write({'state': 'quoted'})
+    
+    def action_set_sold(self):
+        self.write({'state': 'sold'})
 
     def action_set_rejected(self):
         self.write({'state': 'rejected'})
@@ -60,6 +80,8 @@ class EscrowInsuranceQuote(models.Model):
             record.action_set_sent()
             user = record.env.user
             company = record.company_id
+            
+            
             result, message = self.env['syncops.connector'].sudo()._execute(
                 'insurance_post_vehicle_quote', 
                 reference=str(user.partner_id.id), 
@@ -89,6 +111,7 @@ class EscrowInsuranceQuote(models.Model):
             res = result[0]
             if res.get('success'):
                 record.quote_details = res.get('message', '')
+                record.reference = res.get('teklifId', '')
                 record.action_set_quoted()
                 return {
                     'success': True,
