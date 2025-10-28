@@ -199,19 +199,19 @@
                         <div class="form__group">
                             <label class="form__label">Identity Document</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileIdentity" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentity" required="required"/>
+                                <input type="file" class="filepond" name="fileIdentityIndividual" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentityIndividual" required="required"/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label">Residence Document</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileResidence" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileResidence" required="required"/>
+                                <input type="file" class="filepond" name="fileResidenceIndividual" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileResidenceIndividual" required="required"/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label">Criminal Record Document</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileCriminalRecord" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileCriminalRecord" required="required"/>
+                                <input type="file" class="filepond" name="fileCriminalRecordIndividual" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileCriminalRecordIndividual" required="required"/>
                             </div>
                         </div>
                     </div>
@@ -220,19 +220,19 @@
                         <div class="form__group">
                             <label class="form__label">Identity Document</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileIdentity" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentity" required="required"/>
+                                <input type="file" class="filepond" name="fileIdentityCorporate" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentityCorporate" required="required"/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label">Tax Plate</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileTaxPlate" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileTaxPlate" required="required"/>
+                                <input type="file" class="filepond" name="fileTaxPlateCorporate" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileTaxPlateCorporate" required="required"/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label">Signature Circular</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileSignatureCircular" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileSignatureCircular" required="required"/>
+                                <input type="file" class="filepond" name="fileSignatureCircularCorporate" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileSignatureCircularCorporate" required="required"/>
                             </div>
                         </div>
                     </div>
@@ -241,25 +241,25 @@
                         <div class="form__group">
                             <label class="form__label">Tax Plate</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileTaxPlate" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileTaxPlate" required="required"/>
+                                <input type="file" class="filepond" name="fileTaxPlateBroker" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileTaxPlateBroker" required="required"/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label">Signature Circular</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileSignatureCircular" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileSignatureCircular" required="required"/>
+                                <input type="file" class="filepond" name="fileSignatureCircularBroker" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileSignatureCircularBroker" required="required"/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label">Identity Document</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileIdentity" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentity" required="required"/>
+                                <input type="file" class="filepond" name="fileIdentityBroker" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentityBroker" required="required"/>
                             </div>
                         </div>
                         <div class="form__group">
                             <label class="form__label">Authorization Document</label>
                             <div class="pt-1">
-                                <input type="file" class="filepond" name="fileAuthorization" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileAuthorization" required="required"/>
+                                <input type="file" class="filepond" name="fileAuthorizationBroker" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileAuthorizationBroker" required="required"/>
                             </div>
                         </div>
                     </div>

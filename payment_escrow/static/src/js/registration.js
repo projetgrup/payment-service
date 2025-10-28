@@ -45,13 +45,13 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         const field = this.user.input.vat;
                         let message = null;
                         let valid = true;
-                        if (!field._.masked.isComplete) {
-                            message = _t('TC Identity Number is required');
-                            valid = false;
-                        } else if (!this._isTcknValid(field.value)) {
-                            message = _t('TC Identity Number is not valid');
-                            valid = false;
-                        } 
+                        // if (!field._.masked.isComplete) {
+                        //     message = _t('TC Identity Number is required');
+                        //     valid = false;
+                        // } else if (!this._isTcknValid(field.value)) {
+                        //     message = _t('TC Identity Number is not valid');
+                        //     valid = false;
+                        // } 
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -199,13 +199,13 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         const field = this.user.input.iban;
                         let message = null;
                         let valid = true;
-                        if (!field._.masked.isComplete) {
-                            message = _t('IBAN is required');
-                            valid = false;
-                        } else if (!this._isIbanValid(field._.masked.value)) {
-                            message = _t('IBAN is not valid');
-                            valid = false;
-                        }
+                        // if (!field._.masked.isComplete) {
+                        //     message = _t('IBAN is required');
+                        //     valid = false;
+                        // } else if (!this._isIbanValid(field._.masked.value)) {
+                        //     message = _t('IBAN is not valid');
+                        //     valid = false;
+                        // }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -225,50 +225,15 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         return valid;
                     }
                 }),
-                fileTaxPlate: new fields.file({
-                    name: 'fileTaxPlate',
+                // Dealer Individual Files
+                fileIdentityIndividual: new fields.file({
+                    name: 'fileIdentityIndividual',
                     allowMultiple: false,
                     accept: 'image/png, image/jpeg, image/gif, application/pdf',
                     maxFileSize: '10MB',
                     labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
                     validate: () => {
-                        const field = this.user.input.fileTaxPlate;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Tax Plate is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                fileSignatureCircular: new fields.file({
-                    name: 'fileSignatureCircular',
-                    allowMultiple: false,
-                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
-                    maxFileSize: '10MB',
-                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
-                    validate: () => {
-                        const field = this.user.input.fileSignatureCircular;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Signature Circular is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                fileIdentity: new fields.file({
-                    name: 'fileIdentity',
-                    allowMultiple: false,
-                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
-                    maxFileSize: '10MB',
-                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
-                    validate: () => {
-                        const field = this.user.input.fileIdentity;
+                        const field = this.user.input.fileIdentityIndividual;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -279,32 +244,32 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         return valid;
                     }
                 }),
-                fileAuthorization: new fields.file({
-                    name: 'fileAuthorization',
+                fileResidenceIndividual: new fields.file({
+                    name: 'fileResidenceIndividual',
                     allowMultiple: false,
                     accept: 'image/png, image/jpeg, image/gif, application/pdf',
                     maxFileSize: '10MB',
                     labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
                     validate: () => {
-                        const field = this.user.input.fileAuthorization;
+                        const field = this.user.input.fileResidenceIndividual;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
-                            message = _t('Authorization Document is required');
+                            message = _t('Residence Document is required');
                             valid = false;
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
                 }),
-                fileCriminalRecord: new fields.file({
-                    name: 'fileCriminalRecord',
+                fileCriminalRecordIndividual: new fields.file({
+                    name: 'fileCriminalRecordIndividual',
                     allowMultiple: false,
                     accept: 'image/png, image/jpeg, image/gif, application/pdf',
                     maxFileSize: '10MB',
                     labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
                     validate: () => {
-                        const field = this.user.input.fileCriminalRecord;
+                        const field = this.user.input.fileCriminalRecordIndividual;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -315,18 +280,128 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         return valid;
                     }
                 }),
-                fileResidence: new fields.file({
-                    name: 'fileResidence',
+                // Dealer Corporate Files
+                fileIdentityCorporate: new fields.file({
+                    name: 'fileIdentityCorporate',
                     allowMultiple: false,
                     accept: 'image/png, image/jpeg, image/gif, application/pdf',
                     maxFileSize: '10MB',
                     labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
                     validate: () => {
-                        const field = this.user.input.fileResidence;
+                        const field = this.user.input.fileIdentityCorporate;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
-                            message = _t('Residence Document is required');
+                            message = _t('Identity Document is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileTaxPlateCorporate: new fields.file({
+                    name: 'fileTaxPlateCorporate',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileTaxPlateCorporate;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Tax Plate is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileSignatureCircularCorporate: new fields.file({
+                    name: 'fileSignatureCircularCorporate',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileSignatureCircularCorporate;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Signature Circular is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                // Broker Files
+                fileTaxPlateBroker: new fields.file({
+                    name: 'fileTaxPlateBroker',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileTaxPlateBroker;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Tax Plate is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileSignatureCircularBroker: new fields.file({
+                    name: 'fileSignatureCircularBroker',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileSignatureCircularBroker;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Signature Circular is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileIdentityBroker: new fields.file({
+                    name: 'fileIdentityBroker',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileIdentityBroker;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Identity Document is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileAuthorizationBroker: new fields.file({
+                    name: 'fileAuthorizationBroker',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileAuthorizationBroker;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Authorization Document is required');
                             valid = false;
                         }
                         this._onFieldValid(field, valid, message);
@@ -938,24 +1013,22 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
         const userType = this.$('input[name="userType"]:checked').val();
         const registerType = this.$('#register_type').val();
 
+        // Validate files
         const fileFields = [];
-
         if (registerType === 'broker') {
-            fileFields.push(this.user.input.fileTaxPlate);
-            fileFields.push(this.user.input.fileSignatureCircular);
-            fileFields.push(this.user.input.fileIdentity);
-            fileFields.push(this.user.input.fileAuthorization);
-        }
-
-        else if (registerType === 'dealer') {
+            fileFields.push(this.user.input.fileTaxPlateBroker);
+            fileFields.push(this.user.input.fileSignatureCircularBroker);
+            fileFields.push(this.user.input.fileIdentityBroker);
+            fileFields.push(this.user.input.fileAuthorizationBroker);
+        } else if (registerType === 'dealer') {
             if (userType === 'individual') {
-                fileFields.push(this.user.input.fileIdentity);
-                fileFields.push(this.user.input.fileResidence);
-                fileFields.push(this.user.input.fileCriminalRecord);
+                fileFields.push(this.user.input.fileIdentityIndividual);
+                fileFields.push(this.user.input.fileResidenceIndividual);
+                fileFields.push(this.user.input.fileCriminalRecordIndividual);
             } else {
-                fileFields.push(this.user.input.fileTaxPlate);
-                fileFields.push(this.user.input.fileSignatureCircular);
-                fileFields.push(this.user.input.fileIdentity);
+                fileFields.push(this.user.input.fileIdentityCorporate);
+                fileFields.push(this.user.input.fileTaxPlateCorporate);
+                fileFields.push(this.user.input.fileSignatureCircularCorporate);
             }
         }
 
@@ -996,30 +1069,48 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
         };
 
         if (registerType === 'broker') {
-            formData.tax_plate = this.user.input.fileTaxPlate.value;
-            formData.tax_plate_filename = this.user.input.fileTaxPlate.filename || 'tax_plate.pdf';
-            formData.signature_circular = this.user.input.fileSignatureCircular.value;
-            formData.signature_circular_filename = this.user.input.fileSignatureCircular.filename || 'signature_circular.pdf';
-            formData.identity_doc = this.user.input.fileIdentity.value;
-            formData.identity_doc_filename = this.user.input.fileIdentity.filename || 'identity.pdf';
-            formData.authorization_doc = this.user.input.fileAuthorization.value;
-            formData.authorization_doc_filename = this.user.input.fileAuthorization.filename || 'authorization.pdf';
+            formData.tax_plate = this.user.input.fileTaxPlateBroker.value;
+            formData.tax_plate_filename = this.user.input.fileTaxPlateBroker.filename || 'tax_plate.pdf';
+            formData.signature_circular = this.user.input.fileSignatureCircularBroker.value;
+            formData.signature_circular_filename = this.user.input.fileSignatureCircularBroker.filename || 'signature_circular.pdf';
+            formData.identity_doc = this.user.input.fileIdentityBroker.value;
+            formData.identity_doc_filename = this.user.input.fileIdentityBroker.filename || 'identity.pdf';
+            formData.authorization_doc = this.user.input.fileAuthorizationBroker.value;
+            formData.authorization_doc_filename = this.user.input.fileAuthorizationBroker.filename || 'authorization.pdf';
         } else if (registerType === 'dealer') {
             if (userType === 'individual') {
-                formData.identity_doc = this.user.input.fileIdentity.value;
-                formData.identity_doc_filename = this.user.input.fileIdentity.filename || 'identity.pdf';
-                formData.residence_doc = this.user.input.fileResidence.value;
-                formData.residence_doc_filename = this.user.input.fileResidence.filename || 'residence.pdf';
-                formData.criminal_record_doc = this.user.input.fileCriminalRecord.value;
-                formData.criminal_record_doc_filename = this.user.input.fileCriminalRecord.filename || 'criminal_record.pdf';
+                formData.identity_doc = this.user.input.fileIdentityIndividual.value;
+                formData.identity_doc_filename = this.user.input.fileIdentityIndividual.filename || 'identity.pdf';
+                formData.residence_doc = this.user.input.fileResidenceIndividual.value;
+                formData.residence_doc_filename = this.user.input.fileResidenceIndividual.filename || 'residence.pdf';
+                formData.criminal_record_doc = this.user.input.fileCriminalRecordIndividual.value;
+                formData.criminal_record_doc_filename = this.user.input.fileCriminalRecordIndividual.filename || 'criminal_record.pdf';
             } else {
-                formData.identity_doc = this.user.input.fileIdentity.value;
-                formData.identity_doc_filename = this.user.input.fileIdentity.filename || 'identity.pdf';
-                formData.tax_plate = this.user.input.fileTaxPlate.value;
-                formData.tax_plate_filename = this.user.input.fileTaxPlate.filename || 'tax_plate.pdf';
-                formData.signature_circular = this.user.input.fileSignatureCircular.value;
-                formData.signature_circular_filename = this.user.input.fileSignatureCircular.filename || 'signature_circular.pdf';
+                formData.identity_doc = this.user.input.fileIdentityCorporate.value;
+                formData.identity_doc_filename = this.user.input.fileIdentityCorporate.filename || 'identity.pdf';
+                formData.tax_plate = this.user.input.fileTaxPlateCorporate.value;
+                formData.tax_plate_filename = this.user.input.fileTaxPlateCorporate.filename || 'tax_plate.pdf';
+                formData.signature_circular = this.user.input.fileSignatureCircularCorporate.value;
+                formData.signature_circular_filename = this.user.input.fileSignatureCircularCorporate.filename || 'signature_circular.pdf';
             }
+        }
+
+        if (this.agreement && this.agreement.exist && !this.agreement.confirmed) {
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('Please accept all required agreements'),
+            });
+            return;
+        }
+
+        if (!this.partner) {
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('Session expired. Please start over.'),
+            });
+            return;
         }
 
         if (this.agreement && this.agreement.exist) {
