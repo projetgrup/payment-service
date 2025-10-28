@@ -48,11 +48,10 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         if (!field._.masked.isComplete) {
                             message = _t('TC Identity Number is required');
                             valid = false;
-                        }
-                        // } else if (!this._isTcknValid(field.value)) {
-                        //     message = _t('TC Identity Number is not valid');
-                        //     valid = false;
-                        // } 
+                        } else if (!this._isTcknValid(field.value)) {
+                            message = _t('TC Identity Number is not valid');
+                            valid = false;
+                        } 
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -66,11 +65,10 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         if (!field._.masked.isComplete) {
                             message = _t('Tax ID is required');
                             valid = false;
-                        }
-                        // }else if (!this._isVatValid(field.value)) {
-                        //     message = _t('Tax ID is not valid');
-                        //     valid = false;
-                        // } 
+                        }else if (!this._isVatValid(field.value)) {
+                            message = _t('Tax ID is not valid');
+                            valid = false;
+                        } 
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -204,11 +202,10 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         if (!field._.masked.isComplete) {
                             message = _t('IBAN is required');
                             valid = false;
+                        } else if (!this._isIbanValid(field._.masked.value)) {
+                            message = _t('IBAN is not valid');
+                            valid = false;
                         }
-                        // } else if (!this._isIbanValid(field._.masked.value)) {
-                        //     message = _t('IBAN is not valid');
-                        //     valid = false;
-                        // }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
