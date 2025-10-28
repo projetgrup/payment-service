@@ -36,7 +36,7 @@
             })" field="ad.item" t-att-data-item-id="ad.escrow_payment_item_id.id" t-att-data-product-id="ad.id">
             <div class="escrow-ad-item-info">
                 <div class="escrow-ad-item-image">
-                    <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
+                    <img t-attf-src="data:image/png;base64,#{ad.escrow_ad_sale_img}" alt="" name="img"/>
                 </div>
                 <span class="escrow-ad-item-name" t-esc="ad.name" name="name" field="ad.input.name"/>
             </div>
