@@ -71,6 +71,7 @@
                     </group>
                     <group string="Notes">
                         <field name="notes" nolabel="1" placeholder="Additional notes or comments..."/>
+                        <field name="quote_details" nolabel="1" placeholder="Quote details..."/>
                     </group>
                 </sheet>
                 <div class="oe_chatter">

@@ -674,6 +674,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
             input: {
                 birth_date: new fields.string({
+                    mask: '00/00/0000',
                     validate: () => {
                         const field = this.insurance.input.birth_date;
                         let message = null;
@@ -738,6 +739,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 plate: new fields.string({
+                    mask: /^[A-Za-z0-9]*$/,
+                    events: [['input', function() {
+                        const field = this.insurance.input.plate;
+                        field.$.val(field.$.val().toUpperCase());
+                    }]],
                     validate: () => {
                         const field = this.insurance.input.plate;
                         let message = null;
@@ -745,6 +751,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         if (!field.value) {
                             message = _t('License plate is required');
                             valid = false;
+                        } else {
+                            const cleanPlate = field.value.replace(/\s/g, '');
+                            const platePattern = /^[0-9]{2}[A-Z]{1,3}[0-9]{1,4}$/;
+                            if (!platePattern.test(cleanPlate)) {
+                                message = _t('Please enter a valid license plate (e.g., 34TM3405)');
+                                valid = false;
+                            }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -3379,11 +3392,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.insurance.input.email.validate(),
             this.insurance.input.plate.validate(),
             this.insurance.input.license_no.validate(),
-            this.insurance.input.chassis_no.validate(),
+            // this.insurance.input.chassis_no.validate(),
             // this.insurance.input.engine_no.validate(),
             // this.insurance.input.registration_date.validate(),
-            this.insurance.input.model.validate(),
-            this.insurance.input.year.validate(),
+            // this.insurance.input.model.validate(),
+            // this.insurance.input.year.validate(),
         ].every(Boolean);
 
         if (!isValid) {
@@ -3397,11 +3410,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             email: this.insurance.input.email.value,
             plate: this.insurance.input.plate.value,
             license_no: this.insurance.input.license_no.value,
-            chassis_no: this.insurance.input.chassis_no.value,
+            // chassis_no: this.insurance.input.chassis_no.value,
             // engine_no: this.insurance.input.engine_no.value,
             // registration_date: this.insurance.input.registration_date.value,
-            model: this.insurance.input.model.value,
-            year: this.insurance.input.year.value,
+            // model: this.insurance.input.model.value,
+            // year: this.insurance.input.year.value,
         };
 
         this.insurance.button.submit.$.prop('disabled', true);

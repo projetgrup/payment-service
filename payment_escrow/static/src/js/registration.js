@@ -48,10 +48,11 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         if (!field._.masked.isComplete) {
                             message = _t('TC Identity Number is required');
                             valid = false;
-                        } else if (!this._isTcknValid(field.value)) {
-                            message = _t('TC Identity Number is not valid');
-                            valid = false;
-                        } 
+                        }
+                        // } else if (!this._isTcknValid(field.value)) {
+                        //     message = _t('TC Identity Number is not valid');
+                        //     valid = false;
+                        // } 
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -65,10 +66,11 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         if (!field._.masked.isComplete) {
                             message = _t('Tax ID is required');
                             valid = false;
-                        }else if (!this._isVatValid(field.value)) {
-                            message = _t('Tax ID is not valid');
-                            valid = false;
-                        } 
+                        }
+                        // }else if (!this._isVatValid(field.value)) {
+                        //     message = _t('Tax ID is not valid');
+                        //     valid = false;
+                        // } 
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -202,10 +204,11 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         if (!field._.masked.isComplete) {
                             message = _t('IBAN is required');
                             valid = false;
-                        } else if (!this._isIbanValid(field._.masked.value)) {
-                            message = _t('IBAN is not valid');
-                            valid = false;
                         }
+                        // } else if (!this._isIbanValid(field._.masked.value)) {
+                        //     message = _t('IBAN is not valid');
+                        //     valid = false;
+                        // }
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
@@ -297,6 +300,42 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                         return valid;
                     }
                 }),
+                fileCriminalRecord: new fields.file({
+                    name: 'fileCriminalRecord',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileCriminalRecord;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Criminal Record Document is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileResidence: new fields.file({
+                    name: 'fileResidence',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileResidence;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Residence Document is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
                 // fileContract: new fields.file({
                 //     name: 'fileContract',
                 //     allowMultiple: false,
@@ -355,8 +394,8 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
         const $individualFields = $form.find('.individual-fields');
         const $corporateFields = $form.find('.corporate-fields');
         const $slider = $form.find('.radioTab__slider');
-        
-        function setMode(mode) {
+
+        const setMode = (mode) => {
             const isInd = mode === 'individual';
             
             // Toggle visibility
@@ -384,6 +423,9 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                 $individualFields.find('.form__group').removeClass('-error');
                 $individualFields.find('.form__icon').removeClass('fa-times-circle fa-check-circle');
             }
+            
+            // Update document requirements
+            this._updateDocumentRequirements();
         }
         
         // Remove old listeners
@@ -404,6 +446,23 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
         
         const selected = $form.find('input[name="userType"]:checked').val() || 'corporate';
         setMode(selected);
+    },
+
+    _updateDocumentRequirements: function() {
+        const registerType = $('#register_type').val();
+        const userType = $('.radioTab__control[name="userType"]:checked').val() || 'individual';
+        
+        $('.dealer-individual-docs, .dealer-corporate-docs, .broker-docs').hide();
+        
+        if (registerType === 'dealer') {
+            if (userType === 'individual') {
+                $('.dealer-individual-docs').show();
+            } else {
+                $('.dealer-corporate-docs').show();
+            }
+        } else if (registerType === 'broker') {
+            $('.broker-docs').show();
+        }
     },
 
     _isVatValid: function(value) {
@@ -878,14 +937,29 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
     _onClickSubmit: function(ev) {
         ev.preventDefault();
         const self = this;
+        const userType = this.$('input[name="userType"]:checked').val();
+        const registerType = this.$('#register_type').val();
 
-        const fileFields = [
-            this.user.input.fileTaxPlate,
-            this.user.input.fileSignatureCircular,
-            this.user.input.fileIdentity,
-            this.user.input.fileAuthorization,
-            // this.broker.input.fileContract,
-        ];
+        const fileFields = [];
+
+        if (registerType === 'broker') {
+            fileFields.push(this.user.input.fileTaxPlate);
+            fileFields.push(this.user.input.fileSignatureCircular);
+            fileFields.push(this.user.input.fileIdentity);
+            fileFields.push(this.user.input.fileAuthorization);
+        }
+
+        else if (registerType === 'dealer') {
+            if (userType === 'individual') {
+                fileFields.push(this.user.input.fileIdentity);
+                fileFields.push(this.user.input.fileResidence);
+                fileFields.push(this.user.input.fileCriminalRecord);
+            } else {
+                fileFields.push(this.user.input.fileTaxPlate);
+                fileFields.push(this.user.input.fileSignatureCircular);
+                fileFields.push(this.user.input.fileIdentity);
+            }
+        }
 
         let isValid = true;
         fileFields.forEach(field => {
@@ -919,17 +993,36 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
         const formData = {
             step: 2,
             partner_id: this.partner,
-            tax_plate: this.user.input.fileTaxPlate.value,
-            tax_plate_filename: this.user.input.fileTaxPlate.filename || 'tax_plate.pdf',
-            signature_circular: this.user.input.fileSignatureCircular.value,
-            signature_circular_filename: this.user.input.fileSignatureCircular.filename || 'signature_circular.pdf',
-            identity_doc: this.user.input.fileIdentity.value,
-            identity_doc_filename: this.user.input.fileIdentity.filename || 'identity.pdf',
-            authorization_doc: this.user.input.fileAuthorization.value,
-            authorization_doc_filename: this.user.input.fileAuthorization.filename || 'authorization.pdf',
-            // contract: this.user.input.fileContract.value,
-            // contract_filename: this.user.input.fileContract.filename || 'contract.pdf',
+            user_register_type: registerType,
+            user_type: userType,
         };
+
+        if (registerType === 'broker') {
+            formData.tax_plate = this.user.input.fileTaxPlate.value;
+            formData.tax_plate_filename = this.user.input.fileTaxPlate.filename || 'tax_plate.pdf';
+            formData.signature_circular = this.user.input.fileSignatureCircular.value;
+            formData.signature_circular_filename = this.user.input.fileSignatureCircular.filename || 'signature_circular.pdf';
+            formData.identity_doc = this.user.input.fileIdentity.value;
+            formData.identity_doc_filename = this.user.input.fileIdentity.filename || 'identity.pdf';
+            formData.authorization_doc = this.user.input.fileAuthorization.value;
+            formData.authorization_doc_filename = this.user.input.fileAuthorization.filename || 'authorization.pdf';
+        } else if (registerType === 'dealer') {
+            if (userType === 'individual') {
+                formData.identity_doc = this.user.input.fileIdentity.value;
+                formData.identity_doc_filename = this.user.input.fileIdentity.filename || 'identity.pdf';
+                formData.residence_doc = this.user.input.fileResidence.value;
+                formData.residence_doc_filename = this.user.input.fileResidence.filename || 'residence.pdf';
+                formData.criminal_record_doc = this.user.input.fileCriminalRecord.value;
+                formData.criminal_record_doc_filename = this.user.input.fileCriminalRecord.filename || 'criminal_record.pdf';
+            } else {
+                formData.identity_doc = this.user.input.fileIdentity.value;
+                formData.identity_doc_filename = this.user.input.fileIdentity.filename || 'identity.pdf';
+                formData.tax_plate = this.user.input.fileTaxPlate.value;
+                formData.tax_plate_filename = this.user.input.fileTaxPlate.filename || 'tax_plate.pdf';
+                formData.signature_circular = this.user.input.fileSignatureCircular.value;
+                formData.signature_circular_filename = this.user.input.fileSignatureCircular.filename || 'signature_circular.pdf';
+            }
+        }
 
         if (this.agreement && this.agreement.exist) {
             formData.agreements = Object.entries(this.agreement.all)
@@ -996,6 +1089,11 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
             $(`.register-step-${nextStep}`).removeClass('d-none').addClass('d-flex');
             $(`.steps__item:nth-child(${nextStep})`).addClass('-active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Update document requirements when moving to step 2
+            if (stepNumber === 1) {
+                this._updateDocumentRequirements();
+            }
         }
     },
 });

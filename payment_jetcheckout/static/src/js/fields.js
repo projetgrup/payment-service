@@ -170,6 +170,11 @@ class file extends fields {
         return file ? file.getFileEncodeBase64String() : false;
     }
 
+    get filename() {
+        const file = this._.getFile();
+        return file ? file.filename : false;
+    }
+
     set value(v) {
         this._.addFile(v);
     }

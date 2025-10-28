@@ -7,6 +7,8 @@ import time
 import uuid
 from collections import OrderedDict
 from urllib.parse import unquote, urlparse
+
+from datetime import datetime
 from odoo import _, fields
 from odoo import http
 from odoo.http import route, request
@@ -1822,41 +1824,41 @@ class PayloxSystemEscrowController(Controller):
                     }
                 
                 partner = request.env['res.partner'].sudo().create(partner_vals)
-                try:
-                    iban = kwargs.get('iban', '')
-                    vat = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number', '')
-                    iban_verified = self.verify_iban(iban, vat)
-                    if iban and not iban_verified:
-                        iban_raw = kwargs.get('iban', '')
-                        iban_sanitized = sanitize_account_number(iban_raw)
-                        bank = request.env['res.partner.bank'].sudo()
-                        bank_vals = {
-                            'partner_id': partner.id,
-                            'acc_number': iban_raw.replace(' ', ''),
-                            'api_merchant': kwargs.get('iban_name', ''),
-                            'currency_id': company.currency_id.id,
-                            'acc_holder_name': kwargs.get('iban_name', ''),
-                        }
-                        existing_bank = bank.search([
-                            ('partner_id.vat', '=', vat),
-                            ('company_id', '=', company.id),
-                            ('sanitized_acc_number', '=', iban_sanitized),
-                        ], limit=1)
-                        if not existing_bank:
-                            existing_bank = bank.create(bank_vals)
+                # try:
+                #     iban = kwargs.get('iban', '')
+                #     vat = kwargs.get('vat') if user_type == 'individual' else kwargs.get('tax_number', '')
+                #     iban_verified = self.verify_iban(iban, vat)
+                #     if iban and not iban_verified:
+                #         iban_raw = kwargs.get('iban', '')
+                #         iban_sanitized = sanitize_account_number(iban_raw)
+                #         bank = request.env['res.partner.bank'].sudo()
+                #         bank_vals = {
+                #             'partner_id': partner.id,
+                #             'acc_number': iban_raw.replace(' ', ''),
+                #             'api_merchant': kwargs.get('iban_name', ''),
+                #             'currency_id': company.currency_id.id,
+                #             'acc_holder_name': kwargs.get('iban_name', ''),
+                #         }
+                #         existing_bank = bank.search([
+                #             ('partner_id.vat', '=', vat),
+                #             ('company_id', '=', company.id),
+                #             ('sanitized_acc_number', '=', iban_sanitized),
+                #         ], limit=1)
+                #         if not existing_bank:
+                #             existing_bank = bank.create(bank_vals)
                         
-                        if not existing_bank.api_state:
-                            return {
-                                'success': False,
-                                'partner_id': partner.id,
-                                'message': existing_bank.api_message or 'Bank account verification failed'
-                            }
-                except Exception as e:
-                    return {
-                        'success': False,
-                        'partner_id': partner.id,
-                        'message': 'Bank account verification error: ' + str(e)
-                    }
+                #         if not existing_bank.api_state:
+                #             return {
+                #                 'success': False,
+                #                 'partner_id': partner.id,
+                #                 'message': existing_bank.api_message or 'Bank account verification failed'
+                #             }
+                # except Exception as e:
+                #     return {
+                #         'success': False,
+                #         'partner_id': partner.id,
+                #         'message': 'Bank account verification error: ' + str(e)
+                #     }
                 
                 return {
                     'success': True,
@@ -1873,7 +1875,17 @@ class PayloxSystemEscrowController(Controller):
                         'message': 'Session expired. Please start over.'
                     }
                 
-                required_files = ['tax_plate', 'signature_circular', 'identity_doc', 'authorization_doc']
+                required_files = []
+                user_register_type = kwargs.get('user_register_type', 'broker')
+                user_type = kwargs.get('user_type', 'individual')
+                
+                if user_register_type == 'dealer':
+                    if user_type == 'individual':
+                        required_files = ['identity_doc', 'residence_doc', 'criminal_record_doc']
+                    else:
+                        required_files = ['identity_doc', 'tax_plate', 'signature_circular']
+                else: 
+                    required_files = ['tax_plate', 'signature_circular', 'identity_doc', 'authorization_doc']
                 for file_field in required_files:
                     if not kwargs.get(file_field):
                         return {
@@ -1883,7 +1895,23 @@ class PayloxSystemEscrowController(Controller):
                 
                 for file_field in required_files:
                     file_data = kwargs.get(file_field)
-                    file_name = kwargs.get(f'{file_field}_filename', f'{file_field}.pdf')
+                    file_name = kwargs.get(f'{file_field}_filename')
+                    
+                    if not file_name:
+                        if file_data and ',' in file_data:
+                            mime_part = file_data.split(',')[0]
+                            if 'image/jpeg' in mime_part or 'image/jpg' in mime_part:
+                                file_name = f'{file_field}.jpg'
+                            elif 'image/png' in mime_part:
+                                file_name = f'{file_field}.png'
+                            elif 'image/gif' in mime_part:
+                                file_name = f'{file_field}.gif'
+                            elif 'application/pdf' in mime_part:
+                                file_name = f'{file_field}.pdf'
+                            else:
+                                file_name = f'{file_field}.pdf'
+                        else:
+                            file_name = f'{file_field}.pdf'
                     
                     if file_data:
                         if ',' in file_data:
@@ -2050,8 +2078,7 @@ class PayloxSystemEscrowController(Controller):
                     'message': _('Insurance quote feature is not enabled')
                 }
 
-            required_fields = ['birth_date', 'vat', 'gsmNo', 'email', 'plate', 
-                             'license_no', 'chassis_no', 'model', 'year']
+            required_fields = ['birth_date', 'vat', 'gsmNo', 'email', 'plate', 'license_no']
             
             for field in required_fields:
                 if not kwargs.get(field):
@@ -2062,18 +2089,20 @@ class PayloxSystemEscrowController(Controller):
 
             partner = request.env.user.partner_id
 
+            birth_date_str = kwargs.get('birth_date')
+            birth_date = datetime.strptime(birth_date_str, '%d%m%Y').date()
             quote = request.env['escrow.insurance.quote'].sudo().create({
-                'birth_date': kwargs.get('birth_date'),
+                'birth_date': birth_date,
                 'vat': kwargs.get('vat'),
                 'mobile': kwargs.get('gsmNo'),
                 'email': kwargs.get('email'),
                 'plate': kwargs.get('plate'),
                 'license_no': kwargs.get('license_no'),
-                'chassis_no': kwargs.get('chassis_no'),
+                # 'chassis_no': kwargs.get('chassis_no'),
                 # 'engine_no': kwargs.get('engine_no'),
                 # 'registration_date': kwargs.get('registration_date'),
-                'model': kwargs.get('model'),
-                'year': kwargs.get('year'),
+                # 'model': kwargs.get('model'),
+                # 'year': kwargs.get('year'),
                 'partner_id': partner.id,
                 'company_id': company.id,
                 'state': 'draft',
@@ -2084,13 +2113,17 @@ class PayloxSystemEscrowController(Controller):
                 message_type='notification',
             )
 
-            quote.action_submit_quote()
-
-            return {
-                'success': True,
-                'message': _('Your insurance quote request has been submitted successfully!'),
-                'quote_id': quote.id
-            }
+            quote = quote.action_submit_quote()
+            if quote.get('success'):
+                return {
+                    'success': True,
+                    'message': _('Your insurance quote request has been submitted successfully!'),
+                }
+            else:
+                return {
+                    'success': False,
+                    'message': _('Failed to create insurance quote: %s') % quote.get('message', 'Unknown error'),
+                }
 
         except Exception as e:
             _logger.exception('Error creating insurance quote: %s', str(e))

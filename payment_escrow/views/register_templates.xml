@@ -195,36 +195,74 @@
                     <p class="text-muted">Please upload the following documents to complete your registration</p>
                 </div>
                 <form>
-                    <div class="form__group">
-                        <label class="form__label">Tax Plate</label>
-                        <div class="pt-1">
-                            <input type="file" class="filepond" name="fileTaxPlate" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileTaxPlate" required="required"/>
+                    <div class="dealer-individual-docs" style="display: none;">
+                        <div class="form__group">
+                            <label class="form__label">Identity Document</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileIdentity" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentity" required="required"/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label">Residence Document</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileResidence" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileResidence" required="required"/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label">Criminal Record Document</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileCriminalRecord" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileCriminalRecord" required="required"/>
+                            </div>
                         </div>
                     </div>
-                    <div class="form__group">
-                        <label class="form__label">Signature Circular</label>
-                        <div class="pt-1">
-                            <input type="file" class="filepond" name="fileSignatureCircular" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileSignatureCircular" required="required"/>
+
+                    <div class="dealer-corporate-docs" style="display: none;">
+                        <div class="form__group">
+                            <label class="form__label">Identity Document</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileIdentity" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentity" required="required"/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label">Tax Plate</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileTaxPlate" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileTaxPlate" required="required"/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label">Signature Circular</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileSignatureCircular" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileSignatureCircular" required="required"/>
+                            </div>
                         </div>
                     </div>
-                    <div class="form__group">
-                        <label class="form__label">Identity Document</label>
-                        <div class="pt-1">
-                            <input type="file" class="filepond" name="fileIdentity" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentity" required="required"/>
+
+                    <div class="broker-docs" style="display: none;">
+                        <div class="form__group">
+                            <label class="form__label">Tax Plate</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileTaxPlate" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileTaxPlate" required="required"/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label">Signature Circular</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileSignatureCircular" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileSignatureCircular" required="required"/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label">Identity Document</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileIdentity" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileIdentity" required="required"/>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label">Authorization Document</label>
+                            <div class="pt-1">
+                                <input type="file" class="filepond" name="fileAuthorization" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileAuthorization" required="required"/>
+                            </div>
                         </div>
                     </div>
-                    <div class="form__group">
-                        <label class="form__label">Authorization Document</label>
-                        <div class="pt-1">
-                            <input type="file" class="filepond" name="fileAuthorization" accept="image/png, image/jpeg, image/gif, application/pdf" field="user.input.fileAuthorization" required="required"/>
-                        </div>
-                    </div>
-                    <!-- <div class="form__group">
-                        <label class="form__label">Contract</label>
-                        <div class="pt-1">
-                            <input type="file" class="filepond" name="fileContract" accept="application/pdf" field="broker.input.fileContract" required="required"/>
-                        </div>
-                    </div> -->
                     
                     <div t-if="agreements" class="field-agreement mt-4" field="agreements">
                         <t t-foreach="agreements" t-as="agreement">
@@ -263,8 +301,9 @@
                         <i class="fa fa-check-circle text-success" style="font-size: 64px;"/>
                     </div>
                     <h3 class="text-success mb-3">Registration Submitted Successfully!</h3>
+                    <t t-set="register_type" t-value="register_type == 'broker' and 'Broker' or (register_type == 'dealer' and 'Dealer' or 'User')"/>
                     <p class="text-muted mb-4">
-                        Your <t t-esc="register_type" /> registration has been submitted for approval.
+                        Your registration has been submitted for approval.
                         Our team will review your application and notify you via email once it's approved.
                     </p>
                     <div class="alert alert-info">

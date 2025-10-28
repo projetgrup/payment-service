@@ -18,11 +18,11 @@ class EscrowInsuranceQuote(models.Model):
     # Vehicle Information
     plate = fields.Char(string='License Plate', required=True)
     license_no = fields.Char(string='License Serial Number', size=10, required=True)
-    chassis_no = fields.Char(string='Chassis Number', size=17, required=True)
+    chassis_no = fields.Char(string='Chassis Number', size=17)
     engine_no = fields.Char(string='Engine Number')
     registration_date = fields.Date(string='Registration Date')
-    model = fields.Char(string='Vehicle Model', required=True)
-    year = fields.Char(string='Model Year', size=4, required=True)
+    model = fields.Char(string='Vehicle Model')
+    year = fields.Char(string='Model Year', size=4)
 
     # System Fields
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
@@ -38,6 +38,7 @@ class EscrowInsuranceQuote(models.Model):
     notes = fields.Text(string='Notes')
     quote_amount = fields.Monetary(string='Quote Amount', currency_field='currency_id')
     currency_id = fields.Many2one('res.currency', string='Currency', default=lambda self: self.env.company.currency_id)
+    quote_details = fields.Text(string='Quote Details')
 
     def action_set_sent(self):
         self.write({'state': 'sent'})
@@ -63,7 +64,7 @@ class EscrowInsuranceQuote(models.Model):
                 'insurance_post_vehicle_quote', 
                 reference=str(user.partner_id.id), 
                 params={
-                    'birth_date': str(record.birth_date),
+                    'birth_date': record.birth_date.strftime('%Y-%m-%d') if record.birth_date else '',
                     'vat': record.vat,
                     'mobile': record.mobile,
                     'email': record.email,
@@ -79,10 +80,40 @@ class EscrowInsuranceQuote(models.Model):
                 message=True
             )
             if not result:
-                raise Exception(_('Failed to submit insurance quote: %s') % message)
+                record.quote_details = message
+                record.action_set_cancelled()
+                return {
+                    'success': False,
+                    'message': _('Failed to submit insurance quote: %s') % message
+                }
             res = result[0]
             if res.get('success'):
+                record.quote_details = res.get('message', '')
                 record.action_set_quoted()
+                return {
+                    'success': True,
+                    'message': _('Insurance quote submitted successfully.')
+                }
             else:
-                raise Exception(_('Insurance quote submission failed: %s') % res.get('message', 'Unknown error'))
+                errors = res.get('errors', [])
+                error_text = ''
+                if errors:
+                    if isinstance(errors, list):
+                        error_text = '\n'.join(str(error) for error in errors)
+                    elif isinstance(errors, str):
+                        error_text = errors
+                    else:
+                        error_text = str(errors)
+                
+                message = res.get('message', 'Unknown error')
+                full_message = message
+                if error_text:
+                    full_message = f"{message}\n{error_text}"
+                    record.quote_details = full_message
+                    record.action_set_cancelled()
+                
+                return {
+                    'success': False,
+                    'message': _('Insurance quote submission failed: %s') % full_message
+                }
             
