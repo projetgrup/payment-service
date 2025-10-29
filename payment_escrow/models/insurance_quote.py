@@ -111,14 +111,14 @@ class EscrowInsuranceQuote(models.Model):
                 }
             res = result[0]
             if res.get('success'):
-                data = res.get('data', {})
-                quote = data.get('teklifBilgileri', {})
-                
-                record.write({
-                    'quote_details': res.get('message', ''),
-                    'reference': quote.get('teklifId', ''),
-                })
-                record.action_set_sent()
+                data = res.get('data', [])
+                for item in data:
+                    quote = item.get('teklifBilgileri', {})
+
+                    record.quote_details = res.get('message', '')
+                    record.reference = quote.get('teklifId', '')
+                    record.action_set_sent()
+                    self.env.cr.commit()
                 return {
                     'success': True,
                     'message': _('Insurance quote submitted successfully.')
