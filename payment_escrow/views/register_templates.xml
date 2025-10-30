@@ -263,7 +263,8 @@
                             </div>
                         </div>
                     </div>
-                    
+
+                    <input type="hidden" name="partner" field="partner"/>
                     <div t-if="agreements" class="field-agreement mt-4" field="agreements">
                         <t t-foreach="agreements" t-as="agreement">
                             <div class="btn btn-payment-agreement mb-2" t-att-data-id="agreement.id" field="agreement">

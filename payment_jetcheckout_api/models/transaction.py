@@ -44,6 +44,8 @@ class PaymentTransaction(models.Model):
                     requests.post(method.webhook_url, data=json.dumps({
                         'success': True,
                         'id': self.jetcheckout_api_id or None,
+                        'ref': self.jetcheckout_transaction_id or None,
+                        'amount': self.amount or None,
                     }), timeout=15)
                 except:
                     _logger.error('An error occured when triggering physical PoS webhook.', exc_info=True)

@@ -19,11 +19,13 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
     init: function (parent, options) {
         this._super(parent, options);
         this.filePonds = {};
-        this.partner = 0;
+        this.partner = new fields.integer({
+            default: 0
+        });
         this.phoneVerified = false;
         this.otpTimer = null;
         this.otpId = null;
-        
+
         this.user = {
             button: {
                 next: new fields.element({
@@ -801,7 +803,7 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
         
         rpc.query({
             route: '/escrow/otp/start',
-            params: { partner_id: self.partner }
+            params: { partner_id: self.partner.value }
         }).then(function(result) {
             if (result && result.success) {
                 self.otpId = result.otp_id;
@@ -927,7 +929,7 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
             params: formData,
         }).then(function(result) {
             if (result.success) {
-                self.partner = result.partner_id || self.tempPartnerId || 0;
+                self.partner.value = result.partner_id || self.tempPartnerId || 0;
                 
                 if (result.registered) {
                     self._markStepCompleted(1);
@@ -945,7 +947,7 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
                     
                     rpc.query({
                         route: '/escrow/register/otp/start',
-                        params: { partner_id: self.partner }
+                        params: { partner_id: self.partner.value }
                     }).then(function(result) {
                         if (result && result.success) {
                             self.otpId = result.otp_id;
@@ -1052,7 +1054,7 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
             return;
         }
 
-        if (!this.partner) {
+        if (!this.partner.value) {
             self.displayNotification({
                 type: 'danger',
                 title: _t('Error'),
@@ -1063,7 +1065,7 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
 
         const formData = {
             step: 2,
-            partner_id: this.partner,
+            partner_id: this.partner.value,
             user_register_type: registerType,
             user_type: userType,
         };
@@ -1104,7 +1106,7 @@ publicWidget.registry.payloxUserRegistration = payloxPage.extend({
             return;
         }
 
-        if (!this.partner) {
+        if (!this.partner.value) {
             self.displayNotification({
                 type: 'danger',
                 title: _t('Error'),
