@@ -162,7 +162,7 @@ class PaymentAPIService(Component):
             url = 'https://%s/payment?=%s' % (request.httprequest.host, hash)
             return ResponseOk(hash=hash, url=url, **RESPONSE[200])
         except Exception as e:
-            _logger.error(e)
+            _logger.error(e, exc_info=True)
             return Response("Server Error", status=500, mimetype="application/json")
     payment_prepare.__doc__ = _lt("Prepare Payment")
 
@@ -448,22 +448,13 @@ class PaymentAPIService(Component):
         else:
             state = False
 
-        type = getattr(params, 'type', False) or 'virtualpos'
-        codes = hasattr(params, 'methods') and params.methods or []
-        providers = []
-        for code in codes:
-            if not type and code == 'bank':
-                providers.append('transfer')
-            else:
-                providers.append('jetcheckout')
-
         company = api.company_id
         if hasattr(params, 'company'):
             company = self.env['res.company'].sudo().search([('vat', '=', params.company.vat), ('parent_id', '=', company.id)])
             if not company:
                 raise Exception('Company cannot be found')
 
-        acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=providers, limit=1)
+        acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
         values = {
             'state': 'draft',
             'amount': params.amount,
@@ -472,7 +463,6 @@ class PaymentAPIService(Component):
             'partner_id': api.partner_id.id,
             'currency_id': company.currency_id.id,
             'jetcheckout_ip_address': params.partner.ip_address,
-            'jetcheckout_payment_type': type,
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
@@ -483,69 +473,61 @@ class PaymentAPIService(Component):
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
 
-        if getattr(params.url, 'virtualPos', None):
-            values.update({'jetcheckout_api_url_virtualpos_redirect': params.url.virtualPos.redirect})
-            if getattr(params.url.virtualPos, 'webhook', None):
-                values.update({'jetcheckout_api_url_virtualpos_webhook': params.url.virtualPos.webhook})
+        methods = getattr(params, 'methods', {})
+        if not methods:
+            raise Exception('Methods cannot be empty')
 
-        if getattr(params.url, 'physicalPos', None):
-            values.update({'jetcheckout_api_url_physicalpos_redirect': params.url.physicalPos.redirect})
-            if getattr(params.url.physicalPos, 'webhook', None):
-                values.update({'jetcheckout_api_url_physicalpos_webhook': params.url.physicalPos.webhook})
+        method_ids = []
+        method_type = False
+        method_types = {
+            'virtualPos': 'virtualpos',
+            'physicalPos': 'physicalpos',
+            'shoppingCredit': 'credit',
+            'bankTransfer': 'transfer',
+        }
+        for method_name, method_value in methods.dump().items():
+            if method_name in method_types:
+                method_type = method_types[method_name]
+                method_ids.append((0, 0, {
+                    'type': method_type,
+                    'redirect_url': method_value.get('redirect', False),
+                    'webhook_url': method_value.get('webhook', False),
+                }))
 
-        if getattr(params.url, 'shoppingCredit', None):
-            values.update({'jetcheckout_api_url_credit_redirect': params.url.shoppingCredit.redirect})
-            if getattr(params.url.shoppingCredit, 'webhook', None):
-                values.update({'jetcheckout_api_url_credit_webhook': params.url.shoppingCredit.webhook})
-
-        if getattr(params.url, 'bankTransfer', None):
-            values.update({'jetcheckout_api_url_transfer_redirect': params.url.bankTransfer.redirect})
-            if getattr(params.url.bankTransfer, 'webhook', None):
-                values.update({'jetcheckout_api_url_transfer_webhook': params.url.bankTransfer.webhook})
+        if len(method_ids) == 1:
+            values.update({'jetcheckout_payment_type': method_type})
+        values.update({'paylox_api_method_ids': method_ids})
 
         products = getattr(params.order, 'products', [])
         if products:
-            will_create_product = values['jetcheckout_payment_type'] == 'virtualpos'
             product_ids = []
-            if will_create_product:
-                prods = self.env['product.product'].sudo()
-                for product in products:
-                    prod = prods.search([
-                        #('type', '=', 'product'),
-                        ('type', '=', 'consu'),
-                        ('default_code', '=', product),
-                        '|', ('company_id', '=', company.id),
-                            ('company_id', '=', False)
-                    ])
-                    if not prod:
-                        prod = prods.create({
-                            #'type': 'product',
-                            'type': 'consu',
-                            'name': product.name,
-                            'default_code': product.code,
-                        })
-                    product_ids.append((0, 0, {
-                        'product_id': prod.id,
-                        'qty': product.qty,
+            prods = self.env['product.product'].sudo()
+            for product in products:
+                prod = prods.search([
+                    #('type', '=', 'product'),
+                    ('type', '=', 'consu'),
+                    ('default_code', '=', product),
+                    '|', ('company_id', '=', company.id),
+                        ('company_id', '=', False)
+                ])
+                if not prod:
+                    prod = prods.create({
+                        #'type': 'product',
+                        'type': 'consu',
                         'name': product.name,
-                        'code': product.code,
-                        'price': product.price,
-                        'categ': getattr(product, 'categ', False) or False,
-                        'brand': getattr(product, 'brand', False) or False,
-                    }))
-            else:
-                for product in products:
-                    product_ids.append((0, 0, {
-                        'qty': product.qty,
-                        'name': product.name,
-                        'code': product.code,
-                        'price': product.price,
-                        'categ': getattr(product, 'categ', False) or False,
-                        'brand': getattr(product, 'brand', False) or False,
-                    }))
+                        'default_code': product.code,
+                    })
+                product_ids.append((0, 0, {
+                    'product_id': prod.id,
+                    'qty': product.qty,
+                    'name': product.name,
+                    'code': product.code,
+                    'price': product.price,
+                    'categ': getattr(product, 'categ', False) or False,
+                    'brand': getattr(product, 'brand', False) or False,
+                }))
 
             values.update({'paylox_product_ids': product_ids})
-            #values.update({'paylox_product_ids': ','.join(list(map(lambda x: x.name, products)))})
 
         tx = self.env['payment.transaction'].sudo().create(values)
         tx.write({

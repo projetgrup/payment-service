@@ -312,6 +312,15 @@
         color: var(--gradient-primary) !important;
     }
 
+    .border-primary {
+        border-color: var(--gradient-primary) !important;
+    }
+
+    .custom-control-input:checked ~ .custom-control-label::before {
+        border-color: var(--gradient-primary) !important;
+        background-color: var(--gradient-primary) !important;
+    }
+
     .header {
         position: sticky;
         top: 0;
@@ -615,6 +624,57 @@
                     font-size: 14px;
                     font-weight: 500;
                     color: var(--text-color);
+                }
+            }
+        }
+
+        // Commission Rates Dropdown Styles
+        #commissionRatesDropdown {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            
+            &:hover, &:focus {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+                color: white;
+            }
+            
+            .fa-percentage {
+                font-size: 11px;
+            }
+        }
+
+        .dropdown-menu {
+            &[aria-labelledby="commissionRatesDropdown"] {
+                border: 1px solid #e3e6f0;
+                box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+                border-radius: 8px;
+                
+                .dropdown-header {
+                    background-color: #f8f9fc;
+                    color: #5a5c69;
+                    font-weight: 600;
+                    border-bottom: 1px solid #e3e6f0;
+                    padding: 12px 16px;
+                    margin-bottom: 0;
+                }
+                
+                .dropdown-item-text {
+                    &:last-child {
+                        border-bottom: none !important;
+                    }
+                    
+                    &:hover {
+                        background-color: #f8f9fc;
+                    }
+                    
+                    .badge-success {
+                        background-color: #1cc88a;
+                        font-weight: 600;
+                    }
                 }
             }
         }
@@ -3201,25 +3261,6 @@
                 border: 2px solid transparent;
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative;
-                overflow: hidden;
-
-                &::before {
-                    content: '';
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    width: 0;
-                    height: 0;
-                    border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.3);
-                    transform: translate(-50%, -50%);
-                    transition: width 0.6s, height 0.6s;
-                }
-
-                &:hover::before {
-                    width: 300px;
-                    height: 300px;
-                }
 
                 &.active {
                     background: linear-gradient(135deg, var(--primary-color) 0%, var(--gradient-primary) 100%);
@@ -3668,6 +3709,468 @@
             }
         }
     }
+
+    .dealer-transactions-page {
+        .escrow-ad-nav-title {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--gradient-primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 0;
+        }
+
+        .view-toggle-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+            
+            &:hover {
+                transform: translateY(-4px) !important;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+            }
+            
+            &.active-card {
+                box-shadow: 0 4px 20px rgba(0, 123, 255, 0.15), 
+                            0 0 0 1px rgba(0, 123, 255, 0.2) !important;
+                border: 1px solid rgba(0, 123, 255, 0.3) !important;
+                background: linear-gradient(135deg, #ffffff 0%, rgba(0, 123, 255, 0.02) 100%) !important;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                
+                &:hover {
+                    box-shadow: 0 8px 32px rgba(0, 123, 255, 0.2), 
+                                0 0 0 1px rgba(0, 123, 255, 0.3) !important;
+                }
+            }
+        }
+        
+        .view-section {
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            &.fade-enter {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            
+            &.fade-enter-active {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        // Referral Card - Modern & Elegant Design
+        .referral-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+
+            &:hover {
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+            }
+
+            .referral-left-section {
+                background: linear-gradient(135deg, var(--primary-color) 0%, var(--gradient-primary) 100%);
+                color: white;
+                position: relative;
+                overflow: hidden;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    right: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+                    animation: pulse 3s ease-in-out infinite;
+                }
+
+                .referral-icon-wrapper {
+                    position: relative;
+                    z-index: 1;
+                    width: 80px;
+                    height: 80px;
+                    background: rgba(255, 255, 255, 0.15);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto;
+                    backdrop-filter: blur(10px);
+                    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+                    i {
+                        font-size: 2rem;
+                    }
+                }
+
+                h5, p {
+                    position: relative;
+                    z-index: 1;
+                }
+            }
+
+            .referral-input-group {
+                background: #f8f9fa;
+                border-radius: 12px;
+                overflow: hidden;
+                border: 2px solid transparent;
+                transition: all 0.3s ease;
+
+                &:focus-within {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 4px rgba(36, 20, 216, 0.1);
+                }
+
+                .referral-url-input {
+                    background: transparent;
+                    border: none;
+                    padding: 0.875rem 1.25rem;
+                    font-size: 0.9rem;
+                    color: var(--text-color);
+                    font-weight: 600;
+
+                    &:focus {
+                        outline: none;
+                        box-shadow: none;
+                    }
+                }
+
+                .btn-copy-referral {
+                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--gradient-primary) 100%);
+                    color: white;
+                    border: none;
+                    padding: 0.875rem 1.75rem;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    position: relative;
+                    overflow: hidden;
+
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        width: 0;
+                        height: 0;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.3);
+                        transform: translate(-50%, -50%);
+                        transition: width 0.6s, height 0.6s;
+                    }
+
+                    &:hover {
+                        transform: translateX(-2px);
+                        box-shadow: -4px 4px 12px rgba(36, 20, 216, 0.3);
+                    }
+
+                    &:active {
+                        transform: scale(0.98);
+                    }
+
+                    &.btn-copied {
+                        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                        
+                        i {
+                            animation: checkBounce 0.5s ease;
+                        }
+                    }
+                }
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes checkBounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.3);
+            }
+        }
+
+        // Filter card enhancements
+        .filter-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+            .filter-btn {
+                border-radius: 24px;
+                padding: 0.6rem 1.5rem;
+                font-weight: 600;
+                font-size: 0.875rem;
+                border: 2px solid transparent;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                position: relative;
+
+                &.active {
+                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--gradient-primary) 100%);
+                    color: white;
+                    border-color: var(--primary-color);
+                    box-shadow: 0 4px 12px rgba(36, 20, 216, 0.3);
+                    transform: translateY(-2px);
+                }
+
+                i {
+                    transition: transform 0.3s ease;
+                }
+
+                &:hover i {
+                    transform: scale(1.2);
+                }
+            }
+        }
+
+        // List header
+        .escrow-ad-list-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            padding: 0.65rem 0;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--secondary-text-color);
+            display: flex;
+            width: 100%;
+
+            > div {
+                display: flex;
+                align-items: center;
+                padding: 0 0.75rem;
+
+                &:first-child {
+                    color: var(--primary-color);
+                }
+            }
+
+            // Grid kolunları - dealer için
+            > :nth-child(1) { flex: 1.2; } // BROKER
+            > :nth-child(2) { flex: 1.5; } // TRANSACTION
+            > :nth-child(3) { flex: 0.8; } // AD NUMBER
+            > :nth-child(4) { flex: 1.2; } // VEHICLE
+            > :nth-child(5) { flex: 0.8; } // AMOUNT
+            > :nth-child(6) { flex: 1; }   // STATUS
+            > :nth-child(7) { flex: 0.8; } // INVOICE
+        }
+
+        // Transaction list items
+        .escrow-ad-list-item {
+            background: white;
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 0.75rem 0;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            width: 100%;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                background: var(--color-border);
+                transition: all 0.3s ease;
+            }
+
+            &[data-status="can_approve"]::before {
+                background: linear-gradient(180deg, #17a2b8 0%, #138496 100%);
+            }
+
+            &[data-status="waiting_invoice"]::before {
+                background: linear-gradient(180deg, #ffc107 0%, #e0a800 100%);
+            }
+
+            &[data-status="approved"]::before {
+                background: linear-gradient(180deg, #28a745 0%, #1e7e34 100%);
+            }
+
+            &:hover {
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                transform: translateX(3px) translateY(-1px);
+                border-color: var(--primary-color);
+
+                &::before {
+                    width: 5px;
+                }
+            }
+
+            .escrow-ad-list-item-info {
+                display: flex;
+                align-items: center;
+                padding: 0 0.75rem;
+
+                .escrow-ad-list-item-text {
+                    width: 100%;
+
+                    .font-weight-bold {
+                        color: var(--text-color);
+                        font-size: 0.95rem;
+                        letter-spacing: -0.02em;
+                    }
+
+                    .font-weight-600 {
+                        color: var(--text-color);
+                        font-size: 0.9rem;
+                    }
+
+                    small {
+                        color: var(--secondary-text-color);
+                        font-size: 0.75rem;
+                    }
+
+                    .text-primary {
+                        background: linear-gradient(135deg, var(--primary-color) 0%, var(--gradient-primary) 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        font-size: 1.1rem;
+                    }
+                }
+            }
+
+            // Grid kolunları - dealer için (header ile aynı)
+            > :nth-child(1) { flex: 1.2; } // BROKER
+            > :nth-child(2) { flex: 1.5; } // TRANSACTION
+            > :nth-child(3) { flex: 0.8; } // AD NUMBER
+            > :nth-child(4) { flex: 1.2; } // VEHICLE
+            > :nth-child(5) { flex: 0.8; } // AMOUNT
+            > :nth-child(6) { flex: 1; }   // STATUS
+            > :nth-child(7) { flex: 0.8; } // INVOICE
+        }
+
+        // Status badges
+        .badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+
+            &.badge-info {
+                background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+                border-color: #17a2b8;
+                box-shadow: 0 2px 8px rgba(23, 162, 184, 0.25);
+            }
+
+            &.badge-warning {
+                background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+                border-color: #ffc107;
+                box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+            }
+
+            &.badge-success {
+                background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+                border-color: #28a745;
+                box-shadow: 0 2px 8px rgba(40, 167, 69, 0.25);
+            }
+
+            i {
+                font-size: 0.9rem;
+            }
+        }
+
+        // Empty state
+        .text-center.py-5 {
+            .fa-inbox {
+                color: var(--secondary-text-color);
+                opacity: 0.5;
+                animation: float 3s ease-in-out infinite;
+            }
+
+            h4 {
+                color: var(--secondary-text-color);
+                font-weight: 600;
+                margin-top: 1.5rem;
+            }
+        }
+
+        // Invoice status indicators
+        .text-success i,
+        .text-muted i {
+            font-size: 1.1rem;
+            margin-right: 0.25rem;
+        }
+
+        .text-success {
+            color: #28a745 !important;
+            font-weight: 600;
+
+            small {
+                color: #6c757d;
+                font-weight: 400;
+            }
+        }
+
+        // Animations
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        // Responsive adjustments
+        @media (max-width: 768px) {
+            .escrow-ad-list-header {
+                display: none;
+            }
+
+            .escrow-ad-list-item {
+                flex-direction: column;
+
+                .escrow-ad-list-item-info {
+                    width: 100%;
+                    padding: 0.75rem 0;
+                    border-bottom: 1px solid var(--color-border);
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
+                }
+            }
+
+            .filter-card {
+                .btn-group {
+                    flex-direction: column;
+                    width: 100%;
+
+                    .filter-btn {
+                        margin-bottom: 0.5rem;
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
 }
+
+
 
 

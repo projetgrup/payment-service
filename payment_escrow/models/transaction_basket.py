@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class PaymentTransactionBasket(models.Model):
@@ -11,6 +12,7 @@ class PaymentTransactionBasket(models.Model):
     vehicle_info = fields.Char(string='Vehicle Info', compute='_compute_escrow_fields', store=True)
     
     acquirer_id = fields.Many2one('payment.acquirer', string='Payment Provider', related='transaction_id.acquirer_id', store=True, readonly=True)
+    vpos_name = fields.Char(string='Virtual POS Name', related='transaction_id.jetcheckout_vpos_name', store=True, readonly=True)
     transaction_date = fields.Datetime(string='Transaction Date', related='transaction_id.create_date', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='transaction_id.currency_id', store=True, readonly=True)
     
@@ -31,6 +33,7 @@ class PaymentTransactionBasket(models.Model):
         ('broker', 'Broker'),
         ('owner', 'Owner'),
         ('customer', 'Customer'),
+        ('dealer', 'Dealer'),
         ('card_holder', 'Card Holder'),
     ], string='Paylox Escrow Type', compute='_compute_escrow_fields', store=True)
 
@@ -40,17 +43,22 @@ class PaymentTransactionBasket(models.Model):
         ('approved', 'Transfer Approved'),
     ], string='Transfer Status', compute='_compute_transfer_status', store=True)
     
-    approval_state = fields.Selection([
-        ('+', 'Approved'),
-        ('-', 'Waiting'),
-        ('0', 'Rejected'),
-    ], string='Approval Status', related='transaction_id.jetcheckout_approval_state', store=True, readonly=True)
-    
     broker_invoice_id = fields.Many2one('ir.attachment', string='Broker Invoice')
+    broker_invoice_upload_id = fields.Binary(string='Upload Broker Invoice', related='broker_invoice_id.datas', readonly=True)
     broker_invoice_filename = fields.Char(string='Invoice Filename', compute='_compute_broker_invoice_filename', store=True)
     broker_invoice_upload_date = fields.Datetime(string='Invoice Upload Date')
     broker_submitted_for_approval = fields.Boolean(string='Submitted for Approval', default=False)
     broker_submit_date = fields.Datetime(string='Submit Date')
+    partner_id = fields.Many2one('res.partner', string='Submerchant', readonly=True)
+
+    escrow_success_group = fields.Selection(
+        selection=[('successful', 'Successful'), ('unsuccessful', 'Unsuccessful')],
+        string='Escrow Success Group',
+        related='transaction_id.escrow_success_group',
+        store=True,
+        index=True,
+        readonly=True,
+    )
 
     @api.depends('broker_invoice_id', 'broker_invoice_id.name')
     def _compute_broker_invoice_filename(self):
@@ -64,6 +72,7 @@ class PaymentTransactionBasket(models.Model):
             ad_number = ''
             vehicle_info = ''
             ad_state = False
+            approval_state = basket.transaction_id.jetcheckout_approval_state if basket.transaction_id else False
             
             if basket.submerchant_external_id:
                 partner_bank = self.env['res.partner.bank'].sudo().search([
@@ -154,7 +163,14 @@ class PaymentTransactionBasket(models.Model):
         return True
 
     def action_approve_payment(self):
-        self.product_id.action_approve_transfers()
+        for basket in self:
+            basket._action_approve_payment()
+    
+    def _action_approve_payment(self):
+        if self.transfer_status != 'can_approve':
+            self.write({'approval_state_message': _('This payment basket is not eligible for approval.')})
+            raise UserError(_('This payment basket is not eligible for approval.'))
+        self.action_approve()
 
     def write(self, values):
         res = super().write(values)

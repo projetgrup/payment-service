@@ -386,3 +386,23 @@ class EscrowRequestPaymentDelete(Datamodel):
 class EscrowResponsePaymentExpire(Datamodel):
     _inherit = "escrow.response"
     _name = "escrow.response.payment.delete"
+
+
+class EscrowRequestInsuranceCallback(Datamodel):
+    _name = "escrow.request.insurance.callback"
+
+    class Meta:
+        ordered = True
+
+    reference = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Quote Reference"), "description": _lt("Insurance quote reference number"), "example": 123456})
+    amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Insurance Amount"), "description": _lt("Insurance amount"), "example": 1500.50})
+    company = fields.String(required=True, allow_none=False, metadata={"title": _lt("Insurance Company"), "description": _lt("Insurance company name"), "example": "ABC Insurance"})
+    commission = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Commission"), "description": _lt("Commission amount"), "example": 150.00})
+    policyDoc = fields.String(required=True, allow_none=False, metadata={"title": _lt("Policy Document"), "description": _lt("Policy document file in base64 format"), "example": "JVBERi0xLjQK..."})
+    policyNumber = fields.String(required=False, allow_none=True, metadata={"title": _lt("Policy Number"), "description": _lt("Insurance policy number"), "example": "POL-2025-001"})
+
+
+class EscrowResponseInsuranceCallback(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.insurance.callback"
+

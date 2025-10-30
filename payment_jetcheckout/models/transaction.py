@@ -469,6 +469,11 @@ class PaymentTransaction(models.Model):
             self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
             return
 
+        if self.paylox_basket_ids:
+            for basket in self.paylox_basket_ids:
+                basket._action_approve()
+            return
+
         url = '%s/api/v1/payment/submerchant/approve' % self.acquirer_id._get_paylox_api_url()
         data = {
             "application_key": self.acquirer_id.jetcheckout_api_key,
@@ -559,6 +564,10 @@ class PaymentTransaction(models.Model):
         if not self.state == 'cancel':
             if self.jetcheckout_approval_auto:
                 self._action_disapprove()
+            if self.paylox_basket_ids:
+                for basket in self.paylox_basket_ids:
+                    if basket.transfer_status == 'approved':
+                        basket._action_disapprove()
             self.write(self._paylox_cancel_postprocess_values())
         if self.payment_id:
             self.payment_id.action_draft()
@@ -587,7 +596,6 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if not self.env.user.has_group('payment_jetcheckout.group_transaction_cancel'):
             raise AccessError(_('You do not have any permission to cancel this transaction'))
- 
         self._paylox_cancel()
 
     def _paylox_refund(self, amount):
@@ -948,4 +956,98 @@ class PaymentTransactionBasket(models.Model):
     category = fields.Char('Category')
     submerchant_external_id = fields.Char('Submerchant External ID')
     submerchant_price = fields.Float('Submerchant External Price')
-    
+    approval_state = fields.Selection([('+', 'Approved'), ('-', 'Rejected')], string='Approval State')
+    approval_state_message = fields.Text('Approval Message')
+
+    def action_approve(self):
+        for basket in self:
+            basket._action_approve()
+
+    def _action_approve(self):
+        self.ensure_one()
+        if self.approval_state == '+':
+            return
+
+        tx = self.transaction_id
+        if tx.state != 'done':
+            self.approval_state_message = _('Only paid transactions can be approved')
+            return
+
+        url = '%s/api/v1/payment/submerchant/approve' % tx.acquirer_id._get_paylox_api_url()
+        data = {
+            "application_key": tx.acquirer_id.jetcheckout_api_key,
+            "transaction_id": tx.jetcheckout_transaction_id,
+            "item_id": self.uid,
+            "language": "tr",
+        }
+
+        response = requests.post(url, data=json.dumps(data))
+        try:
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    self.approval_state = '+'
+                    self.approval_state_message = _('Approved')
+                else:
+                    self.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+            else:
+                self.approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+            self.env.cr.commit()
+        except:
+            self.env.cr.rollback()
+
+    def action_disapprove(self):
+        for basket in self:
+            basket._action_disapprove()
+
+    def _action_disapprove(self):
+        self.ensure_one()
+        
+        if self.approval_state == '-':
+            return
+
+        tx = self.transaction_id
+        url = '%s/api/v1/payment/submerchant/disapprove' % tx.acquirer_id._get_paylox_api_url()
+        data = {
+            "application_key": tx.acquirer_id.jetcheckout_api_key,
+            "transaction_id": tx.jetcheckout_transaction_id,
+            "item_id": self.uid,
+            "language": "tr",
+        }
+
+        response = requests.post(url, data=json.dumps(data))
+        try:
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == "00":
+                    self.approval_state = '-'
+                    self.approval_state_message = _('Disapproved')
+                else:
+                    self.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+            else:
+                self.approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+            self.env.cr.commit()
+        except:
+            self.env.cr.rollback()
+
+    def write(self, values):
+        res = super().write(values)
+        if 'approval_state' in values:
+            tx = fields.first(self).transaction_id
+            if tx:
+                if all(t == '+' for t in tx.mapped('paylox_basket_ids.approval_state')):
+                    tx.write({
+                        'jetcheckout_approval_state': '+',
+                        'jetcheckout_approval_state_message': _('Approved'),
+                    })
+                elif all(t == '-' for t in tx.mapped('paylox_basket_ids.approval_state')):
+                    tx.write({
+                        'jetcheckout_approval_state': '-',
+                        'jetcheckout_approval_state_message': _('Disapproved'),
+                    })
+                else:
+                    tx.write({
+                        'jetcheckout_approval_state': False,
+                        'jetcheckout_approval_state_message': False,
+                    })
+        return res

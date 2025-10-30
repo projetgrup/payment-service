@@ -1,4 +1,4 @@
-/** @odoo-module alias=paylox.system.escrow.broker **/
+/** @odoo-module alias=paylox.system.escrow.register.user **/
 'use strict';
 
 import rpc from 'web.rpc';
@@ -9,8 +9,8 @@ import fields from 'paylox.fields';
 
 const REGEXP_EMAIL = /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/;
 
-publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
-    selector: '.broker-registration #wrapwrap',
+publicWidget.registry.payloxUserRegistration = payloxPage.extend({
+    selector: '.user-registration #wrapwrap',
     jsLibs: [
         '/payment_jetcheckout/static/src/lib/imask/imask.js',
         '/payment_jetcheckout/static/src/lib/filepond/filepond.js',
@@ -24,7 +24,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         this.otpTimer = null;
         this.otpId = null;
         
-        this.broker = {
+        this.user = {
             button: {
                 next: new fields.element({
                     events: [['click', this._onClickNext]]
@@ -35,28 +35,21 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 submit: new fields.element({
                     events: [['click', this._onClickSubmit]]
                 }),
-                otpSubmit: new fields.element({
-                    events: [['click', this._onClickOtpSubmit]]
-                }),
-                otpCancel: new fields.element({
-                    events: [['click', this._onClickOtpCancel]]
-                }),
-                otpResend: new fields.element({
-                    events: [['click', this._onClickOtpResend]]
-                }),
             },
             input: {
+                register_type: new fields.string(),
+                dealer_referral_code: new fields.string(),
                 vat: new fields.element({
                     mask: '00000000000',
                     validate: () => {
-                        const field = this.broker.input.vat;
+                        const field = this.user.input.vat;
                         let message = null;
                         let valid = true;
                         if (!field._.masked.isComplete) {
                             message = _t('TC Identity Number is required');
                             valid = false;
                         } else if (!this._isTcknValid(field.value)) {
-                            message = _t('Tax ID is not valid');
+                            message = _t('TC Identity Number is not valid');
                             valid = false;
                         } 
                         this._onFieldValid(field, valid, message);
@@ -64,9 +57,9 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     }
                 }),
                 tax_number: new fields.string({
-                    mask: '00000000000',
+                    mask: '0000000000',
                     validate: () => {
-                        const field = this.broker.input.tax_number;
+                        const field = this.user.input.tax_number;
                         let message = null;
                         let valid = true;
                         if (!field._.masked.isComplete) {
@@ -84,7 +77,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                     prepareChar: str => str.toLocaleUpperCase('tr-TR'),
                     validate: () => {
-                        const field = this.broker.input.name;
+                        const field = this.user.input.name;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -98,7 +91,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 company_title: new fields.string({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ0-9]+[A-Za-zığüşöçĞÜŞÖÇİ0-9\s]*$/,
                     validate: () => {
-                        const field = this.broker.input.company_title;
+                        const field = this.user.input.company_title;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -112,7 +105,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 sign_name: new fields.string({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ0-9]+[A-Za-zığüşöçĞÜŞÖÇİ0-9\s]*$/,
                     validate: () => {
-                        const field = this.broker.input.sign_name;
+                        const field = this.user.input.sign_name;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -125,7 +118,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 }),
                 state: new fields.element({
                     validate: () => {
-                        const field = this.broker.input.state;
+                        const field = this.user.input.state;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -140,7 +133,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                     prepareChar: str => str.toLocaleUpperCase('tr-TR'),
                     validate: () => {
-                        const field = this.broker.input.city;
+                        const field = this.user.input.city;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -155,7 +148,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ]+[A-Za-zığüşöçĞÜŞÖÇİ\s]*$/,
                     prepareChar: str => str.toLocaleUpperCase('tr-TR'),
                     validate: () => {
-                        const field = this.broker.input.person;
+                        const field = this.user.input.person;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -170,7 +163,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     mask: '000 000 0000',
                     events: [['input', () => this._onPhoneInput()]],
                     validate: () => {
-                        const field = this.broker.input.phone;
+                        const field = this.user.input.phone;
                         let message = null;
                         let valid = true;
                         
@@ -186,7 +179,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 email: new fields.string({
                     mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
                     validate: () => {
-                        const field = this.broker.input.email;
+                        const field = this.user.input.email;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -203,7 +196,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 iban: new fields.string({
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: () => {
-                        const field = this.broker.input.iban;
+                        const field = this.user.input.iban;
                         let message = null;
                         let valid = true;
                         if (!field._.masked.isComplete) {
@@ -221,7 +214,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     mask: /^[A-Za-zığüşöçĞÜŞÖÇİ0-9]+[A-Za-zığüşöçĞÜŞÖÇİ0-9\s]*$/,
                     prepareChar: str => str.toLocaleUpperCase('tr-TR'),
                     validate: () => {
-                        const field = this.broker.input.iban_name;
+                        const field = this.user.input.iban_name;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -232,50 +225,15 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                         return valid;
                     }
                 }),
-                fileTaxPlate: new fields.file({
-                    name: 'fileTaxPlate',
+                // Dealer Individual Files
+                fileIdentityIndividual: new fields.file({
+                    name: 'fileIdentityIndividual',
                     allowMultiple: false,
                     accept: 'image/png, image/jpeg, image/gif, application/pdf',
                     maxFileSize: '10MB',
                     labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
                     validate: () => {
-                        const field = this.broker.input.fileTaxPlate;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Tax Plate is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                fileSignatureCircular: new fields.file({
-                    name: 'fileSignatureCircular',
-                    allowMultiple: false,
-                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
-                    maxFileSize: '10MB',
-                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
-                    validate: () => {
-                        const field = this.broker.input.fileSignatureCircular;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Signature Circular is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                fileIdentity: new fields.file({
-                    name: 'fileIdentity',
-                    allowMultiple: false,
-                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
-                    maxFileSize: '10MB',
-                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
-                    validate: () => {
-                        const field = this.broker.input.fileIdentity;
+                        const field = this.user.input.fileIdentityIndividual;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -286,14 +244,160 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                         return valid;
                     }
                 }),
-                fileAuthorization: new fields.file({
-                    name: 'fileAuthorization',
+                fileResidenceIndividual: new fields.file({
+                    name: 'fileResidenceIndividual',
                     allowMultiple: false,
                     accept: 'image/png, image/jpeg, image/gif, application/pdf',
                     maxFileSize: '10MB',
                     labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
                     validate: () => {
-                        const field = this.broker.input.fileAuthorization;
+                        const field = this.user.input.fileResidenceIndividual;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Residence Document is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileCriminalRecordIndividual: new fields.file({
+                    name: 'fileCriminalRecordIndividual',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileCriminalRecordIndividual;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Criminal Record Document is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                // Dealer Corporate Files
+                fileIdentityCorporate: new fields.file({
+                    name: 'fileIdentityCorporate',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileIdentityCorporate;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Identity Document is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileTaxPlateCorporate: new fields.file({
+                    name: 'fileTaxPlateCorporate',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileTaxPlateCorporate;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Tax Plate is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileSignatureCircularCorporate: new fields.file({
+                    name: 'fileSignatureCircularCorporate',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileSignatureCircularCorporate;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Signature Circular is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                // Broker Files
+                fileTaxPlateBroker: new fields.file({
+                    name: 'fileTaxPlateBroker',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileTaxPlateBroker;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Tax Plate is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileSignatureCircularBroker: new fields.file({
+                    name: 'fileSignatureCircularBroker',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileSignatureCircularBroker;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Signature Circular is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileIdentityBroker: new fields.file({
+                    name: 'fileIdentityBroker',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileIdentityBroker;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Identity Document is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                fileAuthorizationBroker: new fields.file({
+                    name: 'fileAuthorizationBroker',
+                    allowMultiple: false,
+                    accept: 'image/png, image/jpeg, image/gif, application/pdf',
+                    maxFileSize: '10MB',
+                    labelIdle: 'Drag & Drop your file or <span class="filepond--label-action">Browse</span>',
+                    validate: () => {
+                        const field = this.user.input.fileAuthorizationBroker;
                         let message = null;
                         let valid = true;
                         if (!field.value) {
@@ -323,13 +427,28 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 //     }
                 // }),
             },
+        };
+        this.escrow = {
             otp: {
+                modal: new fields.element(),
+                timer: new fields.element(),
                 input1: new fields.element(),
                 input2: new fields.element(),
                 input3: new fields.element(),
                 input4: new fields.element(),
+                button: {
+                    otpSubmit: new fields.element({
+                        events: [['click', this._onClickOtpSubmit]]
+                    }),
+                    otpCancel: new fields.element({
+                        events: [['click', this._onClickOtpCancel]]
+                    }),
+                    otpResend: new fields.element({
+                        events: [['click', this._onClickOtpResend]]
+                    }),
+                }
             }
-        };
+        }
     },
 
     start: function () {
@@ -342,14 +461,14 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
 
     _initializeUserTypeToggle: function() {
         const self = this;
-        const $form = this.$('#brokerInfoForm');
+        const $form = this.$('#userInfoForm');
         const $radioInd = $form.find('input[name="userType"][value="individual"]');
         const $radioCor = $form.find('input[name="userType"][value="corporate"]');
         const $individualFields = $form.find('.individual-fields');
         const $corporateFields = $form.find('.corporate-fields');
         const $slider = $form.find('.radioTab__slider');
-        
-        function setMode(mode) {
+
+        const setMode = (mode) => {
             const isInd = mode === 'individual';
             
             // Toggle visibility
@@ -377,6 +496,9 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 $individualFields.find('.form__group').removeClass('-error');
                 $individualFields.find('.form__icon').removeClass('fa-times-circle fa-check-circle');
             }
+            
+            // Update document requirements
+            self._updateDocumentRequirements();
         }
         
         // Remove old listeners
@@ -397,6 +519,23 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         
         const selected = $form.find('input[name="userType"]:checked').val() || 'corporate';
         setMode(selected);
+    },
+
+    _updateDocumentRequirements: function() {
+        const registerType = $('#register_type').val();
+        const userType = $('.radioTab__control[name="userType"]:checked').val() || 'individual';
+        
+        $('.dealer-individual-docs, .dealer-corporate-docs, .broker-docs').hide();
+        
+        if (registerType === 'dealer') {
+            if (userType === 'individual') {
+                $('.dealer-individual-docs').show();
+            } else {
+                $('.dealer-corporate-docs').show();
+            }
+        } else if (registerType === 'broker') {
+            $('.broker-docs').show();
+        }
     },
 
     _isVatValid: function(value) {
@@ -480,10 +619,10 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
     _initializeOtpInputs: function() {
         const self = this;
         const otpInputs = [
-            this.broker.otp.input1,
-            this.broker.otp.input2,
-            this.broker.otp.input3,
-            this.broker.otp.input4,
+            this.escrow.otp.input1,
+            this.escrow.otp.input2,
+            this.escrow.otp.input3,
+            this.escrow.otp.input4,
         ];
 
         otpInputs.forEach((input, index) => {
@@ -497,7 +636,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     const code = otpInputs.map(inp => inp.$.val()).join('');
                     if (code.length === 4) {
                         setTimeout(function() {
-                            self.broker.button.otpSubmit.$.trigger('click');
+                            self.escrow.otp.button.otpSubmit.$.trigger('click');
                         }, 300);
                     }
                 }
@@ -525,7 +664,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     otpInputs[lastIndex].$.focus();
                     
                     if (digits.length === 4) {
-                        self.broker.button.otpSubmit.$.trigger('click');
+                        self.escrow.otp.button.otpSubmit.$.trigger('click');
                     }
                 }
             });
@@ -534,7 +673,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
 
     _onPhoneInput: function() {
         const self = this;
-        const field = this.broker.input.phone;
+        const field = this.user.input.phone;
         
         if (this.phoneVerified) {
             this.phoneVerified = false;
@@ -544,11 +683,11 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
 
     _showOtpModal: function(expiresIn) {
         const self = this;
-        const $modal = $('#brokerOtpModal');
-        const $timer = $('#brokerOtpTimer');
-        const $submitBtn = $('#brokerOtpSubmit');
-        const $resendBtn = $('#brokerOtpResend');
-        
+        const $modal = this.escrow.otp.modal.$;
+        const $timer = this.escrow.otp.timer.$;
+        const $submitBtn = this.escrow.otp.button.otpSubmit.$;
+        const $resendBtn = this.escrow.otp.button.otpResend.$;
+
         let seconds = expiresIn || 120;
 
         $modal.css('display', 'flex');
@@ -570,15 +709,15 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
             }
         }, 1000);
 
-        this.broker.otp.input1.$.focus();
-        
-        [this.broker.otp.input1, this.broker.otp.input2, this.broker.otp.input3, this.broker.otp.input4].forEach(input => {
+        this.escrow.otp.input1.$.focus();
+
+        [this.escrow.otp.input1, this.escrow.otp.input2, this.escrow.otp.input3, this.escrow.otp.input4].forEach(input => {
             input.$.val('');
         });
     },
 
     _closeOtpModal: function() {
-        const $modal = $('#brokerOtpModal');
+        const $modal = this.escrow.otp.modal.$;
         $modal.hide();
         
         if (this.otpTimer) {
@@ -586,8 +725,8 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
             this.otpTimer = null;
         }
         
-        $('#brokerOtpSubmit').prop('disabled', false).removeClass('disabled');
-        $('#brokerOtpResend').hide();
+        this.escrow.otp.button.otpSubmit.$.prop('disabled', false).removeClass('disabled');
+        this.escrow.otp.button.otpResend.$.hide();
     },
 
     _onClickOtpSubmit: function(ev) {
@@ -595,10 +734,10 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         const self = this;
 
         const code = [
-            this.broker.otp.input1.$.val(),
-            this.broker.otp.input2.$.val(),
-            this.broker.otp.input3.$.val(),
-            this.broker.otp.input4.$.val(),
+            this.escrow.otp.input1.$.val(),
+            this.escrow.otp.input2.$.val(),
+            this.escrow.otp.input3.$.val(),
+            this.escrow.otp.input4.$.val(),
         ].join('');
 
         if (code.length !== 4) {
@@ -611,7 +750,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         }
 
         rpc.query({
-            route: '/broker/otp/verify',
+            route: '/escrow/register/otp/verify',
             params: {
                 otp_id: this.otpId,
                 code: code,
@@ -620,28 +759,26 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
             if (result && result.success) {
                 self.phoneVerified = true;
                 self._closeOtpModal();
-                self._showFieldSuccessIcon(self.broker.input.phone);
+                self._showFieldSuccessIcon(self.user.input.phone);
                 
-                self.broker.input.phone.$.closest('.form__group').find('.phone-verification-notice, .form__error-label, .just-validate-error-label').remove();
-                self.broker.input.phone.$.removeClass('is-invalid -error just-validate-error-field').addClass('is-valid');
+                self.user.input.phone.$.closest('.form__group').find('.phone-verification-notice, .form__error-label, .just-validate-error-label').remove();
+                self.user.input.phone.$.removeClass('is-invalid -error just-validate-error-field').addClass('is-valid');
                 self.displayNotification({
                         type: 'success',
                         title: _t('Success'),
                         message: _t('Phone number verified successfully'),
                     });
-                setTimeout(function() {
-                    self.broker.button.next.$.trigger('click');
-                }, 500);
+                self._markStepCompleted(1);
             } else {
                 self.displayNotification({
                         type: 'danger',
                         title: _t('Error'),
                         message: result.message || _t('Invalid verification code'),
                     });
-                [self.broker.otp.input1, self.broker.otp.input2, self.broker.otp.input3, self.broker.otp.input4].forEach(input => {
+                [self.escrow.otp.input1, self.escrow.otp.input2, self.escrow.otp.input3, self.escrow.otp.input4].forEach(input => {
                     input.$.val('');
                 });
-                self.broker.otp.input1.$.focus();
+                self.escrow.otp.input1.$.focus();
             }
         }).catch(function(error) {
             console.error('Error verifying OTP:', error);
@@ -663,7 +800,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         const self = this;
         
         rpc.query({
-            route: '/my/otp/start',
+            route: '/escrow/otp/start',
             params: { partner_id: self.partner }
         }).then(function(result) {
             if (result && result.success) {
@@ -673,7 +810,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     title: _t('Success'),
                     message: _t('Verification code sent again'),
                 });
-                $('#brokerOtpResend').hide();
+                self.escrow.otpResend.$.hide();
                 self._showOtpModal(result.expires_in || 120);
             } else {
                 self.displayNotification({
@@ -723,28 +860,28 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         
         if (isIndividual) {
             fields = [
-                this.broker.input.vat,
-                this.broker.input.name,
-                this.broker.input.state,
-                this.broker.input.city,
-                this.broker.input.person,
-                this.broker.input.phone,
-                this.broker.input.email,
-                this.broker.input.iban,
-                this.broker.input.iban_name,
+                this.user.input.vat,
+                this.user.input.name,
+                this.user.input.state,
+                this.user.input.city,
+                this.user.input.person,
+                this.user.input.phone,
+                this.user.input.email,
+                this.user.input.iban,
+                this.user.input.iban_name,
             ];
         } else {
             fields = [
-                this.broker.input.tax_number,
-                this.broker.input.company_title,
-                this.broker.input.sign_name,
-                this.broker.input.state,
-                this.broker.input.city,
-                this.broker.input.person,
-                this.broker.input.phone,
-                this.broker.input.email,
-                this.broker.input.iban,
-                this.broker.input.iban_name,
+                this.user.input.tax_number,
+                this.user.input.company_title,
+                this.user.input.sign_name,
+                this.user.input.state,
+                this.user.input.city,
+                this.user.input.person,
+                this.user.input.phone,
+                this.user.input.email,
+                this.user.input.iban,
+                this.user.input.iban_name,
             ];
         }
 
@@ -762,54 +899,66 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         const formData = {
             step: 1,
             user_type: userType,
-            state_id: this.broker.input.state.value,
-            city: this.broker.input.city.value,
-            person: this.broker.input.person.value,
-            phone: this.broker.input.phone.value,
-            email: this.broker.input.email.value,
-            iban: this.broker.input.iban.$.val(),
-            iban_name: this.broker.input.iban_name.value,
+            user_register_type: this.user.input.register_type.value,
+            dealer_referral_code: this.user.input.dealer_referral_code.value,
+            state_id: this.user.input.state.value,
+            city: this.user.input.city.value,
+            person: this.user.input.person.value,
+            phone: this.user.input.phone.value,
+            email: this.user.input.email.value,
+            iban: this.user.input.iban.$.val(),
+            iban_name: this.user.input.iban_name.value,
         };
         
         if (isIndividual) {
-            formData.vat = this.broker.input.vat.value;
-            formData.name = this.broker.input.name.value;
-            formData.sign_name = this.broker.input.sign_name.value;
+            formData.vat = this.user.input.vat.value;
+            formData.name = this.user.input.name.value;
+            formData.sign_name = this.user.input.sign_name.value;
         } else {
-            formData.tax_number = this.broker.input.tax_number.value;
-            formData.company_title = this.broker.input.company_title.value;
-            formData.sign_name = this.broker.input.sign_name.value;
+            formData.tax_number = this.user.input.tax_number.value;
+            formData.company_title = this.user.input.company_title.value;
+            formData.sign_name = this.user.input.sign_name.value;
         }
 
-        this.broker.button.next.$.prop('disabled', true);
+        this.user.button.next.$.prop('disabled', true);
 
         rpc.query({
-            route: '/broker/register/save',
+            route: '/escrow/register',
             params: formData,
         }).then(function(result) {
             if (result.success) {
                 self.partner = result.partner_id || self.tempPartnerId || 0;
                 
+                if (result.registered) {
+                    self._markStepCompleted(1);
+                    self._markStepCompleted(2);
+                    self.displayNotification({
+                        type: 'info',
+                        title: _t('Information'),
+                        message: result.message || _t('This account is already registered.'),
+                    });
+                    return;
+                }
+                
                 if (!self.phoneVerified) {
-                    self._showFieldLoadingIcon(self.broker.input.phone);
+                    self._showFieldLoadingIcon(self.user.input.phone);
                     
                     rpc.query({
-                        route: '/broker/otp/start',
+                        route: '/escrow/register/otp/start',
                         params: { partner_id: self.partner }
                     }).then(function(result) {
                         if (result && result.success) {
                             self.otpId = result.otp_id;
                             self._showOtpModal(result.expires_in || 120);
-                            self._hideFieldIcon(self.broker.input.phone);
+                            self._hideFieldIcon(self.user.input.phone);
                         } else if (result && result.is_otp_verified) {
                             self.phoneVerified = true;
-                            self._showFieldSuccessIcon(self.broker.input.phone);
-                            // Step 2'ye geç
-                            self._markStepCompleted(1);
-                            $('.broker-step-1').removeClass('d-flex').addClass('d-none');
-                            $('.broker-step-2').removeClass('d-none').addClass('d-flex');
-                            $('.steps__item').eq(0).removeClass('-active').addClass('-completed');
-                            $('.steps__item').eq(1).addClass('-active');
+                            self._showFieldSuccessIcon(self.user.input.phone);
+                            self.displayNotification({
+                                type: 'success',
+                                title: _t('Success'),
+                                message: result.message || _t('OTP already verified'),
+                            });
                         } else {
                             self.displayNotification({
                                 type: 'danger',
@@ -825,17 +974,11 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                             title: _t('Error'),
                             message: _t('An error occurred while sending OTP'),
                         });
-                        self._hideFieldIcon(self.broker.input.phone);
+                        self._hideFieldIcon(self.user.input.phone);
                     });
                     return;
                 }
-                
                 self._markStepCompleted(1);
-                $('.broker-step-1').removeClass('d-flex').addClass('d-none');
-                $('.broker-step-2').removeClass('d-none').addClass('d-flex');
-                
-                $('.steps__item').eq(0).removeClass('-active').addClass('-completed');
-                $('.steps__item').eq(1).addClass('-active');
             } else {
                 self.displayNotification({
                     type: 'danger',
@@ -851,14 +994,14 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 message: _t('An error occurred while processing your request'),
             });
         }).finally(function() {
-            self.broker.button.next.$.prop('disabled', false);
+            self.user.button.next.$.prop('disabled', false);
         });
     },
 
     _onClickBack: function(ev) {
         ev.preventDefault();
-        $('.broker-step-2').removeClass('d-flex').addClass('d-none');
-        $('.broker-step-1').removeClass('d-none').addClass('d-flex');
+        $('.register-step-2').removeClass('d-flex').addClass('d-none');
+        $('.register-step-1').removeClass('d-none').addClass('d-flex');
         
         $('.steps__item').eq(1).removeClass('-active');
         $('.steps__item').eq(0).addClass('-active');
@@ -867,14 +1010,27 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
     _onClickSubmit: function(ev) {
         ev.preventDefault();
         const self = this;
+        const userType = this.$('input[name="userType"]:checked').val();
+        const registerType = this.$('#register_type').val();
 
-        const fileFields = [
-            this.broker.input.fileTaxPlate,
-            this.broker.input.fileSignatureCircular,
-            this.broker.input.fileIdentity,
-            this.broker.input.fileAuthorization,
-            // this.broker.input.fileContract,
-        ];
+        // Validate files
+        const fileFields = [];
+        if (registerType === 'broker') {
+            fileFields.push(this.user.input.fileTaxPlateBroker);
+            fileFields.push(this.user.input.fileSignatureCircularBroker);
+            fileFields.push(this.user.input.fileIdentityBroker);
+            fileFields.push(this.user.input.fileAuthorizationBroker);
+        } else if (registerType === 'dealer') {
+            if (userType === 'individual') {
+                fileFields.push(this.user.input.fileIdentityIndividual);
+                fileFields.push(this.user.input.fileResidenceIndividual);
+                fileFields.push(this.user.input.fileCriminalRecordIndividual);
+            } else {
+                fileFields.push(this.user.input.fileIdentityCorporate);
+                fileFields.push(this.user.input.fileTaxPlateCorporate);
+                fileFields.push(this.user.input.fileSignatureCircularCorporate);
+            }
+        }
 
         let isValid = true;
         fileFields.forEach(field => {
@@ -908,17 +1064,54 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
         const formData = {
             step: 2,
             partner_id: this.partner,
-            tax_plate: this.broker.input.fileTaxPlate.value,
-            tax_plate_filename: this.broker.input.fileTaxPlate.filename || 'tax_plate.pdf',
-            signature_circular: this.broker.input.fileSignatureCircular.value,
-            signature_circular_filename: this.broker.input.fileSignatureCircular.filename || 'signature_circular.pdf',
-            identity_doc: this.broker.input.fileIdentity.value,
-            identity_doc_filename: this.broker.input.fileIdentity.filename || 'identity.pdf',
-            authorization_doc: this.broker.input.fileAuthorization.value,
-            authorization_doc_filename: this.broker.input.fileAuthorization.filename || 'authorization.pdf',
-            // contract: this.broker.input.fileContract.value,
-            // contract_filename: this.broker.input.fileContract.filename || 'contract.pdf',
+            user_register_type: registerType,
+            user_type: userType,
         };
+
+        if (registerType === 'broker') {
+            formData.tax_plate = this.user.input.fileTaxPlateBroker.value;
+            formData.tax_plate_filename = this.user.input.fileTaxPlateBroker.filename || 'tax_plate.pdf';
+            formData.signature_circular = this.user.input.fileSignatureCircularBroker.value;
+            formData.signature_circular_filename = this.user.input.fileSignatureCircularBroker.filename || 'signature_circular.pdf';
+            formData.identity_doc = this.user.input.fileIdentityBroker.value;
+            formData.identity_doc_filename = this.user.input.fileIdentityBroker.filename || 'identity.pdf';
+            formData.authorization_doc = this.user.input.fileAuthorizationBroker.value;
+            formData.authorization_doc_filename = this.user.input.fileAuthorizationBroker.filename || 'authorization.pdf';
+        } else if (registerType === 'dealer') {
+            if (userType === 'individual') {
+                formData.identity_doc = this.user.input.fileIdentityIndividual.value;
+                formData.identity_doc_filename = this.user.input.fileIdentityIndividual.filename || 'identity.pdf';
+                formData.residence_doc = this.user.input.fileResidenceIndividual.value;
+                formData.residence_doc_filename = this.user.input.fileResidenceIndividual.filename || 'residence.pdf';
+                formData.criminal_record_doc = this.user.input.fileCriminalRecordIndividual.value;
+                formData.criminal_record_doc_filename = this.user.input.fileCriminalRecordIndividual.filename || 'criminal_record.pdf';
+            } else {
+                formData.identity_doc = this.user.input.fileIdentityCorporate.value;
+                formData.identity_doc_filename = this.user.input.fileIdentityCorporate.filename || 'identity.pdf';
+                formData.tax_plate = this.user.input.fileTaxPlateCorporate.value;
+                formData.tax_plate_filename = this.user.input.fileTaxPlateCorporate.filename || 'tax_plate.pdf';
+                formData.signature_circular = this.user.input.fileSignatureCircularCorporate.value;
+                formData.signature_circular_filename = this.user.input.fileSignatureCircularCorporate.filename || 'signature_circular.pdf';
+            }
+        }
+
+        if (this.agreement && this.agreement.exist && !this.agreement.confirmed) {
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('Please accept all required agreements'),
+            });
+            return;
+        }
+
+        if (!this.partner) {
+            self.displayNotification({
+                type: 'danger',
+                title: _t('Error'),
+                message: _t('Session expired. Please start over.'),
+            });
+            return;
+        }
 
         if (this.agreement && this.agreement.exist) {
             formData.agreements = Object.entries(this.agreement.all)
@@ -926,17 +1119,14 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 .map(x => Number(x[0]));
         }
 
-        this.broker.button.submit.$.prop('disabled', true);
+        this.user.button.submit.$.prop('disabled', true);
 
         rpc.query({
-            route: '/broker/register/save',
+            route: '/escrow/register',
             params: formData,
         }).then(function(result) {
             if (result.success) {
                 self._markStepCompleted(2);
-                $('.broker-step-2').removeClass('d-flex').addClass('d-none');
-                $('.broker-step-3').removeClass('d-none').addClass('d-flex');
-                $('.steps__item').addClass('-completed completed');
                 self.displayNotification({
                     type: 'success',
                     title: _t('Success'),
@@ -948,7 +1138,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                     title: _t('Error'),
                     message: result.message || _t('An error occurred'),
                 });
-                self.broker.button.submit.$.prop('disabled', false);
+                self.user.button.submit.$.prop('disabled', false);
             }
         }).catch(function(error) {
             console.error('Error:', error);
@@ -957,7 +1147,7 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
                 title: _t('Error'),
                 message: _t('An error occurred while submitting your registration'),
             });
-            self.broker.button.submit.$.prop('disabled', false);
+            self.user.button.submit.$.prop('disabled', false);
         });
     },
 
@@ -982,7 +1172,17 @@ publicWidget.registry.payloxBrokerRegistration = payloxPage.extend({
     _markStepCompleted: function (stepNumber) {
         if (stepNumber >= 1 && stepNumber <= 2) {
             const $stepItem = $(`.steps__item:nth-child(${stepNumber})`);
-            $stepItem.addClass('-completed');
+            $stepItem.addClass('-completed').removeClass('-active');
+            $(`.register-step-${stepNumber}`).removeClass('d-flex').addClass('d-none');
+            const nextStep = stepNumber + 1;
+            $(`.register-step-${nextStep}`).removeClass('d-none').addClass('d-flex');
+            $(`.steps__item:nth-child(${nextStep})`).addClass('-active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Update document requirements when moving to step 2
+            if (stepNumber === 1) {
+                this._updateDocumentRequirements();
+            }
         }
     },
 });

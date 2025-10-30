@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="page_broker_rates" name="Broker Rates Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-escrow broker-rates'"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-call="payment_jetcheckout.payment_loading"/>
+            <t t-call="payment_escrow.background_animation"/>
+
+            <div class="escrow-ad-wrapper d-none">
+                <t t-call="payment_escrow.header">
+                    <t t-set="variant" t-value="'ads'"/>
+                    <t t-set="company" t-value="company"/>
+                </t>
+
+                <div class="escrow-ad-container broker-rates-container"
+                     t-att-data-default-amount="default_amount or 0.0"
+                     t-att-data-default-campaign="selected_campaign and selected_campaign.id or ''"
+                     t-att-data-currency-symbol="currency.symbol"
+                     t-att-data-currency-position="currency.position"
+                     t-att-data-currency-decimals="currency.decimal_places or 2">
+                    <div class="container-fluid px-4 py-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 shadow-sm mb-4 p-4">
+                                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+                                        <div class="mb-3 mb-md-0">
+                                            <h3 class="h4 mb-1 font-weight-bold text-primary">Broker Installment Rates</h3>
+                                            <p class="text-muted mb-0">Preview net margin per installment plan based on the requested amount.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-end">
+                                        <div class="col-md-4 mb-3">
+                                            <div class="field-container w-100">
+                                                <input id="broker_amount" name="broker_amount" type="text" inputmode="decimal" 
+                                                       class="text-center border-primary" required="required" 
+                                                       field="broker.amount" data-role="amount"
+                                                       value="1000000"
+                                                       t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)"/>
+                                                <span class="bar-container"/>
+                                                <span t-if="currency.position == 'before'" class="symbol symbol-before" t-esc="currency.symbol"/>
+                                                <span t-else="" class="symbol symbol-after" t-esc="currency.symbol"/>
+                                                <label for="broker_amount" class="text-primary"><span>Collection Amount</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div class="field-container w-100">
+                                                <select id="broker_campaign" name="broker_campaign" 
+                                                        class="text-center border-primary" required="required"
+                                                        field="broker.campaign" data-role="campaign"
+                                                        t-att-disabled="not campaigns and 'disabled' or None">
+                                                    <option value="">Select Campaign</option>
+                                                    <t t-if="campaigns">
+                                                        <t t-foreach="campaigns" t-as="campaign">
+                                                            <option t-att-value="campaign.id" 
+                                                                    t-att-selected="selected_campaign and campaign.id == selected_campaign.id"
+                                                                    t-esc="campaign.name"/>
+                                                        </t>
+                                                    </t>
+                                                </select>
+                                                <span class="bar-container"/>
+                                                <label for="broker_campaign" class="text-primary"><span>Campaign</span></label>
+                                            </div>
+                                            <div class="small text-muted mt-2" t-if="not campaigns">
+                                                <i class="fa fa-info-circle mr-1"/>
+                                                <t>No active campaign is linked to your account yet.</t>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3 text-md-right">
+                                            <label class="font-weight-600 text-uppercase small text-muted d-md-block d-none">&#160;</label>
+                                            <button type="button" class="btn btn-primary btn-lg px-4 w-100 w-md-auto" 
+                                                    field="broker.button.refresh" data-role="refresh"
+                                                    t-att-disabled="not campaigns and 'disabled' or None">
+                                                <i class="fa fa-sync mr-2"/>
+                                                Calculate Rates
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 shadow-sm" data-role="table-card">
+                                    <div class="alert alert-danger m-4 d-none" role="alert" data-role="error"></div>
+                                    <div class="text-center py-5 d-none" data-role="loading">
+                                        <span class="spinner-border spinner-border-lg text-primary" role="status"></span>
+                                        <p class="mt-3 mb-0 text-muted font-weight-600">Calculating installment scenarios...</p>
+                                    </div>
+                                    <div class="broker-rates-content d-none" data-role="table-wrapper">
+                                        <div class="broker-card-type-tabs mb-4 d-none" role="tablist" data-role="type-tabs"></div>
+                                        <div class="broker-card-type-panels" data-role="tables"></div>
+                                    </div>
+                                    <div class="text-center py-5 text-muted font-weight-600" data-role="empty">
+                                        <i class="fa fa-credit-card mb-3 fa-3x d-block text-primary opacity-25"></i>
+                                        <span>Enter an amount and pick a campaign to preview rates.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card border-0 shadow-sm p-4 d-none" data-role="summary"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="page_broker_settings" name="Broker Settings Page">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-escrow broker-settings'"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-call="payment_jetcheckout.payment_loading"/>
+            <t t-call="payment_escrow.background_animation"/>
+
+            <div class="escrow-ad-wrapper d-none">
+                <t t-call="payment_escrow.header">
+                    <t t-set="variant" t-value="'ads'"/>
+                    <t t-set="company" t-value="company"/>
+                </t>
+
+                <div class="escrow-ad-container broker-settings-container">
+                    <div class="container-fluid px-4 py-4">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card border-0 shadow-sm mb-4 p-4">
+                                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+                                        <div class="mb-3 mb-md-0">
+                                            <h3 class="h4 mb-1 font-weight-bold text-primary">Broker Settings</h3>
+                                            <p class="text-muted mb-0">Configure your default broker campaign preferences.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <div class="field-container w-100">
+                                                <select id="default_campaign" name="default_campaign" 
+                                                        class="text-center border-primary" required="required"
+                                                        field="settings.campaign" data-role="campaign"
+                                                        t-att-disabled="not campaigns and 'disabled' or None">
+                                                    <option value="">Select Default Campaign</option>
+                                                    <t t-if="campaigns">
+                                                        <t t-foreach="campaigns" t-as="campaign">
+                                                            <option t-att-value="campaign.id" 
+                                                                    t-att-selected="default_campaign_id and campaign.id == default_campaign_id"
+                                                                    t-esc="campaign.name"/>
+                                                        </t>
+                                                    </t>
+                                                </select>
+                                                <span class="bar-container"/>
+                                                <label for="default_campaign" class="text-primary"><span>Default Campaign</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="field-container w-100">
+                                                <input type="text" id="sign_name" name="sign_name" 
+                                                       class="text-center border-primary" required="required"
+                                                       field="settings.signName" data-role="sign-name"
+                                                       t-att-value="partner.sign_name or ''"/>
+                                                <span class="bar-container"/>
+                                                <label for="sign_name" class="text-primary"><span>Sign Name</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="field-container w-100">
+                                                <input type="text" id="authorized_person" name="authorized_person" 
+                                                       class="text-center border-primary" required="required"
+                                                       field="settings.authorizedPerson" data-role="authorized-person"
+                                                       t-att-value="partner.authorized_person or ''"/>
+                                                <span class="bar-container"/>
+                                                <label for="authorized_person" class="text-primary"><span>Authorized Person</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="field-container w-100">
+                                                <input type="email" id="email" name="email" 
+                                                       class="text-center border-primary" required="required"
+                                                       field="settings.email" data-role="email"
+                                                       t-att-value="partner.email or ''"/>
+                                                <span class="bar-container"/>
+                                                <label for="email" class="text-primary"><span>Email</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="field-container w-100">
+                                                <input type="tel" id="phone" name="phone" 
+                                                       class="text-center border-primary" required="required"
+                                                       field="settings.phone" data-role="phone"
+                                                       t-att-value="partner.mobile or ''"/>
+                                                <span class="bar-container"/>
+                                                <label for="phone" class="text-primary"><span>Phone</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="field-container w-100">
+                                                <input type="tel" id="mobile" name="mobile" 
+                                                       class="text-center border-primary"
+                                                       field="settings.mobile" data-role="mobile"
+                                                       t-att-value="partner.mobile or ''"/>
+                                                <span class="bar-container"/>
+                                                <label for="mobile" class="text-primary"><span>Mobile</span></label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 text-right">
+                                            <button type="button" class="btn btn-primary btn-lg px-5" 
+                                                    field="settings.button.save" data-role="save">
+                                                <i class="fa fa-save mr-2"/>
+                                                Save Settings
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="alert alert-success mt-3 d-none" data-role="success">
+                                        <i class="fa fa-check-circle mr-2"/>
+                                        Settings saved successfully!
+                                    </div>
+                                    <div class="alert alert-danger mt-3 d-none" data-role="error">
+                                        <i class="fa fa-exclamation-circle mr-2"/>
+                                        <span data-role="error-message"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

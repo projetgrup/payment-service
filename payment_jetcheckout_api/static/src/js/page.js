@@ -17,6 +17,7 @@ publicWidget.registry.payloxApiPage = publicWidget.Widget.extend({
     start: function () {
         return this._super.apply(this, arguments).then(function () {
             framework.hideLoading();
+            window.history.replaceState({}, document.title, window.location.pathname);
         });
     },
 

@@ -96,21 +96,13 @@
                         attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('escrow_customer_ids', '=', False)]}">
                         <field name="escrow_customer_count" widget="statinfo" string="Get Customer"/>
                     </button>
-                    <button name="action_view_transactions"
+                    <button name="action_view_basket_items"
                         type="object"
                         class="oe_stat_button"
-                        icon="fa-credit-card"
-                        string="Transactions"
+                        icon="fa-shopping-basket"
                         group="payment_escrow.group_escrow_manager"
-                        attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('is_platform_owner_user', '=', False)]}"/>
-                    <button name="action_approve_transfers"
-                        type="object"
-                        class="oe_stat_button text-success"
-                        icon="fa-exchange"
-                        group="payment_escrow.group_escrow_manager"
-                        confirm="This will approve ALL wire transfer transactions for this ad. Do you want to continue?"
                         attrs="{'invisible': ['|', ('system', '!=', 'escrow'), ('is_platform_owner_user', '=', False)]}">
-                        <field name="escrow_transfer_count_display" widget="statinfo" string="Approve Transfers"/>
+                        <field name="escrow_transfer_count_display" widget="statinfo" string="Basket Items"/>
                     </button>
                 </div>
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

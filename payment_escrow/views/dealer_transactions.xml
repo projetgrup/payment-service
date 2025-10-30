@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="dealer_transactions_page" name="Dealer Transactions Dashboard">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-escrow dealer-transactions'"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-call="payment_jetcheckout.payment_loading"/>
+            <t t-call="payment_escrow.background_animation"/>
+            
+            <div class="escrow-ad-wrapper dealer-transactions-page">
+                <t t-call="payment_escrow.header">
+                    <t t-set="variant" t-value="'ads'"/>
+                    <t t-set="company" t-value="request.env.company"/>
+                </t>
+                
+                <div class="escrow-ad-container">
+                    <div class="col-12 col-lg-10 mx-auto p-2 escrow-ad-dashboard">
+                        <div class="col-12">
+                            <div class="escrow-ad-nav">
+                                <h3 class="escrow-ad-nav-title">Dealer Dashboard</h3>
+                                <!-- <div class="escrow-ad-nav-control">
+                                    <a class="btn escrow-ad-nav-button-secondary" href="/my/ads">
+                                        <i class="fa fa-arrow-left mr-2"/>
+                                        Back to My Ads
+                                    </a>
+                                </div> -->
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-4 mb-3">
+                                    <div class="card border-0 shadow-sm h-100 view-toggle-card active-card" 
+                                         style="border-radius: 12px; cursor: pointer; transition: transform 0.2s;" 
+                                         data-view="brokers"
+                                         field="transaction.button.showBrokerDetails"
+                                         onmouseover="this.style.transform='translateY(-4px)'"
+                                         onmouseout="this.style.transform='translateY(0)'">
+                                        <div class="card-body p-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="text-muted mb-1">Total Brokers</h6>
+                                                    <h2 class="mb-0 font-weight-bold text-primary" t-esc="broker_stats['total_brokers']"/>
+                                                    <small class="text-muted">
+                                                        <i class="fa fa-eye mr-1"></i>Click to view details
+                                                    </small>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <i class="fa fa-users fa-2x text-primary opacity-75"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card border-0 shadow-sm h-100 view-toggle-card" 
+                                        style="border-radius: 12px; cursor: pointer; transition: transform 0.2s;" 
+                                        data-view="transactions"
+                                        field="transaction.button.showTransactionDetails"
+                                        onmouseover="this.style.transform='translateY(-4px)'"
+                                        onmouseout="this.style.transform='translateY(0)'">
+                                        <div class="card-body p-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="text-muted mb-1">Total Transactions</h6>
+                                                    <h2 class="mb-0 font-weight-bold text-success" t-esc="broker_stats['total_transactions']"/>
+                                                    <small class="text-muted">
+                                                        <i class="fa fa-eye mr-1"></i>Click to view details
+                                                    </small>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <i class="fa fa-exchange-alt fa-2x text-success opacity-75"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="card border-0 shadow-sm h-100" style="border-radius: 12px;">
+                                        <div class="card-body p-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="text-muted mb-1">Total Volume</h6>
+                                                    <h2 class="mb-0 font-weight-bold text-info">
+                                                        <t t-esc="'%.2f' % broker_stats['total_volume']"/>
+                                                        <small t-esc="currency.symbol"/>
+                                                    </h2>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <i class="fa fa-chart-line fa-2x text-info opacity-75"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mb-4 view-section" id="transactionsSection" field="transaction.transactionSection" style="display: none;">
+                                <div class="card border-0 shadow-sm filter-card" style="border-radius: 12px;">
+                                    <div class="card-body py-3 px-4">
+                                        <div class="row align-items-center">
+                                            <div class="col-12">
+                                                <div class="d-flex align-items-center flex-wrap">
+                                                    <span class="mr-3 font-weight-600 text-dark" style="font-size: 14px;">Filter by Broker:</span>
+                                                    <div class="btn-group btn-group-toggle" role="group">
+                                                        <button type="button" class="btn btn-secondary filter-btn active" data-broker="all">
+                                                            <i class="fa fa-list mr-1"></i>All Brokers
+                                                        </button>
+                                                        <t t-foreach="brokers[:5]" t-as="broker">
+                                                            <button type="button" 
+                                                                    class="btn btn-outline-primary filter-btn" 
+                                                                    t-att-data-broker="broker.id">
+                                                                <i class="fa fa-user mr-1"></i>
+                                                                <t t-esc="broker.name"/>
+                                                            </button>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                            <div class="escrow-ad-list list-view mt-4">
+                                <div class="escrow-ad-list-header">
+                                    <div>BROKER</div>
+                                    <div>TRANSACTION</div>
+                                    <div>CAMPAİGN</div>
+                                    <div>VEHICLE</div>
+                                    <div>AMOUNT</div>
+                                    <div>STATUS</div>
+                                    <div>INVOICE</div>
+                                </div>
+                                
+                                <div class="ad-list-container w-100">
+                                    <t t-if="not baskets">
+                                        <div class="text-center py-5 my-5">
+                                            <i class="fa fa-inbox fa-4x text-muted mb-3"></i>
+                                            <h4 class="text-muted">No transactions found</h4>
+                                            <p class="text-muted">Your brokers haven't made any transactions yet</p>
+                                        </div>
+                                    </t>
+                                    
+                                    <t t-foreach="baskets" t-as="basket">
+                                        <t t-set="broker" t-value="basket_broker_map.get(basket.id, False)"/>
+                                        <div class="escrow-ad-list-item" t-att-data-broker-id="broker.id if broker else 0" t-att-data-status="basket.transfer_status">
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-600" t-esc="broker.name if broker else '-'"/>
+                                                    <br/>
+                                                    <small class="text-muted" t-esc="broker.email if broker else ''"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-bold" t-esc="basket.transaction_id.reference"/>
+                                                    <br/>
+                                                    <small class="text-muted" t-esc="basket.transaction_date.strftime('%d.%m.%Y %H:%M') if basket.transaction_date else '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-600" t-esc="broker.campaign_id.name or '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-esc="basket.vehicle_info or '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-bold text-primary">
+                                                        <t t-esc="'%.2f' % basket.transfer_amount"/>
+                                                        <t t-esc="basket.currency_id.symbol"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-if="basket.transfer_status == 'can_approve'" class="badge badge-info px-3 py-2">
+                                                        <i class="fa fa-check-circle mr-1"></i>Can Approve
+                                                    </span>
+                                                    <span t-elif="basket.transfer_status == 'waiting_invoice'" class="badge badge-warning px-3 py-2">
+                                                        <i class="fa fa-clock mr-1"></i>Waiting Invoice
+                                                    </span>
+                                                    <span t-elif="basket.transfer_status == 'approved'" class="badge badge-success px-3 py-2">
+                                                        <i class="fa fa-check mr-1"></i>Approved
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-if="basket.broker_invoice_id" class="text-success">
+                                                        <i class="fa fa-check-circle mr-1"></i>Uploaded
+                                                        <br/>
+                                                        <small t-esc="basket.broker_invoice_upload_date.strftime('%d.%m.%Y') if basket.broker_invoice_upload_date else ''"/>
+                                                    </span>
+                                                    <span t-else="" class="text-muted">
+                                                        <i class="fa fa-times-circle mr-1"></i>Not uploaded
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                            </div>
+                            
+                            <div class="col-12 mb-4 view-section" field="transaction.brokerSection">
+                                <!-- Referral Code Card -->
+                                <t t-if="dealer_referral_code">
+                                    <div class="card border-0 mb-4 referral-card">
+                                        <div class="card-body p-0">
+                                            <div class="row no-gutters">
+                                                <div class="col-md-4 referral-left-section d-flex align-items-center justify-content-center p-4">
+                                                    <div class="text-center">
+                                                        <div class="referral-icon-wrapper mb-3">
+                                                            <i class="fa fa-share-alt fa-3x"></i>
+                                                        </div>
+                                                        <h5 class="font-weight-bold mb-2">Referral Link</h5>
+                                                        <p class="mb-0 small opacity-90">Share with brokers</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8 p-4 d-flex align-items-center">
+                                                    <div class="w-100">
+                                                        <label class="text-muted small mb-2 font-weight-600">Your Unique Broker Registration Link</label>
+                                                        <div class="input-group referral-input-group">
+                                                            <input type="text" 
+                                                                   readonly="" 
+                                                                   t-att-value="dealer_referral_code"
+                                                                   class="form-control referral-url-input"
+                                                                   id="referralCodeInput"/>
+                                                            <div class="input-group-append">
+                                                                <button class="btn btn-copy-referral" 
+                                                                        onclick="copyReferralCode()"
+                                                                        type="button">
+                                                                    <i class="fa fa-copy mr-2"></i>
+                                                                    <span class="copy-text">Copy Link</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <small class="text-muted d-block mt-2">
+                                                            <i class="fa fa-info-circle mr-1"></i>
+                                                            Brokers who register with this link will be automatically assigned to you
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                
+                                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+                                    <div class="card-header bg-white border-0 py-3">
+                                        <h5 class="mb-0 font-weight-bold">
+                                            <i class="fa fa-users mr-2 text-primary"></i>
+                                            My Brokers
+                                        </h5>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover mb-0">
+                                                <thead class="bg-light">
+                                                    <tr>
+                                                        <th class="border-0 px-4 py-3">Name</th>
+                                                        <th class="border-0 px-4 py-3">Email</th>
+                                                        <th class="border-0 px-4 py-3">Phone</th>
+                                                        <th class="border-0 px-4 py-3">Status</th>
+                                                        <th class="border-0 px-4 py-3 text-right">Transactions</th>
+                                                        <th class="border-0 px-4 py-3 text-right">Volume</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-if="not brokers">
+                                                        <tr>
+                                                            <td colspan="6" class="text-center py-5 text-muted">
+                                                                <i class="fa fa-users fa-3x mb-3 d-block"></i>
+                                                                No brokers registered yet
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                    <t t-foreach="brokers" t-as="broker">
+                                                        <tr>
+                                                            <td class="px-4 py-3">
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="avatar-circle bg-primary text-white mr-2" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                                                        <t t-esc="broker.name[:1].upper()"/>
+                                                                    </div>
+                                                                    <span class="font-weight-600" t-esc="broker.name"/>
+                                                                </div>
+                                                            </td>
+                                                            <td class="px-4 py-3" t-esc="broker.email or '-'"/>
+                                                            <td class="px-4 py-3" t-esc="broker.mobile or '-'"/>
+                                                            <td class="px-4 py-3">
+                                                                <span t-if="broker.approval_state == 'approved'" class="badge badge-success px-3 py-1">
+                                                                    <i class="fa fa-check mr-1"></i>Approved
+                                                                </span>
+                                                                <span t-elif="broker.approval_state == 'pending'" class="badge badge-warning px-3 py-1">
+                                                                    <i class="fa fa-clock mr-1"></i>Pending
+                                                                </span>
+                                                                <span t-else="" class="badge badge-secondary px-3 py-1">
+                                                                    <t t-esc="broker.approval_state.title()"/>
+                                                                </span>
+                                                            </td>
+                                                            <td class="px-4 py-3 text-right">
+                                                                <span class="badge badge-primary px-3 py-1" t-esc="broker_transactions.get(broker.id, 0)"/>
+                                                            </td>
+                                                            <td class="px-4 py-3 text-right font-weight-600">
+                                                                <t t-esc="'%.2f' % broker_volumes.get(broker.id, 0.0)"/>
+                                                                <t t-esc="currency.symbol"/>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <script type="text/javascript">
+                function copyReferralCode() {
+                    const input = document.getElementById('referralCodeInput');
+                    const button = event.currentTarget;
+                    const copyText = button.querySelector('.copy-text');
+                    const icon = button.querySelector('i');
+                    
+                    // Select and copy
+                    input.select();
+                    input.setSelectionRange(0, 99999);
+                    
+                    try {
+                        document.execCommand('copy');
+                        showCopySuccess(button, copyText, icon);
+                    } catch (err) {
+                        navigator.clipboard.writeText(input.value).then(function() {
+                            showCopySuccess(button, copyText, icon);
+                        });
+                    }
+                }
+                
+                function showCopySuccess(button, copyText, icon) {
+                    // Change icon and text
+                    icon.className = 'fa fa-check mr-2';
+                    copyText.textContent = 'Copied!';
+                    button.classList.add('btn-copied');
+                    
+                    // Reset after 2 seconds
+                    setTimeout(function() {
+                        icon.className = 'fa fa-copy mr-2';
+                        copyText.textContent = 'Copy Link';
+                        button.classList.remove('btn-copied');
+                    }, 2000);
+                }
+            </script>
+        </t>
+    </template>
+</odoo>

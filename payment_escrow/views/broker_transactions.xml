@@ -25,10 +25,110 @@
                             <div class="escrow-ad-nav">
                                 <h3 class="escrow-ad-nav-title">My Transactions</h3>
                                 <div class="escrow-ad-nav-control">
-                                    <a class="btn escrow-ad-nav-button-secondary" href="/my/ads">
-                                        <i class="fa fa-arrow-left mr-2"/>
-                                        Back to My Ads
-                                    </a>
+                                    <button type="button" 
+                                            class="btn escrow-ad-nav-button-primary mr-2" 
+                                            data-toggle="modal" 
+                                            data-target="#invoiceInfoModal">
+                                        <i class="fa fa-file-invoice mr-2"/>
+                                        Invoice Information
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" 
+                                 id="invoiceInfoModal" 
+                                 tabindex="-1" 
+                                 role="dialog" 
+                                 aria-labelledby="invoiceInfoModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                                        <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 24px 32px;">
+                                            <h5 class="modal-title font-weight-bold text-white m-0" style="font-size: 20px;">
+                                                <i class="fa fa-file-invoice mr-2"></i>
+                                                Invoice Information
+                                            </h5>
+                                            <button type="button" class="close text-white" data-dismiss="modal" style="opacity: 1;">
+                                                <span style="font-size: 28px;">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="padding: 32px; background-color: #f8f9fa;">
+                                            <div class="mb-4 p-4 bg-white shadow-sm" style="border-radius: 12px; border-left: 4px solid #667eea;">
+                                                <h6 class="font-weight-bold mb-3" style="color: #667eea; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                    <i class="fa fa-briefcase mr-2"></i>Company Information
+                                                </h6>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-building text-primary"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Company Name</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;" t-esc="request.env.company.name"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-hashtag text-success"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Tax/VAT Number</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;" t-esc="request.env.company.vat or '-'"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-home text-info"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Tax Office</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;" t-esc="request.env.company.tax_office or '-'"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-phone text-warning"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Phone</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;" t-esc="request.env.company.phone or '-'"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-map-o text-danger"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Address</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;">
+                                                                    <t t-if="request.env.company.street">
+                                                                        <span t-esc="request.env.company.street"/>
+                                                                        <t t-if="request.env.company.city">, <span t-esc="request.env.company.city"/></t>
+                                                                        <t t-if="request.env.company.state_id">/ <span t-esc="request.env.company.state_id.name"/></t>
+                                                                    </t>
+                                                                    <t t-else="">-</t>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0" style="padding: 20px 32px; background-color: #f8f9fa;">
+                                            <button type="button" class="btn btn-secondary px-4 py-2" data-dismiss="modal" style="border-radius: 8px; font-weight: 600;">
+                                                <i class="fa fa-times mr-1"></i>Close
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             

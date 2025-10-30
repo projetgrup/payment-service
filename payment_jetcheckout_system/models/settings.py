@@ -116,6 +116,9 @@ class PaymentSettings(models.TransientModel):
     payment_log_ok = fields.Boolean(related='company_id.payment_log_ok', readonly=False)
     payment_log_opt = fields.Boolean(string='Optional Logging for Payment Requests', compute='_compute_payment_log_opt', compute_sudo=True)
 
+    payment_method_physical_pos_store_code = fields.Char(related='company_id.payment_method_physical_pos_store_code', readonly=False)
+    payment_method_physical_pos_ids = fields.One2many(related='company_id.payment_method_physical_pos_ids', readonly=False)
+
     payment_page_ok = fields.Boolean(related='company_id.payment_page_ok', readonly=False)
     payment_page_flow = fields.Selection(related='company_id.payment_page_flow', readonly=False)
     payment_page_description_ok = fields.Boolean(related='company_id.payment_page_description_ok', readonly=False)

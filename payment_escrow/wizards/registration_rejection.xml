@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_broker_rejection_wizard_form" model="ir.ui.view">
-        <field name="name">broker.rejection.wizard.form</field>
-        <field name="model">broker.rejection.wizard</field>
+    <record id="view_registration_rejection_wizard_form" model="ir.ui.view">
+        <field name="name">registration.rejection.wizard.form</field>
+        <field name="model">registration.rejection.wizard</field>
         <field name="arch" type="xml">
-            <form string="Reject Broker">
+            <form string="Reject Registration">
                 <group>
-                    <field name="broker_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
                     <field name="rejection_reason" placeholder="Please provide a reason for rejection..."/>
                 </group>
                 <footer>
-                    <button string="Reject" type="object" name="action_reject_broker" class="btn-primary"/>
+                    <button string="Reject" type="object" name="action_reject_registration" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

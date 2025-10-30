@@ -37,104 +37,7 @@
                         </div>
                     </div>
                     <div class="app_settings_block" data-string="Settings" string="Settings" data-key="general_settings">
-                        <h2>Settings</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_flow" string="Payment Page"/>
-                                    <div class="text-muted">
-                                        Make payment page active and specify page flow when getting payments
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('payment_page_ok', '=', False)]}">
-                                        <div class="row mt16">
-                                            <field name="payment_page_flow" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}" attrs="{'required': [('payment_page_ok', '!=', False)]}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_advance_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_advance_ok" string="Advance Payment Page"/>
-                                    <div class="text-muted">
-                                        Accept advance payments from partners
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('payment_advance_ok', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label for="payment_advance_amount_readonly" string="Amount Readonly" class="col-lg-4 o_light_label"/>
-                                            <field name="payment_advance_amount_readonly" widget="boolean_toggle"/>
-                                        </div>
-                                        <div class="row mt16">
-                                            <label for="payment_advance_assign_salesperson" string="Assign Salesperson" class="col-lg-4 o_light_label"/>
-                                            <field name="payment_advance_assign_salesperson" widget="boolean_toggle"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_item_priority"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_item_priority" string="Prioritize Payment Items"/>
-                                    <div class="text-muted">
-                                        Select payment items one by one according to their dates
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_advance_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_advance_ok" string="Activate Advance Payments"/>
-                                    <div class="text-muted">
-                                        Allow partners to make advance payments on payment page
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_campaign_table_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_campaign_table_ok" string="Campaign Table"/>
-                                    <div class="text-muted">
-                                        Use campaign table instead of installment table on payment page
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('payment_page_campaign_table_ok', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label for="payment_page_campaign_table_transpose" string="Transpose Table" class="col-lg-4 o_light_label"/>
-                                            <field name="payment_page_campaign_table_transpose" widget="boolean_toggle"/>
-                                        </div>
-                                        <div class="mt16 pl-3 border-left" style="border-width:2px !important">
-                                            Only <field name="payment_page_campaign_table_opt" attrs="{'required': [('payment_page_campaign_table_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following campaign(s)<br/><field name="payment_page_campaign_table_ids" domain="[('acquirer_id.company_id', '=', company_id)]" class="w-100" widget="many2many_tags" placeholder="Campaign(s)..." options="{'no_create': True, 'no_open': True}"/>
-                                            <field name="payment_page_campaign_table_included" invisible="1"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="required_2fa"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="required_2fa"/>
-                                    <div class="text-muted">
-                                        Make two factor authentication usage essential for users
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h2><i class="fa fa-dashboard mr8"/>Dashboard</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
@@ -167,6 +70,98 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_dashboard_button_contactless_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_dashboard_button_contactless_ok" string="Dashboard Contactless Payment Button"/>
+                                    <div class="text-muted">
+                                        Put a contactless payment button at the top of the dashboard page in order to redirecting user to contactless payment page
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_dashboard_button_contactless_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_dashboard_button_contactless_url" string="URL" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_dashboard_button_contactless_url" class="flex-fill" placeholder="/m/payment"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2><i class="fa fa-address-book mr8"/>Partners</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_partner_unique_field" string="Unique Partner Field"/>
+                                    <div class="text-muted">
+                                        Select which field must be used for uniqueness when taking care of partners
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <field name="payment_partner_unique_field" class="ml-3 w-100 o_field_radio_items" widget="radio" options="{'horizontal': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_subpartner_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_subpartner_ok" string="Define Subpartners"/>
+                                    <div class="text-muted">
+                                        Allow partners to create and track their own subpartners
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2><i class="fa fa-user-circle mr8"/>Users</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="user_template_id" string="Select Default User"/>
+                                    <div class="text-muted">
+                                        Use template when creating users
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <label for="user_template_id" class="col-lg-4 o_light_label" string="User"/>
+                                            <field name="user_template_id" class="mx-2" options="{'no_quick_create': True}" domain="[('company_id', '=', company_id), ('active', '=', False), ('share', '=', False)]" context="{'default_company_id': company_id, 'default_active': False, 'install_mode': True, 'form_view_ref': 'payment_jetcheckout_system.user_form'}" placeholder="No user selected"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="auth_unauthorized_action" string="Reaction to Unauthorized User"/>
+                                    <div class="text-muted">
+                                        Select which action will be triggered upon signing in as an unauthorized user
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <label for="auth_unauthorized_action" class="col-lg-4 o_light_label" string="Action"/>
+                                            <field name="auth_unauthorized_action" widget="radio"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="required_2fa"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="required_2fa"/>
+                                    <div class="text-muted">
+                                        Make two factor authentication usage essential for users
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2><i class="fa fa-money mr8"/>Transactions</h2>
+                        <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_transaction_export_txt"/>
@@ -210,17 +205,136 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <h2><i class="fa fa-file-photo-o mr8"/>Payment Page</h2>
+                        <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="payment_subpartner_ok"/>
+                                    <field name="payment_page_ok"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="payment_subpartner_ok" string="Define Subpartners"/>
+                                    <label for="payment_page_flow" string="Payment Page"/>
                                     <div class="text-muted">
-                                        Allow partners to create and track their own subpartners
+                                        Make payment page active and specify page flow when getting payments
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_page_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <field name="payment_page_flow" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}" attrs="{'required': [('payment_page_ok', '!=', False)]}"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_advance_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_advance_ok" string="Advance Payment Page"/>
+                                    <div class="text-muted">
+                                        Accept advance payments from partners
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_advance_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_advance_amount_readonly" string="Amount Readonly" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_advance_amount_readonly" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_advance_assign_salesperson" string="Assign Salesperson" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_advance_assign_salesperson" widget="boolean_toggle"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_init_popup_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_init_popup_ok" string="Open 3D Links in Popup"/>
+                                    <div class="text-muted">
+                                        Redirect 3D links into a popup
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_campaign_table_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_campaign_table_ok" string="Campaign Table"/>
+                                    <div class="text-muted">
+                                        Use campaign table instead of installment table on payment page
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_page_campaign_table_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_page_campaign_table_transpose" string="Transpose Table" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_page_campaign_table_transpose" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="mt16 pl-3 border-left" style="border-width:2px !important">
+                                            Only <field name="payment_page_campaign_table_opt" attrs="{'required': [('payment_page_campaign_table_ok', '!=', False)]}" class="text-center mx-1" style="width: 64px"/> following campaign(s)<br/><field name="payment_page_campaign_table_ids" domain="[('acquirer_id.company_id', '=', company_id)]" class="w-100" widget="many2many_tags" placeholder="Campaign(s)..." options="{'no_create': True, 'no_open': True}"/>
+                                            <field name="payment_page_campaign_table_included" invisible="1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_installment_table_hide_rate"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_installment_table_hide_rate" string="Hide Rate on Installment Table"/>
+                                    <div class="text-muted">
+                                        Hide commission rate column in installment table
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_init_redirect_extra"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_init_redirect_extra" string="Add Extra Redirection Upon Payment"/>
+                                    <div class="text-muted">
+                                        Redirect user to an extra path before result page
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_init_warning_commission_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_init_warning_commission_ok" string="Commission Warning Before Payment"/>
+                                    <div class="text-muted">
+                                        Show a warning dialog to payer if any commission is calculated for relevant payment
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_page_init_warning_commission_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_rate" string="Show Rate" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_rate" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_calculation" string="Show Calculation" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_calculation" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_primary_advice" string="Show Primary Advice" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_primary_advice" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_show_secondary_advice" string="Show Secondary Advice" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_show_secondary_advice" widget="boolean_toggle"/>
+                                        </div>
+                                        <div class="row mt16">
+                                            <label for="payment_page_init_warning_commission_description" string="Description" class="col-lg-5 o_light_label"/>
+                                            <field name="payment_page_init_warning_commission_description"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2><i class="fa fa-list-ol mr8"/>Payment Link</h2>
+                        <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_page_saleref_ok"/>
@@ -229,6 +343,17 @@
                                     <label for="payment_page_saleref_ok" string="Use Sale Reference for Payment Link"/>
                                     <div class="text-muted">
                                         Make payments with using sale reference
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_description_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_description_ok" string="Payment Description"/>
+                                    <div class="text-muted">
+                                        Add description to payment
                                     </div>
                                 </div>
                             </div>
@@ -249,6 +374,28 @@
                                                 <field name="payment_page_item_expire_period" class="oe_inline p-1" attrs="{'required': [('payment_page_item_expire_ok', '=', True)]}"/>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_item_priority"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_item_priority" string="Prioritize Payment Items"/>
+                                    <div class="text-muted">
+                                        Select payment items one by one according to their dates
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_advance_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_advance_ok" string="Activate Advance Payments"/>
+                                    <div class="text-muted">
+                                        Allow partners to make advance payments on payment page
                                     </div>
                                 </div>
                             </div>
@@ -319,34 +466,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_dashboard_button_contactless_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_dashboard_button_contactless_ok" string="Dashboard Contactless Payment Button"/>
-                                    <div class="text-muted">
-                                        Put a contactless payment button at the top of the dashboard page in order to redirecting user to contactless payment page
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('payment_dashboard_button_contactless_ok', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label for="payment_dashboard_button_contactless_url" string="URL" class="col-lg-4 o_light_label"/>
-                                            <field name="payment_dashboard_button_contactless_url" class="flex-fill" placeholder="/m/payment"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_token_wo_commission"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_token_wo_commission" string="Send Amount without Commission On Credit Card Verify Page"/>
-                                    <div class="text-muted">
-                                        When verifying a credit card, send amount without commission
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <h2><i class="fa fa-calendar mr8"/>Payment Plan</h2>
+                        <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_plan_use_base_amount"/>
@@ -370,20 +492,6 @@
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_partner_unique_field" string="Unique Partner Field"/>
-                                    <div class="text-muted">
-                                        Select which field must be used for uniqueness when taking care of partners
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="row mt16">
-                                            <field name="payment_partner_unique_field" class="ml-3 w-100 o_field_radio_items" widget="radio" options="{'horizontal': True}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_plan_fullscreen_ok"/>
                                 </div>
@@ -391,66 +499,6 @@
                                     <label for="payment_plan_fullscreen_ok" string="Pay Plans in Fullscreen"/>
                                     <div class="text-muted">
                                         Make payments of plan in fullscreen window
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_description_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_description_ok" string="Payment Description"/>
-                                    <div class="text-muted">
-                                        Add description to payment
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_token_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_token_ok" string="Save Credit Card"/>
-                                    <div class="text-muted">
-                                        Store credit card tokens of your partners to get payments easily next time
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('payment_token_ok', '=', False)]}">
-                                        <div class="row mt16">
-                                            <field name="payment_page_token_view_type" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}" attrs="{'required': [('payment_token_ok', '!=', False)]}"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_point_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_point_ok" string="Use Credit Card Points"/>
-                                    <div class="text-muted">
-                                        Deduct payment amount with credit card points
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_init_popup_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_init_popup_ok" string="Open 3D Links in Popup"/>
-                                    <div class="text-muted">
-                                        Redirect 3D links into a popup
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_installment_table_hide_rate"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_installment_table_hide_rate" string="Hide Rate on Installment Table"/>
-                                    <div class="text-muted">
-                                        Hide commission rate column in installment table
                                     </div>
                                 </div>
                             </div>
@@ -466,84 +514,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <label for="user_template_id" string="Select Default User"/>
-                                    <div class="text-muted">
-                                        Use template when creating users
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="mt16">
-                                            <label for="user_template_id" class="col-lg-4 o_light_label" string="User"/>
-                                            <field name="user_template_id" class="mx-2" options="{'no_quick_create': True}" domain="[('company_id', '=', company_id), ('active', '=', False), ('share', '=', False)]" context="{'default_company_id': company_id, 'default_active': False, 'install_mode': True, 'form_view_ref': 'payment_jetcheckout_system.user_form'}" placeholder="No user selected"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <label for="auth_unauthorized_action" string="Reaction to Unauthorized User"/>
-                                    <div class="text-muted">
-                                        Select which action will be triggered upon signing in as an unauthorized user
-                                    </div>
-                                    <div class="content-group">
-                                        <div class="mt16">
-                                            <label for="auth_unauthorized_action" class="col-lg-4 o_light_label" string="Action"/>
-                                            <field name="auth_unauthorized_action" widget="radio"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_init_redirect_extra"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_init_redirect_extra" string="Add Extra Redirection Upon Payment"/>
-                                    <div class="text-muted">
-                                        Redirect user to an extra path before result page
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="payment_page_init_warning_commission_ok"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="payment_page_init_warning_commission_ok" string="Commission Warning Before Payment"/>
-                                    <div class="text-muted">
-                                        Show a warning dialog to payer if any commission is calculated for relevant payment
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('payment_page_init_warning_commission_ok', '=', False)]}">
-                                        <div class="row mt16">
-                                            <label for="payment_page_init_warning_commission_show_rate" string="Show Rate" class="col-lg-5 o_light_label"/>
-                                            <field name="payment_page_init_warning_commission_show_rate" widget="boolean_toggle"/>
-                                        </div>
-                                        <div class="row mt16">
-                                            <label for="payment_page_init_warning_commission_show_calculation" string="Show Calculation" class="col-lg-5 o_light_label"/>
-                                            <field name="payment_page_init_warning_commission_show_calculation" widget="boolean_toggle"/>
-                                        </div>
-                                        <div class="row mt16">
-                                            <label for="payment_page_init_warning_commission_show_primary_advice" string="Show Primary Advice" class="col-lg-5 o_light_label"/>
-                                            <field name="payment_page_init_warning_commission_show_primary_advice" widget="boolean_toggle"/>
-                                        </div>
-                                        <div class="row mt16">
-                                            <label for="payment_page_init_warning_commission_show_secondary_advice" string="Show Secondary Advice" class="col-lg-5 o_light_label"/>
-                                            <field name="payment_page_init_warning_commission_show_secondary_advice" widget="boolean_toggle"/>
-                                        </div>
-                                        <div class="row mt16">
-                                            <label for="payment_page_init_warning_commission_description" string="Description" class="col-lg-5 o_light_label"/>
-                                            <field name="payment_page_init_warning_commission_description"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                    <div class="app_settings_block" data-string="Dues" string="Dues" data-key="hr_attendance">
-                        <h2>Dues</h2>
+                        <h2><i class="fa fa-clock-o mr8"/>Payment Dues</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
@@ -604,8 +576,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('payment_page_due_ok', '=', False)]}">
                                 <div class="o_setting_left_pane">
                                     <field name="payment_page_due_hide_payment_ok"/>
@@ -624,9 +594,76 @@
                                 </div>
                             </div>
                         </div>
+                        <h2><i class="fa fa-credit-card mr8"/>Virtual PoS</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_page_token_wo_commission"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_page_token_wo_commission" string="Send Amount without Commission On Credit Card Verify Page"/>
+                                    <div class="text-muted">
+                                        When verifying a credit card, send amount without commission
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_token_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_token_ok" string="Save Credit Card"/>
+                                    <div class="text-muted">
+                                        Store credit card tokens of your partners to get payments easily next time
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('payment_token_ok', '=', False)]}">
+                                        <div class="row mt16">
+                                            <field name="payment_page_token_view_type" class="ml-3 o_field_radio_items" widget="radio" options="{'horizontal': True}" attrs="{'required': [('payment_token_ok', '!=', False)]}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="payment_point_ok"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_point_ok" string="Use Credit Card Points"/>
+                                    <div class="text-muted">
+                                        Deduct payment amount with credit card points
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2><i class="fa fa-fax mr8"/>Physical PoS</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                <label for="payment_method_physical_pos_ids" string="Physical PoS List"/>
+                                    <div class="text-muted">
+                                        Enter PoS list to get payment with physical PoS devices
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label for="payment_method_physical_pos_store_code" string="Store Code" class="col-lg-4 o_light_label"/>
+                                            <field name="payment_method_physical_pos_store_code"/>
+                                        </div>
+                                        <div class="mt16">
+                                            <field name="payment_method_physical_pos_ids" class="w-100">
+                                                <tree editable="bottom">
+                                                    <field name="name"/>
+                                                    <field name="type"/>
+                                                </tree>
+                                            </field>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="app_settings_block" data-string="Security" string="Security" data-key="test_exceptions">
-                        <h2>Security</h2>
+                        <h2><i class="fa fa-flag mr8"/>Audit Logs</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
@@ -658,6 +695,7 @@
                                 </div>
                             </div>
                         </div>
+                        <h2><i class="fa fa-tag mr8"/>DLP</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
@@ -679,7 +717,7 @@
                         </div>
                     </div>
                     <div class="app_settings_block" data-string="Notifications" string="Notifications" data-key="snailmail">
-                        <h2>Notifications</h2>
+                        <h2><i class="fa fa-feed mr8"/>Notifications</h2>
                         <div class="row mt16 o_settings_container" id="system_notification">
                             <div class="col-12 col-lg-6 o_setting_box" id="system_notification_webhook">
                                 <div class="o_setting_left_pane"/>

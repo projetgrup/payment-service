@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_escrow_insurance_quote_tree" model="ir.ui.view">
+        <field name="name">escrow.insurance.quote.tree</field>
+        <field name="model">escrow.insurance.quote</field>
+        <field name="arch" type="xml">
+            <tree string="Insurance Quotes">
+                <field name="reference" string="Reference"/>
+                <field name="create_date" string="Request Date"/>
+                <field name="plate" string="License Plate"/>
+                <field name="model" string="Vehicle Model"/>
+                <field name="year" string="Year"/>
+                <field name="vat" string="TC ID"/>
+                <field name="mobile" string="Mobile"/>
+                <field name="email" string="Email"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'sold'" 
+                       decoration-info="state == 'quoted'" 
+                       decoration-primary="state == 'sent'" 
+                       decoration-muted="state == 'rejected'" 
+                       decoration-warning="state == 'draft'"/>
+                <field name="quote_amount" optional="show"/>
+                <field name="insurance_commission" optional="hide"/>
+                <field name="insurance_company" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_escrow_insurance_quote_form" model="ir.ui.view">
+        <field name="name">escrow.insurance.quote.form</field>
+        <field name="model">escrow.insurance.quote</field>
+        <field name="arch" type="xml">
+            <form string="Insurance Quote">
+                <header>
+                    <button name="action_set_sent" string="Mark as Sent" type="object" states="draft" class="oe_highlight"/>
+                    <button name="action_set_quoted" string="Mark as Quoted" type="object" states="sent" class="oe_highlight"/>
+                    <button name="action_set_sold" string="Mark as Sold" type="object" states="quoted" class="oe_highlight"/>
+                    <button name="action_set_rejected" string="Reject" type="object" states="draft,sent"/>
+                    <button name="action_set_cancelled" string="Cancel" type="object" states="draft,sent,quoted"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" states="rejected,cancelled"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,quoted,sold"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="plate" placeholder="License Plate" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group string="Personal Information">
+                            <field name="vat"/>
+                            <field name="birth_date"/>
+                            <field name="mobile"/>
+                            <field name="email" widget="email"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group string="Vehicle Information">
+                            <field name="plate"/>
+                            <field name="license_no"/>
+                            <field name="chassis_no"/>
+                            <!-- <field name="engine_no"/>
+                            <field name="registration_date"/> -->
+                            <field name="model"/>
+                            <field name="year"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Quote Information">
+                            <field name="quote_amount" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="reference"/>
+                        </group>
+                        <group string="System Information">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="create_date" readonly="1"/>
+                            <field name="create_uid" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Insurance Sale Information" attrs="{'invisible': [('state', '!=', 'sold')]}">
+                        <group>
+                            <field name="insurance_company"/>
+                            <field name="insurance_commission" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="policy_number"/>
+                            <field name="sale_date"/>
+                            <field name="policy_pdf" filename="policy_pdf_filename"/>
+                            <field name="policy_pdf_filename" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1" placeholder="Additional notes or comments..."/>
+                        <field name="quote_details" nolabel="1" placeholder="Quote details..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_escrow_insurance_quote_search" model="ir.ui.view">
+        <field name="name">escrow.insurance.quote.search</field>
+        <field name="model">escrow.insurance.quote</field>
+        <field name="arch" type="xml">
+            <search string="Insurance Quotes">
+                <field name="reference" string="Reference"/>
+                <field name="plate" string="Plate"/>
+                <field name="vat" string="TC ID"/>
+                <field name="email" string="Email"/>
+                <field name="mobile" string="Mobile"/>
+                <field name="model" string="Model"/>
+                <field name="chassis_no" string="Chassis"/>
+                <field name="policy_number" string="Policy Number"/>
+                <field name="insurance_company" string="Insurance Company"/>
+                <separator/>
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_sent" string="Sent" domain="[('state', '=', 'sent')]"/>
+                <filter name="filter_quoted" string="Quoted" domain="[('state', '=', 'quoted')]"/>
+                <filter name="filter_sold" string="Sold" domain="[('state', '=', 'sold')]"/>
+                <filter name="filter_rejected" string="Rejected" domain="[('state', '=', 'rejected')]"/>
+                <separator/>
+                <filter name="filter_this_month" string="This Month" domain="[('create_date', '&gt;=', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_last_month" string="Last Month" domain="[('create_date', '&gt;=', (context_today() - relativedelta(months=1, day=1)).strftime('%Y-%m-%d')), ('create_date', '&lt;', (context_today() - relativedelta(day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_insurance_company" string="Insurance Company" context="{'group_by': 'insurance_company'}"/>
+                    <filter name="group_by_model" string="Vehicle Model" context="{'group_by': 'model'}"/>
+                    <filter name="group_by_year" string="Year" context="{'group_by': 'year'}"/>
+                    <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_escrow_insurance_quote" model="ir.actions.act_window">
+        <field name="name">Insurance Quotes</field>
+        <field name="res_model">escrow.insurance.quote</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first insurance quote request
+            </p>
+            <p>
+                Insurance quote requests will appear here when customers request quotes through the website.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem
+        id="menu_escrow_insurance_quote"
+        name="Insurance Quotes"
+        parent="payment_escrow.menu_main"
+        action="action_escrow_insurance_quote"
+        sequence="60"/>
+</odoo>

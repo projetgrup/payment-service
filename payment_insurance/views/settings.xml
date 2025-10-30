@@ -7,7 +7,7 @@
     <field name="arch" type="xml">
         <xpath expr="//div[@data-key='general_settings']" position="after">
             <div class="app_settings_block" data-string="Insurance" string="Insurance" data-key="payment_insurance" invisible="context.get('active_system') != 'insurance'">
-                <h2>Insurance</h2>
+                <h2><i class="fa fa-check-circle mr8"/>Options</h2>
             </div>
         </xpath>
     </field>

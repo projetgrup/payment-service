@@ -33,10 +33,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             status: '',
             different: false,
             filterState: 'all',
-            broker: {
-                activeType: null,
-                requestToken: null,
-            },
             pagination: {
                 currentPage: 1,
                 pageSize: 10,
@@ -660,6 +656,213 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         }
 
+        this.insurance = {
+            button: {
+                submit: new fields.element({
+                    events: [['click', this._onInsuranceSubmit]]
+                })
+            },
+            alert: {
+                success: new fields.element(),
+                error: new fields.element()
+            },
+            success: {
+                message: new fields.element()
+            },
+            error: {
+                message: new fields.element()
+            },
+            input: {
+                birth_date: new fields.string({
+                    mask: '00/00/0000',
+                    validate: () => {
+                        const field = this.insurance.input.birth_date;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Birth date is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                vat: new fields.string({
+                    mask: /^\d{0,11}$/,
+                    validate: () => {
+                        const field = this.insurance.input.vat;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('TC Identity Number is required');
+                            valid = false;
+                        } else if (field.value.length !== 11) {
+                            message = _t('TC Identity Number must be 11 digits');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                gsmNo: new fields.string({
+                    mask: /^[0-9]{0,10}$/,
+                    validate: () => {
+                        const field = this.insurance.input.gsmNo;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Mobile number is required');
+                            valid = false;
+                        } else if (field.value.length !== 10) {
+                            message = _t('Mobile number must be 10 digits');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                email: new fields.string({
+                    mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
+                    validate: () => {
+                        const field = this.insurance.input.email;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Email is required');
+                            valid = false;
+                        } else if (!REGEXP_EMAIL.test(field.value)) {
+                            message = _t('Email format is not correct');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                plate: new fields.string({
+                    mask: /^[A-Za-z0-9]*$/,
+                    events: [['input', function() {
+                        const field = this.insurance.input.plate;
+                        field.$.val(field.$.val().toUpperCase());
+                    }]],
+                    validate: () => {
+                        const field = this.insurance.input.plate;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('License plate is required');
+                            valid = false;
+                        } else {
+                            const cleanPlate = field.value.replace(/\s/g, '');
+                            const platePattern = /^[0-9]{2}[A-Z]{1,3}[0-9]{1,4}$/;
+                            if (!platePattern.test(cleanPlate)) {
+                                message = _t('Please enter a valid license plate (e.g., 34TM3405)');
+                                valid = false;
+                            }
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                license_no: new fields.string({
+                    mask: /^[A-Z0-9]{0,8}$/,
+                    validate: () => {
+                        const field = this.insurance.input.license_no;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('License serial number is required');
+                            valid = false;
+                        } else if (field.value.length !== 8) {
+                            message = _t('License serial number must be 8 characters');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                chassis_no: new fields.string({
+                    mask: /^[A-Z0-9]{0,17}$/,
+                    validate: () => {
+                        const field = this.insurance.input.chassis_no;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Chassis number is required');
+                            valid = false;
+                        } else if (field.value.length !== 17) {
+                            message = _t('Chassis number must be 17 characters');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                // engine_no: new fields.string({
+                //     validate: () => {
+                //         const field = this.insurance.input.engine_no;
+                //         let message = null;
+                //         let valid = true;
+                //         if (!field.value) {
+                //             message = _t('Engine number is required');
+                //             valid = false;
+                //         }
+                //         this._onFieldValid(field, valid, message);
+                //         return valid;
+                //     }
+                // }),
+                // registration_date: new fields.string({
+                //     validate: () => {
+                //         const field = this.insurance.input.registration_date;
+                //         let message = null;
+                //         let valid = true;
+                //         if (!field.value) {
+                //             message = _t('Registration date is required');
+                //             valid = false;
+                //         }
+                //         this._onFieldValid(field, valid, message);
+                //         return valid;
+                //     }
+                // }),
+                model: new fields.string({
+                    validate: () => {
+                        const field = this.insurance.input.model;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Vehicle model is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                year: new fields.string({
+                    mask: /^\d{0,4}$/,
+                    validate: () => {
+                        const field = this.insurance.input.year;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Model year is required');
+                            valid = false;
+                        } else if (field.value.length !== 4) {
+                            message = _t('Model year must be 4 digits');
+                            valid = false;
+                        } else {
+                            const year = parseInt(field.value);
+                            const currentYear = new Date().getFullYear();
+                            if (year < 1900 || year > currentYear + 1) {
+                                message = _t('Invalid model year');
+                                valid = false;
+                            }
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+            }
+        };
+
         this.ad = {
             state: {
                 filter: new fields.element(),
@@ -705,6 +908,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 }),
                 create: new fields.element({
                     events: [['click', this._onClickButtonCreate]],
+                }),
+                license_serial_no_helper: new fields.element({
+                    events: [['click', this._onClickButtonLicenseSerialNoHelper]],
                 }),
             },
 
@@ -776,7 +982,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 license_serial_no: new fields.string({
-                    mask: /^[A-Z0-9]{0,10}$/,
+                    mask: /^[A-Z0-9]{0,6}$/,
                     prepareChar: str => str.toUpperCase(),
                     validate: () => {
                         const field = this.ad.input.license_serial_no;
@@ -1044,96 +1250,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             }
         };
 
-        this.broker = {
-            amount: new fields.float({
-                events: [
-                    ['input', this._onBrokerAmountInput],
-                ],
-                mask: payloxPage.prototype._maskAmount.bind(this),
-                validate: () => {
-                    const field = this.broker.amount;
-                    let valid = true;
-                    let message = null;
-                    
-                    if (field.value <= 0) {
-                        message = _t('Please enter a positive amount to calculate rates.');
-                        valid = false;
-                    }
-                    
-                    this._onFieldValid(field, valid, message);
-                    return valid;
-                }
-            }),
-            campaign: new fields.selection({
-                events: [['change', this._onBrokerCampaignChange]],
-                default: '',
-                validate: () => {
-                    const field = this.broker.campaign;
-                    let valid = true;
-                    let message = null;
-                    
-                    if (!field.value) {
-                        message = _t('No active campaign is linked to your account yet.');
-                        valid = false;
-                    }
-                    
-                    this._onFieldValid(field, valid, message);
-                    return valid;
-                }
-            }),
-            button: {
-                refresh: new fields.element({
-                    events: [['click', this._onBrokerRefresh]]
-                })
-            },
-            container: new fields.element(),
-            wrapper: new fields.element(),
-            tabs: new fields.element(),
-            tables: new fields.element(),
-            summary: new fields.element(),
-            loading: new fields.element(),
-            empty: new fields.element(),
-            error: new fields.element(),
-        };
-
-        this.settings = {
-            campaign: new fields.selection({
-                events: [['change', this._onSettingsFieldChange]],
-                default: ''
-            }),
-            signName: new fields.string({
-                events: [['input', this._onSettingsFieldChange]],
-                default: ''
-            }),
-            authorizedPerson: new fields.string({
-                events: [['input', this._onSettingsFieldChange]],
-                default: ''
-            }),
-            email: new fields.string({
-                events: [['input', this._onSettingsFieldChange]],
-                mask: /^[\w-\.]+@{0,1}[\w-\.]*$/,
-                default: ''
-            }),
-            phone: new fields.string({
-                events: [['input', this._onSettingsFieldChange]],
-                mask: '000 000 0000',
-                default: ''
-            }),
-            mobile: new fields.string({
-                events: [['input', this._onSettingsFieldChange]],
-                mask: '000 000 0000',
-                default: ''
-            }),
-            button: {
-                save: new fields.element({
-                    events: [['click', this._onSettingsSave]]
-                })
-            },
-            success: new fields.element(),
-            error: new fields.element(),
-            errorMessage: new fields.element()
-        };
-        
         this.assignment = {
             form: {
                 section: new fields.element(),
@@ -1178,25 +1294,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(() => {
             payloxPage.prototype._setCurrency.apply(this);
             payloxPage.prototype._start.apply(this);
-            
-            const isBrokerPage = this.$('.broker-rates-container').length > 0;
-            const isSettingsPage = this.$('.broker-settings-container').length > 0;
-            
-            if (isBrokerPage) {
-                this._initBroker();
-            } else if (isSettingsPage) {
-                this._initSettings();
-            } else {
-                this._parseAds();
-                this._startState();
-                this._initializePagination();
-                this._startToggles();
-            }
-            
+
+            this._parseAds();
+            this._startState();
+            this._initializePagination();
+            this._startToggles();
+
             $('.escrow-ad-wrapper').removeClass('d-none');
             framework.hideLoading();
             setTimeout(() => $('div.o_loading').addClass('transparent'), 2000);
         });
+    },
+
+    _onClickButtonLicenseSerialNoHelper: function (ev) {
+        ev.stopPropagation();
+        const $tooltip = this.$('.license-serial-tooltip');
+        $tooltip.toggle();
     },
 
     _initBroker: function () {
@@ -1218,6 +1331,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.broker.summary.$ = $container.find('[data-role="summary"]');
         this.broker.amount.$ = $container.find('[data-role="amount"]');
         this.broker.campaign.$ = $container.find('[data-role="campaign"]');
+        this.broker.viewMode.$ = $container.find('[data-role="view-mode"]');
         this.broker.button.refresh.$ = $container.find('[data-role="refresh"]');
 
         if (dataset.defaultCampaign) {
@@ -1235,331 +1349,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _initializePagination: function() {
         this._filterAdsByState('all');
     },
-
-    _initSettings: function () {
-        const $container = this.$('.broker-settings-container');
-        if (!$container.length) return;
-
-        this.settings.campaign.$ = $container.find('[data-role="campaign"]');
-        this.settings.signName.$ = $container.find('[data-role="sign-name"]');
-        this.settings.authorizedPerson.$ = $container.find('[data-role="authorized-person"]');
-        this.settings.email.$ = $container.find('[data-role="email"]');
-        this.settings.phone.$ = $container.find('[data-role="phone"]');
-        this.settings.mobile.$ = $container.find('[data-role="mobile"]');
-        this.settings.button.save.$ = $container.find('[data-role="save"]');
-        this.settings.success.$ = $container.find('[data-role="success"]');
-        this.settings.error.$ = $container.find('[data-role="error"]');
-        this.settings.errorMessage.$ = $container.find('[data-role="error-message"]');
-    },
-
-    _onSettingsFieldChange: function () {
-        this.settings.success.$.addClass('d-none');
-        this.settings.error.$.addClass('d-none');
-    },
-
-    _onSettingsSave: function () {
-        const campaignId = parseInt(this.settings.campaign.$.val(), 10) || null;
-        const signName = this.settings.signName.$.val().trim();
-        const authorizedPerson = this.settings.authorizedPerson.$.val().trim();
-        const email = this.settings.email.$.val().trim();
-        const phone = this.settings.phone.value || this.settings.phone.$.val().trim();
-        const mobile = this.settings.mobile.value || this.settings.mobile.$.val().trim();
-
-        if (!signName || !authorizedPerson || !email || !phone) {
-            this.settings.errorMessage.$.text('Please fill all required fields');
-            this.settings.error.$.removeClass('d-none');
-            return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            this.settings.errorMessage.$.text('Please enter a valid email address');
-            this.settings.error.$.removeClass('d-none');
-            return;
-        }
-
-        this.settings.button.save.$.prop('disabled', true);
-        this.settings.success.$.addClass('d-none');
-        this.settings.error.$.addClass('d-none');
-
-        rpc.query({
-            route: '/payment/escrow/broker/settings/save',
-            params: { 
-                default_campaign_id: campaignId,
-                sign_name: signName,
-                authorized_person: authorizedPerson,
-                email: email,
-                phone: phone.replace(/\s/g, ''),
-                mobile: mobile.replace(/\s/g, '')
-            }
-        }).then(result => {
-            if (result && result.success) {
-                this.settings.success.$.removeClass('d-none');
-                setTimeout(() => this.settings.success.$.addClass('d-none'), 3000);
-            } else {
-                this.settings.errorMessage.$.text(result.error || 'Failed to save settings');
-                this.settings.error.$.removeClass('d-none');
-            }
-        }).guardedCatch(() => {
-            this.settings.errorMessage.$.text('Unable to save settings. Please try again later.');
-            this.settings.error.$.removeClass('d-none');
-        }).then(() => {
-            this.settings.button.save.$.prop('disabled', false);
-        });
-    },
-
-    _onBrokerAmountInput: function () {
-        if (!this._brokerDebounce) {
-            this._brokerDebounce = this._debounce(() => this._fetchBrokerRates(), 400);
-        }
-        this._brokerDebounce();
-    },
-
-    _onBrokerAmountChange: function () {
-        this._fetchBrokerRates();
-    },
-
-    _onBrokerCampaignChange: function () {
-        this._fetchBrokerRates();
-    },
-
-    _onBrokerRefresh: function () {
-        this._fetchBrokerRates();
-    },
-
-    _parseBrokerAmount: function (value) {
-        if (typeof value === 'number') return value;
-        if (!value) return 0;
-        
-        const normalized = String(value).replace(/\s/g, '').replace(',', '.');
-        const parsed = parseFloat(normalized);
-        return Number.isNaN(parsed) ? 0 : parsed;
-    },
-
-    _getBrokerFormatHelpers: function () {
-        return {
-            currency: (value, pos, sym, dec) => format.currency(
-                value, 
-                pos || this.currency.position, 
-                sym || this.currency.symbol, 
-                dec !== undefined ? dec : this.currency.decimal
-            ),
-            percent: (value) => {
-                const rate = typeof value === 'number' ? value : parseFloat(value || 0);
-                const percent = Number.isNaN(rate) ? 0 : rate;
-                const numStr = percent.toString();
-                const decimalPart = numStr.split('.')[1] || '';
-                const decimals = Math.min(6, decimalPart.length);
-                return (decimals > 0 ? percent.toFixed(decimals) : percent.toFixed(2)) + '%';
-            },
-        };
-    },
-
-    _getCardTypeLabel: function (type) {
-        const labels = {
-            'Credit': _t('Credit Card'),
-            'Debit': _t('Debit Card'),
-            'Credit-Business': _t('Business Card'),
-        };
-        return labels[type] || _t('Other Cards');
-    },
-
-    _toggleBrokerLoading: function (loading) {
-        this.broker.loading.$.toggleClass('d-none', !loading);
-        this.broker.button.refresh.$.prop('disabled', loading || !this.broker.campaign.value);
-        
-        if (loading) {
-            this.broker.wrapper.$.addClass('d-none');
-            this.broker.summary.$.addClass('d-none');
-            this.broker.empty.$.addClass('d-none');
-        }
-    },
-
-    _showBrokerError: function (message) {
-        if (message) {
-            this.broker.error.$.text(message).removeClass('d-none');
-        } else {
-            this.broker.error.$.addClass('d-none').empty();
-        }
-    },
-
-    _renderBrokerRates: function (data = {}) {
-        if (data.currency) {
-            if (data.currency.symbol) this.currency.symbol = data.currency.symbol;
-            if (data.currency.position) this.currency.position = data.currency.position;
-            if (data.currency.decimal_places !== undefined) this.currency.decimal = data.currency.decimal_places;
-        }
-
-        const amount = typeof data.amount === 'number' ? data.amount : this._parseBrokerAmount(data.amount || 0);
-        const lines = data.lines || [];
-        const cardTypes = this._prepareBrokerCardTypes(data.card_types, lines);
-
-        this.broker.tables.$.empty();
-        if (this.broker.tabs.$) this.broker.tabs.$.empty();
-
-        if (!cardTypes.length) {
-            this.state.broker.activeType = null;
-            this.broker.wrapper.$.addClass('d-none');
-            this.broker.empty.$.toggleClass('d-none', !!data.error);
-            this.broker.summary.$.addClass('d-none').empty();
-            if (this.broker.tabs.$) this.broker.tabs.$.addClass('d-none');
-            return;
-        }
-
-        this.broker.empty.$.addClass('d-none');
-        this.broker.wrapper.$.removeClass('d-none');
-
-        const availableSlugs = cardTypes.map(ct => ct.slug);
-        if (!this.state.broker.activeType || !availableSlugs.includes(this.state.broker.activeType)) {
-            this.state.broker.activeType = availableSlugs[0];
-        }
-
-        const showTabs = this.broker.tabs.$ && cardTypes.length > 1;
-        if (this.broker.tabs.$) this.broker.tabs.$.toggleClass('d-none', !showTabs);
-
-        cardTypes.forEach(cardType => {
-            this._renderBrokerPanel(cardType, amount);
-        });
-
-        if (!showTabs) {
-            this.broker.tables.$.children('[data-type]').removeClass('d-none');
-        }
-    },
-
-    _prepareBrokerCardTypes: function (rawTypes, lines) {
-        const slugify = (value, fallback) => {
-            const slug = (value || '').toString().toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '');
-            return slug || fallback || 'other';
-        };
-
-        if (rawTypes && rawTypes.length) {
-            return rawTypes.map((ct, i) => ({
-                ...ct,
-                slug: ct.slug || slugify(ct.code, `type-${i}`),
-            }));
-        }
-
-        if (lines.length) {
-            return [{
-                code: 'Other',
-                slug: 'other',
-                label: _t('All Cards'),
-                families: [{
-                    name: _t('All Cards'),
-                    code: 'all',
-                    logo: '',
-                    lines: lines,
-                }],
-            }];
-        }
-
-        return [];
-    },
-
-    _renderBrokerPanel: function (cardType, amount) {
-        const isActive = cardType.slug === this.state.broker.activeType;
-        const $panel = $('<div/>')
-            .addClass('broker-card-type-panel')
-            .attr('data-type', cardType.slug)
-            .toggleClass('d-none', !isActive);
-
-        const $header = $('<div/>')
-            .addClass('d-flex align-items-center justify-content-between broker-card-type-header mb-4')
-            .append($('<h4/>')
-                .addClass('h5 text-uppercase text-primary mb-0 font-weight-bold')
-                .text(cardType.label || this._getCardTypeLabel(cardType.code))
-            );
-
-        $panel.append($header);
-
-        const $grid = $('<div/>').addClass('row');
-        const families = cardType.families || [];
-
-        if (!families.length) {
-            $grid.append($('<div/>')
-                .addClass('col-12 text-center text-muted py-5')
-                .text(_t('No installment data found.'))
-            );
-        } else {
-            const formatHelpers = this._getBrokerFormatHelpers();
-            families.forEach(family => {
-                const $col = $('<div/>').addClass('col-12 mb-4');
-                const html = qweb.render('paylox.broker.rates.table', {
-                    family: family,
-                    baseAmount: amount,
-                    format: formatHelpers,
-                    position: this.currency.position,
-                    symbol: this.currency.symbol,
-                    decimal: this.currency.decimal,
-                    Number: Number,
-                    _t: _t,
-                });
-                $col.html(html);
-                $grid.append($col);
-            });
-        }
-
-        $panel.append($grid);
-        this.broker.tables.$.append($panel);
-    },
-
-    _fetchBrokerRates: function () {
-        const campaignValue = this.broker.campaign.$.val();
-        if (!campaignValue) {
-            this._showBrokerError(_t('No active campaign is linked to your account yet.'));
-            this._renderBrokerRates({ lines: [], error: true });
-            return;
-        }
-
-        const amount = this._parseBrokerAmount(this.broker.amount.$.val());
-
-        if (amount <= 0) {
-            this._showBrokerError(_t('Please enter a positive amount to calculate rates.'));
-            this._renderBrokerRates({ lines: [], error: true });
-            return;
-        }
-
-        const token = Date.now();
-        this.state.broker.requestToken = token;
-        this._showBrokerError();
-        this._toggleBrokerLoading(true);
-
-        rpc.query({
-            route: '/payment/escrow/broker/rates/data',
-            params: {
-                amount: amount,
-                campaign_id: parseInt(campaignValue, 10) || null,
-            },
-        }).then(result => {
-            if (this.state.broker.requestToken !== token) return;
-
-            if (result && result.error) {
-                this._showBrokerError(result.error);
-                this._renderBrokerRates({ lines: [], error: true });
-            } else {
-                this._renderBrokerRates(result || { lines: [] });
-            }
-        }).guardedCatch(() => {
-            if (this.state.broker.requestToken !== token) return;
-            
-            this._showBrokerError(_t('Unable to fetch broker rates. Please try again later.'));
-            this._renderBrokerRates({ lines: [], error: true });
-        }).then(() => {
-            if (this.state.broker.requestToken === token) {
-                this._toggleBrokerLoading(false);
-            }
-        });
-    },
-
-    _debounce: function (func, wait) {
-        let timeout;
-        return (...args) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    },
+    
     _onFieldValid: function(field, valid, message='') {
         field.$.closest('.form__group').find('.form__error-label, .just-validate-error-label').remove();
         if (valid) {
@@ -3590,5 +3380,75 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (this.ad.pagination.container && this.ad.pagination.container.$) {
             this.ad.pagination.container.$.toggle(this.state.pagination.totalItems > 0);
         }
+    },
+
+    _onInsuranceSubmit: function(e) {
+        e.preventDefault();
+        
+        const isValid = [
+            this.insurance.input.birth_date.validate(),
+            this.insurance.input.vat.validate(),
+            this.insurance.input.gsmNo.validate(),
+            this.insurance.input.email.validate(),
+            this.insurance.input.plate.validate(),
+            this.insurance.input.license_no.validate(),
+            // this.insurance.input.chassis_no.validate(),
+            // this.insurance.input.engine_no.validate(),
+            // this.insurance.input.registration_date.validate(),
+            // this.insurance.input.model.validate(),
+            // this.insurance.input.year.validate(),
+        ].every(Boolean);
+
+        if (!isValid) {
+            return;
+        }
+
+        const data = {
+            birth_date: this.insurance.input.birth_date.value,
+            vat: this.insurance.input.vat.value,
+            gsmNo: this.insurance.input.gsmNo.value,
+            email: this.insurance.input.email.value,
+            plate: this.insurance.input.plate.value,
+            license_no: this.insurance.input.license_no.value,
+            // chassis_no: this.insurance.input.chassis_no.value,
+            // engine_no: this.insurance.input.engine_no.value,
+            // registration_date: this.insurance.input.registration_date.value,
+            // model: this.insurance.input.model.value,
+            // year: this.insurance.input.year.value,
+        };
+
+        this.insurance.button.submit.$.prop('disabled', true);
+        
+        this.insurance.alert.success.$.addClass('d-none');
+        this.insurance.alert.error.$.addClass('d-none');
+
+        rpc.query({
+            route: '/escrow/insurance/quote',
+            params: data
+        }).then((result) => {
+            if (result.success) {
+                this.insurance.success.message.$.text(result.message || _t('Insurance quote request sent successfully!'));
+                this.insurance.alert.success.$.removeClass('d-none');
+                
+                Object.keys(this.insurance.input).forEach(key => {
+                    this.insurance.input[key].$.val('');
+                    this.insurance.input[key].value = '';
+                });
+                
+                setTimeout(() => {
+                    $('#insuranceQuoteModal').modal('hide');
+                    this.insurance.alert.success.$.addClass('d-none');
+                }, 2000);
+            } else {
+                this.insurance.error.message.$.text(result.message || _t('An error occurred. Please try again.'));
+                this.insurance.alert.error.$.removeClass('d-none');
+            }
+        }).catch((error) => {
+            this.insurance.error.message.$.text(_t('An error occurred. Please try again.'));
+            this.insurance.alert.error.$.removeClass('d-none');
+            console.error('Insurance quote error:', error);
+        }).finally(() => {
+            this.insurance.button.submit.$.prop('disabled', false);
+        });
     },
 });

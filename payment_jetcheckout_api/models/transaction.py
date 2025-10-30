@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
+import json
+import logging
+import requests
 from odoo import fields, models, api
+
+_logger = logging.getLogger(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -30,6 +35,20 @@ class PaymentTransaction(models.Model):
             values['jetcheckout_payment_ok'] = False
         return super().write(values)
 
+    def _paylox_done_postprocess(self):
+        res = super()._paylox_done_postprocess()
+        if self.jetcheckout_payment_type == 'physicalpos':
+            method = fields.first(self.paylox_api_method_ids.filtered(lambda m: m.type == 'physicalpos'))
+            if method.webhook_url:
+                try:
+                    requests.post(method.webhook_url, data=json.dumps({
+                        'success': True,
+                        'id': self.jetcheckout_api_id or None,
+                    }), timeout=15)
+                except:
+                    _logger.error('An error occured when triggering physical PoS webhook.', exc_info=True)
+        return res
+
 
 class PaymentTransactionPayloxApiMethod(models.Model):
     _name = 'payment.transaction.paylox.api.method'
@@ -47,6 +66,24 @@ class PaymentTransactionPayloxApiMethod(models.Model):
             else:
                 method.code = method.type
 
+    @api.depends('type')
+    def _compute_icon(self):
+        for method in self:
+            if method.type == 'virtualpos':
+                method.icon = 'credit-card'
+            elif method.type == 'physicalpos':
+                method.icon = 'fax'
+            elif method.type == 'softpos':
+                method.icon = 'mobile-phone'
+            elif method.type == 'transfer':
+                method.icon = 'bank'
+            elif method.type == 'wallet':
+                method.icon = 'money'
+            elif method.type == 'credit':
+                method.icon = 'shopping-cart'
+            else:
+                method.icon = False
+
     transaction_id = fields.Many2one('payment.transaction')
     type = fields.Selection(selection=[
         ('virtualpos', 'Virtual PoS'),
@@ -56,6 +93,7 @@ class PaymentTransactionPayloxApiMethod(models.Model):
         ('wallet', 'Wallet'),
         ('credit', 'Shopping Credit'),
     ], default='virtualpos')
-    code = fields.Char(compute='_compute_code', store=True)
+    code = fields.Char(compute='_compute_code')
+    icon = fields.Char(compute='_compute_icon')
     redirect_url = fields.Char(string='Redirect URL')
     webhook_url = fields.Char(string='Webhook URL')

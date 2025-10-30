@@ -213,6 +213,105 @@ class EscrowAPIService(Component):
         tx = self._payment_delete(token, params)
         return dict(**tx, **RESPONSE[200])
 
+
+    @restapi.method(
+        [(["/insurance/callback"], "POST")],
+        input_param=Datamodel("escrow.request.insurance.callback"),
+        output_param=Datamodel("escrow.response.insurance.callback"),
+        auth="public",
+        tags=[_lt("Insurance Operations")],
+        name=_lt("Insurance Sale Callback")
+    )
+    def insurance_callback(self, params):
+        """
+        Webhook endpoint for insurance companies to send sale information
+        When insurance is sold, they will send:
+        - reference: Insurance quote reference number
+        - premium: Insurance premium amount
+        - company: Insurance company name
+        - commission: Commission amount
+        - policyDoc: Policy document in base64 format
+        - policyNumber: Policy number (optional)
+        """
+        token = auth(self.env)
+        try:
+            reference = params.reference
+            if not reference:
+                return {
+                    'status': 1,
+                    'message': 'Reference number is required'
+                }
+            
+            quote = self.env['escrow.insurance.quote'].sudo().search([('reference', '=', reference)], limit=1)
+            if not quote:
+                return {
+                    'status': 2,
+                    'message': 'Insurance quote not found with this reference'
+                }
+            
+            if quote.state == 'sold':
+                return {
+                    'status': 4,
+                    'message': 'This insurance quote has already been marked as sold'
+                }
+            
+            policy_pdf_base64 = params.policyDoc if hasattr(params, 'policyDoc') else None
+            if policy_pdf_base64:
+                try:
+                    policy_pdf = base64.b64decode(policy_pdf_base64)
+                except Exception as e:
+                    _logger.error(f"Failed to decode policy PDF for {reference}: {str(e)}")
+                    return {
+                        'status': 3,
+                        'message': 'Invalid PDF format. Please provide a valid base64 encoded PDF'
+                    }
+            else:
+                policy_pdf = False
+            
+            amount = params.amount if hasattr(params, 'amount') else 0.0
+            if amount <= 0:
+                return {
+                    'status': 5,
+                    'message': 'Amount must be greater than zero'
+                }
+            
+            vals = {
+                'state': 'sold',
+                'quote_amount': amount,
+                'insurance_company': params.company if hasattr(params, 'company') else '',
+                'insurance_commission': params.commission if hasattr(params, 'commission') else 0.0,
+                'policy_pdf': policy_pdf,
+                'policy_pdf_filename': f"policy_{quote.plate}_{getattr(params, 'policyNumber', 'N/A')}.pdf",
+                'policy_number': getattr(params, 'policyNumber', ''),
+                'sale_date': fields.Datetime.now(),
+            }
+            
+            quote.write(vals)
+            
+            quote.message_post(
+                body=_('Insurance sold: %s - Amount: %.2f - Commission: %.2f - Policy: %s') % (
+                    getattr(params, 'company', 'N/A'),
+                    amount,
+                    getattr(params, 'commission', 0.0),
+                    getattr(params, 'policyNumber', 'N/A')
+                ),
+                subject=_('Insurance Sale Callback Received')
+            )
+            
+            _logger.info(f"Insurance callback processed successfully for quote {reference}")
+            
+            return {
+                'status': 0,
+                'message': 'Insurance sale information received successfully'
+            }
+            
+        except Exception as e:
+            _logger.error(f"Unexpected error in insurance callback: {str(e)}", exc_info=True)
+            return {
+                'status': 99,
+                'message': 'An error occurred while processing your request. Please try again or contact support.'
+            }
+
     #
     # PRIVATE METHODS
     #

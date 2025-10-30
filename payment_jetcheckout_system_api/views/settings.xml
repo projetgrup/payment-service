@@ -3,12 +3,12 @@
     <record id="settings_form" model="ir.ui.view">
     <field name="name">payment.settings.student.form</field>
     <field name="model">payment.settings</field>
-    <field name="priority" eval="10"/>
+    <field name="priority" eval="91"/>
     <field name="inherit_id" ref="payment_jetcheckout_system.settings_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//div[hasclass('settings')]" position="inside">
-            <div class="app_settings_block" data-string="API Settings" string="API Settings" data-key="website_partner">
-                <h2>Payment Items</h2>
+        <xpath expr="//div[@class='settings']" position="inside">
+            <div class="app_settings_block" data-string="API Settings" string="API Settings" data-key="project">
+                <h2><i class="fa fa-list-ul mr8"/>Payment Items</h2>
                 <div class="row mt16 o_settings_container" id="api_item_notif">
                     <div class="col-12 col-lg-6 o_setting_box" id="api_item_notif_mail">
                         <div class="o_setting_left_pane">

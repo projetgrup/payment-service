@@ -296,7 +296,7 @@ class PayloxController(http.Controller):
             elif ptype['code'] == 'wallet':
                 wallets = self._prepare_wallet(acquirer=acquirer)
             elif ptype['code'] == 'transfer':
-                transfers = self._prepare_wiretransfer(acquirer=acquirer)
+                transfers = self._prepare_transfer(acquirer=acquirer)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         currencies = acquirer.currency_ids
         if currencies and currency not in currencies:
@@ -398,7 +398,6 @@ class PayloxController(http.Controller):
                             'code': 'credit',
                             'id': 6,
                         })
-        raise Exception(types)
         return types
 
     def _get_payment_tokens(self, acquirer, partner):
@@ -553,7 +552,7 @@ class PayloxController(http.Controller):
                     index += 1
         return wallets
 
-    def _prepare_wiretransfer(self, acquirer=None):
+    def _prepare_transfer(self, acquirer=None):
         acquirer = self._get_acquirer(acquirer=acquirer)
         url = '%s/api/v1/prepayment/wiretransfer_options' % acquirer._get_paylox_api_url()
         data = {
@@ -1568,18 +1567,24 @@ class PayloxController(http.Controller):
 
             data.update(self._get_data_values(data, tx, **kwargs))
             if 'customer_basket' in data:
-                tx.write({'paylox_basket_ids': [(0, 0, {
-                    'uid': basket.get('id'),
-                    'name': basket.get('name'),
-                    'description': basket.get('description'),
-                    'qty': basket.get('qty'),
-                    'amount': basket.get('amount'),
-                    'physical': basket.get('is_physical'),
-                    'category': basket.get('category'),
-                    'submerchant_external_id': basket.get('submerchant_external_id'),
-                    'submerchant_price': basket.get('submerchant_price'),
-                }) for basket in data['customer_basket']]})
-
+                basket_ids = []
+                for basket in data['customer_basket']:
+                    basket_ids.append((0, 0, {
+                        'uid': basket.get('id'),
+                        'name': basket.get('name'),
+                        'description': basket.get('description'),
+                        'qty': basket.get('qty'),
+                        'amount': basket.get('amount'),
+                        'physical': basket.get('is_physical'),
+                        'category': basket.get('category'),
+                        'submerchant_external_id': basket.get('submerchant_external_id'),
+                        'submerchant_price': basket.get('submerchant_price'),
+                        'partner_id': basket.get('partner_id'),
+                    }))
+                    if 'partner_id' in basket:
+                        del basket['partner_id']
+                tx.write({'paylox_basket_ids': basket_ids})
+                    
             response = requests.post(url, data=json.dumps(data))
             result = None
 

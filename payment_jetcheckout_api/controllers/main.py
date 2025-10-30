@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+import uuid
 import json
 import werkzeug
 import requests
@@ -78,17 +79,18 @@ class PayloxApiController(Controller):
         if not status and tx.jetcheckout_api_hash:
             self._del('hash')
 
-            redirect_url = getattr(tx, 'jetcheckout_api_method_%s_redirect_url' % tx.jetcheckout_payment_type, None)
-            if redirect_url:
+            method = fields.first(tx.paylox_api_method_ids.filtered(lambda m: m.type == 'virtualpos'))
+            if method and method.redirect_url:
                 status = True
-                url = '%s/%s' % (redirect_url, tx.jetcheckout_order_id)
+                url = '%s/%s' % (method.redirect_url, tx.jetcheckout_order_id)
 
         return url, tx, status
 
     def _get_template(self, path, values):
-        if path == '/payment/card':
-            return 'payment_jetcheckout_api.page_payment_virtualpos'
-        return 'payment_jetcheckout_api.page_payment'
+        method = ''
+        if values.get('method'):
+            method = f'_{values["method"]["type"]}'
+        return 'payment_jetcheckout_api.page_payment%s' % method
 
     @http.route(['/api/payment/success'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api_payment_success(self, **kwargs):
@@ -124,7 +126,7 @@ class PayloxApiController(Controller):
 
     @http.route(['/payment'], type='http', methods=['GET', 'POST'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api(self, **kwargs):
-        self._del()
+        #self._del() #TODO remove it if unnecessary
 
         hash = self._set_hash(raise_exception=False, **kwargs)
         tx = request.env['payment.transaction'].sudo().search([
@@ -176,7 +178,9 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif 'card' not in tx.paylox_api_method_ids.mapped('code'):
+
+        method = tx.paylox_api_method_ids.filtered(lambda m: m.type == 'virtualpos')
+        if not method:
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -186,8 +190,159 @@ class PayloxApiController(Controller):
             limit=1,
         )
         values = self._prepare(acquirer=acquirer, company=tx.company_id, partner=tx.partner_id, transaction=tx, balance=False, filters={'type': ['virtualpos']})
-        values.update({'tx': tx})
+        values.update({'tx': tx, 'method': method})
         template = self._get_template('/payment/card', values)
+        return request.render(template, values, headers={
+            'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '-1'
+        })
+
+    @http.route(['/payment/pos'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
+    def page_api_pos(self, **kwargs):
+        hash = self._set_hash(raise_exception=False, **kwargs)
+        tx = request.env['payment.transaction'].sudo().search([
+            ('jetcheckout_api_hash', '!=', False),
+            ('jetcheckout_api_hash', '=', hash),
+            #('state', 'in', ('draft', 'cancel', 'expired'))
+        ], limit=1)
+        if not tx:
+            raise NotFound()
+        
+        method = tx.paylox_api_method_ids.filtered(lambda m: m.type == 'physicalpos')
+        if not method:
+            raise NotFound()
+
+        acquirer = tx.acquirer_id
+        values = self._prepare(acquirer=acquirer, company=tx.company_id, partner=tx.partner_id, transaction=tx, balance=False, filters={'type': ['physicalpos']})
+        values.update({'tx': tx, 'method': method})
+        template = self._get_template('/payment/pos', values)
+
+        url = acquirer._get_paylox_api_url()
+        apikey = acquirer.jetcheckout_api_key
+        base_url = acquirer.get_base_url()
+        if base_url.endswith('/'):
+            base_url = base_url[:-1]
+        payload = {
+            'application_key': apikey,
+            'order_id': tx.jetcheckout_order_id,
+            'amount': int(tx.amount*100),
+            'currency': tx.company_id.currency_id.name,
+            'store_code': tx.company_id.payment_method_physical_pos_store_code or '',
+            'callback_api_url': '%s/payment/callback' % base_url,
+            'mode': acquirer._get_paylox_env(),
+            #'document_type': 4,
+        }
+        if tx.paylox_product_ids:
+            precision = request.env['decimal.precision'].sudo().precision_get('Product Price')
+            payload.update({
+                'sale_items': [{
+                    'name': product.name or '',
+                    'barcode': product.code or '',
+                    'qty': round(product.qty, precision),
+                    'price': round(product.price, precision),
+                    'amount': round(product.qty*product.price, precision),
+                    'tax_rate': 20
+                } for product in tx.paylox_product_ids]
+            })
+
+        devices = tx.company_id.payment_method_physical_pos_ids
+        device_ids = []
+        device_owner = ''
+        device_name = ''
+        if devices:        
+            device_owner = devices[0].type
+            if device_owner == 'pavo':
+                device_name = devices[0].name
+                device_ids.append(device_name)
+            else:
+                device_name = devices[0].name
+                device_ids.extend(devices.mapped('name'))
+
+        if device_ids:
+            payload.update({'device_ids': device_ids})
+
+        if device_owner:
+            payload.update({'device_owner': device_owner})
+
+        request_count = 0
+        def init_physical_payment():
+            nonlocal request_count
+            if request_count == 5:
+                message = _('Request cycle exceeded. Please contact with system administrator.')
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
+                values.update({'error': message})
+                return
+
+            request_count += 1
+            response = requests.post('%s/api/v1/physical/payment' % url, json=payload)
+            if response.status_code == 200:
+                result = response.json()
+                if result['response_code'] == '00158':
+                    response = requests.post('%s/api/v1/physical/pairing' % url, json={
+                        "application_key": apikey,
+                        "device_id": device_name,
+                        "device_owner": device_owner
+                    })
+                    if response.status_code == 200:
+                        result = response.json()
+                        if result['pairing_code']:
+                            values.update({'method_physical_code': result['pairing_code']})
+                        else:
+                            message = _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                            tx.write({
+                                'state': 'error',
+                                'state_message': message,
+                                'last_state_change': fields.Datetime.now(),
+                            })
+                            values.update({'error': message})
+                    else:
+                        message = _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                        tx.write({
+                            'state': 'error',
+                            'state_message': message,
+                            'last_state_change': fields.Datetime.now(),
+                        })
+                        values.update({'error': message})
+
+                elif result['response_code'] == '00202':
+                    tx.write({
+                        'state': 'pending', 
+                        'last_state_change': fields.Datetime.now(),
+                        'jetcheckout_payment_type': 'physicalpos',
+                        'jetcheckout_transaction_id': result['transaction_id']
+                    })
+                    values.update({'name': result['pos_order_number']})
+
+                elif result['response_code'] == '00122':
+                    order_aux_id = 'x%s' % str(uuid.uuid4())
+                    tx.write({'jetcheckout_order_aux_id': order_aux_id})
+                    payload.update({"order_id": order_aux_id})
+                    init_physical_payment()
+
+                else:
+                    message = _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                    tx.write({
+                        'state': 'error',
+                        'state_message': message,
+                        'last_state_change': fields.Datetime.now(),
+                    })
+                    values.update({'error': message})
+
+            else:
+                message = _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                tx.write({
+                    'state': 'error',
+                    'state_message': message,
+                    'last_state_change': fields.Datetime.now(),
+                })
+                values.update({'error': message})
+
+        init_physical_payment()
         return request.render(template, values, headers={
             'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
@@ -204,7 +359,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('type'):
             raise NotFound()
 
         order = request.env['payment.transaction'].sudo().search([
@@ -246,7 +401,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('type'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -278,7 +433,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif 'wallet' not in tx.paylox_api_method_ids.mapped('code'):
+        elif 'wallet' not in tx.paylox_api_method_ids.mapped('type'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -299,6 +454,7 @@ class PayloxApiController(Controller):
             'Pragma': 'no-cache',
             'Expires': '-1'
         })
+
     @http.route(['/payment/credit'], type='http', methods=['GET'], auth='public', csrf=False, sitemap=False, website=True)
     def page_api_credit(self, **kwargs):
         hash = self._set_hash(raise_exception=False, **kwargs)
@@ -309,7 +465,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif 'credit' not in tx.paylox_api_method_ids.mapped('code'):
+        elif 'credit' not in tx.paylox_api_method_ids.mapped('type'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -341,7 +497,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             raise NotFound()
-        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('type'):
             raise NotFound()
 
         acquirer = request.env['payment.acquirer']._get_acquirer(
@@ -372,7 +528,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             return '/404'
-        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('type'):
             return '/404'
 
         self._confirm_bank_webhook(tx)
@@ -387,7 +543,7 @@ class PayloxApiController(Controller):
         ], limit=1)
         if not tx:
             return '/404'
-        elif 'transfer' not in tx.paylox_api_method_ids.mapped('code'):
+        elif 'transfer' not in tx.paylox_api_method_ids.mapped('type'):
             return '/404'
 
         self._del()
