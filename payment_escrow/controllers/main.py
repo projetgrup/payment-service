@@ -2020,7 +2020,6 @@ class PayloxSystemEscrowController(Controller):
 
         baskets = request.env['payment.transaction.basket'].sudo().search([
             ('partner_id', '=', partner.id),
-            ('transaction_id.state', '=', 'done'),
         ], order='transaction_date desc')
 
         values = {
@@ -2029,8 +2028,9 @@ class PayloxSystemEscrowController(Controller):
         }
         return request.render('payment_escrow.broker_transactions_page', values)
 
-    @route('/my/broker/transaction/<int:basket_id>/upload_invoice', type='json', auth='user', website=True, methods=['POST'], csrf=False)
-    def broker_upload_invoice(self, basket_id, **kwargs):
+    @route('/my/broker/transaction/upload_invoice', type='json', auth='user', website=True, methods=['POST'], csrf=False)
+    def broker_upload_invoice(self, **kwargs):
+        basket_id = kwargs.get('basket_id')
         basket = request.env['payment.transaction.basket'].sudo().browse(int(basket_id))
         
         if not basket.exists():
