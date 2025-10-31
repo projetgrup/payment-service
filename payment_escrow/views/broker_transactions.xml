@@ -9,6 +9,7 @@
             <t t-set="title" t-value="website.name"/>
             <t t-set="body_classname" t-value="'payment-page payment-escrow broker-transactions'"/>
             <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="currency" t-value="request.env.company.currency_id"/>
             <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
             <t t-call="payment_jetcheckout.payment_loading"/>
             <t t-call="payment_escrow.background_animation"/>
@@ -179,6 +180,7 @@
                                         </div>
                                     </t>
                                     
+                                    <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
                                     <t t-foreach="baskets" t-as="basket">
                                         <div class="escrow-ad-list-item" t-att-data-status="basket.transfer_status">
                                             <div class="escrow-ad-list-item-info">
@@ -242,9 +244,11 @@
                                                     <div class="btn-group-vertical btn-group-sm w-100">
                                                         <button type="button" 
                                                                 class="btn btn-outline-primary mb-1" 
-                                                                data-toggle="modal"
-                                                                t-att-data-target="'#uploadInvoiceModal' + str(basket.id)"
-                                                                t-if="basket.transfer_status == 'waiting_invoice' and not basket.broker_invoice_id">
+                                                                t-if="basket.transfer_status == 'waiting_invoice' and not basket.broker_invoice_id"
+                                                                t-att-data-id="basket.id"
+                                                                t-att-data-ad-number="basket.ad_number"
+                                                                t-att-data-transfer-amount="basket.transfer_amount"
+                                                                field="transactions.uploadInvoice">
                                                             <i class="fa fa-upload mr-1"></i>Upload Invoice
                                                         </button>
 

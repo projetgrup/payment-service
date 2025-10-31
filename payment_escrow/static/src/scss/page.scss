@@ -2002,6 +2002,16 @@
             cursor: wait;
         }
     }
+
+    .modal:has(.o_payment_escrow_upload_invoice) {
+        main {
+            margin: 0 !important;
+        }
+        footer {
+            justify-content: center;
+        }
+
+    }
 }
 
 /* Payment (Step 3) */
