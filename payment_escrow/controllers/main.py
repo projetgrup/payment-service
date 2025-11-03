@@ -2172,7 +2172,7 @@ class PayloxSystemEscrowController(Controller):
                 ('partner_id', 'in', brokers.ids),
             ], limit=1)
             if broker_basket:
-                broker = broker_bank_map.get(broker_basket.submerchant_external_id, False)
+                broker = broker_basket.partner_id
                 basket_broker_map[dealer_basket.id] = broker
         
         broker_transactions = {}
