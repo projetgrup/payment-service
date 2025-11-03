@@ -2149,7 +2149,7 @@ class PayloxSystemEscrowController(Controller):
         ])
         
         dealer_baskets = request.env['payment.transaction.basket'].sudo().search([
-            ('partner_id', 'in', partner.id),
+            ('partner_id', '=', partner.id),
             ('transaction_id.state', '=', 'done'),
         ], order='transaction_date desc')
         
