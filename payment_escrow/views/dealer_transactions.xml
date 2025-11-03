@@ -147,7 +147,7 @@
                                     
                                     <t t-foreach="baskets" t-as="basket">
                                         <t t-set="broker" t-value="basket_broker_map.get(basket.id, False)"/>
-                                        <div class="escrow-ad-list-item" t-att-data-broker-id="broker.id if broker else 0" t-att-data-status="basket.transfer_status">
+                                        <div t-if="False" class="escrow-ad-list-item" t-att-data-broker-id="broker.id if broker else 0" t-att-data-status="basket.transfer_status">
                                             <div class="escrow-ad-list-item-info">
                                                 <div class="escrow-ad-list-item-text">
                                                     <span class="font-weight-600" t-esc="broker.name if broker else '-'"/>

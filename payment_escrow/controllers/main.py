@@ -2174,10 +2174,9 @@ class PayloxSystemEscrowController(Controller):
         broker_volumes = {}
         for basket in dealer_baskets:
             broker = basket_broker_map.get(basket.id, False)
-            if broker > 0:
-                broker_id = broker.id if broker else 0
-                broker_transactions[broker_id] = broker_transactions.get(broker_id, 0) + 1
-                broker_volumes[broker_id] = broker_volumes.get(broker_id, 0.0) + basket.transfer_amount
+            broker_id = broker.id if broker else 0
+            broker_transactions[broker_id] = broker_transactions.get(broker_id, 0) + 1
+            broker_volumes[broker_id] = broker_volumes.get(broker_id, 0.0) + basket.transfer_amount
         
         total_transactions = len(dealer_baskets)
         total_volume = sum(dealer_baskets.mapped('transfer_amount'))
