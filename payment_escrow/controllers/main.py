@@ -2174,7 +2174,6 @@ class PayloxSystemEscrowController(Controller):
             if broker_basket:
                 broker = broker_basket.partner_id
                 basket_broker_map[dealer_basket.id] = broker
-        raise Exception(basket_broker_map)
         
         broker_transactions = {}
         broker_volumes = {}
@@ -2191,6 +2190,7 @@ class PayloxSystemEscrowController(Controller):
         
         dealer_referral_code = partner.dealer_referral_code if partner.dealer_referral_code else ''
         
+        raise Exception(basket_broker_map)
         commission_rates = partner.dealer_commission_rate_ids.filtered('active')
         
         values = {
