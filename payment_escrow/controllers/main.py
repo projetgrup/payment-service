@@ -2020,6 +2020,7 @@ class PayloxSystemEscrowController(Controller):
 
         baskets = request.env['payment.transaction.basket'].sudo().search([
             ('partner_id', '=', partner.id),
+            ('transaction_id.state', '=', 'done'),
         ], order='transaction_date desc')
 
         values = {
