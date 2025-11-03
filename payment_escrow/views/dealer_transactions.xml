@@ -166,7 +166,7 @@
                                             
                                             <div class="escrow-ad-list-item-info">
                                                 <div class="escrow-ad-list-item-text">
-                                                    <span class="font-weight-600" t-esc="broker.campaign_id.name or '-'"/>
+                                                    <span class="font-weight-600" t-esc="broker.campaign_id.name if broker and broker.campaign_id else '-'"/>
                                                 </div>
                                             </div>
                                             
