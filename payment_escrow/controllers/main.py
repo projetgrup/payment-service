@@ -2190,7 +2190,6 @@ class PayloxSystemEscrowController(Controller):
         
         dealer_referral_code = partner.dealer_referral_code if partner.dealer_referral_code else ''
         
-        raise Exception(basket_broker_map)
         commission_rates = partner.dealer_commission_rate_ids.filtered('active')
         
         values = {
