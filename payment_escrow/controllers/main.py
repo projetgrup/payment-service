@@ -2169,7 +2169,7 @@ class PayloxSystemEscrowController(Controller):
         for dealer_basket in dealer_baskets:
             broker_basket = request.env['payment.transaction.basket'].sudo().search([
                 ('transaction_id', '=', dealer_basket.transaction_id.id),
-                ('partner_id', 'in', brokers.ids),
+                ('submerchant_external_id', 'in', list(broker_bank_map.keys())),
             ], limit=1)
             if broker_basket:
                 broker = broker_bank_map.get(broker_basket.submerchant_external_id, False)
