@@ -2174,6 +2174,7 @@ class PayloxSystemEscrowController(Controller):
             if broker_basket:
                 broker = broker_basket.partner_id
                 basket_broker_map[dealer_basket.id] = broker
+        raise Exception(basket_broker_map)
         
         broker_transactions = {}
         broker_volumes = {}
