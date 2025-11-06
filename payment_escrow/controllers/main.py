@@ -2029,8 +2029,9 @@ class PayloxSystemEscrowController(Controller):
         }
         return request.render('payment_escrow.broker_transactions_page', values)
 
-    @route('/my/broker/transaction/<int:basket_id>/upload_invoice', type='json', auth='user', website=True, methods=['POST'], csrf=False)
-    def broker_upload_invoice(self, basket_id, **kwargs):
+    @route('/my/broker/transaction/upload_invoice', type='json', auth='user', website=True, methods=['POST'], csrf=False)
+    def broker_upload_invoice(self, **kwargs):
+        basket_id = kwargs.get('basket_id')
         basket = request.env['payment.transaction.basket'].sudo().browse(int(basket_id))
         
         if not basket.exists():
@@ -2147,13 +2148,8 @@ class PayloxSystemEscrowController(Controller):
             ('paylox_escrow_type', '=', 'broker'),
         ])
         
-        dealer_banks = request.env['res.partner.bank'].sudo().search([
-            ('partner_id', '=', partner.id),
-        ])
-        dealer_bank_refs = dealer_banks.mapped('api_ref')
-        
         dealer_baskets = request.env['payment.transaction.basket'].sudo().search([
-            ('submerchant_external_id', 'in', dealer_bank_refs),
+            ('partner_id', '=', partner.id),
             ('transaction_id.state', '=', 'done'),
         ], order='transaction_date desc')
         
@@ -2168,10 +2164,10 @@ class PayloxSystemEscrowController(Controller):
         for dealer_basket in dealer_baskets:
             broker_basket = request.env['payment.transaction.basket'].sudo().search([
                 ('transaction_id', '=', dealer_basket.transaction_id.id),
-                ('submerchant_external_id', 'in', list(broker_bank_map.keys())),
+                ('partner_id', 'in', brokers.ids),
             ], limit=1)
             if broker_basket:
-                broker = broker_bank_map.get(broker_basket.submerchant_external_id, False)
+                broker = broker_basket.partner_id
                 basket_broker_map[dealer_basket.id] = broker
         
         broker_transactions = {}
@@ -2190,7 +2186,6 @@ class PayloxSystemEscrowController(Controller):
         dealer_referral_code = partner.dealer_referral_code if partner.dealer_referral_code else ''
         
         commission_rates = partner.dealer_commission_rate_ids.filtered('active')
-        
         values = {
             'baskets': dealer_baskets,
             'brokers': brokers,

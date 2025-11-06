@@ -65,7 +65,9 @@ publicWidget.registry.payloxBrokerTransaction = payloxPage.extend({
         const transferAmount = parseFloat(ev.currentTarget.dataset.transferAmount);
         const adNumber = ev.currentTarget.dataset.adNumber;
         const currency = this.currency;
-        console.log(currency);
+        const self = this;
+        let filePondInstance = null;
+        
         const popup = new dialog(this, {
             title: _t('Upload Invoice'),
             technical: false,
@@ -86,35 +88,57 @@ publicWidget.registry.payloxBrokerTransaction = payloxPage.extend({
                 text: _t('Upload'),
                 classes: 'btn-primary text-white',
                 click: () => {
-                    $button.find('.card-token-loading').addClass('show');
-                    $button.find('.card-token-radio-add').click();
+                    const files = filePondInstance ? filePondInstance.getFiles() : [];
+                    
+                    if (!files || files.length === 0) {
+                        self.displayNotification({
+                            type: 'warning',
+                            title: _t('Warning'),
+                            message: _t('Please select a file to upload'),
+                        });
+                        return;
+                    }
+                    
+                    const file = files[0];
+                    const fileData = file.getFileEncodeBase64String();
+                    
                     popup.destroy();
+                    
                     rpc.query({
-                        route: '/payment/card/remove',
-                        params: { token: $input.val() },
+                        route: '/my/broker/transaction/upload_invoice',
+                        params: { 
+                            invoice_file: fileData,
+                            filename: file.filename,
+                            mimetype: file.fileType,
+                            basket_id: id 
+                        },
                     }).then((res) => {
-                        if (res.error) {
+                        if (res.success) {
+                            self.displayNotification({
+                                type: 'success',
+                                title: _t('Success'),
+                                message: res.message || _t('Invoice uploaded successfully'),
+                            });
+                            // Refresh page to show updated status
+                            setTimeout(() => window.location.reload(), 1500);
+                        } else {
                             self.displayNotification({
                                 type: 'danger',
                                 title: _t('Error'),
-                                message: _t('An error occured. Please contact with your system administrator.'),
+                                message: res.message || _t('An error occurred. Please contact your system administrator.'),
                             });
-                        } else {
-                            $button.remove();
                         }
                     }).guardedCatch((error) => {
-                        $button.find('.card-token-loading').removeClass('show');
-                        if (!ev?.detail?.noWarning) {
-                            self.displayNotification({
-                                type: 'danger',
-                                title: _t('Error'),
-                                message: _t('An error occured. Please contact with your system administrator.'),
-                            });
-                        }
+                        self.displayNotification({
+                            type: 'danger',
+                            title: _t('Error'),
+                            message: _t('An error occurred. Please contact your system administrator.'),
+                        });
                     });
                 },
             }],
         });
+        
         popup.open().opened(() => {
             const props = {
                 name: 'invoiceFile',
@@ -129,18 +153,15 @@ publicWidget.registry.payloxBrokerTransaction = payloxPage.extend({
                     </svg>
                     <span class="text-600">Fatura Yükle</span>
                     <div class="text-600">PDF veya Resim</div>`,
-                allowImageEdit: true,
+                allowImageEdit: false,
                 credits: false,
-                captureMethod: 'environment',
                 allowFileSizeValidation: true,
                 labelMaxFileSizeExceeded: _t('File is too large'),
                 labelMaxFileSize: _t('Maximum file size is {filesize}'),
-                labelMaxTotalFileSizeExceeded: _t('Maximum total size exceeded'),
-                labelMaxTotalFileSize: _t('Maximum total file size is {filesize}'),
-            }
+            };
 
-            const $file = popup.$el.find('input');
-            FilePond.create($file[0], props);
+            const $file = popup.$el.find('input[name="invoiceFile"]');
+            filePondInstance = FilePond.create($file[0], props);
         });
     },
 
