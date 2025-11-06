@@ -94,10 +94,16 @@
                 <field name="paylox_api_method_ids" string="Methods">
                     <tree>
                         <field name="type"/>
+                        <field name="type_physicalpos_ids" domain="[('company_id', '=', parent.company_id)]" widget="many2manytags" attrs="{'invisible': [('parent.jetcheckout_payment_type', '!=', 'physicalpos')]}"/>
                     </tree>
                     <form>
                         <group>
-                            <field name="type"/>
+                            <group>
+                                <field name="type"/>
+                            </group>
+                            <group>
+                                <field name="type_physicalpos_ids" domain="[('company_id', '=', parent.company_id)]" widget="many2manytags" attrs="{'invisible': [('parent.jetcheckout_payment_type', '!=', 'physicalpos')]}"/>
+                            </group>
                         </group>
                     </form>
                 </field>

@@ -121,7 +121,7 @@ class PaymentTransaction(models.Model):
         if user.share and self.partner_id:
             user = self.partner_id.users_id
 
-        line = self.acquirer_id._get_branch_line(name=self.jetcheckout_vpos_name, user=user)
+        line = self.acquirer_id._get_branch_line(self, user)
         if not line or not line.account_code:
             if not self.env.context.get('no_button'):
                 raise UserError(_('There is no account line for %s.') % self.jetcheckout_vpos_name)

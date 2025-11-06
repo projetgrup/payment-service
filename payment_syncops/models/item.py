@@ -140,7 +140,7 @@ class PaymentItem(models.Model):
                 self.write(values)
                 self.flush()
             else:
-                line = tx and tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=self.create_uid)
+                line = tx and tx.acquirer_id._get_branch_line(tx)
                 result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_collection', reference=str(self.id), params={
                     'id': self.id,
                     'collection_id': self.id,

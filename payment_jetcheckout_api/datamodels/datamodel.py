@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from marshmallow import fields
+from marshmallow import fields, validate
 from odoo import _lt
 from odoo.addons.datamodel.core import Datamodel
 from odoo.addons.datamodel.fields import NestedModel
@@ -163,6 +163,17 @@ class PaymentPrepareMethodItem(Datamodel):
     webhook = fields.String(required=False, allow_none=False, metadata={"title": _lt("Webhook URL"), "description": _lt("Webhook URL to send a notification"), "example": "https://example.com/method/webhook"})
 
 
+class PaymentPrepareMethodPhysicalPos(Datamodel):
+    class Meta:
+        ordered = True
+
+    _name = "payment.prepare.method.physicalPos"
+
+    ids = fields.List(fields.String, required=True, allow_none=False, validate=validate.NoneOf([[]]), metadata={"title": _lt("PoS IDs"), "description": _lt("List of PoS ID numbers"), "example": ["POS708090"]})
+    redirect = fields.String(required=True, allow_none=False, metadata={"title": _lt("Redirect URL"), "description": _lt("Redirect URL when user picks suitable payment method"), "example": "https://example.com/method/result"})
+    webhook = fields.String(required=False, allow_none=False, metadata={"title": _lt("Webhook URL"), "description": _lt("Webhook URL to send a notification"), "example": "https://example.com/method/webhook"})
+
+
 class PaymentPrepareMethod(Datamodel):
     class Meta:
         ordered = True
@@ -170,7 +181,7 @@ class PaymentPrepareMethod(Datamodel):
     _name = "payment.prepare.method"
 
     virtualPos = NestedModel("payment.prepare.method.item", required=False, metadata={"title": _lt("Virtual PoS payment"), "description": _lt("Attributes when card payment is selected")})
-    physicalPos = NestedModel("payment.prepare.method.item", required=False, metadata={"title": _lt("Physical PoS"), "description": _lt("Attributes when physical PoS is selected")})
+    physicalPos = NestedModel("payment.prepare.method.physicalPos", required=False, metadata={"title": _lt("Physical PoS"), "description": _lt("Attributes when physical PoS is selected")})
     shoppingCredit = NestedModel("payment.prepare.method.item", required=False, metadata={"title": _lt("Shopping credit"), "description": _lt("Attributes when shopping credit is selected")})
     bankTransfer = NestedModel("payment.prepare.method.item", required=False, metadata={"title": _lt("Bank transfer"), "description": _lt("Attributes when bank payment is selected")})
 
@@ -247,6 +258,7 @@ class PaymentPrepareInput(Datamodel):
     html = fields.String(metadata={"title": _lt("Custom HTML"), "description": _lt("Custom code to be viewed bottom of the page"), "example": "<p>Copyright</p>"})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
     methods = NestedModel("payment.prepare.method", required=True, allow_none=False, metadata={"title": _lt("Method List"), "description": _lt("List of codes of methods. Possible keys are 'virtualPos', 'physicalPos', 'shoppingCredit', 'bankTransfer'.")})
+    payNow = fields.Boolean(required=False, allow_none=False, metadata={"title": _lt("Begin Payment Process Now"), "description": _lt("Do not redirect to a payment page and process the transaction immediately"), "example": False})
 
 
 class PaymentPrepareOutput(Datamodel):

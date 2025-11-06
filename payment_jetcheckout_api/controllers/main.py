@@ -246,7 +246,7 @@ class PayloxApiController(Controller):
                 } for product in tx.paylox_product_ids]
             })
 
-        devices = tx.company_id.payment_method_physical_pos_ids
+        devices = method.type_physicalpos_ids
         device_ids = []
         device_owner = ''
         device_name = ''

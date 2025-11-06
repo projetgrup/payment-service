@@ -99,3 +99,4 @@ class PaymentTransactionPayloxApiMethod(models.Model):
     icon = fields.Char(compute='_compute_icon')
     redirect_url = fields.Char(string='Redirect URL')
     webhook_url = fields.Char(string='Webhook URL')
+    type_physicalpos_ids = fields.Many2many('payment.method.physicalpos', 'payment_transaction_api_method_physicalpos_rel', 'method_id', 'pos_id', string='Physical PoS IDs')

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import uuid
 import time
 import base64
 import hashlib
@@ -9,6 +10,7 @@ import datetime
 import functools
 from urllib.parse import quote
 
+from odoo import fields
 from odoo.http import Response, request
 from odoo.exceptions import AccessError
 from odoo.tools.translate import _, _lt
@@ -155,9 +157,139 @@ class PaymentAPIService(Component):
             if not hash:
                 return Response("Hash is not matched", status=401, mimetype="application/json")
 
-            self._create_transaction(api, hash, params)
+            tx = self._create_transaction(api, hash, params)
 
             ResponseOk = self.env.datamodels["payment.prepare.output"]
+            if tx.jetcheckout_payment_type == 'physicalpos' and getattr(params, 'payNow', False):
+                method = fields.first(tx.paylox_api_method_ids.filtered(lambda m: m.type == 'physicalpos'))
+                status, message = 0, 'Success'
+                acquirer = tx.acquirer_id
+                url = acquirer._get_paylox_api_url()
+                apikey = acquirer.jetcheckout_api_key
+                base_url = acquirer.get_base_url()
+                if base_url.endswith('/'):
+                    base_url = base_url[:-1]
+                payload = {
+                    'application_key': apikey,
+                    'order_id': tx.jetcheckout_order_id,
+                    'amount': int(tx.amount*100),
+                    'currency': tx.company_id.currency_id.name,
+                    'store_code': tx.company_id.payment_method_physical_pos_store_code or '',
+                    'callback_api_url': '%s/payment/callback' % base_url,
+                    'mode': acquirer._get_paylox_env(),
+                    #'document_type': 4,
+                }
+                if tx.paylox_product_ids:
+                    precision = self.env['decimal.precision'].sudo().precision_get('Product Price')
+                    payload.update({
+                        'sale_items': [{
+                            'name': product.name or '',
+                            'barcode': product.code or '',
+                            'qty': round(product.qty, precision),
+                            'price': round(product.price, precision),
+                            'amount': round(product.qty*product.price, precision),
+                            'tax_rate': 20
+                        } for product in tx.paylox_product_ids]
+                    })
+
+                devices = method.type_physicalpos_ids
+                device_ids = []
+                device_owner = ''
+                device_name = ''
+                if devices:        
+                    device_owner = devices[0].type
+                    if device_owner == 'pavo':
+                        device_name = devices[0].name
+                        device_ids.append(device_name)
+                    else:
+                        device_name = devices[0].name
+                        device_ids.extend(devices.mapped('name'))
+
+                if device_ids:
+                    payload.update({'device_ids': device_ids})
+
+                if device_owner:
+                    payload.update({'device_owner': device_owner})
+
+                request_count = 0
+                status = 0
+                message = ''
+                def init_physical_payment():
+                    nonlocal request_count
+                    nonlocal status
+                    nonlocal message
+                    if request_count == 5:
+                        status, message = 1, _('Request cycle exceeded. Please contact with system administrator.')
+                        tx.write({
+                            'state': 'error',
+                            'state_message': message,
+                            'last_state_change': fields.Datetime.now(),
+                        })
+
+                    request_count += 1
+                    response = requests.post('%s/api/v1/physical/payment' % url, json=payload)
+                    if response.status_code == 200:
+                        result = response.json()
+                        if result['response_code'] == '00158':
+                            response = requests.post('%s/api/v1/physical/pairing' % url, json={
+                                "application_key": apikey,
+                                "device_id": device_name,
+                                "device_owner": device_owner
+                            })
+                            if response.status_code == 200:
+                                result = response.json()
+                                if result['pairing_code']:
+                                    status, message = 0, _('Pairing code is %s') % result['pairing_code']
+                                else:
+                                    status, message = 1, _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                                    tx.write({
+                                        'state': 'error',
+                                        'state_message': message,
+                                        'last_state_change': fields.Datetime.now(),
+                                    })
+                            else:
+                                status, message = 1, _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                                tx.write({
+                                    'state': 'error',
+                                    'state_message': message,
+                                    'last_state_change': fields.Datetime.now(),
+                                })
+
+                        elif result['response_code'] == '00202':
+                            tx.write({
+                                'state': 'pending', 
+                                'last_state_change': fields.Datetime.now(),
+                                'jetcheckout_payment_type': 'physicalpos',
+                                'jetcheckout_transaction_id': result['transaction_id']
+                            })
+                            status, message = 0, _('Payment #%s is ready. Please check the PoS device.') % result['pos_order_number']
+
+                        elif result['response_code'] == '00122':
+                            order_aux_id = 'x%s' % str(uuid.uuid4())
+                            tx.write({'jetcheckout_order_aux_id': order_aux_id})
+                            payload.update({"order_id": order_aux_id})
+                            init_physical_payment()
+
+                        else:
+                            status, message = 1, _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                            tx.write({
+                                'state': 'error',
+                                'state_message': message,
+                                'last_state_change': fields.Datetime.now(),
+                            })
+
+                    else:
+                        status, message = 1, _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                        tx.write({
+                            'state': 'error',
+                            'state_message': message,
+                            'last_state_change': fields.Datetime.now(),
+                        })
+
+                init_physical_payment()
+                http_status = 400 if status else 200
+                return Response(json.dumps(dict(status=status, message=message)), status=http_status, mimetype="application/json")
+
             hash = quote(hash)
             url = 'https://%s/payment?=%s' % (request.httprequest.host, hash)
             return ResponseOk(hash=hash, url=url, **RESPONSE[200])
@@ -488,12 +620,27 @@ class PaymentAPIService(Component):
         for method_name, method_value in methods.dump().items():
             if method_name in method_types:
                 method_type = method_types[method_name]
-                method_ids.append((0, 0, {
+                method_values = {
                     'type': method_type,
                     'redirect_url': method_value.get('redirect', False),
                     'webhook_url': method_value.get('webhook', False),
-                }))
+                }
+                if method_type == 'physicalpos':
+                    physical_pos_ids = tx.company_id.payment_method_physical_pos_ids
+                    physical_pos = self.env['payment.method.physicalpos']
+                    for i in method_value.get('ids', []):
+                        pos = fields.first(physical_pos_ids.filtered(lambda p: p.name == i))
+                        if not pos:
+                            raise Exception('There is a PoS ID which has not been defined: %s' % i)
+                        physical_pos |= pos
 
+                    method_values.update({
+                        'type_physicalpos_ids': [(6, 0, physical_pos.ids)]
+                    })
+
+                method_ids.append((0, 0, method_values))
+        
+            values.update({'jetcheckout_payment_type': method_type})
         if len(method_ids) == 1:
             values.update({'jetcheckout_payment_type': method_type})
         values.update({'paylox_api_method_ids': method_ids})
@@ -541,6 +688,7 @@ class PaymentAPIService(Component):
             'partner_country_id': country and country.id or False,
             'partner_state_id': state and state.id or False,
         })
+        return tx
 
     def _initialize_transaction(self, api, hash, params):
         if hasattr(params.partner, 'country'):
