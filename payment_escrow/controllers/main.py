@@ -1382,12 +1382,12 @@ class PayloxSystemEscrowController(Controller):
                     existing.write(bank_vals)
                 if not existing:
                     existing = bank.create(bank_vals)
-                # if not existing.api_state:
-                #     return {
-                #         'success': False,
-                #         'partner_id': partner.id,
-                #         'message': existing.api_message
-                #     }
+                if not existing.api_state:
+                    return {
+                        'success': False,
+                        'partner_id': partner.id,
+                        'message': existing.api_message
+                    }
             if kwargs.get('ad_id'):
                 ad = request.env['product.product'].sudo().with_context(system='escrow').search([('id', '=', int(kwargs.get('ad_id'))), ('company_id', '=', company.id)], limit=1)
                 if ad:
