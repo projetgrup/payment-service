@@ -45,7 +45,7 @@ class PaymentAcquirer(models.Model):
 
         line = self._get_journal_line(tx.jetcheckout_vpos_name)
         if line:
-            domain = self._get_branch_line_domain(line)
+            domain = self._get_branch_line_domain(line, tx)
             branch = self.env['payment.acquirer.jetcheckout.branch'].search(domain + [('user_ids', 'in', [user.id])], limit=1)
             if branch:
                 return branch
