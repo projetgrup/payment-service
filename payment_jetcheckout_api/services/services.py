@@ -260,7 +260,9 @@ class PaymentAPIService(Component):
                                 'state': 'pending', 
                                 'last_state_change': fields.Datetime.now(),
                                 'jetcheckout_payment_type': 'physicalpos',
-                                'jetcheckout_transaction_id': result['transaction_id']
+                                'jetcheckout_transaction_id': result['transaction_id'],
+                                'jetcheckout_payment_type_physicalpos_request_id': result['pos_order_number'],
+                                'jetcheckout_payment_type_physicalpos_serial_id': device_name,
                             })
                             status, message = 0, _('Payment #%s is ready. Please check the PoS device.') % result['pos_order_number']
 

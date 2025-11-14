@@ -2756,13 +2756,13 @@ msgstr "Şirket bazında tercihen"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_order_id
-msgid "Order"
-msgstr "Referans"
+msgid "Order ID"
+msgstr "Sipariş ID"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_prestatus__order_id
 msgid "Order Reference"
-msgstr "Sipariş Id"
+msgstr "Sipariş Referansı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields.selection,name:payment_jetcheckout.selection__payment_paylox_log__request_method__patch
@@ -4159,11 +4159,15 @@ msgstr "Toplam Ödeme"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_refund__transaction_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_status__transaction_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_paylox_log__transaction_id
-#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_transaction_id
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction_product__transaction_id
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.page_transaction
 msgid "Transaction"
 msgstr "İşlem"
+
+#. module: payment_jetcheckout
+#: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_transaction__jetcheckout_transaction_id
+msgid "Transaction ID"
+msgstr "İşlem ID"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_token__jetcheckout_limit_tx

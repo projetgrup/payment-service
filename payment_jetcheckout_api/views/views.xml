@@ -100,9 +100,11 @@
                         <group>
                             <group>
                                 <field name="type"/>
+                                <field name="type_physicalpos_ids" domain="[('company_id', '=', parent.company_id)]" widget="many2many_tags" attrs="{'invisible': [('parent.jetcheckout_payment_type', '!=', 'physicalpos')]}"/>
                             </group>
                             <group>
-                                <field name="type_physicalpos_ids" domain="[('company_id', '=', parent.company_id)]" widget="many2manytags" attrs="{'invisible': [('parent.jetcheckout_payment_type', '!=', 'physicalpos')]}"/>
+                                <field name="webhook_url"/>
+                                <field name="redirect_url"/>
                             </group>
                         </group>
                     </form>
