@@ -287,12 +287,14 @@ class PaymentItem(models.Model):
 
                             tag_ids = company.syncops_cron_sync_item_notif_tag_ids.ids
                             if company.syncops_cron_sync_item_notif_tag_ok:
-                                if not any(tag_id not in partner.category_id.ids for tag_id in tag_ids):
+                                if all(tag_id not in partner.category_id.ids for tag_id in tag_ids):
                                     self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
+                                    partners.add(partner.id)
                                     continue
                             else:
                                 if any(tag_id in partner.category_id.ids for tag_id in tag_ids):
                                     self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
+                                    partners.add(partner.id)
                                     continue
 
                             user_ids = company.syncops_cron_sync_item_notif_user_ids.ids

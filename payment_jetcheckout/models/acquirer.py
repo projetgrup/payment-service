@@ -50,6 +50,7 @@ class PaymentPayloxStatus(models.TransientModel):
     postauth = fields.Boolean(readonly=True, string='Post-Authorization')
     threed = fields.Boolean(readonly=True)
     amount = fields.Monetary(readonly=True)
+    installment_count = fields.Integer(readonly=True)
     commission_amount = fields.Monetary(readonly=True)
     commission_rate = fields.Float(readonly=True)
     customer_amount = fields.Monetary(readonly=True, string='Customer Commission Amount')
@@ -66,6 +67,8 @@ class PaymentPayloxStatus(models.TransientModel):
     transaction_id = fields.Many2one('payment.transaction', readonly=True)
     transaction_link = fields.Boolean(string='Transaction Link', readonly=True)
     transaction_ref = fields.Char(string='Transaction Reference', readonly=True)
+    bank_name = fields.Char(string='Bank Name', readonly=True)
+    bank_ref = fields.Char(string='Bank Reference', readonly=True)
 
     @api.model
     def create(self, values):

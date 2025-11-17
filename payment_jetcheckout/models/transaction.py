@@ -76,12 +76,13 @@ class PaymentTransaction(models.Model):
     jetcheckout_vpos_name = fields.Char('Virtual PoS', readonly=True, copy=False)
     jetcheckout_vpos_ref = fields.Char('Virtual PoS Reference', readonly=True, copy=False)
     jetcheckout_vpos_code = fields.Char('Virtual PoS Code', readonly=True, copy=False)
-    jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
+    jetcheckout_order_id = fields.Char('Order ID', readonly=True, copy=False)
     jetcheckout_order_aux_id = fields.Char('Auxiliary Order', readonly=True, copy=False)
     jetcheckout_link = fields.Boolean('Paylox Link', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
-    jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
+    jetcheckout_transaction_id = fields.Char('Transaction ID', readonly=True, copy=False)
+    jetcheckout_transaction_date = fields.Datetime('Transaction Date', readonly=True, copy=False)
     jetcheckout_preauth = fields.Boolean('Pre-Authorization', readonly=True, copy=False)
     jetcheckout_postauth = fields.Boolean('Post-Authorization', readonly=True, copy=False)
     jetcheckout_postauth_amount = fields.Monetary('Post-Authorization Amount', readonly=True, copy=False)
@@ -98,6 +99,15 @@ class PaymentTransaction(models.Model):
     jetcheckout_payment_type_wallet_service_name = fields.Char('Paylox Payment Type Wallet Service Name', readonly=True, copy=False)
     jetcheckout_payment_type_wallet_id = fields.Integer('Paylox Payment Type Wallet ID', readonly=True, copy=False)
     jetcheckout_payment_type_credit_bank_code = fields.Char('Paylox Payment Type Credit Bank Code', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_serial_id = fields.Char('Paylox Payment Type Physical PoS Serial ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_merchant_id = fields.Char('Paylox Payment Type Physical PoS Merchant ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_terminal_id = fields.Char('Paylox Payment Type Physical PoS Terminal ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_request_id = fields.Char('Paylox Payment Type Physical PoS Request ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_transaction_id = fields.Char('Paylox Payment Type Physical PoS Transaction ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_batch_id = fields.Char('Paylox Payment Type Physical PoS Batch ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_auth_code = fields.Char('Paylox Payment Type Physical PoS Authorization Code', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_acquirer_name = fields.Char('Paylox Payment Type Physical PoS Acquirer Name', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_acquirer_ref = fields.Char('Paylox Payment Type Physical PoS Acquirer Reference', readonly=True, copy=False)
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_payment_amount = fields.Monetary('Amount to Pay', readonly=True, copy=False)
     jetcheckout_payment_paid = fields.Monetary('Amount Paid', compute='_compute_amounts', readonly=True, copy=False, store=True)
@@ -645,6 +655,16 @@ class PaymentTransaction(models.Model):
             'jetcheckout_card_number': self.token_id and self.token_id.jetcheckout_number or self.jetcheckout_card_number or '%sXXXXXXXXXX' % (values.get('bin_code', '') or '',),
             'jetcheckout_payment_amount': self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount,
         }
+        if self.jetcheckout_payment_type == 'physicalpos':
+            vals.update({
+                'jetcheckout_payment_type_physicalpos_auth_code': values.get('auth_code', False),
+                'jetcheckout_payment_type_physicalpos_acquirer_name': values.get('bank_name', False),
+                'jetcheckout_payment_type_physicalpos_acquirer_ref': values.get('bank_ref', False),
+            })
+        if values.get('installment_count'):
+            vals.update({
+                'jetcheckout_installment_count': values['installment_count'],
+            })
         if values.get('transaction_ref'):
             vals.update({
                 'jetcheckout_transaction_id': values['transaction_ref'],
@@ -745,6 +765,7 @@ class PaymentTransaction(models.Model):
                 'vpos_id': result['virtual_pos_id'],
                 'vpos_name': result['virtual_pos_name'],
                 'vpos_ref': result['pos_bank_eft_code'] or result['card_bank_eft_code'],
+                'installment_count': result['inst_period'],
                 'vpos_code': result['auth_code'],
                 'successful': result['successful'],
                 'completed': result['completed'],
@@ -758,6 +779,7 @@ class PaymentTransaction(models.Model):
                 'card_family': result['card_family'] or '',
                 'card_type': result['card_type'] or '',
                 'card_program': result['card_program'] or '',
+                'bank_name': result['pos_bank_name'] or '',
                 'bin_code': result['bin_code'],
                 'service_ref_id': result['service_ref_id'],
                 'transaction_ref': result['transaction_id'],

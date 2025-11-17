@@ -163,7 +163,7 @@ class PaymentTransaction(models.Model):
                     'account_code': line.account_code,
                     'state': 'refund' if self.source_transaction_id else self.state,
                     'card_number': self.jetcheckout_card_number or '',
-                    'card_name': self.jetcheckout_card_name,
+                    'card_name': self.jetcheckout_card_name or '',
                     'order_id': self.source_transaction_id.jetcheckout_order_id if self.source_transaction_id else self.jetcheckout_order_id,
                     'transaction_id': self.source_transaction_id.jetcheckout_transaction_id if self.source_transaction_id else self.jetcheckout_transaction_id,
                     'virtual_pos_id': self.jetcheckout_vpos_id or 0,
@@ -184,11 +184,12 @@ class PaymentTransaction(models.Model):
                     }]
                 }, company=self.company_id, message=True)
         else:
-            result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', reference=str(self.id), params={
+            params = {
                 'id': self.id,
                 'ref': ref or '',
                 'vat': vat or '',
                 'name': name or '',
+                'type': self.jetcheckout_payment_type or '',
                 'tag': self.paylox_item_tag_name or '',
                 'date': date.strftime('%Y-%m-%d %H:%M:%S'),
                 'amount': abs(self.amount),
@@ -203,7 +204,7 @@ class PaymentTransaction(models.Model):
                 'account_code': line.account_code,
                 'state': 'refund' if self.source_transaction_id else self.state,
                 'card_number': self.jetcheckout_card_number or '',
-                'card_name': self.jetcheckout_card_name,
+                'card_name': self.jetcheckout_card_name or '',
                 'reference_id': self.jetcheckout_order_id,
                 'order_id': self.source_transaction_id.jetcheckout_order_id if self.source_transaction_id else self.jetcheckout_order_id,
                 'transaction_id': self.source_transaction_id.jetcheckout_transaction_id if self.source_transaction_id else self.jetcheckout_transaction_id,
@@ -224,7 +225,21 @@ class PaymentTransaction(models.Model):
                     'ref': item.ref,
                     'amount': float_round(item.amount, 2)
                 } for item in self.paylox_transaction_item_ids if item.ref]
-            }, company=self.company_id, message=True)
+            }
+            if self.jetcheckout_payment_type == 'physicalpos':
+                params.update({
+                   'type_physicalpos_serial_id': self.jetcheckout_payment_type_physicalpos_serial_id or '',
+                   'type_physicalpos_merchant_id': self.jetcheckout_payment_type_physicalpos_merchant_id or '',
+                   'type_physicalpos_terminal_id': self.jetcheckout_payment_type_physicalpos_terminal_id or '',
+                   'type_physicalpos_request_id': self.jetcheckout_payment_type_physicalpos_request_id or '',
+                   'type_physicalpos_transaction_id': self.jetcheckout_payment_type_physicalpos_transaction_id or 0,
+                   'type_physicalpos_batch_id': self.jetcheckout_payment_type_physicalpos_batch_id or 0,
+                   'type_physicalpos_auth_code': self.jetcheckout_payment_type_physicalpos_auth_code or 0,
+                   'type_physicalpos_acquirer_name': self.jetcheckout_payment_type_physicalpos_acquirer_name or '',
+                   'type_physicalpos_acquirer_ref': self.jetcheckout_payment_type_physicalpos_acquirer_ref or '',
+                   'type_physicalpos_transaction_date': self.jetcheckout_transaction_date and self.jetcheckout_transaction_date.strftime('%Y-%m-%d %H:%M:%S') or '',
+                })
+            result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', reference=str(self.id), params=params, company=self.company_id, message=True)
 
         if result is None:
             self.write({

@@ -73,7 +73,7 @@
                         </li>
                     </t>
                 </ul>
-                <div class="tab-content">
+                <div class="tab-content w-100">
                     <t t-set="i" t-value="0"/>
                     <t t-foreach="tabs" t-as="tab">
                         <div t-attf-class="tab-pane fade shadow-none #{!i ? 'show active' : ''}" t-att-id="'installment-tab-' + i" role="tabpanel" t-att-aria-labelledby="'installment-tab-' + i + '-tab'">
