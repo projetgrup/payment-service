@@ -7,6 +7,7 @@ from odoo.tools.safe_eval import test_python_expr
 class Company(models.Model):
     _inherit = 'res.company'
 
+    @api.depends('sequence')
     def _compute_is_admin(self):
         for company in self:
             company.is_admin = self.env.user.has_group('base.group_system')

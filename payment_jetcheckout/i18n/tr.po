@@ -991,13 +991,13 @@ msgstr "Uygulama ID"
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__api_key
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
 msgid "Application Key"
-msgstr "Uygulama"
+msgstr "Uygulama Anahtarı"
 
 #. module: payment_jetcheckout
 #: model:ir.model.fields,field_description:payment_jetcheckout.field_payment_acquirer_jetcheckout_signin__api_name
 #: model_terms:ir.ui.view,arch_db:payment_jetcheckout.signin_form
 msgid "Application Name"
-msgstr "Uygulama"
+msgstr "Uygulama Adı"
 
 #. module: payment_jetcheckout
 #: model:ir.actions.act_window,name:payment_jetcheckout.action_api_application

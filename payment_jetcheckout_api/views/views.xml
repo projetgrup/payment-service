@@ -43,20 +43,20 @@
                         <field name="hash_id" string="ID" class="oe_edit_only" groups="base.group_system"/>
                         <field name="hash_key" string="Key" class="oe_edit_only" groups="base.group_system" widget="CopyClipboardChar" options="{'string': 'Copy Hash Key'}"/>
                     </group>
-                    <group>
-                    </group>
-                    <group>
-                        <group name="perm" string="Permissions">
-                            <div class="o_row text-nowrap">
-                                <field name="perm_payment" nolabel="1" class="oe_inline"/>
-                                <label for="perm_payment" class="font-weight-bold"/>
-                            </div>
-                            <em class="text-muted text-nowrap ml-4">grant access to use payment services like create, prepare, cancel, refund and so on</em>
-                        </group>
-                        <group>
-                        </group>
-                    </group>
                 </group>
+                <notebook>
+                    <page name="perm" string="Permissions">
+                        <group>
+                            <group name="perm">
+                                <div class="o_row text-nowrap">
+                                    <field name="perm_payment" nolabel="1" class="oe_inline"/>
+                                    <label for="perm_payment" class="font-weight-bold"/>
+                                </div>
+                                <em class="text-muted text-nowrap ml-4">grant access to use payment services like create, prepare, cancel, refund and so on</em>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
             </sheet>
         </form>
     </field>

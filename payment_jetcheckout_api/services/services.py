@@ -628,7 +628,7 @@ class PaymentAPIService(Component):
                     'webhook_url': method_value.get('webhook', False),
                 }
                 if method_type == 'physicalpos':
-                    physical_pos_ids = tx.company_id.payment_method_physical_pos_ids
+                    physical_pos_ids = company.payment_method_physical_pos_ids
                     physical_pos = self.env['payment.method.physicalpos']
                     for i in method_value.get('ids', []):
                         pos = fields.first(physical_pos_ids.filtered(lambda p: p.name == i))
