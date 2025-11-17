@@ -237,7 +237,7 @@ class PaymentTransaction(models.Model):
                    'type_physicalpos_auth_code': self.jetcheckout_payment_type_physicalpos_auth_code or '',
                    'type_physicalpos_acquirer_name': self.jetcheckout_payment_type_physicalpos_acquirer_name or '',
                    'type_physicalpos_acquirer_ref': self.jetcheckout_payment_type_physicalpos_acquirer_ref or '',
-                   'type_physicalpos_create_date': self.jetcheckout_payment_type_physicalpos_create_date and self.jetcheckout_payment_type_physicalpos_create_date.strftime('%Y-%m-%d %H:%M:%S') or '',
+                   'type_physicalpos_transaction_date': self.jetcheckout_transaction_date and self.jetcheckout_transaction_date.strftime('%Y-%m-%d %H:%M:%S') or '',
                 })
             result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_payment', reference=str(self.id), params=params, company=self.company_id, message=True)
 
