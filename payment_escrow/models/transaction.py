@@ -7,8 +7,11 @@ from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
 from odoo import models, fields, api, _
+from odoo.osv import expression
 from odoo.tools.misc import formatLang
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
+
+from .approval_chain import ESCROW_DEFAULT_VISIBLE_TYPES
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +28,6 @@ class PaymentTransaction(models.Model):
     conveyance_attachment_id = fields.Many2one('ir.attachment', 'Conveyance Form Attachment', readonly=True, copy=False)
     conveyance_upload_date = fields.Datetime('Conveyance Upload Date', readonly=True, copy=False)
 
-    # Grouping helper for success vs failure in views
     escrow_success_group = fields.Selection(
         selection=[('successful', 'Successful'), ('unsuccessful', 'Unsuccessful')],
         string='Escrow Success Group',
@@ -45,13 +47,10 @@ class PaymentTransaction(models.Model):
             elif tx.state in unsuccessful_states:
                 tx.escrow_success_group = 'unsuccessful'
             else:
-                # Leave empty for other transient states (draft, pending, authorized, etc.)
                 tx.escrow_success_group = False
 
     def _generate_access_token(self):
-        """Generate a secure access token for escrow payment URLs"""
         self.ensure_one()
-        # Create token based on transaction ID, reference and current time
         data = f"{self.id}-{self.reference or ''}-{self.create_date}-escrow"
         return hashlib.sha256(data.encode()).hexdigest()[:32]
     
@@ -270,3 +269,67 @@ class PaymentTransaction(models.Model):
     @api.model
     def jetcheckout_send_daily_email(self):
         self.paylox_send_daily_email()
+
+    def _escrow_visibility_domain(self):
+        user = self.env.user
+        if not user._is_restricted_escrow_user():
+            return []
+
+        company_map = user._get_escrow_allowed_type_map()
+        domain_parts = []
+        for company_id, types in company_map.items():
+            if not types:
+                continue
+            domain_parts.append([
+                ('company_id', '=', company_id),
+                ('paylox_basket_ids.paylox_escrow_type', 'in', list(types)),
+            ])
+
+        if not domain_parts:
+            domain_parts.append([
+                ('paylox_basket_ids.paylox_escrow_type', 'in', list(ESCROW_DEFAULT_VISIBLE_TYPES)),
+            ])
+
+        visibility_domain = expression.OR(domain_parts)
+        return expression.OR([
+            [('company_id.system', '!=', 'escrow')],
+            visibility_domain,
+        ])
+
+    @api.model
+    def _apply_escrow_visibility_domain(self, domain):
+        base_domain = domain or []
+        visibility_domain = self._escrow_visibility_domain()
+
+        if base_domain and visibility_domain:
+            return expression.AND([base_domain, visibility_domain])
+        if base_domain:
+            return base_domain
+        if visibility_domain:
+            return visibility_domain
+        return []
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        args = self._apply_escrow_visibility_domain(args)
+        return super().search(args, offset=offset, limit=limit, order=order, count=count)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        domain = self._apply_escrow_visibility_domain(domain)
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+    def check_access_rule(self, operation):
+        super().check_access_rule(operation)
+        user = self.env.user
+        if not user._is_restricted_escrow_user():
+            return
+
+        company_map = user._get_escrow_allowed_type_map()
+        restricted = self.filtered(
+            lambda tx: tx.company_id.system == 'escrow' and not tx.paylox_basket_ids.filtered(
+                lambda basket: basket.paylox_escrow_type in company_map.get(tx.company_id.id, tx.company_id._get_escrow_allowed_types_for_user(user))
+            )
+        )
+        if restricted:
+            raise AccessError(_('You do not have the required rights to access these escrow transactions.'))

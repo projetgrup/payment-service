@@ -12,3 +12,4 @@ class PaymentSettings(models.TransientModel):
     broker_registration_enabled = fields.Boolean('Enable Broker Registration', related='company_id.broker_registration_enabled', readonly=False)
     dealer_registration_enabled = fields.Boolean('Enable Dealer Registration', related='company_id.dealer_registration_enabled', readonly=False)
     escrow_insurance_quote_enabled = fields.Boolean('Enable Insurance Quote', related='company_id.escrow_insurance_quote_enabled', readonly=False)
+    escrow_chain_ids = fields.One2many(related='company_id.escrow_chain_ids', readonly=False)

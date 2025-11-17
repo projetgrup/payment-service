@@ -15,3 +15,5 @@ from . import broker_campaign
 from . import dealer_commission_rate
 from . import settings
 from . import insurance_quote
+from . import approval_chain
+from . import user

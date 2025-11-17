@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
+import logging
 
 from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
+from odoo.osv import expression
+
+from .approval_chain import ESCROW_DEFAULT_VISIBLE_TYPES
+
+
+_logger = logging.getLogger(__name__)
 
 
 class PaymentTransactionBasket(models.Model):
@@ -65,7 +72,7 @@ class PaymentTransactionBasket(models.Model):
         for record in self:
             record.broker_invoice_filename = record.broker_invoice_id.name if record.broker_invoice_id else False
 
-    @api.depends('transaction_id', 'transaction_id.jetcheckout_item_ids', 'transaction_id.paylox_product_ids', 'submerchant_external_id')
+    @api.depends('transaction_id', 'transaction_id.jetcheckout_item_ids', 'transaction_id.paylox_product_ids', 'submerchant_external_id', 'partner_id')
     def _compute_escrow_fields(self):
         for basket in self:
             product = False
@@ -73,6 +80,7 @@ class PaymentTransactionBasket(models.Model):
             vehicle_info = ''
             ad_state = False
             approval_state = basket.transaction_id.jetcheckout_approval_state if basket.transaction_id else False
+            escrow_type = False
             
             if basket.submerchant_external_id:
                 partner_bank = self.env['res.partner.bank'].sudo().search([
@@ -80,8 +88,15 @@ class PaymentTransactionBasket(models.Model):
                 ], limit=1)
                 if partner_bank and partner_bank.partner_id:
                     escrow_type = partner_bank.partner_id.paylox_escrow_type
-                    if escrow_type and escrow_type != 'customer':
-                        basket.paylox_escrow_type = escrow_type
+
+            if not escrow_type and basket.partner_id:
+                escrow_type = basket.partner_id.paylox_escrow_type
+
+            if not escrow_type and basket.transaction_id and basket.transaction_id.partner_id:
+                escrow_type = basket.transaction_id.partner_id.paylox_escrow_type
+
+            if escrow_type and escrow_type != 'customer':
+                basket.paylox_escrow_type = escrow_type
 
             if basket.transaction_id:
                 if basket.transaction_id.jetcheckout_item_ids:
@@ -172,6 +187,11 @@ class PaymentTransactionBasket(models.Model):
             raise UserError(_('This payment basket is not eligible for approval.'))
         self.action_approve()
 
+    def _action_approve(self):
+        res = super()._action_approve()
+        self._escrow_trigger_auto_approval()
+        return res
+
     def write(self, values):
         res = super().write(values)
         if values.get('broker_submitted_for_approval'):
@@ -189,3 +209,88 @@ class PaymentTransactionBasket(models.Model):
                         email_layout_xmlid='mail.mail_notification_light',
                     )
         return res
+
+    def _escrow_trigger_auto_approval(self):
+        stack = set(self.env.context.get('escrow_auto_chain_stack', []))
+        for basket in self:
+            company = basket.transaction_id.company_id
+            if (not basket.transaction_id or company.system != 'escrow' or
+                    basket.approval_state != '+' or not basket.paylox_escrow_type):
+                continue
+
+            if basket.paylox_escrow_type in stack:
+                continue
+
+            child_types = company._get_escrow_chain_children(basket.paylox_escrow_type)
+            if not child_types:
+                continue
+
+            dependents = basket.paylox_escrow_type != child_types
+            if not dependents:
+                continue
+
+            new_stack = list(stack | {basket.paylox_escrow_type})
+            try:
+                dependents.with_context(escrow_auto_chain_stack=new_stack).sudo()._action_approve()
+            except Exception as err:  # pragma: no cover - logging safeguard
+                _logger.exception('Failed to auto-approve cascaded escrow basket(s): %s', err)
+
+    def _escrow_visibility_domain(self):
+        user = self.env.user
+        if not user._is_restricted_escrow_user():
+            return []
+
+        company_map = user._get_escrow_allowed_type_map()
+        domain_parts = []
+        for company_id, types in company_map.items():
+            if not types:
+                continue
+            domain_parts.append([
+                ('transaction_id.company_id', '=', company_id),
+                ('paylox_escrow_type', 'in', list(types)),
+            ])
+
+        if not domain_parts:
+            domain_parts.append([
+                ('paylox_escrow_type', 'in', list(ESCROW_DEFAULT_VISIBLE_TYPES)),
+            ])
+
+        visibility_domain = expression.OR(domain_parts)
+        return expression.OR([
+            [('transaction_id.company_id.system', '!=', 'escrow')],
+            visibility_domain,
+        ])
+
+    @api.model
+    def _apply_escrow_visibility_domain(self, domain):
+        base_domain = domain or []
+        visibility_domain = self._escrow_visibility_domain()
+
+        if base_domain and visibility_domain:
+            return expression.AND([base_domain, visibility_domain])
+        if base_domain:
+            return base_domain
+        if visibility_domain:
+            return visibility_domain
+        return []
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        args = self._apply_escrow_visibility_domain(args)
+        return super().search(args, offset=offset, limit=limit, order=order, count=count)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        domain = self._apply_escrow_visibility_domain(domain)
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+    def check_access_rule(self, operation):
+        super().check_access_rule(operation)
+        user = self.env.user
+        if not user._is_restricted_escrow_user():
+            return
+
+        company_map = user._get_escrow_allowed_type_map()
+        restricted = self.filtered(lambda b: b.transaction_id and b.transaction_id.company_id.system == 'escrow' and b.paylox_escrow_type not in company_map.get(b.transaction_id.company_id.id, b.transaction_id.company_id._get_escrow_allowed_types_for_user(user)))
+        if restricted:
+            raise AccessError(_('You do not have the required rights to access these escrow transfers.'))

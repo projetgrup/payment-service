@@ -2068,6 +2068,152 @@ class PayloxSystemEscrowController(Controller):
             'broker_submit_date': fields.Datetime.now(),
         })
         return request.redirect('/my/broker/transactions')
+
+    @route('/escrow/insurance/brands', type='json', auth='user', website=True, methods=['POST'], csrf=False)
+    def escrow_insurance_brands(self, **kwargs):
+        try:
+            company = request.env.company
+            if not company.escrow_insurance_quote_enabled:
+                return {
+                    'success': False,
+                    'message': _('Insurance quote feature is not enabled')
+                }
+
+            year = kwargs.get('year') or kwargs.get('model_year') or kwargs.get('modelYear')
+
+            if not year:
+                return {
+                    'success': False,
+                    'message': _('Model year is required')
+                }
+
+            payload = {
+                'year': year,
+                'usage': '1',
+            }
+
+            result, message = request.env['syncops.connector'].sudo()._execute(
+                'insurance_get_vehicle_brands',
+                reference=str(request.env.user.partner_id.id),
+                params=payload,
+                company=company,
+                message=True
+            )
+
+            if result is None:
+                return {
+                    'success': False,
+                    'message': message or _('Unable to fetch vehicle brands')
+                }
+
+            response = result[0] if result else {}
+            success_flag = str(response.get('success', True)).lower() == 'true'
+            if not success_flag:
+                return {
+                    'success': False,
+                    'message': response.get('message') or message or _('Unable to fetch vehicle brands'),
+                    'errors': response.get('errors') or []
+                }
+
+            result_block = response.get('result') or {}
+            raw_brands = result_block.get('brands') or []
+            options = []
+            for item in raw_brands:
+                code = item.get('brandId') or item.get('brand_id') or item.get('id')
+                label = item.get('brand') or item.get('label') or item.get('name') or ''
+                name = label
+                if label and ' - ' in label:
+                    name = label.split(' - ', 1)[1]
+                if code:
+                    options.append({
+                        'code': code,
+                        'label': label or name,
+                        'name': (name or '').strip(),
+                    })
+
+            return {
+                'success': True,
+                'data': options,
+            }
+        except Exception as e:
+            _logger.exception('Error fetching insurance brands: %s', str(e))
+            return {
+                'success': False,
+                'message': _('Unable to fetch vehicle brands. %s') % str(e)
+            }
+
+    @route('/escrow/insurance/models', type='json', auth='user', website=True, methods=['POST'], csrf=False)
+    def escrow_insurance_models(self, **kwargs):
+        try:
+            company = request.env.company
+            if not company.escrow_insurance_quote_enabled:
+                return {
+                    'success': False,
+                    'message': _('Insurance quote feature is not enabled')
+                }
+
+            year = kwargs.get('year') or kwargs.get('model_year') or kwargs.get('modelYear')
+            brand_code = kwargs.get('brand_code') or kwargs.get('brandCode') or kwargs.get('brand_id')
+
+            if not year or not brand_code:
+                return {
+                    'success': False,
+                    'message': _('Model year and brand are required')
+                }
+
+            payload = {
+                'year': year,
+                'usage': '1',
+                'brand_id': brand_code,
+            }
+
+            result, message = request.env['syncops.connector'].sudo()._execute(
+                'insurance_get_vehicle_models',
+                reference=str(request.env.user.partner_id.id),
+                params=payload,
+                company=company,
+                message=True
+            )
+
+            if result is None:
+                return {
+                    'success': False,
+                    'message': message or _('Unable to fetch vehicle models')
+                }
+
+            response = result[0] if result else {}
+            success_flag = str(response.get('success', True)).lower() == 'true'
+            if not success_flag:
+                return {
+                    'success': False,
+                    'message': response.get('message') or message or _('Unable to fetch vehicle models'),
+                    'errors': response.get('errors') or []
+                }
+
+            result_block = response.get('result') or {}
+            raw_models = result_block.get('models') or []
+            options = []
+            for item in raw_models:
+                code = item.get('makeId') or item.get('modelId') or item.get('model_id')
+                label = item.get('model') or item.get('label') or item.get('name') or ''
+                brand_name = item.get('brand') or ''
+                if code:
+                    options.append({
+                        'code': code,
+                        'label': (label or code).strip(),
+                        'brand': (brand_name or '').strip(),
+                    })
+
+            return {
+                'success': True,
+                'data': options,
+            }
+        except Exception as e:
+            _logger.exception('Error fetching insurance models: %s', str(e))
+            return {
+                'success': False,
+                'message': _('Unable to fetch vehicle models. %s') % str(e)
+            }
     
     @route('/escrow/insurance/quote', type='json', auth='user', website=True, methods=['POST'], csrf=False)
     def escrow_insurance_quote(self, **kwargs):
@@ -2079,54 +2225,42 @@ class PayloxSystemEscrowController(Controller):
                     'success': False,
                     'message': _('Insurance quote feature is not enabled')
                 }
-
-            required_fields = ['birth_date', 'vat', 'gsmNo', 'email', 'plate', 'license_no']
             
-            for field in required_fields:
-                if not kwargs.get(field):
-                    return {
-                        'success': False,
-                        'message': _('Missing required field: %s') % field
-                    }
-
             partner = request.env.user.partner_id
 
             birth_date_str = kwargs.get('birth_date')
-            birth_date = datetime.strptime(birth_date_str, '%d%m%Y').date()
-            quote = request.env['escrow.insurance.quote'].sudo().create({
+            brand_code = kwargs.get('brand_code') or kwargs.get('brandCode') or kwargs.get('brand_id')
+            model_code = kwargs.get('model_code') or kwargs.get('modelCode') or kwargs.get('model_id')
+            model_name = kwargs.get('model_name') or kwargs.get('modelName') or kwargs.get('model')
+            year = kwargs.get('year') or kwargs.get('model_year') or kwargs.get('modelYear')
+            brand_name = kwargs.get('brand_name') or kwargs.get('brandName')
+            birth_date = datetime.strptime(birth_date_str, '%d%m%Y').date().strftime('%Y-%m-%d')
+
+            values = {
                 'birth_date': birth_date,
                 'vat': kwargs.get('vat'),
                 'mobile': kwargs.get('gsmNo'),
                 'email': kwargs.get('email'),
                 'plate': kwargs.get('plate'),
                 'license_no': kwargs.get('license_no'),
-                # 'chassis_no': kwargs.get('chassis_no'),
-                # 'engine_no': kwargs.get('engine_no'),
-                # 'registration_date': kwargs.get('registration_date'),
-                # 'model': kwargs.get('model'),
-                # 'year': kwargs.get('year'),
+                'brand_id': brand_code,
+                'brand_name': brand_name,
+                'model_id': model_code,
+                'model_name': model_name,
+                'year': year,
+                'person_name': partner.name,
                 'partner_id': partner.id,
                 'company_id': company.id,
                 'state': 'draft',
-            })
+                'notes': brand_name and _('Vehicle Brand: %s') % brand_name or False,
+            }
 
-            quote.message_post(
-                body=_('Insurance quote request created from website by %s') % partner.name,
-                message_type='notification',
-            )
+            quotes = request.env['escrow.insurance.quote'].sudo().create_quotes(values)
 
-            quote = quote.action_submit_quote()
-            if quote.get('success'):
-                return {
-                    'success': True,
-                    'message': _('Your insurance quote request has been submitted successfully!'),
-                }
-            else:
-                return {
-                    'success': False,
-                    'message': _('Failed to create insurance quote: %s') % quote.get('message', 'Unknown error'),
-                }
-
+            return {
+                'success': True,
+                'quotes': quotes
+            }
         except Exception as e:
             _logger.exception('Error creating insurance quote: %s', str(e))
             return {

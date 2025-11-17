@@ -657,6 +657,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         this.insurance = {
+            state: {
+                brandRequestId: 0,
+                modelRequestId: 0,
+            },
             button: {
                 submit: new fields.element({
                     events: [['click', this._onInsuranceSubmit]]
@@ -823,7 +827,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 //         return valid;
                 //     }
                 // }),
-                model: new fields.string({
+                brand: new fields.selection({
+                    events: [['change', this._onInsuranceBrandChange]],
+                    validate: () => {
+                        const field = this.insurance.input.brand;
+                        let message = null;
+                        let valid = true;
+                        if (!field.value) {
+                            message = _t('Vehicle brand is required');
+                            valid = false;
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                model: new fields.selection({
                     validate: () => {
                         const field = this.insurance.input.model;
                         let message = null;
@@ -837,6 +855,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 year: new fields.string({
+                    events: [
+                        ['blur', this._onInsuranceYearChange],
+                        ['change', this._onInsuranceYearChange],
+                    ],
                     mask: /^\d{0,4}$/,
                     validate: () => {
                         const field = this.insurance.input.year;
@@ -1299,6 +1321,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._startState();
             this._initializePagination();
             this._startToggles();
+            this._initInsuranceModal();
 
             $('.escrow-ad-wrapper').removeClass('d-none');
             framework.hideLoading();
@@ -1312,50 +1335,229 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         $tooltip.toggle();
     },
 
-    _initBroker: function () {
-        const $container = this.$('.broker-rates-container');
-        if (!$container.length) return;
-
-        const dataset = $container[0].dataset || {};
-        this.currency.decimal = parseInt(dataset.currencyDecimals || this.currency.decimal, 10);
-        this.currency.symbol = dataset.currencySymbol || this.currency.symbol;
-        this.currency.position = dataset.currencyPosition || this.currency.position;
-
-        this.broker.container.$ = $container;
-        this.broker.wrapper.$ = $container.find('[data-role="table-wrapper"]');
-        this.broker.tabs.$ = $container.find('[data-role="type-tabs"]');
-        this.broker.tables.$ = $container.find('[data-role="tables"]');
-        this.broker.loading.$ = $container.find('[data-role="loading"]');
-        this.broker.empty.$ = $container.find('[data-role="empty"]');
-        this.broker.error.$ = $container.find('[data-role="error"]');
-        this.broker.summary.$ = $container.find('[data-role="summary"]');
-        this.broker.amount.$ = $container.find('[data-role="amount"]');
-        this.broker.campaign.$ = $container.find('[data-role="campaign"]');
-        this.broker.viewMode.$ = $container.find('[data-role="view-mode"]');
-        this.broker.button.refresh.$ = $container.find('[data-role="refresh"]');
-
-        if (dataset.defaultCampaign) {
-            this.broker.campaign.$.val(dataset.defaultCampaign);
-        }
-
-        const hasCampaign = this.broker.campaign.$.find('option[value!=""]').length > 0;
-        if (hasCampaign && this.broker.campaign.$.val()) {
-            this._fetchBrokerRates();
-        } else {
-            this._showBrokerError(_t('No active campaign is linked to your account yet.'));
-        }
-    },
-
     _initializePagination: function() {
         this._filterAdsByState('all');
     },
+
+    _initInsuranceModal: function() {
+        if (!this.insurance || !this.insurance.input) {
+            return;
+        }
+        const $modal = $('#insuranceQuoteModal');
+        if (!$modal.length) {
+            return;
+        }
+        this.insurance.modal = $modal;
+        this._clearInsuranceBrand();
+    },
+
+    _populateInsuranceSelect: function(field, options = [], placeholder = '', config = {}) {
+        if (!field || !field.$ || !field.$.length) {
+            return;
+        }
+        const data = (options || []).map((opt, index) => {
+            if (typeof opt === 'string') {
+                return { id: opt, text: opt };
+            }
+            return {
+                id: opt.code ?? opt.id ?? opt.value ?? opt.key ?? `option-${index}`,
+                text: opt.text ?? opt.label ?? opt.name ?? opt.description ?? opt.id ?? '',
+            };
+        }).filter(opt => opt.id);
+
+        if (field.$.data('select2')) {
+            field.$.select2('destroy');
+        }
+
+        field.$.empty();
+        const placeholderOption = new Option(placeholder || '', '', true, true);
+        $(placeholderOption).attr('disabled', true);
+        field.$.append(placeholderOption);
+        data.forEach(opt => {
+            const option = new Option(opt.text, opt.id, false, false);
+            field.$.append(option);
+        });
+
+        field.$.select2({
+            placeholder: placeholder,
+            width: '100%',
+        });
+
+        field.$.val('');
+        field.$.prop('disabled', config.disabled !== undefined ? config.disabled : !data.length);
+        field._skipNextValidation = true;
+        field.$.trigger('change');
+    },
+
+    _clearInsuranceBrand: function() {
+        this._populateInsuranceSelect(this.insurance.input.brand, [], _t('Select vehicle brand'), { disabled: true });
+        this._clearInsuranceModel();
+    },
+
+    _clearInsuranceModel: function() {
+        this._populateInsuranceSelect(this.insurance.input.model, [], _t('Select vehicle model'), { disabled: true });
+    },
+
+    _onInsuranceYearChange: function() {
+        this.insurance.alert.error.$.addClass('d-none');
+        const yearField = this.insurance.input.year;
+        if (!yearField || !yearField.value) {
+            this._clearInsuranceBrand();
+            return;
+        }
+        if (yearField.validate()) {
+            this._fetchInsuranceBrands();
+        }
+    },
+
+    _onInsuranceBrandChange: function() {
+        this.insurance.alert.error.$.addClass('d-none');
+        this._clearInsuranceModel();
+        if (this.insurance.input.brand.value) {
+            this._fetchInsuranceModels();
+        }
+    },
+
+    _fetchInsuranceBrands: function() {
+        const yearField = this.insurance.input.year;
+        if (!yearField) {
+            return;
+        }
+        if (!yearField.value) {
+            return;
+        }
+        if (!yearField.validate()) {
+            return;
+        }
+
+        this._populateInsuranceSelect(this.insurance.input.brand, [], _t('Loading brands...'), { disabled: true });
+        this.insurance.state.brandRequestId += 1;
+        const requestId = this.insurance.state.brandRequestId;
+
+        rpc.query({
+            route: '/escrow/insurance/brands',
+            params: {
+                year: yearField.value,
+            },
+        }).then(result => {
+            if (requestId !== this.insurance.state.brandRequestId) {
+                return;
+            }
+            if (result && result.success) {
+                console.log(result);
+                const options = (result.data || []).map(opt => ({
+                    id: opt.code || opt.id || opt.value,
+                    text: opt.name || opt.label || opt.text || opt.id,
+                })).filter(opt => opt.id);
+                this.insurance.alert.error.$.addClass('d-none');
+                this._populateInsuranceSelect(this.insurance.input.brand, options, _t('Select vehicle brand'), { disabled: !options.length });
+                if (!options.length) {
+                    this._showInsuranceError(_t('No brands returned for the selected criteria.'));
+                }
+            } else {
+                this._clearInsuranceBrand();
+                this._showInsuranceError(result && result.message ? result.message : _t('Unable to fetch vehicle brands. Please try again.'));
+            }
+        }).catch(() => {
+            if (requestId !== this.insurance.state.brandRequestId) {
+                return;
+            }
+            this._clearInsuranceBrand();
+            this._showInsuranceError(_t('Unable to fetch vehicle brands. Please try again.'));
+        });
+    },
+
+    _fetchInsuranceModels: function() {
+        const yearField = this.insurance.input.year;
+        const brandField = this.insurance.input.brand;
+        if (!yearField || !brandField) {
+            return;
+        }
+        if (!yearField.value || !brandField.value) {
+            return;
+        }
+
+        this._populateInsuranceSelect(this.insurance.input.model, [], _t('Loading models...'), { disabled: true });
+        this.insurance.state.modelRequestId += 1;
+        const requestId = this.insurance.state.modelRequestId;
+        console.log('Fetching models for brand:', brandField.value, 'year:', yearField.value);
+
+        rpc.query({
+            route: '/escrow/insurance/models',
+            params: {
+                year: yearField.value,
+                brand_code: brandField.value,
+                brand_name: brandField.text,
+            },
+        }).then(result => {
+            if (requestId !== this.insurance.state.modelRequestId) {
+                return;
+            }
+            if (result && result.success) {
+                const options = (result.data || []).map(opt => ({
+                    id: opt.code || opt.id || opt.value,
+                    text: opt.label || opt.name || opt.text || opt.id,
+                })).filter(opt => opt.id);
+                this.insurance.alert.error.$.addClass('d-none');
+                this._populateInsuranceSelect(this.insurance.input.model, options, _t('Select vehicle model'), { disabled: !options.length });
+                if (!options.length) {
+                    this._showInsuranceError(_t('No models returned for the selected brand.'));
+                }
+            } else {
+                this._clearInsuranceModel();
+                this._showInsuranceError(result && result.message ? result.message : _t('Unable to fetch vehicle models. Please try again.'));
+            }
+        }).catch(() => {
+            if (requestId !== this.insurance.state.modelRequestId) {
+                return;
+            }
+            this._clearInsuranceModel();
+            this._showInsuranceError(_t('Unable to fetch vehicle models. Please try again.'));
+        });
+    },
+
+    _showInsuranceError: function(message) {
+        if (!this.insurance || !this.insurance.alert || !this.insurance.error) {
+            return;
+        }
+        this.insurance.alert.success.$.addClass('d-none');
+        this.insurance.error.message.$.text(message || _t('An unexpected error occurred.'));
+        this.insurance.alert.error.$.removeClass('d-none');
+    },
+
+    _resetInsuranceForm: function() {
+        if (!this.insurance || !this.insurance.input) {
+            return;
+        }
+        Object.keys(this.insurance.input).forEach(key => {
+            const field = this.insurance.input[key];
+            if (!field || !field.$) {
+                return;
+            }
+            field.value = '';
+            field.$.removeClass('is-valid is-invalid -error just-validate-error-field');
+            field.$.closest('.form__group').find('.form__error-label, .just-validate-error-label').remove();
+            if (field.$.data('select2')) {
+                field.$.trigger('change');
+            }
+        });
+        this._clearInsuranceBrand();
+    },
     
     _onFieldValid: function(field, valid, message='') {
-        field.$.closest('.form__group').find('.form__error-label, .just-validate-error-label').remove();
+        const $group = field.$.closest('.form__group');
+        $group.find('.form__error-label, .just-validate-error-label').remove();
+        field.$.removeClass('is-valid is-invalid -error just-validate-error-field');
+
+        if (field._skipNextValidation) {
+            field._skipNextValidation = false;
+            return;
+        }
+
         if (valid) {
-            field.$.removeClass('is-invalid -error just-validate-error-field').addClass('is-valid');
+            field.$.addClass('is-valid');
         } else {
-            field.$.addClass('is-invalid -error just-validate-error-field').removeClass('is-valid');
+            field.$.addClass('is-invalid -error just-validate-error-field');
             field.$.closest('.form__group').append($(`<div class="form__error-label just-validate-error-label">${message}</div>`));
         }
     },
@@ -3392,16 +3594,26 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this.insurance.input.email.validate(),
             this.insurance.input.plate.validate(),
             this.insurance.input.license_no.validate(),
+            this.insurance.input.year.validate(),
+            this.insurance.input.brand.validate(),
+            this.insurance.input.model.validate(),
             // this.insurance.input.chassis_no.validate(),
             // this.insurance.input.engine_no.validate(),
             // this.insurance.input.registration_date.validate(),
-            // this.insurance.input.model.validate(),
-            // this.insurance.input.year.validate(),
         ].every(Boolean);
 
         if (!isValid) {
             return;
         }
+
+        const extractName = (label = '') => {
+            if (!label) return '';
+            const parts = label.split(' - ');
+            if (parts.length > 1) {
+                return parts.slice(1).join(' - ').trim();
+            }
+            return label.trim();
+        };
 
         const data = {
             birth_date: this.insurance.input.birth_date.value,
@@ -3410,42 +3622,84 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             email: this.insurance.input.email.value,
             plate: this.insurance.input.plate.value,
             license_no: this.insurance.input.license_no.value,
+            year: this.insurance.input.year.value,
+            brand_code: this.insurance.input.brand.value,
+            brand_name: extractName(this.insurance.input.brand.text || ''),
+            model_code: this.insurance.input.model.value,
+            model_name: extractName(this.insurance.input.model.text || ''),
             // chassis_no: this.insurance.input.chassis_no.value,
             // engine_no: this.insurance.input.engine_no.value,
             // registration_date: this.insurance.input.registration_date.value,
-            // model: this.insurance.input.model.value,
-            // year: this.insurance.input.year.value,
+            // model: this.insurance.input.model.text || this.insurance.input.model.value,
         };
 
         this.insurance.button.submit.$.prop('disabled', true);
-        
-        this.insurance.alert.success.$.addClass('d-none');
-        this.insurance.alert.error.$.addClass('d-none');
+        const infoTitle = _t('Insurance Quote');
+        const preparingMessage = _t('Your insurance quote is being prepared...');
+
+        this.displayNotification({
+            type: 'info',
+            title: infoTitle,
+            message: preparingMessage,
+        });
+
+        setTimeout(() => {
+            $('#insuranceQuoteModal').modal('hide');
+        }, 300);
 
         rpc.query({
             route: '/escrow/insurance/quote',
             params: data
-        }).then((result) => {
+        }).then((result = {}) => {
+            const defaultError = _t('An error occurred. Please try again.');
             if (result.success) {
-                this.insurance.success.message.$.text(result.message || _t('Insurance quote request sent successfully!'));
-                this.insurance.alert.success.$.removeClass('d-none');
-                
-                Object.keys(this.insurance.input).forEach(key => {
-                    this.insurance.input[key].$.val('');
-                    this.insurance.input[key].value = '';
-                });
-                
-                setTimeout(() => {
-                    $('#insuranceQuoteModal').modal('hide');
-                    this.insurance.alert.success.$.addClass('d-none');
-                }, 2000);
+                const quotes = Array.isArray(result.quotes) ? result.quotes : [];
+                if (quotes.length > 0) {
+                    this._resetInsuranceForm();
+                    quotes.forEach((quote) => {
+                        const toastType = quote.success ? 'success' : 'warning';
+                        const toastTitle = quote.success ? infoTitle : _t('Insurance Quote Error');
+                        const infoParts = [];
+                        if (quote.reference) {
+                            infoParts.push(`${_t('Reference')}: ${quote.reference}`);
+                        }
+                        if (quote.amount) {
+                            infoParts.push(`${_t('Amount')}: ${quote.amount}`);
+                        }
+                        if (quote.details) {
+                            infoParts.push(quote.details);
+                        }
+                        const toastMessage = infoParts.filter(Boolean).join(' • ') || (quote.success ? _t('The quote was successfully created.') : _t('The quote could not be created.'));
+
+                        this.displayNotification({
+                            type: toastType,
+                            title: toastTitle,
+                            message: toastMessage,
+                        });
+                    });
+                } else {
+                    const noQuoteMessage = result.message || _t('No insurance offer was returned. Please verify vehicle information and try again.');
+                    this.displayNotification({
+                        type: 'warning',
+                        title: infoTitle,
+                        message: noQuoteMessage,
+                    });
+                }
             } else {
-                this.insurance.error.message.$.text(result.message || _t('An error occurred. Please try again.'));
-                this.insurance.alert.error.$.removeClass('d-none');
+                const errorMessage = result.message || defaultError;
+                this.displayNotification({
+                    type: 'danger',
+                    title: infoTitle,
+                    message: errorMessage,
+                });
             }
         }).catch((error) => {
-            this.insurance.error.message.$.text(_t('An error occurred. Please try again.'));
-            this.insurance.alert.error.$.removeClass('d-none');
+            const errorMessage = _t('An error occurred. Please try again.');
+            this.displayNotification({
+                type: 'danger',
+                title: infoTitle,
+                message: errorMessage,
+            });
             console.error('Insurance quote error:', error);
         }).finally(() => {
             this.insurance.button.submit.$.prop('disabled', false);
