@@ -1577,6 +1577,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     if (result.reload) {
                         window.location.reload();
                     }
+                    this._enableButton();
                     //window.history.pushState({}, '', href);
                     framework.hideLoading();
                 }

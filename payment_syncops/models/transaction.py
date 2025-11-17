@@ -226,7 +226,7 @@ class PaymentTransaction(models.Model):
                     'amount': float_round(item.amount, 2)
                 } for item in self.paylox_transaction_item_ids if item.ref]
             }
-            if self.jetcheckout_payment_type == 'virtualpos':
+            if self.jetcheckout_payment_type == 'physicalpos':
                 params.update({
                    'type_physicalpos_serial_id': self.jetcheckout_payment_type_physicalpos_serial_id or '',
                    'type_physicalpos_merchant_id': self.jetcheckout_payment_type_physicalpos_merchant_id or '',
