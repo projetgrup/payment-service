@@ -215,6 +215,7 @@ class PaymentTransactionBasket(models.Model):
         stack = set(self.env.context.get('escrow_auto_chain_stack', []))
         for basket in self:
             company = basket.transaction_id.company_id
+            raise Exception(company.name)
             if (not basket.transaction_id or company.system != 'escrow' or
                     basket.approval_state != '+' or not basket.paylox_escrow_type):
                 continue
