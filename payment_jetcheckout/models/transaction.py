@@ -1058,12 +1058,13 @@ class PaymentTransactionBasket(models.Model):
         if 'approval_state' in values:
             tx = fields.first(self).transaction_id
             if tx:
-                if all(t == '+' for t in tx.mapped('paylox_basket_ids.approval_state')):
+                _logger.info(tx.with_context(skip_approval_state_update=True).mapped('paylox_basket_ids.approval_state'))
+                if all(t == '+' for t in tx.with_context(skip_approval_state_update=True).mapped('paylox_basket_ids.approval_state')):
                     tx.write({
                         'jetcheckout_approval_state': '+',
                         'jetcheckout_approval_state_message': _('Approved'),
                     })
-                elif all(t == '-' for t in tx.mapped('paylox_basket_ids.approval_state')):
+                elif all(t == '-' for t in tx.with_context(skip_approval_state_update=True).mapped('paylox_basket_ids.approval_state')):
                     tx.write({
                         'jetcheckout_approval_state': '-',
                         'jetcheckout_approval_state_message': _('Disapproved'),
