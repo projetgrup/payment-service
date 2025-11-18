@@ -212,6 +212,8 @@ class PaymentTransactionBasket(models.Model):
 
     def _escrow_trigger_auto_approval(self):
         stack = set(self.env.context.get('escrow_auto_chain_stack', []))
+        _logger.error(self)
+        _logger.error(stack)
         for basket in self:
             company = basket.transaction_id.company_id
             if (not basket.transaction_id or company.system != 'escrow' or
