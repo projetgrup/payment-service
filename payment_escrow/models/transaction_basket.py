@@ -188,8 +188,9 @@ class PaymentTransactionBasket(models.Model):
         self.action_approve()
 
     def _action_approve(self):
-        res = super()._action_approve()
         self._escrow_trigger_auto_approval()
+        raise
+        res = super()._action_approve()
         return res
 
     def write(self, values):
