@@ -225,11 +225,11 @@ class PaymentTransactionBasket(models.Model):
             if not child_types:
                 continue
             dependents = basket.transaction_id.paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+')
-            raise Exception(dependents)
             if not dependents:
                 continue
 
             new_stack = list(stack | {basket.paylox_escrow_type})
+            raise Exception(new_stack)
             try:
                 dependents.with_context(escrow_auto_chain_stack=new_stack).sudo()._action_approve()
             except Exception as err:  # pragma: no cover - logging safeguard
