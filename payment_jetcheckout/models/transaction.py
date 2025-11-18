@@ -1056,21 +1056,18 @@ class PaymentTransactionBasket(models.Model):
         res = super().write(values)
         if 'approval_state' in values:
             for tx in self.mapped('transaction_id'):
-                _logger.info(len(tx.with_context(skip_escrow_visibility_domain=False).paylox_basket_ids))
-                raise Exception(len(tx.paylox_basket_ids))
-
-                if all(t.approval_state == '+' for t in tx.paylox_basket_ids):
+                if all(t.approval_state == '+' for t in tx.with_context(skip_escrow_visibility_domain=False).paylox_basket_ids):
                     tx.write({
                         'jetcheckout_approval_state': '+',
                         'jetcheckout_approval_state_message': _('Approved'),
                     })
-                elif all(t.approval_state == '-' for t in tx.paylox_basket_ids):
+                elif all(t.approval_state == '-' for t in tx.with_context(skip_escrow_visibility_domain=False).paylox_basket_ids):
                     tx.write({
                         'jetcheckout_approval_state': '-',
                         'jetcheckout_approval_state_message': _('Disapproved'),
                     })
                 else:
-                    tx.write({
+                    tx.with_context(skip_escrow_visibility_domain=False).write({
                         'jetcheckout_approval_state': False,
                         'jetcheckout_approval_state_message': False,
                     })
