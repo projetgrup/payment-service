@@ -223,10 +223,10 @@ class PaymentTransactionBasket(models.Model):
                 continue
 
             child_types = company._get_escrow_chain_children(basket.paylox_escrow_type)
-            raise Exception('Debug: child_types=%s' % child_types)
             if not child_types:
                 continue
             dependents = basket.transaction_id.paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+')
+            raise Exception('Debug: dependents=%s' % dependents)
             if not dependents:
                 continue
 
