@@ -188,7 +188,9 @@ class PaymentTransactionBasket(models.Model):
         self.action_approve()
 
     def _action_approve(self):
+        res = super()._action_approve()
         self._escrow_trigger_auto_approval()
+        return res
 
     def write(self, values):
         res = super().write(values)
@@ -220,7 +222,6 @@ class PaymentTransactionBasket(models.Model):
                 continue
 
             child_types = company._get_escrow_chain_children(basket.paylox_escrow_type)
-            raise Exception(child_types)
             if not child_types:
                 continue
 
