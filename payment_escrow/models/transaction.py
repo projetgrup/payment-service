@@ -309,10 +309,10 @@ class PaymentTransaction(models.Model):
             return visibility_domain
         return []
 
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        args = self._apply_escrow_visibility_domain(args)
-        return super().search(args, offset=offset, limit=limit, order=order, count=count)
+    # @api.model
+    # def search(self, args, offset=0, limit=None, order=None, count=False):
+    #     args = self._apply_escrow_visibility_domain(args)
+    #     return super().search(args, offset=offset, limit=limit, order=order, count=count)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

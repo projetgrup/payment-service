@@ -480,10 +480,7 @@ class PaymentTransaction(models.Model):
             return
 
         if self.paylox_basket_ids:
-            baskets = self.paylox_basket_ids
-            if self.env.user._is_restricted_escrow_user():
-                baskets = baskets.sudo()
-            for basket in baskets:
+            for basket in self.paylox_basket_ids:
                 basket._action_approve()
             return
 
@@ -1059,14 +1056,13 @@ class PaymentTransactionBasket(models.Model):
         res = super().write(values)
         if 'approval_state' in values:
             tx = fields.first(self).transaction_id
-            _logger.info(tx.sudo().mapped('paylox_basket_ids.approval_state'))
             if tx:
-                if all(t == '+' for t in tx.sudo().mapped('paylox_basket_ids.approval_state')):
+                if all(t == '+' for t in tx.mapped('paylox_basket_ids.approval_state')):
                     tx.write({
                         'jetcheckout_approval_state': '+',
                         'jetcheckout_approval_state_message': _('Approved'),
                     })
-                elif all(t == '-' for t in tx.sudo().mapped('paylox_basket_ids.approval_state')):
+                elif all(t == '-' for t in tx.mapped('paylox_basket_ids.approval_state')):
                     tx.write({
                         'jetcheckout_approval_state': '-',
                         'jetcheckout_approval_state_message': _('Disapproved'),
