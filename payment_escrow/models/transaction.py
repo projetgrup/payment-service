@@ -270,31 +270,31 @@ class PaymentTransaction(models.Model):
     def jetcheckout_send_daily_email(self):
         self.paylox_send_daily_email()
 
-    def _escrow_visibility_domain(self):
-        user = self.env.user
-        if not user._is_restricted_escrow_user():
-            return []
+    # def _escrow_visibility_domain(self):
+    #     user = self.env.user
+    #     if not user._is_restricted_escrow_user():
+    #         return []
 
-        company_map = user._get_escrow_allowed_type_map()
-        domain_parts = []
-        for company_id, types in company_map.items():
-            if not types:
-                continue
-            domain_parts.append([
-                ('company_id', '=', company_id),
-                ('paylox_basket_ids.paylox_escrow_type', 'in', list(types)),
-            ])
+    #     company_map = user._get_escrow_allowed_type_map()
+    #     domain_parts = []
+    #     for company_id, types in company_map.items():
+    #         if not types:
+    #             continue
+    #         domain_parts.append([
+    #             ('company_id', '=', company_id),
+    #             ('paylox_basket_ids.paylox_escrow_type', 'in', list(types)),
+    #         ])
 
-        if not domain_parts:
-            domain_parts.append([
-                ('paylox_basket_ids.paylox_escrow_type', 'in', list(ESCROW_DEFAULT_VISIBLE_TYPES)),
-            ])
+    #     if not domain_parts:
+    #         domain_parts.append([
+    #             ('paylox_basket_ids.paylox_escrow_type', 'in', list(ESCROW_DEFAULT_VISIBLE_TYPES)),
+    #         ])
 
-        visibility_domain = expression.OR(domain_parts)
-        return expression.OR([
-            [('company_id.system', '!=', 'escrow')],
-            visibility_domain,
-        ])
+    #     visibility_domain = expression.OR(domain_parts)
+    #     return expression.OR([
+    #         [('company_id.system', '!=', 'escrow')],
+    #         visibility_domain,
+    #     ])
 
     # @api.model
     # def _apply_escrow_visibility_domain(self, domain):

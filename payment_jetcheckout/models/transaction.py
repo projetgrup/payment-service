@@ -1057,14 +1057,12 @@ class PaymentTransactionBasket(models.Model):
         if 'approval_state' in values:
             tx = fields.first(self).transaction_id
             if tx:
-                states = tx.sudo().mapped('paylox_basket_ids.approval_state')
-                _logger.info(states)
-                if states and all(state == '+' for state in states):
+                if all(t == '+' for t in tx.mapped('paylox_basket_ids.approval_state')):
                     tx.write({
                         'jetcheckout_approval_state': '+',
                         'jetcheckout_approval_state_message': _('Approved'),
                     })
-                elif states and all(state == '-' for state in states):
+                elif all(t == '-' for t in tx.mapped('paylox_basket_ids.approval_state')):
                     tx.write({
                         'jetcheckout_approval_state': '-',
                         'jetcheckout_approval_state_message': _('Disapproved'),
