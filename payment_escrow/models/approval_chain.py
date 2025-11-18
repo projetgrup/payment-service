@@ -14,7 +14,7 @@ ESCROW_TYPE_SELECTION = [
     ('card_holder', 'Card Holder'),
 ]
 
-ESCROW_DEFAULT_VISIBLE_TYPES = {'owner', 'broker'}
+ESCROW_DEFAULT_VISIBLE_TYPES = {'owner'}
 
 
 class EscrowApprovalChain(models.Model):
