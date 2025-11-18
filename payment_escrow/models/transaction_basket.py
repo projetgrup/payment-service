@@ -188,9 +188,10 @@ class PaymentTransactionBasket(models.Model):
         self.action_approve()
 
     def _action_approve(self):
-        res = super()._action_approve()
-        self._escrow_trigger_auto_approval()
-        return res
+        for basket in self:
+            super(PaymentTransactionBasket, basket)._action_approve()
+            basket._escrow_trigger_auto_approval()
+        return True
 
     def write(self, values):
         res = super().write(values)
@@ -212,8 +213,6 @@ class PaymentTransactionBasket(models.Model):
 
     def _escrow_trigger_auto_approval(self):
         stack = set(self.env.context.get('escrow_auto_chain_stack', []))
-        _logger.error(self)
-        _logger.error(stack)
         for basket in self:
             company = basket.transaction_id.company_id
             if (not basket.transaction_id or company.system != 'escrow' or
