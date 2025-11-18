@@ -19,7 +19,6 @@ class ResCompany(models.Model):
         if self.system != 'escrow' or not parent_type:
             return []
         chains = self.escrow_chain_ids.filtered(lambda c: c.parent_type == parent_type)
-        raise Exception(chains)
         return chains.mapped('child_type')
 
     def _get_escrow_allowed_types_for_user(self, user):
