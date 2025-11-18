@@ -479,9 +479,9 @@ class PaymentTransaction(models.Model):
             self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
             return
 
-        baskets = self.with_context(skip_escrow_visibility=True).paylox_basket_ids
-        if baskets:
-            baskets._action_approve()
+        if self.paylox_basket_ids:
+            for basket in self.paylox_basket_ids:
+                basket._action_approve()
             return
 
         url = '%s/api/v1/payment/submerchant/approve' % self.acquirer_id._get_paylox_api_url()
@@ -574,11 +574,10 @@ class PaymentTransaction(models.Model):
         if not self.state == 'cancel':
             if self.jetcheckout_approval_auto:
                 self._action_disapprove()
-            baskets = self.with_context(skip_escrow_visibility=True).paylox_basket_ids
-            if baskets:
-                approved_baskets = baskets.filtered(lambda b: b.transfer_status == 'approved')
-                if approved_baskets:
-                    approved_baskets._action_disapprove()
+            if self.paylox_basket_ids:
+                for basket in self.paylox_basket_ids:
+                    if basket.transfer_status == 'approved':
+                        basket._action_disapprove()
             self.write(self._paylox_cancel_postprocess_values())
         if self.payment_id:
             self.payment_id.action_draft()
@@ -1056,15 +1055,13 @@ class PaymentTransactionBasket(models.Model):
     def write(self, values):
         res = super().write(values)
         if 'approval_state' in values:
-            tx = fields.first(self).transaction_id
-            if tx:
-                _logger.info(tx.mapped('paylox_basket_ids.approval_state'))
-                if all(t == '+' for t in tx.mapped('paylox_basket_ids.approval_state')):
+            for tx in self:
+                if all(t.approval_state == '+' for t in tx.paylox_basket_ids):
                     tx.write({
                         'jetcheckout_approval_state': '+',
                         'jetcheckout_approval_state_message': _('Approved'),
                     })
-                elif all(t == '-' for t in tx.mapped('paylox_basket_ids.approval_state')):
+                elif all(t.approval_state == '-' for t in tx.paylox_basket_ids):
                     tx.write({
                         'jetcheckout_approval_state': '-',
                         'jetcheckout_approval_state_message': _('Disapproved'),
@@ -1072,6 +1069,6 @@ class PaymentTransactionBasket(models.Model):
                 else:
                     tx.write({
                         'jetcheckout_approval_state': False,
-                        'jetcheckout_approval_state_message': False,    
+                        'jetcheckout_approval_state_message': False,
                     })
         return res
