@@ -296,69 +296,69 @@ class PaymentTransaction(models.Model):
             visibility_domain,
         ])
 
-    @api.model
-    def _apply_escrow_visibility_domain(self, domain):
-        base_domain = domain or []
-        visibility_domain = self._escrow_visibility_domain()
+    # @api.model
+    # def _apply_escrow_visibility_domain(self, domain):
+    #     base_domain = domain or []
+    #     visibility_domain = self._escrow_visibility_domain()
 
-        if base_domain and visibility_domain:
-            return expression.AND([base_domain, visibility_domain])
-        if base_domain:
-            return base_domain
-        if visibility_domain:
-            return visibility_domain
-        return []
+    #     if base_domain and visibility_domain:
+    #         return expression.AND([base_domain, visibility_domain])
+    #     if base_domain:
+    #         return base_domain
+    #     if visibility_domain:
+    #         return visibility_domain
+    #     return []
 
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        args = self._apply_escrow_visibility_domain(args)
-        return super().search(args, offset=offset, limit=limit, order=order, count=count)
+    # @api.model
+    # def search(self, args, offset=0, limit=None, order=None, count=False):
+    #     args = self._apply_escrow_visibility_domain(args)
+    #     return super().search(args, offset=offset, limit=limit, order=order, count=count)
 
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        domain = self._apply_escrow_visibility_domain(domain)
-        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+    # @api.model
+    # def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+    #     domain = self._apply_escrow_visibility_domain(domain)
+    #     return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-    def check_access_rule(self, operation):
-        super().check_access_rule(operation)
-        user = self.env.user
-        if not user._is_restricted_escrow_user():
-            return
+    # def check_access_rule(self, operation):
+    #     super().check_access_rule(operation)
+    #     user = self.env.user
+    #     if not user._is_restricted_escrow_user():
+    #         return
 
-        escrow_transactions = self.filtered(lambda tx: tx.company_id.system == 'escrow')
-        if not escrow_transactions:
-            return
+    #     escrow_transactions = self.filtered(lambda tx: tx.company_id.system == 'escrow')
+    #     if not escrow_transactions:
+    #         return
 
-        company_map = user._get_escrow_allowed_type_map()
-        allowed_type_cache = {}
+    #     company_map = user._get_escrow_allowed_type_map()
+    #     allowed_type_cache = {}
 
-        def _allowed_types(company):
-            company_id = company.id
-            if company_id not in allowed_type_cache:
-                allowed = company_map.get(company_id)
-                if allowed is None:
-                    allowed = company._get_escrow_allowed_types_for_user(user)
-                allowed_type_cache[company_id] = set(allowed or [])
-            return allowed_type_cache[company_id]
+    #     def _allowed_types(company):
+    #         company_id = company.id
+    #         if company_id not in allowed_type_cache:
+    #             allowed = company_map.get(company_id)
+    #             if allowed is None:
+    #                 allowed = company._get_escrow_allowed_types_for_user(user)
+    #             allowed_type_cache[company_id] = set(allowed or [])
+    #         return allowed_type_cache[company_id]
 
-        basket_model = self.env['payment.transaction.basket'].sudo()
-        basket_map = {}
-        baskets = basket_model.search([('transaction_id', 'in', escrow_transactions.ids)])
-        for basket in baskets:
-            if not basket.paylox_escrow_type:
-                continue
-            tx_id = basket.transaction_id.id
-            basket_map.setdefault(tx_id, set()).add(basket.paylox_escrow_type)
+    #     basket_model = self.env['payment.transaction.basket'].sudo()
+    #     basket_map = {}
+    #     baskets = basket_model.search([('transaction_id', 'in', escrow_transactions.ids)])
+    #     for basket in baskets:
+    #         if not basket.paylox_escrow_type:
+    #             continue
+    #         tx_id = basket.transaction_id.id
+    #         basket_map.setdefault(tx_id, set()).add(basket.paylox_escrow_type)
 
-        def _has_allowed_basket(tx):
-            allowed_types = _allowed_types(tx.company_id)
-            if not allowed_types:
-                return False
-            basket_types = basket_map.get(tx.id, set())
-            if not basket_types:
-                return False
-            return bool(allowed_types & basket_types)
+    #     def _has_allowed_basket(tx):
+    #         allowed_types = _allowed_types(tx.company_id)
+    #         if not allowed_types:
+    #             return False
+    #         basket_types = basket_map.get(tx.id, set())
+    #         if not basket_types:
+    #             return False
+    #         return bool(allowed_types & basket_types)
 
-        restricted = escrow_transactions.filtered(lambda tx: not _has_allowed_basket(tx))
-        if restricted:
-            raise AccessError(_('You do not have the required rights to access these escrow transactions.'))
+    #     restricted = escrow_transactions.filtered(lambda tx: not _has_allowed_basket(tx))
+    #     if restricted:
+    #         raise AccessError(_('You do not have the required rights to access these escrow transactions.'))
