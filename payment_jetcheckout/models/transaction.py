@@ -1054,6 +1054,7 @@ class PaymentTransactionBasket(models.Model):
 
     def write(self, values):
         res = super().write(values)
+        raise Exception(values)
         if 'approval_state' in values:
             tx = fields.first(self).transaction_id
             if tx:
