@@ -479,9 +479,9 @@ class PaymentTransaction(models.Model):
             self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
             return
 
-        if self.paylox_basket_ids:
-            for basket in self.paylox_basket_ids:
-                basket._action_approve()
+        baskets = self.with_context(skip_escrow_visibility=True).paylox_basket_ids
+        if baskets:
+            baskets._action_approve()
             return
 
         url = '%s/api/v1/payment/submerchant/approve' % self.acquirer_id._get_paylox_api_url()
@@ -574,10 +574,11 @@ class PaymentTransaction(models.Model):
         if not self.state == 'cancel':
             if self.jetcheckout_approval_auto:
                 self._action_disapprove()
-            if self.paylox_basket_ids:
-                for basket in self.paylox_basket_ids:
-                    if basket.transfer_status == 'approved':
-                        basket._action_disapprove()
+            baskets = self.with_context(skip_escrow_visibility=True).paylox_basket_ids
+            if baskets:
+                approved_baskets = baskets.filtered(lambda b: b.transfer_status == 'approved')
+                if approved_baskets:
+                    approved_baskets._action_disapprove()
             self.write(self._paylox_cancel_postprocess_values())
         if self.payment_id:
             self.payment_id.action_draft()
