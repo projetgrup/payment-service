@@ -1055,7 +1055,9 @@ class PaymentTransactionBasket(models.Model):
     def write(self, values):
         res = super().write(values)
         if 'approval_state' in values:
-            for tx in self:
+            for tx in self.mapped('transaction_id'):
+                raise Exception(len(tx.paylox_basket_ids))
+
                 if all(t.approval_state == '+' for t in tx.paylox_basket_ids):
                     tx.write({
                         'jetcheckout_approval_state': '+',
@@ -1071,4 +1073,5 @@ class PaymentTransactionBasket(models.Model):
                         'jetcheckout_approval_state': False,
                         'jetcheckout_approval_state_message': False,
                     })
+        
         return res
