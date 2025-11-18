@@ -983,7 +983,7 @@ class PaymentTransactionBasket(models.Model):
 
     def action_approve(self):
         for basket in self:
-            basket._action_approve()
+            basket.with_context(skip_escrow_visibility_domain=False)._action_approve()
 
     def _action_approve(self):
         self.ensure_one()
