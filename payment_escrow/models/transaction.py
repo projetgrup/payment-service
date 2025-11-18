@@ -325,11 +325,40 @@ class PaymentTransaction(models.Model):
         if not user._is_restricted_escrow_user():
             return
 
+        escrow_transactions = self.filtered(lambda tx: tx.company_id.system == 'escrow')
+        if not escrow_transactions:
+            return
+
         company_map = user._get_escrow_allowed_type_map()
-        restricted = self.filtered(
-            lambda tx: tx.company_id.system == 'escrow' and not tx.paylox_basket_ids.filtered(
-                lambda basket: basket.paylox_escrow_type in company_map.get(tx.company_id.id, tx.company_id._get_escrow_allowed_types_for_user(user))
-            )
-        )
+        allowed_type_cache = {}
+
+        def _allowed_types(company):
+            company_id = company.id
+            if company_id not in allowed_type_cache:
+                allowed = company_map.get(company_id)
+                if allowed is None:
+                    allowed = company._get_escrow_allowed_types_for_user(user)
+                allowed_type_cache[company_id] = set(allowed or [])
+            return allowed_type_cache[company_id]
+
+        basket_model = self.env['payment.transaction.basket'].sudo()
+        basket_map = {}
+        baskets = basket_model.search([('transaction_id', 'in', escrow_transactions.ids)])
+        for basket in baskets:
+            if not basket.paylox_escrow_type:
+                continue
+            tx_id = basket.transaction_id.id
+            basket_map.setdefault(tx_id, set()).add(basket.paylox_escrow_type)
+
+        def _has_allowed_basket(tx):
+            allowed_types = _allowed_types(tx.company_id)
+            if not allowed_types:
+                return False
+            basket_types = basket_map.get(tx.id, set())
+            if not basket_types:
+                return False
+            return bool(allowed_types & basket_types)
+
+        restricted = escrow_transactions.filtered(lambda tx: not _has_allowed_basket(tx))
         if restricted:
             raise AccessError(_('You do not have the required rights to access these escrow transactions.'))
