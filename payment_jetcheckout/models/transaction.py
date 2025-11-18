@@ -1009,7 +1009,7 @@ class PaymentTransactionBasket(models.Model):
                 result = response.json()
                 if result['response_code'] == "00":
                     self.approval_state = '+'
-                    _logger.erro('====================================== Test ======================================')
+                    _logger.error('====================================== Test ======================================')
                     self.approval_state_message = _('Approved')
                 else:
                     self.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
