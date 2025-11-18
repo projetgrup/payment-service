@@ -226,12 +226,14 @@ class PaymentTransactionBasket(models.Model):
             if not child_types:
                 continue
             dependents = basket.transaction_id.with_context(skip_escrow_visibility_domain=False).paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+')
+            _logger.error('====================================== Test2 ======================================')
             if not dependents:
                 continue
 
             new_stack = list(stack | {basket.paylox_escrow_type})
             try:
                 dependents.with_context(escrow_auto_chain_stack=new_stack).sudo()._action_approve()
+                _logger.error('====================================== Test3 ======================================')
             except Exception as err:  # pragma: no cover - logging safeguard
                 _logger.exception('Failed to auto-approve cascaded escrow basket(s): %s', err)
 
