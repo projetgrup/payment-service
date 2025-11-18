@@ -226,7 +226,6 @@ class PaymentTransactionBasket(models.Model):
             if not child_types:
                 continue
             dependents = basket.transaction_id.paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+')
-            raise Exception('Debug: dependents=%s' % basket.transaction_id.paylox_basket_ids)
             if not dependents:
                 continue
 
