@@ -14,11 +14,11 @@ class ResCompany(models.Model):
     escrow_insurance_quote_enabled = fields.Boolean('Enable Insurance Quote', default=False)
     escrow_chain_ids = fields.One2many('escrow.approval.chain', 'company_id', string='Escrow Approval Chains')
 
-    def _get_escrow_chain_children(self, parent_type):
+    def _get_escrow_chain_children(self, child_type):
         self.ensure_one()
-        if self.system != 'escrow' or not parent_type:
+        if self.system != 'escrow' or not child_type:
             return []
-        chains = self.escrow_chain_ids.filtered(lambda c: c.active and c.parent_type == parent_type)
+        chains = self.escrow_chain_ids.filtered(lambda c: c.active and c.child_type == child_type)
         return chains.mapped('child_type')
 
     def _get_escrow_allowed_types_for_user(self, user):
