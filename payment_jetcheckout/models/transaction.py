@@ -1058,6 +1058,7 @@ class PaymentTransactionBasket(models.Model):
             tx = fields.first(self).transaction_id
             if tx:
                 states = tx.sudo().mapped('paylox_basket_ids.approval_state')
+                raise Exception(states)
                 if states and all(state == '+' for state in states):
                     tx.write({
                         'jetcheckout_approval_state': '+',
