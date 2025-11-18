@@ -1056,7 +1056,7 @@ class PaymentTransactionBasket(models.Model):
         res = super().write(values)
         if 'approval_state' in values:
             for tx in self.mapped('transaction_id'):
-                _logger.info(len(tx.paylox_basket_ids))
+                _logger.info(len(tx.with_context(skip_escrow_visibility_domain=False).paylox_basket_ids))
                 raise Exception(len(tx.paylox_basket_ids))
 
                 if all(t.approval_state == '+' for t in tx.paylox_basket_ids):
