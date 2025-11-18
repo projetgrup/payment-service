@@ -230,6 +230,7 @@ class PaymentTransactionBasket(models.Model):
             dependents = all_baskets.filtered(
                 lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+'
             )
+            raise Exception(dependents)
             if not dependents:
                 continue
 
