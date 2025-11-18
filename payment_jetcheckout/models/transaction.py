@@ -1056,7 +1056,7 @@ class PaymentTransactionBasket(models.Model):
         res = super().write(values)
         if 'approval_state' in values:
             tx = fields.first(self).transaction_id
-            _logger.info(tx.sudo().mapped('paylox_basket_ids.approval_state')))
+            _logger.info(tx.sudo().mapped('paylox_basket_ids.approval_state'))
             if tx:
                 if all(t == '+' for t in tx.sudo().mapped('paylox_basket_ids.approval_state')):
                     tx.write({
