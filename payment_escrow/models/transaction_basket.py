@@ -229,7 +229,6 @@ class PaymentTransactionBasket(models.Model):
                 continue
 
             new_stack = list(stack | {basket.paylox_escrow_type})
-            raise Exception(new_stack)
             try:
                 dependents.with_context(escrow_auto_chain_stack=new_stack).sudo()._action_approve()
             except Exception as err:  # pragma: no cover - logging safeguard
