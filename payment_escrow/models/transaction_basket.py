@@ -188,9 +188,10 @@ class PaymentTransactionBasket(models.Model):
         self.action_approve()
 
     def _action_approve(self):
-        res = super()._action_approve()
-        self._escrow_trigger_auto_approval()
-        return res
+        for basket in self:
+            super(PaymentTransactionBasket, basket)._action_approve()
+            basket._escrow_trigger_auto_approval()
+        return True
 
     def write(self, values):
         res = super().write(values)
@@ -224,8 +225,7 @@ class PaymentTransactionBasket(models.Model):
             child_types = company._get_escrow_chain_children(basket.paylox_escrow_type)
             if not child_types:
                 continue
-            dependents = basket.transaction_id.paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+')
-            _logger.info(dependents)
+            dependents = basket.transaction_id.with_context(skip_escrow_visibility_domain=False).paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+')
             if not dependents:
                 continue
 
