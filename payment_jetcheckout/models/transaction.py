@@ -480,7 +480,10 @@ class PaymentTransaction(models.Model):
             return
 
         if self.paylox_basket_ids:
-            for basket in self.paylox_basket_ids:
+            baskets = self.paylox_basket_ids
+            if self.env.user._is_restricted_escrow_user():
+                baskets = baskets.sudo()
+            for basket in baskets:
                 basket._action_approve()
             return
 
