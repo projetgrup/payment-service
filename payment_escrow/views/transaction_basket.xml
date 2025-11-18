@@ -200,6 +200,7 @@
             'search_default_can_approve_transfer': 1,
             'search_default_group_vehicle_info': 1,
             'search_default_group_transfer_status': 1,
+            'skip_escrow_visibility_domain': True
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

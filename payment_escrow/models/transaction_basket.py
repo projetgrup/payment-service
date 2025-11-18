@@ -188,10 +188,9 @@ class PaymentTransactionBasket(models.Model):
         self.action_approve()
 
     def _action_approve(self):
-        for basket in self:
-            super(PaymentTransactionBasket, basket)._action_approve()
-            basket._escrow_trigger_auto_approval()
-        return True
+        res = super()._action_approve()
+        self._escrow_trigger_auto_approval()
+        return res
 
     def write(self, values):
         res = super().write(values)
@@ -225,12 +224,7 @@ class PaymentTransactionBasket(models.Model):
             child_types = company._get_escrow_chain_children(basket.paylox_escrow_type)
             if not child_types:
                 continue
-
-            all_baskets = basket.transaction_id.paylox_basket_ids.sudo()
-            dependents = all_baskets.filtered(
-                lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+'
-            )
-            raise Exception(dependents)
+            dependents = basket.transaction_id.paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+')
             if not dependents:
                 continue
 
@@ -281,7 +275,7 @@ class PaymentTransactionBasket(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        if not self.env.context.get('skip_escrow_visibility'):
+        if self.env.context.get('skip_escrow_visibility_domain'):
             args = self._apply_escrow_visibility_domain(args)
         return super().search(args, offset=offset, limit=limit, order=order, count=count)
 
