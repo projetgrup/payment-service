@@ -986,68 +986,70 @@ class PaymentTransactionBasket(models.Model):
             basket.with_context(skip_escrow_visibility_domain=False)._action_approve()
 
     def _action_approve(self):
-        if self.approval_state == '+':
-            return
+        for basket in self:
+            if basket.approval_state == '+':
+                continue
 
-        tx = self.transaction_id
-        if tx.state != 'done':
-            self.approval_state_message = _('Only paid transactions can be approved')
-            return
+            tx = basket.transaction_id
+            if tx.state != 'done':
+                basket.approval_state_message = _('Only paid transactions can be approved')
+                continue
 
-        url = '%s/api/v1/payment/submerchant/approve' % tx.acquirer_id._get_paylox_api_url()
-        data = {
-            "application_key": tx.acquirer_id.jetcheckout_api_key,
-            "transaction_id": tx.jetcheckout_transaction_id,
-            "item_id": self.uid,
-            "language": "tr",
-        }
+            url = '%s/api/v1/payment/submerchant/approve' % tx.acquirer_id._get_paylox_api_url()
+            data = {
+                "application_key": tx.acquirer_id.jetcheckout_api_key,
+                "transaction_id": tx.jetcheckout_transaction_id,
+                "item_id": self.env.user.id,
+                "language": "tr",
+            }
 
-        response = requests.post(url, data=json.dumps(data))
-        try:
-            if response.status_code == 200:
-                result = response.json()
-                if result['response_code'] == "00":
-                    self.approval_state = '+'
-                    self.approval_state_message = _('Approved')
+            response = requests.post(url, data=json.dumps(data))
+            try:
+                if response.status_code == 200:
+                    result = response.json()
+                    if result['response_code'] == "00":
+                        basket.approval_state = '+'
+                        basket.approval_state_message = _('Approved')
+                    else:
+                        basket.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
                 else:
-                    self.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
-            else:
-                self.approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
-            self.env.cr.commit()
-        except:
-            self.env.cr.rollback()
+                    basket.approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+                self.env.cr.commit()
+            except:
+                self.env.cr.rollback()
 
     def action_disapprove(self):
         for basket in self:
             basket._action_disapprove()
 
     def _action_disapprove(self):
-        if self.approval_state == '-':
-            return
+        for basket in self:
+            if basket.approval_state == '-':
+                continue
 
-        tx = self.transaction_id
-        url = '%s/api/v1/payment/submerchant/disapprove' % tx.acquirer_id._get_paylox_api_url()
-        data = {
-            "application_key": tx.acquirer_id.jetcheckout_api_key,
-            "transaction_id": tx.jetcheckout_transaction_id,
-            "item_id": self.uid,
-            "language": "tr",
-        }
+            tx = basket.transaction_id
+            url = '%s/api/v1/payment/submerchant/disapprove' % tx.acquirer_id._get_paylox_api_url()
+            data = {
+                "application_key": tx.acquirer_id.jetcheckout_api_key,
+                "transaction_id": tx.jetcheckout_transaction_id,
+                "item_id": self.env.user.id,
+                "language": "tr",
+            }
 
-        response = requests.post(url, data=json.dumps(data))
-        try:
-            if response.status_code == 200:
-                result = response.json()
-                if result['response_code'] == "00":
-                    self.approval_state = '-'
-                    self.approval_state_message = _('Disapproved')
+            response = requests.post(url, data=json.dumps(data))
+            try:
+                if response.status_code == 200:
+                    result = response.json()
+                    if result['response_code'] == "00":
+                        basket.approval_state = '-'
+                        basket.approval_state_message = _('Disapproved')
+                    else:
+                        basket.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
                 else:
-                    self.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
-            else:
-                self.approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
-            self.env.cr.commit()
-        except:
-            self.env.cr.rollback()
+                    basket.approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+                self.env.cr.commit()
+            except:
+                self.env.cr.rollback()
 
     def write(self, values):
         res = super().write(values)
