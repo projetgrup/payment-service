@@ -999,7 +999,7 @@ class PaymentTransactionBasket(models.Model):
             data = {
                 "application_key": tx.acquirer_id.jetcheckout_api_key,
                 "transaction_id": tx.jetcheckout_transaction_id,
-                "item_id": self.env.user.id,
+                "item_id": basket.uid,
                 "language": "tr",
             }
 
