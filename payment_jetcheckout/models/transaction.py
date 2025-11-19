@@ -1007,23 +1007,25 @@ class PaymentTransactionBasket(models.Model):
             try:
                 if response.status_code == 200:
                     result = response.json()
+                    _logger.error("Paylox Response for basket %s: %s", basket.id, result)
                     if result['response_code'] == "00":
-                        basket.approval_state = '+'
-                        basket.approval_state_message = _('Approved')
-                        basket.write({
+                        _logger.error("Writing approval state for basket %s", basket.id)
+                        basket.sudo().write({
                             'approval_state': '+',
                             'approval_state_message': _('Approved'),
                         })
+                        _logger.error("Write successful for basket %s. New state: %s", basket.id, basket.approval_state)
                     else:
-                        basket.write({
+                        basket.sudo().write({
                             'approval_state_message': _('%s (Error Code: %s)') % (result['message'], result['response_code']),
                         })
                 else:
-                    basket.write({
+                    basket.sudo().write({
                         'approval_state_message': _('%s (Error Code: %s)') % (response.reason, response.status_code),
                     })
                 self.env.cr.commit()
-            except:
+            except Exception as e:
+                _logger.error("CRITICAL ERROR during approval of basket %s: %s", basket.id, str(e))
                 self.env.cr.rollback()
 
     def action_disapprove(self):
