@@ -1010,10 +1010,18 @@ class PaymentTransactionBasket(models.Model):
                     if result['response_code'] == "00":
                         basket.approval_state = '+'
                         basket.approval_state_message = _('Approved')
+                        basket.write({
+                            'approval_state': '+',
+                            'approval_state_message': _('Approved'),
+                        })
                     else:
-                        basket.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                        basket.write({
+                            'approval_state_message': _('%s (Error Code: %s)') % (result['message'], result['response_code']),
+                        })
                 else:
-                    basket.approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+                    basket.write({
+                        'approval_state_message': _('%s (Error Code: %s)') % (response.reason, response.status_code),
+                    })
                 self.env.cr.commit()
             except:
                 self.env.cr.rollback()
