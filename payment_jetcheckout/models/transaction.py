@@ -986,7 +986,6 @@ class PaymentTransactionBasket(models.Model):
             basket.with_context(skip_escrow_visibility_domain=False)._action_approve()
 
     def _action_approve(self):
-        self.ensure_one()
         if self.approval_state == '+':
             return
 
@@ -1023,8 +1022,6 @@ class PaymentTransactionBasket(models.Model):
             basket._action_disapprove()
 
     def _action_disapprove(self):
-        self.ensure_one()
-        
         if self.approval_state == '-':
             return
 
