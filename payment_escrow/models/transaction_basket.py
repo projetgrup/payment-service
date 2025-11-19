@@ -285,15 +285,15 @@ class PaymentTransactionBasket(models.Model):
         domain = self._apply_escrow_visibility_domain(domain)
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-    def check_access_rule(self, operation):
-        if self.env.context.get('skip_escrow_check_access_rule'):
-            return
-        super().check_access_rule(operation)
-        user = self.env.user
-        if not user._is_restricted_escrow_user():
-            return
+    # def check_access_rule(self, operation):
+    #     if self.env.context.get('skip_escrow_check_access_rule'):
+    #         return
+    #     super().check_access_rule(operation)
+    #     user = self.env.user
+    #     if not user._is_restricted_escrow_user():
+    #         return
 
-        company_map = user._get_escrow_allowed_type_map()
-        restricted = self.filtered(lambda b: b.transaction_id and b.transaction_id.company_id.system == 'escrow' and b.paylox_escrow_type not in company_map.get(b.transaction_id.company_id.id, b.transaction_id.company_id._get_escrow_allowed_types_for_user(user)))
-        if restricted:
-            raise AccessError(_('You do not have the required rights to access these escrow transfers.'))
+    #     company_map = user._get_escrow_allowed_type_map()
+    #     restricted = self.filtered(lambda b: b.transaction_id and b.transaction_id.company_id.system == 'escrow' and b.paylox_escrow_type not in company_map.get(b.transaction_id.company_id.id, b.transaction_id.company_id._get_escrow_allowed_types_for_user(user)))
+    #     if restricted:
+    #         raise AccessError(_('You do not have the required rights to access these escrow transfers.'))
