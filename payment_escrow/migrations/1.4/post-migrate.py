@@ -175,11 +175,11 @@ def migrate(cr, version):
             WHERE res_model = 'product.product' AND res_id = %s
         """, (ad.id, product.id))
         
-        cr.execute("""
-            UPDATE mail_followers 
-            SET res_model = 'escrow.ad', res_id = %s 
-            WHERE res_model = 'product.product' AND res_id = %s
-        """, (ad.id, product.id))
+        # cr.execute("""
+        #     UPDATE mail_followers 
+        #     SET res_model = 'escrow.ad', res_id = %s 
+        #     WHERE res_model = 'product.product' AND res_id = %s
+        # """, (ad.id, product.id))
         
         cr.execute("""
             UPDATE ir_attachment 
