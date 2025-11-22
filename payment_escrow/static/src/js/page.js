@@ -1339,7 +1339,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 return;
             }
             if (result && result.success) {
-                console.log(result);
                 const options = (result.data || []).map(opt => ({
                     id: opt.code || opt.id || opt.value,
                     text: opt.name || opt.label || opt.text || opt.id,
@@ -1375,7 +1374,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this._populateInsuranceSelect(this.insurance.input.model, [], _t('Loading models...'), { disabled: true });
         this.insurance.state.modelRequestId += 1;
         const requestId = this.insurance.state.modelRequestId;
-        console.log('Fetching models for brand:', brandField.value, 'year:', yearField.value);
 
         rpc.query({
             route: '/escrow/insurance/models',
@@ -1748,11 +1746,19 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
     
     _onFieldValid: function(field, valid, message='') {
-        field.$.closest('.form__group').find('.form__error-label, .just-validate-error-label').remove();
+        const $group = field.$.closest('.form__group');
+        $group.find('.form__error-label, .just-validate-error-label').remove();
+        field.$.removeClass('is-valid is-invalid -error just-validate-error-field');
+
+        if (field._skipNextValidation) {
+            field._skipNextValidation = false;
+            return;
+        }
+
         if (valid) {
-            field.$.removeClass('is-invalid -error just-validate-error-field').addClass('is-valid');
+            field.$.addClass('is-valid');
         } else {
-            field.$.addClass('is-invalid -error just-validate-error-field').removeClass('is-valid');
+            field.$.addClass('is-invalid -error just-validate-error-field');
             field.$.closest('.form__group').append($(`<div class="form__error-label just-validate-error-label">${message}</div>`));
         }
     },
@@ -1921,7 +1927,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleVehicleHolder: function() {
         const id = this.state.id;
-        if (this.values.ads[id].state === 'waiting_official_sale_img' || this.values.ads[id].state === 'waiting_transfer_approval' || this.values.ads[id].state === 'transferred') {
+        if (this.values.ads[id].sale_state === 'waiting_official_sale_img' || this.values.ads[id].sale_state === 'waiting_transfer_approval' || this.values.ads[id].sale_state === 'transferred') {
             this.state.status = 'success';
             this._onChangeStep(5);
         } else {
@@ -1934,7 +1940,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _onToggleSellerHolder: function() {
         const id = this.state.id;
-        if (this.values.ads[id].state === 'waiting_official_sale_img' || this.values.ads[id].state === 'waiting_transfer_approval' || this.values.ads[id].state === 'transferred') {
+        if (this.values.ads[id].sale_state === 'waiting_official_sale_img' || this.values.ads[id].sale_state === 'waiting_transfer_approval' || this.values.ads[id].sale_state === 'transferred') {
             this.state.status = 'success';
             this._onChangeStep(5);
         } else {
@@ -1955,7 +1961,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _parseAds: function () {
         this.values.ads = {};
-        console.log($('[field="ad.item"][data-value]'))
         $('[field="ad.item"][data-value]').each((i, e) => {
             const $this = $(e);
             const values = $this.data('value');
@@ -2289,7 +2294,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.state.customer = this.values.ads[id]?.customer_id || 0;
 
         const value = this.values.ads[id];
-        console.log('Ad clicked:', value);
         const $item = $('.escrow-ad-sidebar-items');
         if ($item.length) {
             $item.find('.escrow-ad-item-name').text(value.name);
