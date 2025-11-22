@@ -41,6 +41,32 @@ class EscrowRequestAdOwner(Datamodel):
     banks = fields.List(NestedModel("escrow.request.ad.owner.banks"), required=True, allow_none=False, metadata={"title": _lt("List of Bank Accounts"), "description": _lt("List of bank accounts of owner")})
 
 
+class EscrowRequestBrokerBanks(Datamodel):
+    _inherit = "payment.partner.bank"
+    _name = "escrow.request.broker.banks"
+
+    merchant = fields.String(required=True, allow_none=False, metadata={"title": _lt("Merchant Name"), "description": _lt("Merchant name"), "example": "Jane Doe Inc."})
+
+
+class EscrowRequestBroker(Datamodel):
+    _name = "escrow.request.broker"
+
+    class Meta:
+        ordered = True
+
+    name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Broker Name"), "description": _lt("Broker name"), "example": "John Doe Broker"})
+    vat = fields.String(required=True, allow_none=False, metadata={"title": _lt("Broker VAT"), "description": _lt("Broker VAT number"), "example": "12345678910"})
+    taxOffice = fields.String(required=False, allow_none=False, metadata={"title": _lt("Broker Tax Office"), "description": _lt("Broker tax office (required if lenght of VAT is ten)"), "example": "MERKEZ"})
+    email = fields.String(required=True, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "broker@example.com"})
+    phone = fields.String(required=True, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
+    country = fields.String(required=False, allow_none=False, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
+    state = fields.String(required=False, allow_none=False, metadata={"title": _lt("State Code"), "description": _lt("State code"), "example": "34"})
+    city = fields.String(required=False, allow_none=False, metadata={"title": _lt("City/Town Name"), "description": _lt("City/Town name"), "example": "Beyoğlu"})
+    address = fields.String(required=False, allow_none=False, metadata={"title": _lt("Broker Address"), "description": _lt("Broker address"), "example": "Example Street, No: 1"})
+    zip = fields.String(required=False, allow_none=False, metadata={"title": _lt("ZIP Code"), "description": _lt("ZIP Code"), "example": "34100"})
+    banks = fields.List(NestedModel("escrow.request.broker.banks"), required=True, allow_none=False, metadata={"title": _lt("List of Bank Accounts"), "description": _lt("List of bank accounts of broker")})
+
+
 class EscrowRequestAd(Datamodel):
     _name = "escrow.request.ad"
 
@@ -220,6 +246,166 @@ class EscrowResponseAdsDelete(Datamodel):
         ordered = True
 
     ads = fields.List(NestedModel("escrow.response.ads.create.ads"), required=True, allow_none=False, metadata={"title": _lt("Ads"), "description": _lt("Array of ads")})
+
+
+# Broker Datamodels
+
+
+class EscrowRequestBrokersCreate(Datamodel):
+    _name = "escrow.request.brokers.create"
+
+    class Meta:
+        ordered = True
+
+    brokers = fields.List(NestedModel("escrow.request.broker"), required=True, allow_none=False, metadata={"title": _lt("Array of Brokers"), "description": _lt("Array of brokers")})
+
+
+class EscrowResponseBrokersCreateBrokers(Datamodel):
+    _name = "escrow.response.brokers.create.brokers"
+
+    class Meta:
+        ordered = True
+
+    id = fields.UUID(required=True, allow_none=False, metadata={"title": _lt("ID"), "description": _lt("Broker unique number"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
+    vat = fields.String(required=True, allow_none=False, metadata={"title": _lt("VAT"), "description": _lt("Broker VAT number"), "example": "12345678910"})
+
+
+class EscrowResponseBrokersCreate(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.brokers.create"
+
+    class Meta:
+        ordered = True
+
+    brokers = fields.List(NestedModel("escrow.response.brokers.create.brokers"), required=True, allow_none=False, metadata={"title": _lt("Brokers"), "description": _lt("Array of brokers")})
+
+
+class EscrowRequestBrokersReadPage(Datamodel):
+    _name = "escrow.request.brokers.read.page"
+
+    class Meta:
+        ordered = True
+
+    size = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Page Size"), "description": _lt("Page size"), "example": 10})
+    number = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Page Number"), "description": _lt("Page number"), "example": 1})
+
+
+class EscrowRequestBrokersRead(Datamodel):
+    _name = "escrow.request.brokers.read"
+
+    class Meta:
+        ordered = True
+
+    page = NestedModel("escrow.request.brokers.read.page", required=True, allow_none=False, metadata={"title": _lt("Page"), "description": _lt("Page options")})
+    brokers = fields.List(fields.UUID, required=False, allow_none=True, metadata={"title": _lt("Brokers"), "description": _lt("Array of brokers"), "example": ["9ee3fd53-42f9-4f16-b454-77e6b714c2e9"]})
+
+
+class EscrowResponseBrokersReadPage(Datamodel):
+    _name = "escrow.response.brokers.read.page"
+
+    class Meta:
+        ordered = True
+
+    size = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Page Size"), "description": _lt("Requested page size"), "example": 10})
+    number = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Page Number"), "description": _lt("Current page number"), "example": 1})
+    count = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Page Count"), "description": _lt("Total page count"), "example": 1})
+
+
+class EscrowResponseBrokersReadBrokers(Datamodel):
+    _name = "escrow.response.brokers.read.brokers"
+
+    class Meta:
+        ordered = True
+
+    id = fields.UUID(required=True, allow_none=False, metadata={"title": _lt("ID"), "description": _lt("Broker unique number"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
+    name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Name"), "description": _lt("Broker name"), "example": "John Doe Broker"})
+    vat = fields.String(required=True, allow_none=False, metadata={"title": _lt("VAT"), "description": _lt("Broker VAT number"), "example": "12345678910"})
+    taxOffice = fields.String(required=False, allow_none=False, metadata={"title": _lt("Tax Office"), "description": _lt("Broker tax office"), "example": "MERKEZ"})
+    email = fields.String(required=True, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "broker@example.com"})
+    phone = fields.String(required=True, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
+    country = fields.String(required=False, allow_none=False, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
+    state = fields.String(required=False, allow_none=False, metadata={"title": _lt("State Code"), "description": _lt("State code"), "example": "34"})
+    city = fields.String(required=False, allow_none=False, metadata={"title": _lt("City/Town Name"), "description": _lt("City/Town name"), "example": "Beyoğlu"})
+    address = fields.String(required=False, allow_none=False, metadata={"title": _lt("Broker Address"), "description": _lt("Broker address"), "example": "Example Street, No: 1"})
+    zip = fields.String(required=False, allow_none=False, metadata={"title": _lt("ZIP Code"), "description": _lt("ZIP Code"), "example": "34100"})
+    banks = fields.List(NestedModel("escrow.request.broker.banks"), required=True, allow_none=False, metadata={"title": _lt("List of Bank Accounts"), "description": _lt("List of bank accounts of broker")})
+
+
+class EscrowResponseBrokersRead(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.brokers.read"
+
+    class Meta:
+        ordered = True
+
+    page = NestedModel("escrow.response.brokers.read.page", required=True, allow_none=False, metadata={"title": _lt("Page"), "description": _lt("Page information")})
+    brokers = fields.List(NestedModel("escrow.response.brokers.read.brokers"), required=True, allow_none=False, metadata={"title": _lt("Brokers"), "description": _lt("Array of brokers")})
+
+
+class EscrowRequestBrokersUpdateBrokersBanks(Datamodel):
+    _name = "escrow.request.brokers.update.brokers.banks"
+
+    name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Account Name"), "description": _lt("Account name"), "example": "Bank Account"})
+    iban = fields.String(required=True, allow_none=False, metadata={"title": _lt("Account IBAN"), "description": _lt("Account IBAN"), "example": "TR000000000000000000000000"})
+    merchant = fields.String(required=False, allow_none=False, metadata={"title": _lt("Merchant Name"), "description": _lt("Merchant name"), "example": "Jane Doe Inc."})
+
+
+class EscrowRequestBrokersUpdateBrokers(Datamodel):
+    _name = "escrow.request.brokers.update.brokers"
+
+    class Meta:
+        ordered = True
+
+    id = fields.UUID(required=True, allow_none=False, metadata={"title": _lt("ID"), "description": _lt("Broker unique number"), "example": "9ee3fd53-42f9-4f16-b454-77e6b714c2e9"})
+    name = fields.String(required=False, allow_none=False, metadata={"title": _lt("Broker Name"), "description": _lt("Broker name"), "example": "John Doe Broker"})
+    vat = fields.String(required=False, allow_none=False, metadata={"title": _lt("Broker VAT"), "description": _lt("Broker VAT number"), "example": "12345678910"})
+    taxOffice = fields.String(required=False, allow_none=False, metadata={"title": _lt("Broker Tax Office"), "description": _lt("Broker tax office"), "example": "MERKEZ"})
+    email = fields.String(required=False, allow_none=False, metadata={"title": _lt("Email Address"), "description": _lt("Email address"), "example": "broker@example.com"})
+    phone = fields.String(required=False, allow_none=False, metadata={"title": _lt("Phone Number"), "description": _lt("Phone number"), "example": "+905321234567"})
+    country = fields.String(required=False, allow_none=True, metadata={"title": _lt("Country Code"), "description": _lt("Country code"), "example": "TR"})
+    state = fields.String(required=False, allow_none=True, metadata={"title": _lt("State Code"), "description": _lt("State code"), "example": "34"})
+    city = fields.String(required=False, allow_none=True, metadata={"title": _lt("City/Town Name"), "description": _lt("City/Town name"), "example": "Beyoğlu"})
+    address = fields.String(required=False, allow_none=True, metadata={"title": _lt("Broker Address"), "description": _lt("Broker address"), "example": "Example Street, No: 1"})
+    zip = fields.String(required=False, allow_none=True, metadata={"title": _lt("ZIP Code"), "description": _lt("ZIP Code"), "example": "34100"})
+    banks = fields.List(NestedModel("escrow.request.brokers.update.brokers.banks"), required=False, allow_none=False, metadata={"title": _lt("List of Bank Accounts"), "description": _lt("List of bank accounts of broker")})
+
+
+class EscrowRequestBrokersUpdate(Datamodel):
+    _name = "escrow.request.brokers.update"
+
+    class Meta:
+        ordered = True
+
+    brokers = fields.List(NestedModel("escrow.request.brokers.update.brokers"), required=True, allow_none=False, metadata={"title": _lt("Array of Brokers"), "description": _lt("Array of brokers")})
+
+
+class EscrowResponseBrokersUpdate(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.brokers.update"
+
+    class Meta:
+        ordered = True
+
+    brokers = fields.List(NestedModel("escrow.response.brokers.create.brokers"), required=True, allow_none=False, metadata={"title": _lt("Brokers"), "description": _lt("Array of brokers")})
+
+
+class EscrowRequestBrokersDelete(Datamodel):
+    _name = "escrow.request.brokers.delete"
+
+    class Meta:
+        ordered = True
+
+    brokers = fields.List(fields.UUID, required=True, allow_none=False, metadata={"title": _lt("Brokers"), "description": _lt("Array of brokers"), "example": ["9ee3fd53-42f9-4f16-b454-77e6b714c2e9"]})
+
+
+class EscrowResponseBrokersDelete(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.brokers.delete"
+
+    class Meta:
+        ordered = True
+
+    brokers = fields.List(NestedModel("escrow.response.brokers.create.brokers"), required=True, allow_none=False, metadata={"title": _lt("Brokers"), "description": _lt("Array of brokers")})
 
 
 class EscrowResponsePaymentTransaction(Datamodel):
@@ -405,4 +591,127 @@ class EscrowRequestInsuranceCallback(Datamodel):
 class EscrowResponseInsuranceCallback(Datamodel):
     _inherit = "escrow.response"
     _name = "escrow.response.insurance.callback"
+
+
+class EscrowRequestBrokerPaymentLink(Datamodel):
+    _name = "escrow.request.broker.payment.link"
+
+    class Meta:
+        ordered = True
+
+    broker_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Broker ID"), "description": _lt("Broker partner ID"), "example": 123})
+
+
+class EscrowResponseBrokerPaymentLink(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.broker.payment.link"
+
+    class Meta:
+        ordered = True
+
+    url = fields.String(required=True, allow_none=False, metadata={"title": _lt("Payment Link"), "description": _lt("Broker payment link with token"), "example": "https://example.com/my/ads/broker?token=MTIzOjE3MzY3MzgwMDA="})
+    expires_at = fields.DateTime(required=True, allow_none=False, metadata={"title": _lt("Expiry Time"), "description": _lt("Link expiry timestamp"), "example": "2025-01-13 12:00:00"})
+
+
+class EscrowRequestBrokerRates(Datamodel):
+    _name = "escrow.request.broker.rates"
+
+    class Meta:
+        ordered = True
+
+    broker_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Broker ID"), "description": _lt("Broker partner ID"), "example": 123})
+    campaign_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Campaign ID"), "description": _lt("Campaign ID to calculate rates"), "example": 1})
+    amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Transaction amount"), "example": 10000.0})
+
+
+
+class EscrowResponseBrokerRatesInstallment(Datamodel):
+    _name = "escrow.response.broker.rates.installment"
+
+    class Meta:
+        ordered = True
+
+    installment_count = fields.String(required=True, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Number of installments"), "example": "3"})
+    cost_rate = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Cost Rate"), "description": _lt("Bank commission rate percentage"), "example": 2.5})
+    broker_rate = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Broker Rate"), "description": _lt("Broker additional commission rate percentage"), "example": 1.5})
+    total_rate = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Total Rate"), "description": _lt("Cost rate + Broker rate"), "example": 4.0})
+    customer_rate = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Customer Rate"), "description": _lt("Rate reflected to customer"), "example": 4.17})
+    total_amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Total Amount"), "description": _lt("Amount to be collected from customer"), "example": 10417.0})
+
+
+class EscrowResponseBrokerRatesCampaignLine(Datamodel):
+    _name = "escrow.response.broker.rates.campaign.line"
+
+    class Meta:
+        ordered = True
+
+    card_family = fields.String(required=True, allow_none=False, metadata={"title": _lt("Card Family"), "description": _lt("Card family name"), "example": "Advantage"})
+    installments = fields.List(NestedModel("escrow.response.broker.rates.installment"), required=True, allow_none=False, metadata={"title": _lt("Installments"), "description": _lt("Available installment options for this card family")})
+
+
+class EscrowResponseBrokerRatesRate(Datamodel):
+    _name = "escrow.response.broker.rates.rate"
+
+    class Meta:
+        ordered = True
+
+    installment_count = fields.String(required=True, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Number of installments"), "example": "3"})
+    broker_additional_rate = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Broker Additional Rate"), "description": _lt("Broker additional commission rate percentage"), "example": 2.5})
+
+
+class EscrowResponseBrokerRatesCampaign(Datamodel):
+    _name = "escrow.response.broker.rates.campaign"
+
+    class Meta:
+        ordered = True
+
+    campaign_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Campaign ID"), "description": _lt("Campaign ID"), "example": 1})
+    campaign_name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Campaign Name"), "description": _lt("Campaign name"), "example": "Summer Campaign"})
+    is_default = fields.Boolean(required=True, allow_none=False, metadata={"title": _lt("Is Default"), "description": _lt("Whether this is the default campaign for broker"), "example": True})
+    lines = fields.List(NestedModel("escrow.response.broker.rates.campaign.line"), required=True, allow_none=False, metadata={"title": _lt("Lines"), "description": _lt("Installment lines with rates and amounts")})
+
+
+class EscrowResponseBrokerRates(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.broker.rates"
+
+    class Meta:
+        ordered = True
+
+    broker_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Broker ID"), "description": _lt("Broker partner ID"), "example": 123})
+    broker_name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Broker Name"), "description": _lt("Broker name"), "example": "ABC Broker"})
+    campaign_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Campaign ID"), "description": _lt("Campaign ID"), "example": 1})
+    campaign_name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Campaign Name"), "description": _lt("Campaign name"), "example": "Summer Campaign"})
+    amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Transaction amount"), "example": 10000.0})
+    lines = fields.List(NestedModel("escrow.response.broker.rates.campaign.line"), required=True, allow_none=False, metadata={"title": _lt("Lines"), "description": _lt("Installment lines with rates and amounts")})
+
+
+
+class EscrowRequestCampaigns(Datamodel):
+    _name = "escrow.request.campaigns"
+
+    class Meta:
+        ordered = True
+
+
+class EscrowResponseCampaignsCampaign(Datamodel):
+    _name = "escrow.response.campaigns.campaign"
+
+    class Meta:
+        ordered = True
+
+    id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Campaign ID"), "description": _lt("Campaign unique identifier"), "example": 1})
+    name = fields.String(required=True, allow_none=False, metadata={"title": _lt("Campaign Name"), "description": _lt("Campaign name"), "example": "Summer Campaign 2025"})
+    sequence = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Sequence"), "description": _lt("Display sequence"), "example": 10})
+    active = fields.Boolean(required=True, allow_none=False, metadata={"title": _lt("Active"), "description": _lt("Whether campaign is active"), "example": True})
+
+
+class EscrowResponseCampaigns(Datamodel):
+    _inherit = "escrow.response"
+    _name = "escrow.response.campaigns"
+
+    class Meta:
+        ordered = True
+
+    campaigns = fields.List(NestedModel("escrow.response.campaigns.campaign"), required=True, allow_none=False, metadata={"title": _lt("Campaigns"), "description": _lt("List of all active campaigns")})
 

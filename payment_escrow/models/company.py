@@ -13,6 +13,11 @@ class ResCompany(models.Model):
     dealer_registration_enabled = fields.Boolean('Enable Dealer Registration', default=False)
     escrow_insurance_quote_enabled = fields.Boolean('Enable Insurance Quote', default=False)
     escrow_chain_ids = fields.One2many('escrow.approval.chain', 'company_id', string='Escrow Approval Chains')
+    escrow_broker_link_validity = fields.Integer(
+        string='Broker Payment Link Validity (Minutes)',
+        default=15,
+        help='Duration in minutes for which broker payment links remain valid. Default is 15 minutes.'
+    )
 
     def _get_escrow_chain_children(self, parent_type):
         self.ensure_one()

@@ -924,6 +924,66 @@ class PayloxSystemEscrowController(Controller):
         except Exception as e:
             return {'success': False, 'message': str(e)}
 
+    @route('/my/ads/broker', type='http', auth='public', methods=['GET'], sitemap=False, csrf=False, website=True)
+    def page_broker_payment_link(self, token=None, **kwargs):
+        if not token:
+            return request.render('payment_escrow.broker_link_error', {
+                'error': _('Invalid link: No token provided')
+            })
+        
+        try:
+            import base64
+            from datetime import datetime
+            import logging
+            decoded = base64.b64decode(token).decode()
+            
+            broker_id, expires_timestamp = decoded.split(':')
+            broker_id = int(broker_id)
+            expires_timestamp = int(expires_timestamp)
+            
+            if datetime.now().timestamp() > expires_timestamp:
+                return request.render('payment_escrow.broker_link_error', {
+                    'error': _('This payment link has expired')
+                })
+            
+            broker = request.env['res.partner'].sudo().search([
+                ('id', '=', broker_id),
+                ('paylox_escrow_type', '=', 'broker'),
+            ], limit=1)
+            
+            if not broker:
+                return request.render('payment_escrow.broker_link_error', {
+                    'error': _('Broker not found')
+                })
+            
+            if not broker.user_ids:
+                import secrets
+                import string
+                alphabet = string.ascii_letters + string.digits
+                password = ''.join(secrets.choice(alphabet) for i in range(16))
+                
+                user_vals = {
+                    'name': broker.name,
+                    'login': f'broker_{broker.id}@system.local',
+                    'partner_id': broker.id,
+                    'groups_id': [(6, 0, [request.env.ref('base.group_portal').id])],
+                }
+                broker_user = request.env['res.users'].sudo().with_context(no_reset_password=True).create(user_vals)
+                broker_user.sudo().write({'password': password})
+            else:
+                broker_user = broker.user_ids[0]
+            
+            request.session.uid = broker_user.id
+            request.session.login = broker_user.login
+            request.session.session_token = broker_user._compute_session_token(request.session.sid)
+            
+            return request.redirect('/my/ads')
+            
+        except Exception as e:
+            return request.render('payment_escrow.broker_link_error', {
+                'error': _('Invalid or malformed token: %s') % str(e)
+            })
+
     @route('/my/ads', type='http', auth='user', methods=['GET', 'POST'], sitemap=False, csrf=False, website=True)
     def page_my_ads(self, **kwargs):
         user = request.env.user

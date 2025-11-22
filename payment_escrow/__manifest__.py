@@ -46,6 +46,7 @@
         'views/insurance_quote.xml',
         'views/insurance_quote_views.xml',
         'views/broker_rate.xml',
+        'views/broker_link_error.xml',
         'views/settings.xml',
         'wizards/sync.xml',
         'wizards/registration_rejection.xml',

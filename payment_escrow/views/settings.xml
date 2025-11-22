@@ -103,6 +103,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="escrow_broker_link_validity" string="Broker Login Validity"/>
+                            <div class="text-muted">
+                                Set the validity duration for broker login tokens in minutes
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="escrow_broker_link_validity" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 o_setting_box">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">

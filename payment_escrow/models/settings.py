@@ -13,3 +13,9 @@ class PaymentSettings(models.TransientModel):
     dealer_registration_enabled = fields.Boolean('Enable Dealer Registration', related='company_id.dealer_registration_enabled', readonly=False)
     escrow_insurance_quote_enabled = fields.Boolean('Enable Insurance Quote', related='company_id.escrow_insurance_quote_enabled', readonly=False)
     escrow_chain_ids = fields.One2many(related='company_id.escrow_chain_ids', readonly=False)
+    escrow_broker_link_validity = fields.Integer(
+        string='Broker Payment Link Validity (Minutes)',
+        related='company_id.escrow_broker_link_validity',
+        readonly=False,
+        help='Duration in minutes for which broker payment links remain valid. Default is 15 minutes.'
+    )

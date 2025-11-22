@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="broker_link_error" name="Broker Payment Link Error">
+        <t t-call="portal.frontend_layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center py-5">
+                                <i class="fa fa-exclamation-triangle text-warning" style="font-size: 4rem;"></i>
+                                <h2 class="mt-4">Payment Link Error</h2>
+                                <p class="text-muted mt-3">
+                                    <t t-esc="error"/>
+                                </p>
+                                <a href="/" class="btn btn-primary mt-4">
+                                    <i class="fa fa-home"></i> Return to Home
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
