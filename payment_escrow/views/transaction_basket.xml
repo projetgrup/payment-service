@@ -19,7 +19,7 @@
                 <field name="currency_id" invisible="1"/>
                 <field name="transaction_id" string="Transaction"/>
                 <field name="ad_number" string="Ad Number"/>
-                <field name="vehicle_info" string="Vehicle"/>
+                <field name="ad_info" string="Advertisement"/>
                 <field name="acquirer_id" string="Payment Provider"/>
                 <field name="vpos_name" string="Virtual POS"/>
                 <field name="transaction_date" string="Transaction Date"/>
@@ -70,8 +70,8 @@
                     <group>
                         <group string="Ad Information">
                             <field name="ad_number"/>
-                            <field name="product_id" readonly="1"/>
-                            <field name="vehicle_info"/>
+                            <field name="ad_id" readonly="1"/>
+                            <field name="ad_info"/>
                             <field name="ad_state"/>
                         </group>
                         <group string="Transaction Information">
@@ -131,7 +131,7 @@
         <field name="arch" type="xml">
             <search string="Search Transaction Baskets">
                 <field name="ad_number" string="Ad Number"/>
-                <field name="vehicle_info" string="Vehicle"/>
+                <field name="ad_info" string="Vehicle"/>
                 <field name="paylox_escrow_type" string="Category"/>
                 <field name="acquirer_id" string="Payment Provider"/>
                 <field name="transaction_id" string="Transaction"/>
@@ -169,8 +169,8 @@
                         domain="[('broker_submitted_for_approval', '=', True)]"/>
                 
                 <group expand="0" string="Group By">
-                    <filter string="Vehicle Info" name="group_vehicle_info" 
-                            context="{'group_by': 'vehicle_info'}"/>
+                    <filter string="Vehicle Info" name="group_ad_info" 
+                            context="{'group_by': 'ad_info'}"/>
                     <filter string="Transfer Status" name="group_transfer_status" 
                             context="{'group_by': 'transfer_status'}"/>
                     <filter string="Transaction" name="group_transaction" 
@@ -198,9 +198,8 @@
         <field name="domain">[('transaction_id.state', '=', 'done')]</field>
         <field name="context">{
             'search_default_can_approve_transfer': 1,
-            'search_default_group_vehicle_info': 1,
+            'search_default_group_ad_info': 1,
             'search_default_group_transfer_status': 1,
-            'skip_escrow_visibility_domain': True
         }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -215,7 +214,7 @@
     <menuitem 
         id="menu_payment_transaction_basket"
         name="Transfer Basket"
-        parent="payment_escrow.menu_main"
+        parent="menu_main"
         action="action_payment_transaction_basket"
         sequence="25"/>
 </odoo>

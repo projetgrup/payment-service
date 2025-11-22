@@ -246,4 +246,125 @@
             </div>
         </div>
     </t>
+
+    <!-- Dinamik Form Field Template -->
+    <t t-name="escrow.form.field">
+        <div class="form__group">
+            <label t-if="field_type !== 'boolean'" class="form__label" t-attf-for="{{field_id}}">
+                <t t-esc="field_label"/>
+                <span t-if="field_required" class="text-danger">*</span>
+            </label>
+            
+            <small t-if="field_help" class="form-text text-muted" t-esc="field_help"/>
+            
+            <!-- Text Input -->
+            <input t-if="field_type === 'char'" 
+                   type="text" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   t-att-required="field_required"/>
+            
+            <!-- Textarea -->
+            <textarea t-if="field_type === 'text'" 
+                      class="form__control" 
+                      t-attf-id="{{field_id}}"
+                      t-attf-name="{{field_name}}"
+                      rows="3"
+                      t-att-required="field_required"/>
+            
+            <!-- Number Input -->
+            <input t-if="field_type === 'integer'" 
+                   type="number" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   step="1"
+                   t-att-required="field_required"/>
+            
+            <!-- Decimal Input -->
+            <input t-if="field_type === 'float'" 
+                   type="number" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   step="0.01"
+                   t-att-required="field_required"/>
+            
+            <!-- Checkbox -->
+            <div t-if="field_type === 'boolean'" class="form-check">
+                <input type="checkbox" 
+                       class="form-check-input" 
+                       t-attf-id="{{field_id}}"
+                       t-attf-name="{{field_name}}"/>
+                <label class="form-check-label" t-attf-for="{{field_id}}">
+                    <t t-esc="field_label"/>
+                </label>
+            </div>
+            
+            <!-- Date Input -->
+            <input t-if="field_type === 'date'" 
+                   type="date" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   t-att-required="field_required"/>
+            
+            <!-- DateTime Input -->
+            <input t-if="field_type === 'datetime'" 
+                   type="datetime-local" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   t-att-required="field_required"/>
+            
+            <!-- Selection Input -->
+            <select t-if="field_type === 'selection'" 
+                    class="form__control" 
+                    t-attf-id="{{field_id}}"
+                    t-attf-name="{{field_name}}"
+                    t-att-required="field_required">
+                <option value="">-- Seçiniz --</option>
+                <t t-foreach="field_options || []" t-as="option">
+                    <option t-att-value="option.value" t-esc="option.name"/>
+                </t>
+            </select>
+            
+            <!-- Many2one Input (same as selection) -->
+            <select t-if="field_type === 'many2one'" 
+                    class="form__control" 
+                    t-attf-id="{{field_id}}"
+                    t-attf-name="{{field_name}}"
+                    t-att-required="field_required">
+                <option value="">-- Seçiniz --</option>
+                <t t-foreach="field_options || []" t-as="option">
+                    <option t-att-value="option.value" t-esc="option.name"/>
+                </t>
+            </select>
+            
+            <!-- Binary/File Input -->
+            <input t-if="field_type === 'binary'" 
+                   type="file" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   accept="image/*"
+                   t-att-required="field_required"/>
+        </div>
+    </t>
+
+    <!-- Dinamik Attribute Fields Container -->
+    <t t-name="escrow.dynamic.attributes">
+        <t t-foreach="attributes" t-as="attr">
+            <t t-call="escrow.form.field">
+                <t t-set="field_id" t-value="'attr_' + attr.technical_name"/>
+                <t t-set="field_name" t-value="attr.technical_name"/>
+                <t t-set="field_label" t-value="attr.name"/>
+                <t t-set="field_type" t-value="attr.attribute_type"/>
+                <t t-set="field_required" t-value="attr.required"/>
+                <t t-set="field_help" t-value="attr.help_text"/>
+                <t t-set="field_options" t-value="attr.options"/>
+            </t>
+        </t>
+    </t>
 </templates>

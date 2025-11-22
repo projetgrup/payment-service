@@ -12,6 +12,8 @@
             <field name="priority"/>
             <field name="default_code"/>
             <field name="lst_price"/>
+            <field name="price"/>
+            <field name="product_template_attribute_value_ids"/>
             <templates>
                 <t t-name="kanban-box">
                     <div class="oe_kanban_card oe_kanban_global_click">

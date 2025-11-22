@@ -796,20 +796,12 @@ msgstr ""
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.insurance_quote_modal
 msgid ""
-"<i class=\"fa fa-shield-alt mr-2\"/>\n"
+"<i class=\"fa fa-shield mr-2\"/>\n"
 "                            Request Insurance Quote"
 msgstr ""
-"<i class=\"fa fa-shield-alt mr-2\"/>\n"
+"<i class=\"fa fa-shield mr-2\"/>\n"
 "                            Sigorta Teklifi İste"
-
-#. module: payment_escrow
-#: model_terms:ir.ui.view,arch_db:payment_escrow.page_ads
-msgid ""
-"<i class=\"fa fa-shield-alt mr8\"/>\n"
-"                                        Request Insurance Quote"
-msgstr ""
-"<i class=\"fa fa-shield-alt mr8\"/>\n"
-"                                        Sigorta Teklifi İste"
+                                Sigorta Teklifi İste"
 
 #. module: payment_escrow
 #: model_terms:ir.ui.view,arch_db:payment_escrow.page_broker_rates
@@ -5343,7 +5335,7 @@ msgid "Vehicle Brands"
 msgstr "Araç Markaları"
 
 #. module: payment_escrow
-#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__vehicle_info model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
+#: model:ir.model.fields,field_description:payment_escrow.field_payment_transaction_basket__ad_info model_terms:ir.ui.view,arch_db:payment_escrow.view_payment_transaction_basket_search
 msgid "Vehicle Info"
 msgstr "Araç Bilgi"
 

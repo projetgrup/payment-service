@@ -41,6 +41,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 filteredAds: []
             }
         };
+        this.filterState = {
+            search: '',
+            category: 'all',
+            state: 'all',
+            priceMin: null,
+            priceMax: null
+        };
         this.transaction = []
         this.currency = {
             id: 0,
@@ -891,9 +898,13 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 all: new fields.element({ events: [['click', this._onStateFilterClick]] }),
                 new: new fields.element({ events: [['click', this._onStateFilterClick]] }),
                 waiting: new fields.element({ events: [['click', this._onStateFilterClick]] }),
-                waiting_sale: new fields.element({ events: [['click', this._onStateFilterClick]] }),
-                waiting_transfer_approval: new fields.element({ events: [['click', this._onStateFilterClick]] }),
-                transferred: new fields.element({ events: [['click', this._onStateFilterClick]] })
+                draft: new fields.element({ events: [['click', this._onStateFilterClick]] }),
+                waiting_payment: new fields.element({ events: [['click', this._onStateFilterClick]] }),
+                waiting_official_doc: new fields.element({ events: [['click', this._onStateFilterClick]] }),
+                waiting_transfer: new fields.element({ events: [['click', this._onStateFilterClick]] }),
+                transferred: new fields.element({ events: [['click', this._onStateFilterClick]] }),
+                sold: new fields.element({ events: [['click', this._onStateFilterClick]] }),
+                cancelled: new fields.element({ events: [['click', this._onStateFilterClick]] })
             },
             sort: new fields.selection({ 
                 default: 'date_desc',
@@ -931,9 +942,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 create: new fields.element({
                     events: [['click', this._onClickButtonCreate]],
                 }),
-                license_serial_no_helper: new fields.element({
-                    events: [['click', this._onClickButtonLicenseSerialNoHelper]],
-                }),
             },
 
             input: {
@@ -969,121 +977,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this._onFieldValid(field, valid, message);
                         return valid;
                     }
-                }),
-                brand: new fields.selection({
-                    validate: () => {
-                        const field = this.ad.input.brand;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Brand is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                year: new fields.string({
-                    validate: () => {
-                        const field = this.ad.input.year;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Year is required');
-                            valid = false;
-                        } else {
-                            let date = new Date();
-                            let year = date.getFullYear();
-                            if (field.value > year) {
-                                message = _.str.sprintf(_t('Year cannot be later than %s.'), year);
-                                valid = false;
-                            }
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                license_serial_no: new fields.string({
-                    mask: /^[A-Z0-9]{0,6}$/,
-                    prepareChar: str => str.toUpperCase(),
-                    validate: () => {
-                        const field = this.ad.input.license_serial_no;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('License Serial No is required');
-                            valid = false;
-                        } else if (field.value.length > 10) {
-                            message = _t('License Serial No must be at most 10 characters');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                vin: new fields.string({
-                    mask: /^[A-Z0-9]{0,17}$/,
-                    prepareChar: str => str.toUpperCase(),
-                    events: [
-                        ['input', function() {
-                            const field = this.ad.input.vin;
-                            if (field.value && field.value.length === 17) {
-                                this._onVinComplete(field.value);
-                            }
-                        }]
-                    ],
-                    validate: () => {
-                        const field = this.ad.input.vin;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('VIN is required');
-                            valid = false;
-                        } else if (field.value.length !== 17) {
-                            message = _t('VIN must be exactly 17 characters');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                plate: new fields.string({
-                    validate: () => {
-                        const field = this.ad.input.plate;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Plate is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    }
-                }),
-                fileLicence: new fields.file({
-                    name: 'fileLicence',
-                    allowMultiple: false,
-                    accept: 'image/*',
-                    maxFileSize: '15MB',
-                    className: 'escrow-wizard-file',
-                    labelIdle: `<svg class="w-100" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
-                            <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
-                            <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
-                        </svg>
-                        <span class="text-600">Select Image or Take New</span>
-                        <div class="text-600">No Image Selected</div>`,
-                    validate: () => {
-                        const field = this.ad.input.fileLicence;
-                        let message = null;
-                        let valid = true;
-                        if (!field.value) {
-                            message = _t('Licence image is required');
-                            valid = false;
-                        }
-                        this._onFieldValid(field, valid, message);
-                        return valid;
-                    },
                 }),
             },
             view: {
@@ -1305,6 +1198,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 window.history.replaceState(null, '', window.location.pathname);
             }
         }
+        
+        if (this.state.filterState) {
+            this.filterState.state = this.state.filterState;
+        }
+
         this._onChangeStep(this.state.step, { init: true });
     },
 
@@ -1321,6 +1219,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._startState();
             this._initializePagination();
             this._startToggles();
+            this._bindFilterEvents();
             this._initInsuranceModal();
 
             $('.escrow-ad-wrapper').removeClass('d-none');
@@ -1333,10 +1232,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         ev.stopPropagation();
         const $tooltip = this.$('.license-serial-tooltip');
         $tooltip.toggle();
-    },
-
-    _initializePagination: function() {
-        this._filterAdsByState('all');
     },
 
     _initInsuranceModal: function() {
@@ -1543,21 +1438,321 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
         this._clearInsuranceBrand();
     },
-    
-    _onFieldValid: function(field, valid, message='') {
-        const $group = field.$.closest('.form__group');
-        $group.find('.form__error-label, .just-validate-error-label').remove();
-        field.$.removeClass('is-valid is-invalid -error just-validate-error-field');
 
-        if (field._skipNextValidation) {
-            field._skipNextValidation = false;
-            return;
+    _initBroker: function () {
+        const $container = this.$('.broker-rates-container');
+        if (!$container.length) return;
+
+        const dataset = $container[0].dataset || {};
+        this.currency.decimal = parseInt(dataset.currencyDecimals || this.currency.decimal, 10);
+        this.currency.symbol = dataset.currencySymbol || this.currency.symbol;
+        this.currency.position = dataset.currencyPosition || this.currency.position;
+
+        this.broker.container.$ = $container;
+        this.broker.wrapper.$ = $container.find('[data-role="table-wrapper"]');
+        this.broker.tabs.$ = $container.find('[data-role="type-tabs"]');
+        this.broker.tables.$ = $container.find('[data-role="tables"]');
+        this.broker.loading.$ = $container.find('[data-role="loading"]');
+        this.broker.empty.$ = $container.find('[data-role="empty"]');
+        this.broker.error.$ = $container.find('[data-role="error"]');
+        this.broker.summary.$ = $container.find('[data-role="summary"]');
+        this.broker.amount.$ = $container.find('[data-role="amount"]');
+        this.broker.campaign.$ = $container.find('[data-role="campaign"]');
+        this.broker.viewMode.$ = $container.find('[data-role="view-mode"]');
+        this.broker.button.refresh.$ = $container.find('[data-role="refresh"]');
+
+        if (dataset.defaultCampaign) {
+            this.broker.campaign.$.val(dataset.defaultCampaign);
         }
 
-        if (valid) {
-            field.$.addClass('is-valid');
+        const hasCampaign = this.broker.campaign.$.find('option[value!=""]').length > 0;
+        if (hasCampaign && this.broker.campaign.$.val()) {
+            this._fetchBrokerRates();
         } else {
-            field.$.addClass('is-invalid -error just-validate-error-field');
+            this._showBrokerError(_t('No active campaign is linked to your account yet.'));
+        }
+    },
+
+    _initializePagination: function() {
+        this._applyFilters();
+    },
+    
+    _onCategoryChange: function() {
+        const categoryId = this.ad.input.category.value;
+        if (!categoryId) {
+            this._clearDynamicAttributes();
+            return Promise.resolve();
+        }
+        
+        const self = this;
+        const params = { 
+            category_id: categoryId,
+            ad_id: this.state.id || null
+        };
+        
+        return this._rpc({
+            route: '/my/ad/category/attributes',
+            params: params,
+        }).then(function (result) {
+            if (result && result.success) {
+                self._renderDynamicAttributes(result.attributes);
+                
+                if (result.attribute_values && self.state.id) {
+                    setTimeout(() => {
+                        Object.keys(result.attribute_values).forEach(key => {
+                            const attrMeta = self.ad.dynamicAttributes && self.ad.dynamicAttributes[key];
+                            if (attrMeta) {
+                                const value = result.attribute_values[key];
+                                const $input = attrMeta.$element;
+                                
+                                if (attrMeta.type === 'binary' && attrMeta.filePond && value) {
+                                    if (value.startsWith('data:image') || value.startsWith('http')) {
+                                        console.log(value)
+                                        attrMeta.filePond.addFile(value).catch(err => {
+                                            console.error('Could not load image to FilePond:', err);
+                                        });
+                                    }
+                                } else if (attrMeta.type === 'boolean') {
+                                    $input.find('input[type="checkbox"]').prop('checked', value === true);
+                                } else if (attrMeta.type !== 'binary' && $input && $input.length && value !== null && value !== undefined) {
+                                    $input.val(value);
+                                }
+                            }
+                        });
+                    }, 50);
+                }
+            } else {
+                self._clearDynamicAttributes();
+            }
+        }).catch(function(error) {
+            console.error('Error loading category attributes:', error);
+            self._clearDynamicAttributes();
+        });
+    },
+    
+    _clearDynamicAttributes: function() {
+        const $container = $('#dynamicAttributesContainer');
+        const $panel = $('#dynamicAttributesPanel');
+        
+        if ($container.length) {
+            $container.empty();
+        }
+        if ($panel.length) {
+            $panel.hide();
+        }
+        if (this.ad && this.ad.dynamicAttributes) {
+            this.ad.dynamicAttributes = {};
+        }
+    },
+    
+    _renderDynamicAttributes: function(attributes) {
+        const $container = $('#dynamicAttributesContainer');
+        const $panel = $('#dynamicAttributesPanel');
+        
+        if (!$container.length) {
+            return;
+        }
+        
+        $container.empty();
+        
+        if (!attributes || attributes.length === 0) {
+            $panel.hide();
+            return;
+        }
+        
+        $panel.show();
+        this.ad.dynamicAttributes = {};
+        
+        const html = qweb.render('escrow.dynamic.attributes', {
+            attributes: attributes
+        });
+        
+        $container.html(html);
+        
+        attributes.forEach(attr => {
+            const $element = $container.find(`#attr_${attr.technical_name}`);
+            this.ad.dynamicAttributes[attr.technical_name] = {
+                id: attr.id,
+                type: attr.attribute_type,
+                required: attr.required,
+                $element: $element
+            };
+            
+            if (attr.mask && $element.length && attr.attribute_type !== 'binary' && attr.attribute_type !== 'boolean') {
+                try {
+                    let maskOption = attr.mask;
+                    let maskConfig = {};
+
+                    if (maskOption.startsWith('/') && maskOption.endsWith('/')) {
+                        maskConfig = {
+                            mask: new RegExp(maskOption.slice(1, -1)),
+                            prepare: (str) => str.toUpperCase()
+                        };
+                    } else if (maskOption.startsWith('[') || maskOption.startsWith('{')) {
+                        try {
+                            const parsedConf = JSON.parse(maskOption);
+                            maskConfig = parsedConf;
+                            if (Array.isArray(maskConfig)) {
+                                maskConfig.forEach(m => {
+                                    if (!m.prepare) m.prepare = (str) => str.toUpperCase();
+                                });
+                                maskConfig = { mask: maskConfig };
+                            } else {
+                                if (!maskConfig.prepare) maskConfig.prepare = (str) => str.toUpperCase();
+                            }
+                        } catch (jsonErr) {
+                            console.error('Invalid JSON mask:', jsonErr);
+                            maskConfig = { mask: maskOption, prepare: (str) => str.toUpperCase() };
+                        }
+                    } else {
+                        maskConfig = {
+                            mask: maskOption,
+                            prepare: (str) => str.toUpperCase(),
+                            definitions: {
+                                'a': /[A-Za-z]/,
+                                '*': /[A-Za-z0-9]/
+                            }
+                        };
+                    }
+                    
+                    IMask($element[0], maskConfig);
+                } catch (e) {
+                    console.error('Error applying mask:', e);
+                }
+            }
+            
+            if (attr.attribute_type === 'binary') {
+                const inputElement = $element[0];
+                if (inputElement) {
+                    const pond = FilePond.create(inputElement, {
+                        allowMultiple: false,
+                        acceptedFileTypes: ['image/*'],
+                        maxFileSize: '10MB',
+                        labelIdle: `<svg class="w-100" width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M31.4998 33.2514C30.5318 33.2514 29.7484 32.468 29.7484 31.5C29.7484 30.532 30.5318 29.7486 31.4998 29.7486C35.3594 29.7486 38.5012 26.6068 38.5012 22.7473C38.5012 19.0723 35.626 16.0084 31.9592 15.7705L30.9256 15.709L30.4867 14.7779C28.7559 11.1152 25.0316 8.74863 20.9998 8.74863C16.968 8.74863 13.2438 11.1152 11.5129 14.7779L11.074 15.709L10.0445 15.7746C6.37363 16.0125 3.50254 19.0764 3.50254 22.7514C3.50254 26.6109 6.64434 29.7527 10.5039 29.7527C11.4719 29.7527 12.2553 30.5361 12.2553 31.5041C12.2553 32.4721 11.4719 33.2555 10.5039 33.2555C4.7125 33.2555 0.00390625 28.5469 0.00390625 22.7555C0.00390625 17.5834 3.79785 13.2193 8.80996 12.4031C11.2709 8.02676 15.9508 5.25 20.9998 5.25C26.0488 5.25 30.7287 8.02676 33.1938 12.3949C38.2059 13.2111 41.9998 17.5793 41.9998 22.7514C41.9998 28.5387 37.2912 33.2514 31.4998 33.2514Z" fill="black"/>
+                            <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
+                            <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
+                        </svg>
+                        <span class="text-600">Resim Seçin veya Yeni Çekin</span>
+                        <div class="text-600">Resim Seçilmedi</div>`,
+                    });
+                    
+                    this.ad.dynamicAttributes[attr.technical_name].filePond = pond;
+                    
+                    pond.on('addfile', () => {
+                        const $formGroup = $element.closest('.form__group');
+                        $formGroup.find('.form__error-label, .just-validate-error-label').remove();
+                        $element.removeClass('is-invalid -error just-validate-error-field');
+                    });
+                }
+            }
+            
+            $element.on('input change', function() {
+                const $formGroup = $element.closest('.form__group');
+                $formGroup.find('.form__error-label, .just-validate-error-label').remove();
+                $element.removeClass('is-invalid -error just-validate-error-field');
+            });
+            
+            if (attr.technical_name === 'brand' && attr.attribute_type === 'many2one') {
+                $element.on('change', () => {
+                    const brandId = $element.val();
+                    const $modelSelect = $container.find('#attr_model');
+                    
+                    if (!brandId || !$modelSelect.length) return;
+                    
+                    this._rpc({
+                        route: '/my/ad/brand/models',
+                        params: { brand_id: parseInt(brandId, 10) },
+                    }).then((result) => {
+                        if (result && result.success) {
+                            $modelSelect.empty();
+                            $modelSelect.append('<option value="">-- Seçiniz --</option>');
+                            result.models.forEach(model => {
+                                $modelSelect.append(`<option value="${model.id}">${model.name}</option>`);
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    },
+    
+    _getDynamicAttributeValues: async function() {
+        if (!this.ad.dynamicAttributes) {
+            return [];
+        }
+        
+        const attributeValues = [];
+        
+        for (const [technicalName, attrMeta] of Object.entries(this.ad.dynamicAttributes)) {
+            const $el = attrMeta.$element;
+            let value;
+            
+            if (attrMeta.type === 'boolean') {
+                value = $el.find('input[type="checkbox"]').is(':checked');
+            } else if (attrMeta.type === 'binary') {
+                const filePondInstance = attrMeta.filePond;
+                if (filePondInstance) {
+                    const files = filePondInstance.getFiles();
+                    if (files && files.length > 0) {
+                        try {
+                            const fileItem = files[0];
+                            const file = fileItem.file;
+                            
+                            value = await new Promise((resolve, reject) => {
+                                const reader = new FileReader();
+                                reader.onload = (e) => {
+                                    const base64String = e.target.result;
+                                    const base64Data = base64String.split(',')[1];
+                                    resolve(base64Data);
+                                };
+                                reader.onerror = reject;
+                                reader.readAsDataURL(file);
+                            });
+                        } catch (err) {
+                            console.error('Error reading file:', err);
+                            value = null;
+                        }
+                    } else {
+                        value = null;
+                    }
+                } else {
+                    value = $el.val() || $el.data('file-uploaded');
+                }
+            } else if (attrMeta.type === 'many2one') {
+                const selectedValue = $el.val();
+                value = selectedValue ? parseInt(selectedValue, 10) : null;
+            } else if (attrMeta.type === 'integer') {
+                const intValue = $el.val();
+                value = intValue ? parseInt(intValue, 10) : null;
+            } else if (attrMeta.type === 'float') {
+                const floatValue = $el.val();
+                value = floatValue ? parseFloat(floatValue) : null;
+            } else {
+                value = $el.val();
+            }
+            
+            if (attrMeta.required && !value && value !== false) {
+                continue;
+            }
+            
+            if (value !== '' && value !== null && value !== undefined) {
+                attributeValues.push({
+                    attribute_id: attrMeta.id,
+                    value: value
+                });
+            }
+        }
+        
+        return attributeValues;
+    },
+    
+    _onFieldValid: function(field, valid, message='') {
+        field.$.closest('.form__group').find('.form__error-label, .just-validate-error-label').remove();
+        if (valid) {
+            field.$.removeClass('is-invalid -error just-validate-error-field').addClass('is-valid');
+        } else {
+            field.$.addClass('is-invalid -error just-validate-error-field').removeClass('is-valid');
             field.$.closest('.form__group').append($(`<div class="form__error-label just-validate-error-label">${message}</div>`));
         }
     },
@@ -1760,7 +1955,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _parseAds: function () {
         this.values.ads = {};
-        
+        console.log($('[field="ad.item"][data-value]'))
         $('[field="ad.item"][data-value]').each((i, e) => {
             const $this = $(e);
             const values = $this.data('value');
@@ -1823,16 +2018,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             if (view === 'list') {
                 this.ad.view.grid.$.stop(true, true).hide();
                 this.ad.view.list.$.stop(true, true).fadeIn(400, () => {
-                    if (this.state.filterState) {
-                        this._filterAdsByState(this.state.filterState);
-                    }
+                    this._applyFilters();
                 });
             } else {
                 this.ad.view.list.$.stop(true, true).hide();
                 this.ad.view.grid.$.stop(true, true).fadeIn(400, () => {
-                    if (this.state.filterState) {
-                        this._filterAdsByState(this.state.filterState);
-                    }
+                    this._applyFilters();
                 });
             }
             $edit.stop(true, true).fadeOut(400, () => {
@@ -2001,31 +2192,6 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (adData.price) {
             this.ad.input.price.value = format.float(adData.price);
         }
-        if (adData.categ) {
-            this.ad.input.category.$.val(adData.categ);
-            this.ad.input.category.$.trigger('change');
-        }
-
-        if (adData.vin) {
-            this.ad.input.vin.value = adData.vin;
-        }
-        if (adData.plate) {
-            this.ad.input.plate.value = adData.plate;
-        }
-        
-        if (adData.brand_id) {
-            this.ad.input.brand.$.val(adData.brand_id);
-            this.ad.input.brand.$.trigger('change');
-        }
-        if (adData.year) {
-            this.ad.input.year.value = adData.year;
-        }
-        if (adData.license_serial_no) {
-            this.ad.input.license_serial_no.value = adData.license_serial_no;
-        }
-        if (adData.img) {
-            this.ad.input.fileLicence.value = adData.img;
-        }
     },
 
     _formatAddress: function(partner) {
@@ -2046,19 +2212,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         return isNaN(parsed) ? 0 : parsed;
     },
 
-    _saveAdData: function() {
-        let params;
-        params = {
+    _saveAdData: async function() {
+        const attributes = await this._getDynamicAttributeValues();
+        
+        let params = {
             id: this.state.id,
-            categ_id: parseInt(this.ad.input.category.$.val(), 10) || null,
+            category_id: parseInt(this.ad.input.category.$.val(), 10) || null,
             price: this._parsePrice(this.ad.input.price.value),
-            escrow_car_vin: this.ad.input.vin.$.val(),
-            escrow_car_plate: this.ad.input.plate.$.val(),
-            escrow_car_brand_id: parseInt(this.ad.input.brand.$.val(), 10) || null,
-            escrow_car_model_year: parseInt(this.ad.input.year.$.val(), 10) || null,
-            escrow_ad_sale_img: this.ad.input.fileLicence.value || null,
-            escrow_owner_id: this.state.owner || null,
-            escrow_license_serial_no: this.ad.input.license_serial_no.value || null,
+            owner_id: this.state.owner || null,
+            attributes: attributes,
         };
 
         return rpc.query({ route: '/my/ad/save', params }).then((result) => {
@@ -2127,34 +2289,66 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.state.customer = this.values.ads[id]?.customer_id || 0;
 
         const value = this.values.ads[id];
+        console.log('Ad clicked:', value);
         const $item = $('.escrow-ad-sidebar-items');
         if ($item.length) {
             $item.find('.escrow-ad-item-name').text(value.name);
-            $item.find('.escrow-ad-item-categ').text(value.categ);
+            $item.find('.escrow-ad-item-categ').text(value.category_name || value.categ);
             $item.find('.seller-name').text(value.partner || 'Not specified');
             $item.find('.seller-tc').text(value.vat || 'Not specified');
             $item.find('.seller-iban').text(value.iban || 'Not specified');
-            $item.find('.escrow-ad-item-year').text(value.year || 'Not specified');
-            $item.find('.escrow-ad-item-plate').text(value.plate || 'Not specified');
-            $item.find('.escrow-ad-item-vin').text(value.vin || 'Not specified');
-
-            let stateClass, stateLabel;
-            if (value.state === 'new') {
-                stateClass = 'success';
-                stateLabel = _t('New');
-            } else if (value.state === 'waiting_official_sale_img' || value.state === 'waiting_transfer_approval' || value.state === 'transferred') {
-                stateClass = 'danger';
-                stateLabel = _t('Sold');
-            } else {
-                stateClass = 'info';
-                stateLabel = _t('Waiting Approval');
+            
+            const $attrContainer = $item.find('.escrow-ad-attributes-container');
+            $attrContainer.empty();
+            if (value.attributes && value.attributes.length > 0) {
+                value.attributes.forEach(attr => {
+                    $attrContainer.append(`
+                        <div class="info-item">
+                            <span class="info-label">${attr.name}:</span>
+                            <span class="info-value">${attr.value}</span>
+                        </div>
+                    `);
+                });
             }
 
-            $item.find('.escrow-ad-item-state').html(`<span class="${stateClass}">${stateLabel}</span>`);
+            let stateClass = 'secondary', stateLabel = '';
+            const state = value.raw_state;
+            const saleState = value.sale_state;
+
+            if (state === 'draft') {
+                stateClass = 'secondary';
+                stateLabel = _t('Draft');
+            } else if (state === 'waiting') {
+                stateClass = 'warning';
+                stateLabel = _t('Waiting Approval');
+            } else if (state === 'new' && !saleState) {
+                stateClass = 'success';
+                stateLabel = _t('Published');
+            } else if (state === 'sold') {
+                stateClass = 'dark';
+                stateLabel = _t('Sold');
+            } else if (state === 'cancelled') {
+                stateClass = 'danger';
+                stateLabel = _t('Cancelled');
+            } else if (saleState === 'waiting_payment') {
+                stateClass = 'info';
+                stateLabel = _t('Waiting Payment');
+            } else if (saleState === 'waiting_official_doc') {
+                stateClass = 'info';
+                stateLabel = _t('Waiting Official Doc');
+            } else if (saleState === 'waiting_transfer') {
+                stateClass = 'primary';
+                stateLabel = _t('Waiting Transfer');
+            } else if (saleState === 'transferred') {
+                stateClass = 'success';
+                stateLabel = _t('Transferred');
+            }
+
+            $item.find('.escrow-ad-item-state').html(`<span class="badge badge-${stateClass}">${stateLabel}</span>`);
             $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
         } else {
             $item.find('.seller-name, .seller-tc, .seller-iban').text('Not specified');
-            $item.find('.vehicle-year, .vehicle-plate, .vehicle-vin').text('Not specified');
+            $item.find('.escrow-ad-attributes-container').empty();
             $item.find('.escrow-ad-item-price').text('');
             $item.find('.escrow-ad-item-state').html('');
             $item.find('.escrow-ad-item-name').text(_t('No ad found'));
@@ -2497,13 +2691,55 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (this.wizard.currentStep === 2) {
             for (const input of Object.values(this.ad.input)) {
                 let valid = await input.validate();
-                console.log('Validating input', input, valid);
                 if (!valid) {
                     return this.displayNotification({
                         title: 'Error',
-                        message: 'An error occurred while saving ad information.',
+                        message: 'Please fill in all required fields.',
                         type: 'warning',
                     });
+                }
+            }
+            
+            if (this.ad.dynamicAttributes) {
+                for (const [technicalName, attrMeta] of Object.entries(this.ad.dynamicAttributes)) {
+                    if (attrMeta.required) {
+                        const $el = attrMeta.$element;
+                        const $formGroup = $el.closest('.form__group');
+                        const fieldLabel = $formGroup.find('label').text().trim() || 'Field';
+                        let value;
+                        let valid = true;
+                        
+                        if (attrMeta.type === 'boolean') {
+                            value = $el.find('input[type="checkbox"]').is(':checked');
+                        } else if (attrMeta.type === 'binary') {
+                            const filePondInstance = attrMeta.filePond;
+                            if (filePondInstance) {
+                                const files = filePondInstance.getFiles();
+                                value = files && files.length > 0;
+                            } else {
+                                value = $el.val() || $el.data('file-uploaded');
+                            }
+                        } else {
+                            value = $el.val();
+                        }
+                        
+                        if (!value && value !== false) {
+                            valid = false;
+                        }
+                        
+                        $formGroup.find('.form__error-label, .just-validate-error-label').remove();
+                        if (!valid) {
+                            $el.addClass('is-invalid -error just-validate-error-field').removeClass('is-valid');
+                            $formGroup.append($(`<div class="form__error-label just-validate-error-label">${fieldLabel} is required</div>`));
+                            return this.displayNotification({
+                                title: 'Error',
+                                message: 'Please fill in all required fields.',
+                                type: 'warning',
+                            });
+                        } else {
+                            $el.removeClass('is-invalid -error just-validate-error-field').addClass('is-valid');
+                        }
+                    }
                 }
             }
 
@@ -2600,8 +2836,16 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _initializeProductInfoForm: function () {
         if (this.state.id > 0) {
-            this._getProductData();
-            this._prefillProductFromAd();
+            const self = this;
+            this._getProductData().then(() => {
+                const adData = self.values.ads[self.state.id];
+                if (adData && adData.categ) {
+                    self.ad.input.category.$.val(adData.categ);
+                    self._onCategoryChange().then(() => {
+                        self._prefillProductFromAd();
+                    });
+                }
+            });
         }
     },
 
@@ -2619,32 +2863,30 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _getProductData: function() {
         const self = this;
-        this._rpc({
+        return this._rpc({
             route: '/get/ad',
             params: { ad_id: self.state.id },
         }).then((product) => {
             if (product && product.success) {
                 self.values.ads[product.ad.id] = {
+                    attributes: product.ad.attributes || [],
+                    categ: product.ad.categ_id?.id || product.ad.categ_id,
+                    category_name: product.ad.categ_id?.name || '',
                     id: product.ad.id,
                     img: product.ad.image,
+                    item_id: product.ad.item_id,
+                    image: product.ad.image,
                     name: product.ad.name,
-                    categ: product.ad.categ,
+                    owner_id: product.ad.owner_id,
+                    partner: product.ad.partner,
                     price: product.ad.price,
-                    state: product.ad.state,
+                    product_id: product.ad.id,
+                    sale_state: product.ad.sale_state,
+                    raw_state: product.ad.state,
+                    iban: product.ad.iban,
+                    vat: product.ad.vat,
                     owner_id: product.ad.owner_id,
                     customer_id: product.ad.customer_id,
-                    vin: product.ad.vin,
-                    plate: product.ad.plate,
-                    brand_id: product.ad.brand_id,
-                    brand_name: product.ad.brand_name,
-                    year: product.ad.year,
-                    item_id: product.ad.item_id,
-                    amount: product.ad.amount,
-                    residual_amount: product.ad.residual_amount,
-                    paid_amount: product.ad.paid_amount,
-                    partner: product.ad.partner,
-                    vat: product.ad.vat,
-                    iban: product.ad.iban,
                 };
             }
         });
@@ -3394,20 +3636,46 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         });
     },
 
-    _onStateFilterClick: function(e) {
-        const clickedButton = $(e.currentTarget);
-        const state = clickedButton.data('state');
+    _bindFilterEvents: function() {
+        this.$('[field="ad.search"]').on('input', this._onSearchInput.bind(this));
+        this.$('[field="ad.category.filter"] button').on('click', this._onCategoryFilterClick.bind(this));
+        this.$('#price-min, #price-max').on('input', this._onPriceInput.bind(this));
+        this.$('#price-range').on('input', this._onPriceRangeInput.bind(this));
+        this.$('[field="ad.state.filter"] button').on('click', this._onStateFilterClick.bind(this));
+    },
+
+    _onSearchInput: function(e) {
+        this.filterState.search = $(e.currentTarget).val().toLowerCase();
+        this._applyFilters();
+    },
+
+    _onCategoryFilterClick: function(e) {
+        const $btn = $(e.currentTarget);
+        this.filterState.category = $btn.data('category');
+        this.$('[field="ad.category.filter"] button').removeClass('active');
+        $btn.addClass('active');
+        this._applyFilters();
+    },
+
+    _onPriceInput: function(e) {
+        const min = parseFloat(this.$('#price-min').val());
+        const max = parseFloat(this.$('#price-max').val());
+        this.filterState.priceMin = isNaN(min) ? null : min;
+        this.filterState.priceMax = isNaN(max) ? null : max;
+        this._applyFilters();
+    },
+
+    _onPriceRangeInput: function(e) {
+        const val = $(e.currentTarget).val();
+        this.$('#price-max').val(val);
+        this.filterState.priceMax = parseFloat(val);
+        this._applyFilters();
+    },
+
+    _applyFilters: function() {
+        const { search, category, state, priceMin, priceMax } = this.filterState;
         
-        this._filterAdsByState(state);
-    },
-    
-    _onSortChange: function(e) {
-        const sortValue = $(e.currentTarget).val();
-        this._sortAds(sortValue);
-    },
-    
-    _filterAdsByState: function(state) {
-        this._setState({ filterState: state });
+        this.state.pagination.filteredAds = [];
         
         const isListView = this.$('.escrow-ad-list').is(':visible');
         const isGridView = this.$('.escrow-ad-grid').is(':visible');
@@ -3421,43 +3689,95 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             adRows = this.$('.escrow-ad-list .escrow-ad-list-item');
         }
         
-        this.state.pagination.filteredAds = [];
-        
         adRows.each((i, element) => {
             const $element = $(element);
-            const adId = $element.data('id');
-            const adState = $element.data('state');
-            const adData = this.values.ads[adId];
-            const dataState = adData?.state || 'waiting';
-            const finalState = adState || dataState;
+            const id = $element.data('id');
+            const data = this.values.ads[id];
             
+            if (!data) return;
             
-            if (state === 'all' || state === finalState) {
+            let matches = true;
+            
+            if (search && !data.name.toLowerCase().includes(search)) {
+                matches = false;
+            }
+            
+            if (matches && category !== 'all') {
+                const categId = (typeof data.categ === 'object' && data.categ !== null) ? data.categ.id : data.categ;
+                if (String(categId) !== String(category)) {
+                    matches = false;
+                }
+            }
+            
+            if (matches && state !== 'all') {
+                if (state === 'cancelled') {
+                    if (data.raw_state !== 'cancelled') matches = false;
+                } else if (state === 'sold') {
+                    if (data.raw_state !== 'sold') matches = false;
+                } else {
+                    if (data.raw_state === 'cancelled' || data.raw_state === 'sold') {
+                        matches = false;
+                    } else {
+                        const currentAdState = data.state || 'waiting';
+                        if (currentAdState !== state) {
+                            matches = false;
+                        }
+                    }
+                }
+            }
+            
+            if (matches) {
+                const price = parseFloat(data.price) || 0;
+                if (priceMin !== null && price < priceMin) matches = false;
+                if (priceMax !== null && price > priceMax) matches = false;
+            }
+            
+            if (matches) {
                 this.state.pagination.filteredAds.push(element);
-            } else {
             }
         });
         
-        
-        this.state.pagination.currentPage = 1;
-        
-        const filterContainer = this.ad?.state?.filter?.$ || this.$('[field="ad.state.filter"]');
-        if (filterContainer && filterContainer.length) {
-            filterContainer.find('.filter-btn').removeClass('active btn-primary btn-success btn-warning btn-info').addClass('btn-outline-secondary');
-            
-            const activeBtn = filterContainer.find(`[data-state="${state}"]`);
-            activeBtn.removeClass('btn-outline-secondary btn-outline-success btn-outline-warning btn-outline-info').addClass('active');
-            
-            if (state === 'new') activeBtn.addClass('btn-success');
-            else if (state === 'waiting') activeBtn.addClass('btn-warning');
-            else if (state === 'waiting_official_sale_img') activeBtn.addClass('btn-info');
-            else if (state === 'waiting_transfer_approval') activeBtn.addClass('btn-info');
-            else if (state === 'transferred') activeBtn.addClass('btn-primary');
-            else activeBtn.addClass('btn-secondary');
-        }
-        
         this.state.pagination.currentPage = 1;
         this._updatePagination();
+    },
+
+    _onStateFilterClick: function(e) {
+        const clickedButton = $(e.currentTarget);
+        const state = clickedButton.data('state');
+        
+        this.filterState.state = state;
+        this._setState({ filterState: state });
+        
+        const filterContainer = this.$('[field="ad.state.filter"]');
+        if (filterContainer.length) {
+            filterContainer.find('.btn').each(function() {
+                const $btn = $(this);
+                $btn.removeClass('active btn-primary btn-success btn-warning btn-info btn-secondary text-white')
+                    .addClass('btn-light');
+                $btn.find('i').removeClass('text-white');
+            });
+            
+            clickedButton.removeClass('btn-light').addClass('active text-white');
+            clickedButton.find('i').addClass('text-white');
+            
+            if (state === 'new') clickedButton.addClass('btn-success');
+            else if (state === 'waiting') clickedButton.addClass('btn-warning');
+            else if (state === 'draft') clickedButton.addClass('btn-secondary');
+            else if (state === 'waiting_payment') clickedButton.addClass('btn-info');
+            else if (state === 'waiting_official_doc') clickedButton.addClass('btn-info');
+            else if (state === 'waiting_transfer') clickedButton.addClass('btn-primary');
+            else if (state === 'transferred') clickedButton.addClass('btn-success');
+            else if (state === 'sold') clickedButton.addClass('btn-dark');
+            else if (state === 'cancelled') clickedButton.addClass('btn-danger');
+            else clickedButton.addClass('btn-secondary');
+        }
+
+        this._applyFilters();
+    },
+    
+    _onSortChange: function(e) {
+        const sortValue = $(e.currentTarget).val();
+        this._sortAds(sortValue);
     },
     
     _sortAds: function(sortType) {
@@ -3600,6 +3920,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             // this.insurance.input.chassis_no.validate(),
             // this.insurance.input.engine_no.validate(),
             // this.insurance.input.registration_date.validate(),
+            // this.insurance.input.model.validate(),
+            // this.insurance.input.year.validate(),
         ].every(Boolean);
 
         if (!isValid) {
@@ -3677,7 +3999,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             message: toastMessage,
                         });
                     });
-                } else {
+            } else {
                     const noQuoteMessage = result.message || _t('No insurance offer was returned. Please verify vehicle information and try again.');
                     this.displayNotification({
                         type: 'warning',

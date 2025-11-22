@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_escrow_ad_tree" model="ir.ui.view">
+        <field name="name">escrow.ad.tree</field>
+        <field name="model">escrow.ad</field>
+        <field name="arch" type="xml">
+            <tree string="Advertisements" decoration-success="state=='new'" decoration-warning="state=='waiting'" decoration-muted="state in ['cancelled','sold']">
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="broker_id"/>
+                <field name="owner_id"/>
+                <field name="price" widget="monetary"/>
+                <field name="state" widget="badge" decoration-success="state=='new'" decoration-warning="state=='waiting'" decoration-muted="state in ['cancelled','sold']"/>
+                <field name="create_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_escrow_ad_form" model="ir.ui.view">
+        <field name="name">escrow.ad.form</field>
+        <field name="model">escrow.ad</field>
+        <field name="arch" type="xml">
+            <form string="Advertisement">
+                <header>
+                    <button name="action_submit_for_approval" string="Submit for Approval" type="object" states="draft" class="btn-primary"/>
+                    <button name="action_approve" string="Approve" type="object" states="waiting" class="btn-success" groups="payment_escrow.group_escrow_platform_owner"/>
+                    <button name="action_reject" string="Reject" type="object" states="waiting" class="btn-danger" groups="payment_escrow.group_escrow_platform_owner"/>
+                    <button name="action_set_sold" string="Mark as Sold" type="object" states="new" class="btn-info"/>
+                    <button name="action_cancel" string="Cancel" type="object" states="draft,waiting,new"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,waiting,new,sold"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_customers" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="customer_count" widget="statinfo" string="Customers"/>
+                        </button>
+                        <button name="action_view_images" type="object" class="oe_stat_button" icon="fa-image">
+                            <field name="image_count" widget="statinfo" string="Images"/>
+                        </button>
+                        <button name="action_view_basket_items" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('payment_item_id', '=', False)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Transfers</span>
+                                <span class="o_stat_value"><field name="transfer_count_display"/></span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Featured" bg_color="bg-warning" attrs="{'invisible': [('is_featured', '=', False)]}"/>
+                    <field name="is_featured" invisible="1"/>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Advertisement Name"/></h1>
+                        <h3><field name="reference" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id" options="{'no_create': True}"/>
+                            <field name="category_type" invisible="1"/>
+                            <field name="broker_id" options="{'no_create': True}"/>
+                            <field name="owner_id" options="{'no_create': True}"/>
+                            <field name="price"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" widget="html"/>
+                        </page>
+                        <page string="Details">
+                            <separator string="Product Attributes"/>
+                            <field name="attribute_value_ids" mode="kanban" nolabel="1">
+                                <kanban create="false" delete="false" edit="inline" class="o_kanban_mobile">
+                                    <field name="id"/>
+                                    <field name="attribute_id"/>
+                                    <field name="attribute_type"/>
+                                    <field name="display_value"/>
+                                    <field name="value_binary"/>
+                                    <field name="value_binary_filename"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_card oe_kanban_global_click" style="padding: 12px;">
+                                                <t t-if="record.attribute_type.value == 'binary' and record.value_binary.value">
+                                                    <div style="margin-bottom: 8px;">
+                                                        <strong style="display: block; margin-bottom: 8px; color: #495057;">
+                                                            <field name="attribute_id"/>
+                                                        </strong>
+                                                    </div>
+                                                    <div class="o_kanban_image" style="text-align: center;">
+                                                        <img t-att-src="kanban_image('escrow.ad.attribute.value', 'value_binary', record.id.value)" 
+                                                             alt="Image" 
+                                                             style="max-width: 100%; max-height: 250px; height: auto; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);"/>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <div style="margin-bottom: 4px;">
+                                                        <strong style="display: block; color: #6c757d; font-size: 12px; margin-bottom: 6px;">
+                                                            <field name="attribute_id"/>
+                                                        </strong>
+                                                    </div>
+                                                    <div style="font-size: 14px; color: #212529; font-weight: 500;">
+                                                        <field name="display_value"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <tree editable="bottom">
+                                    <field name="attribute_id" options="{'no_create': True}"/>
+                                    <field name="attribute_type" invisible="1"/>
+                                    <field name="value_char" attrs="{'invisible': [('attribute_type', '!=', 'char')], 'required': [('attribute_type', '=', 'char')]}"/>
+                                    <field name="value_integer" attrs="{'invisible': [('attribute_type', '!=', 'integer')], 'required': [('attribute_type', '=', 'integer')]}"/>
+                                    <field name="value_float" attrs="{'invisible': [('attribute_type', '!=', 'float')], 'required': [('attribute_type', '=', 'float')]}"/>
+                                    <field name="value_boolean" attrs="{'invisible': [('attribute_type', '!=', 'boolean')]}"/>
+                                    <field name="value_date" attrs="{'invisible': [('attribute_type', '!=', 'date')], 'required': [('attribute_type', '=', 'date')]}"/>
+                                    <field name="value_datetime" attrs="{'invisible': [('attribute_type', '!=', 'datetime')], 'required': [('attribute_type', '=', 'datetime')]}"/>
+                                    <field name="value_selection" attrs="{'invisible': [('attribute_type', '!=', 'selection')], 'required': [('attribute_type', '=', 'selection')]}"/>
+                                    <field name="value_text" attrs="{'invisible': [('attribute_type', '!=', 'text')], 'required': [('attribute_type', '=', 'text')]}"/>
+                                    <field name="value_many2one" attrs="{'invisible': [('attribute_type', '!=', 'many2one')], 'required': [('attribute_type', '=', 'many2one')]}"/>
+                                    <field name="value_binary" colspan="2" nolabel="1" widget="image" options="{'preview_image': false}" attrs="{'invisible': [('attribute_type', '!=', 'binary')]}" />
+                                    <field name="display_value"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Images">
+                            <field name="image_ids">
+                                <kanban>
+                                    <field name="id"/>
+                                    <field name="image"/>
+                                    <field name="sequence"/>
+                                    <field name="is_main"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_global_click">
+                                                <div class="o_kanban_image">
+                                                    <img t-att-src="kanban_image('escrow.ad.image', 'image', record.id.value)" alt="Image"/>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <strong class="o_kanban_record_title">
+                                                        <field name="sequence"/>
+                                                        <t t-if="record.is_main.value"> (Main)</t>
+                                                    </strong>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                        <page string="Customers">
+                            <field name="customer_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="mobile"/>
+                                    <field name="email"/>
+                                    <field name="vat"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Sale Information" attrs="{'invisible': [('payment_item_id', '=', False)]}">
+                            <group>
+                                <group>
+                                    <field name="sale_state"/>
+                                    <field name="payment_item_id" readonly="1"/>
+                                    <field name="payment_paid"/>
+                                </group>
+                                <group>
+                                    <field name="official_sale_document" filename="official_sale_document_name"/>
+                                    <field name="official_sale_document_name" invisible="1"/>
+                                    <field name="official_sale_upload_date" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Statistics">
+                            <group>
+                                <group>
+                                    <field name="view_count"/>
+                                    <field name="favorite_count"/>
+                                </group>
+                                <group>
+                                    <field name="create_uid" readonly="1"/>
+                                    <field name="create_date" readonly="1"/>
+                                    <field name="write_uid" readonly="1"/>
+                                    <field name="write_date" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_escrow_ad_kanban" model="ir.ui.view">
+        <field name="name">escrow.ad.kanban</field>
+        <field name="model">escrow.ad</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id"/>
+                <field name="name"/>
+                <field name="price"/>
+                <field name="state"/>
+                <field name="image_1920"/>
+                <field name="is_featured"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill" style="position: relative;">
+                            <div class="o_kanban_image" t-if="record.image_1920.value">
+                                <img t-att-src="kanban_image('escrow.ad', 'image_1920', record.id.value)" alt="Ad Image"/>
+                            </div>
+                            <div t-if="record.is_featured.value" style="position: absolute; top: 10px; right: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 11px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 10;">
+                                ⭐ FEATURED
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <div>
+                                    <field name="price" widget="monetary"/>
+                                </div>
+                                <div>
+                                    <field name="state" widget="badge" decoration-success="state=='new'" decoration-warning="state=='waiting'" decoration-muted="state in ['cancelled','sold']"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_escrow_ad_search" model="ir.ui.view">
+        <field name="name">escrow.ad.search</field>
+        <field name="model">escrow.ad</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="category_id"/>
+                <field name="owner_id"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Waiting Approval" name="waiting" domain="[('state','=','waiting')]"/>
+                <filter string="Published" name="published" domain="[('state','=','new')]"/>
+                <filter string="Sold" name="sold" domain="[('state','=','sold')]"/>
+                <filter string="Featured" name="featured" domain="[('is_featured','=',True)]"/>
+                <separator/>
+                <filter string="My Ads" name="my_ads" domain="[('owner_id.user_ids','in',uid)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="group_category" context="{'group_by':'category_id'}"/>
+                    <filter string="Owner" name="group_owner" context="{'group_by':'owner_id'}"/>
+                    <filter string="State" name="group_state" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_escrow_ad" model="ir.actions.act_window">
+        <field name="name">Advertisements</field>
+        <field name="res_model">escrow.ad</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_escrow_ad_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first advertisement
+            </p>
+        </field>
+    </record>
+</odoo>

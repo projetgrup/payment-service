@@ -172,7 +172,7 @@
                                             
                                             <div class="escrow-ad-list-item-info">
                                                 <div class="escrow-ad-list-item-text">
-                                                    <span t-esc="basket.vehicle_info or '-'"/>
+                                                    <span t-esc="basket.ad_info or '-'"/>
                                                 </div>
                                             </div>
                                             

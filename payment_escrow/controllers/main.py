@@ -35,17 +35,17 @@ class CustomerPortal(portal.CustomerPortal):
 class PayloxSystemEscrowController(Controller):
 
     @http.route('/payment/escrow/transaction-data', type='json', auth='user', methods=['POST'])
-    def get_transaction_data(self, product_id=None, status=None, **kwargs):
+    def get_transaction_data(self, ad_id=None, status=None, **kwargs):
         try:
             company = request.env.company
-            if not product_id:
-                return {'error': 'No product ID provided'}
+            if not ad_id:
+                return {'error': 'No ad ID provided'}
 
             if status == 'success':
                 status = 'done'
             elif status == 'partial':
                 status = 'done'
-            payment_item = request.env['payment.item'].sudo().search([('product_id', '=', int(product_id))], limit=1)
+            payment_item = request.env['payment.item'].sudo().search([('ad_id', '=', int(ad_id))], limit=1)
             if not payment_item.exists():
                 return {'error': 'Payment item not found'}
 
@@ -89,7 +89,7 @@ class PayloxSystemEscrowController(Controller):
                 'transactions': transaction_list,
                 'paid_date': payment_item.paid_date.strftime('%d.%m.%Y') if payment_item.paid_date else '',
                 'currency': 'TL',
-                'img': payment_item.product_id.escrow_ad_official_sale_img and 'data:%s;base64,%s' % (guess_mimetype(base64.b64decode(payment_item.product_id.escrow_ad_official_sale_img)), payment_item.product_id.escrow_ad_official_sale_img.decode('utf-8')) or '',
+                'img': payment_item.ad_id.official_sale_document and 'data:%s;base64,%s' % (guess_mimetype(base64.b64decode(payment_item.ad_id.official_sale_document)), payment_item.ad_id.official_sale_document.decode('utf-8')) or '',
             }
             
             if different_holder_txs:
@@ -148,9 +148,9 @@ class PayloxSystemEscrowController(Controller):
         system = kwargs.get('system') or (tx and tx.system) or request.env.company.system
         if system == 'escrow':
             paylox_product_ids = request.env['payment.transaction.product'].sudo().browse(tx.paylox_product_ids.ids)
-            product_id = paylox_product_ids and paylox_product_ids.product_id.id or 0
-            owner = paylox_product_ids and paylox_product_ids.product_id.escrow_owner_id.id or None
-            escrow_customer_id = paylox_product_ids.product_id.escrow_customer_ids
+            ad_id = paylox_product_ids and paylox_product_ids.ad_id.id or 0
+            owner = paylox_product_ids and paylox_product_ids.ad_id.owner_id.id or None
+            escrow_customer_id = paylox_product_ids.ad_id.customer_ids
             customer = escrow_customer_id.filtered(lambda c: c.is_escrow_customer).id
             if tx.state == 'done':
                 payment_items_paid = True
@@ -162,18 +162,18 @@ class PayloxSystemEscrowController(Controller):
                                 payment_items_paid = False
                                 break
 
-                product_id = 0
+                ad_id = 0
                 if tx.paylox_transaction_item_ids:
                     first_item = tx.paylox_transaction_item_ids[0]
-                    if first_item.item_id and first_item.item_id.product_id:
-                        product_id = first_item.item_id.product_id.id
+                    if first_item.item_id and first_item.item_id.ad_id:
+                        ad_id = first_item.item_id.ad_id.id
 
                 if payment_items_paid:
-                    url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='success')
+                    url = self._generate_hash_url(step=5, id=ad_id, owner=owner, customer=customer, status='success')
                 else:
-                    url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='partial')
+                    url = self._generate_hash_url(step=5, id=ad_id, owner=owner, customer=customer, status='partial')
             else:
-                url = self._generate_hash_url(step=5, id=product_id, owner=owner, customer=customer, status='error')
+                url = self._generate_hash_url(step=5, id=ad_id, owner=owner, customer=customer, status='error')
         return url, tx, status
 
     def _get_tx_values(self, **kwargs):
@@ -183,8 +183,8 @@ class PayloxSystemEscrowController(Controller):
             different = kwargs.get('different_holder', {}).get('different', False)
             if different:
                 partner = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('different_holder', {}).get('vat', '')), ('paylox_escrow_type', '=', 'card_holder')], limit=1)
-            products = kwargs.get('products', [])
-            payment_items = request.env['payment.item'].sudo().search([('product_id', 'in', products and [p['pid'] for p in products] or [])])
+            ads = kwargs.get('ads', [])
+            payment_items = request.env['payment.item'].sudo().search([('ad_id', 'in', ads and [a['aid'] for a in ads] or [])])
             res.update({
                 'paylox_transaction_item_ids':[(0, 0, {
                         'item_id': rec.id,
@@ -524,8 +524,8 @@ class PayloxSystemEscrowController(Controller):
             customer_basket = []
 
             product_line = transaction.paylox_product_ids[0]
-            partner = product_line.product_id.escrow_owner_id
-            customers = product_line.product_id.escrow_customer_ids
+            partner = product_line.ad_id.owner_id
+            customers = product_line.ad_id.customer_ids
             customer = customers.filtered(lambda c: c.is_escrow_customer)[:1]
             
             if not customer:
@@ -589,8 +589,8 @@ class PayloxSystemEscrowController(Controller):
                 "description": product_line.name or 'Owner commission',
                 "qty": 1,
                 "amount": seller_amount,
-                "category": product_line.product_id.categ_id.name if product_line.product_id.categ_id else '',
-                "is_physical": product_line.product_id.type == 'product',
+                "category": product_line.ad_id.category_id.name if product_line.ad_id.category_id else '',
+                "is_physical": False,
                 "submerchant_external_id": reference_seller,
                 "partner_id": partner.id,
                 "submerchant_price": seller_net
@@ -835,38 +835,60 @@ class PayloxSystemEscrowController(Controller):
         if not ad_id:
             return {'success': False, 'message': 'Missing ad_id'}
         domain = [('company_id', '=', company.id), ('id', '=', ad_id)]
-        ad = request.env['product.product'].sudo().with_context(system='escrow').search(domain, limit=1)
+        ad = request.env['escrow.ad'].sudo().search(domain, limit=1)
         if not ad.exists():
             return {'success': False, 'message': 'Ad not found'}
 
-        image = ad.escrow_ad_sale_img
+        image = ad.image_1920
         if image:
             mime = guess_mimetype(base64.b64decode(image))
             image = 'data:%s;base64,%s' % (mime, image.decode('utf-8'))
-        acc_number = ad.escrow_owner_id.bank_ids.filtered(lambda b: b.api_state) and ad.escrow_owner_id.bank_ids.filtered(lambda b: b.api_state)[0]['acc_number'] or ''
+        acc_number = ad.owner_id.bank_ids.filtered(lambda b: b.api_state) and ad.owner_id.bank_ids.filtered(lambda b: b.api_state)[0]['acc_number'] or ''
+        attributes = [{'name': v.attribute_id.name, 'value': v.display_value} for v in ad.attribute_value_ids]
+        attribute_values = {}
+        for value_rec in ad.attribute_value_ids:
+            attr = value_rec.attribute_id
+            key = attr.technical_name
+            
+            if attr.attribute_type == 'binary' and value_rec.value_binary:
+                mime = guess_mimetype(base64.b64decode(value_rec.value_binary))
+                image = 'data:%s;base64,%s' % (mime, value_rec.value_binary.decode('utf-8'))
+                attribute_values[key] = image
+            elif attr.attribute_type == 'many2one' and value_rec.value_many2one:
+                attribute_values[key] = value_rec.value_many2one
+            elif attr.attribute_type == 'boolean':
+                attribute_values[key] = value_rec.value_boolean
+            elif attr.attribute_type == 'integer':
+                attribute_values[key] = value_rec.value_integer
+            elif attr.attribute_type == 'float':
+                attribute_values[key] = value_rec.value_float
+            elif attr.attribute_type == 'date' and value_rec.value_date:
+                attribute_values[key] = value_rec.value_date.strftime('%Y-%m-%d')
+            elif attr.attribute_type == 'datetime' and value_rec.value_datetime:
+                attribute_values[key] = value_rec.value_datetime.strftime('%Y-%m-%d %H:%M:%S')
+            elif attr.attribute_type in ('char', 'text', 'selection'):
+                attribute_values[key] = value_rec.value_char or value_rec.value_text or ''
         return {
             'success': True,
             'ad': {
                 'id': ad.id,
                 'name': ad.name,
                 'description': ad.description,
-                'price': ad.list_price,
+                'price': ad.price,
                 'image': image,
-                'categ_id': ad.categ_id and {'id': ad.categ_id.id, 'name': ad.categ_id.name} or None,
-                'brand_id': ad.escrow_car_brand_id.id,
-                'model_id': ad.escrow_car_model_id.id,
-                'year': ad.escrow_car_model_year,
-                'vin': ad.escrow_car_vin,
-                'plate': ad.escrow_car_plate,
-                'owner_id': ad.escrow_owner_id.id,
-                'state': ad.escrow_state,
-                'customer_id': ad.escrow_customer_ids and [{'id': customer.id, 'name': customer.name} for customer in ad.escrow_customer_ids if customer.is_escrow_customer] or None,
-                'broker_id': ad.broker_id.id,
-                'item_id': ad.escrow_payment_item_id and ad.escrow_payment_item_id.id or None,
-                'paid_amount': ad.escrow_payment_item_id.paid_amount or 0.0,
+                'categ_id': ad.category_id and {'id': ad.category_id.id, 'name': ad.category_id.name} or None,
+                'owner_id': ad.owner_id.id,
+                'state': ad.state,
+                'customer_id': ad.customer_ids and [{'id': customer.id, 'name': customer.name} for customer in ad.customer_ids if customer.is_escrow_customer] or None,
+                'broker_id': None,
+                'item_id': ad.payment_item_id and ad.payment_item_id.id or None,
+                'paid_amount': ad.payment_item_id.paid_amount or 0.0 if ad.payment_item_id else 0.0,
                 'iban': acc_number,
-                'partner': ad.escrow_owner_id.name,
-                'vat': ad.escrow_owner_id.vat,
+                'partner': ad.owner_id.name,
+                'vat': ad.owner_id.vat,
+                'sale_state': ad.sale_state,
+                'attribute_values': attribute_values,
+                'attributes': attributes,
             }
         }
 
@@ -878,25 +900,27 @@ class PayloxSystemEscrowController(Controller):
         user = request.env.user
         partner = user.partner_id
         domain = [('company_id', '=', company.id), ('id', '=', ad_id)]
-        ad = request.env['product.product'].sudo().with_context(system='escrow').search(domain, limit=1)
+        ad = request.env['escrow.ad'].sudo().search(domain, limit=1)
         if not ad.exists():
             return {'success': False, 'message': 'Ad not found'}
-        if ad.broker_id != partner:
+        if ad.owner_id != partner:
             return {'success': False, 'message': 'You are not allowed to update this ad'}
         try:
             attachment = request.env['ir.attachment'].sudo().create({
-                'name': _('%s - Official Sale Image') % (ad.name,),
+                'name': _('%s - Official Sale Document') % (ad.title,),
                 'res_model': ad._name,
                 'res_id': ad.id,
-                'mimetype': file['mimetype'] or 'image/png',
+                'mimetype': file['mimetype'] or 'application/pdf',
                 'datas': file['data'],
                 'type': 'binary',
             })
-            ad.escrow_ad_official_sale_img = file['data']
-            ad.write ({'escrow_state': 'waiting_transfer_approval'})
-            body = _('User has uploaded official sale image. User IP Address is %s') % (request.httprequest.remote_addr,)
+            ad.official_sale_document = file['data']
+            ad.official_sale_document_name = attachment.name
+            ad.official_sale_upload_date = fields.Datetime.now()
+            ad.write({'sale_state': 'waiting_transfer'})
+            body = _('User has uploaded official sale document. User IP Address is %s') % (request.httprequest.remote_addr,)
             ad.message_post(body=body, attachment_ids=attachment.ids)
-            return {'success': True, 'message': 'Official sale image uploaded successfully'}
+            return {'success': True, 'message': 'Official sale document uploaded successfully'}
         except Exception as e:
             return {'success': False, 'message': str(e)}
 
@@ -907,7 +931,7 @@ class PayloxSystemEscrowController(Controller):
         
         if partner.paylox_escrow_type == 'dealer':
             return request.redirect('/my/dealer/transactions')
-        
+
         hash = kwargs.get('')
         values = {}
         if hash:
@@ -923,8 +947,8 @@ class PayloxSystemEscrowController(Controller):
         campaign = partner.campaign_id.name if partner and partner.campaign_id else ''
         domain = [('company_id', '=', company.id)]
         if user.share:
-            domain.append(('broker_id', '=', partner.id))
-        ads = request.env['product.product'].sudo().with_context(system='escrow').search(domain)
+            domain.append(('owner_id', '=', partner.id))
+        ads = request.env['escrow.ad'].sudo().search(domain)
 
         try:
             step = int(values['s'])
@@ -1109,7 +1133,136 @@ class PayloxSystemEscrowController(Controller):
 
     @route(['/my/ad/<int:id>/image'], type='http', auth='user')
     def page_my_ad_image(self, id):
-        return request.env['ir.http'].sudo()._content_image(xmlid=None, model='product.product', res_id=id, field='image_1920', filename_field='name', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False, quality=0, access_token=None)
+        return request.env['ir.http'].sudo()._content_image(xmlid=None, model='escrow.ad', res_id=id, field='image_1920', filename_field='title', unique=None, filename=None, mimetype=None, download=None, width=0, height=0, crop=False, quality=0, access_token=None)
+
+    @route(['/my/ad/category/attributes'], type='json', auth='user', methods=['POST'])
+    def get_category_attributes(self, category_id=None, ad_id=None, **kwargs):
+        if not category_id:
+            return {'error': 'No category ID provided'}
+        
+        try:
+            category = request.env['escrow.ad.category'].sudo().browse(int(category_id))
+            if not category.exists():
+                return {'error': 'Category not found'}
+            
+            attributes = []
+            # Attribute'leri sequence'a göre sırala
+            for attr in category.attribute_ids.sorted(lambda a: (a.sequence, a.name)):
+                attr_data = {
+                    'id': attr.id,
+                    'name': attr.name,
+                    'technical_name': attr.technical_name,
+                    'attribute_type': attr.attribute_type,
+                    'required': attr.required,
+                    'help_text': attr.help_text or '',
+                    'mask': attr.mask or '',
+                    'sequence': attr.sequence,
+                }
+                
+                if attr.attribute_type == 'selection':
+                    # Selection option'ları da sequence'a göre sırala
+                    attr_data['options'] = [
+                        {'value': opt.value, 'name': opt.name}
+                        for opt in attr.selection_option_ids.sorted(lambda o: (o.sequence, o.name))
+                    ]
+                elif attr.attribute_type == 'many2one' and attr.relation_model:
+                    # Many2one için ilgili modelden kayıtları getir
+                    try:
+                        related_model = request.env[attr.relation_model].sudo()
+                        if attr.relation_model == 'escrow.car.model':
+                            # Model için sadece aktif olanları getir
+                            records = related_model.search([('active', '=', True)], order='name')
+                        else:
+                            # Brand ve diğerleri için tüm kayıtları getir
+                            records = related_model.search([], order='name')
+                        
+                        attr_data['options'] = [
+                            {'value': str(rec.id), 'name': rec.name}
+                            for rec in records
+                        ]
+                        attr_data['relation_model'] = attr.relation_model
+                    except Exception as e:
+                        _logger.warning(f"Could not load many2one options for {attr.relation_model}: {e}")
+                        attr_data['options'] = []
+                
+                attributes.append(attr_data)
+            
+            result = {
+                'success': True,
+                'category_type': category.category_type,
+                'attributes': attributes
+            }
+            
+            if ad_id:
+                _logger.info(f"Loading attribute values for ad_id: {ad_id}")
+                try:
+                    ad = request.env['escrow.ad'].sudo().browse(int(ad_id))
+                    _logger.info(f"Ad found: {ad.exists()}, attribute_value_ids count: {len(ad.attribute_value_ids)}")
+                    if ad.exists():
+                        attribute_values = {}
+                        for value_rec in ad.attribute_value_ids:
+                            attr = value_rec.attribute_id
+                            _logger.info(f"Processing attribute: {attr.technical_name}, categories: {attr.category_ids.ids}, current category: {category.id}")
+                            if category.id in attr.category_ids.ids:
+                                key = attr.technical_name
+                                if attr.attribute_type == 'binary':
+                                    if value_rec.value_binary:
+                                        import base64
+                                        b64_data = base64.b64encode(value_rec.value_binary).decode('utf-8')
+                                        attribute_values[key] = f'data:image/jpeg;base64,{b64_data}'
+                                    elif attr.is_primary_image and ad.image_1920:
+                                        attribute_values[key] = f'data:image/jpeg;base64,{ad.image_1920.decode("utf-8")}'
+                                elif attr.attribute_type == 'many2one' and value_rec.value_many2one:
+                                    # value_many2one artık integer (ID) - string'e çevir
+                                    attribute_values[key] = str(value_rec.value_many2one)
+                                elif attr.attribute_type == 'boolean':
+                                    attribute_values[key] = value_rec.value_boolean
+                                elif attr.attribute_type == 'integer':
+                                    attribute_values[key] = value_rec.value_integer
+                                elif attr.attribute_type == 'float':
+                                    attribute_values[key] = value_rec.value_float
+                                elif attr.attribute_type == 'date' and value_rec.value_date:
+                                    attribute_values[key] = value_rec.value_date.strftime('%Y-%m-%d')
+                                elif attr.attribute_type == 'datetime' and value_rec.value_datetime:
+                                    attribute_values[key] = value_rec.value_datetime.strftime('%Y-%m-%d %H:%M:%S')
+                                elif attr.attribute_type in ('char', 'text', 'selection'):
+                                    attribute_values[key] = value_rec.value_char or value_rec.value_text or ''
+                        
+                        _logger.info(f"Collected attribute_values: {attribute_values}")
+                        result['attribute_values'] = attribute_values
+                except Exception as e:
+                    _logger.warning(f"Could not load attribute values for ad {ad_id}: {e}")
+                    import traceback
+                    _logger.error(traceback.format_exc())
+            
+            return result
+        except Exception as e:
+            _logger.error("Error in get_category_attributes: %s", str(e))
+            return {'error': str(e)}
+
+    @route(['/my/ad/brand/models'], type='json', auth='user', methods=['POST'])
+    def get_brand_models(self, brand_id=None, **kwargs):
+        """Brand seçildiğinde o brand'e ait modelleri döndür"""
+        if not brand_id:
+            return {'error': 'No brand ID provided'}
+        
+        try:
+            brand = request.env['escrow.car.brand'].sudo().browse(int(brand_id))
+            if not brand.exists():
+                return {'error': 'Brand not found'}
+            
+            models = request.env['escrow.car.model'].sudo().search([
+                ('brand_id', '=', brand.id),
+                ('active', '=', True)
+            ], order='name')
+            
+            return {
+                'success': True,
+                'models': [{'id': m.id, 'name': m.name} for m in models]
+            }
+        except Exception as e:
+            _logger.error("Error in get_brand_models: %s", str(e))
+            return {'error': str(e)}
 
     @route(['/my/ad/save'], type='json', auth='user', website=True)
     def page_my_ad_save(self, **kwargs):
@@ -1118,81 +1271,107 @@ class PayloxSystemEscrowController(Controller):
         partner = user.partner_id
         values = {}
         
-        def generate_product_name():
-            brand_name = ""
-            model_name = ""
-            year = kwargs.get('escrow_car_model_year', '')
-            
-            if kwargs.get('escrow_car_brand_id'):
-                try:
-                    brand = request.env['escrow.car.brand'].sudo().browse(int(kwargs['escrow_car_brand_id']))
-                    if brand.exists():
-                        brand_name = brand.name
-                except:
-                    pass
-            
-            if kwargs.get('escrow_car_model_id'):
-                try:
-                    model = request.env['escrow.car.model'].sudo().browse(int(kwargs['escrow_car_model_id']))
-                    if model.exists():
-                        model_name = model.name
-                except:
-                    pass
-
-            name_parts = []
-            if brand_name:
-                name_parts.append(brand_name)
-            if model_name:
-                name_parts.append(model_name)
-            if year:
-                name_parts.append(str(year))
-            return " / ".join(name_parts) if name_parts else "Araç İlanı"
+        category_id = kwargs.get('category_id')
+        if not category_id:
+            return {'error': _('Category is required.')}
+        
+        category = request.env['escrow.ad.category'].sudo().browse(int(category_id))
+        if not category.exists():
+            return {'error': _('Invalid category.')}
+        
+        ad_values = {
+            'name': kwargs.get('name', ''),
+            'description': kwargs.get('description', ''),
+            'price': kwargs.get('price', 0.0),
+            'category_id': category_id,
+            'owner_id': kwargs.get('owner_id', partner.id),
+            'company_id': company.id,
+        }
+        
+        if kwargs.get('image_1920'):
+            ad_values['image_1920'] = kwargs['image_1920']
+        
         if kwargs.get('id'):
-            product = request.env['product.product'].sudo().with_context(system='escrow').search([
+            ad = request.env['escrow.ad'].sudo().search([
                 ('id', '=', kwargs['id']),
-                ('broker_id', '=', request.env.user.partner_id.id),
-                ('company_id', '=', request.env.company.id),
+                ('company_id', '=', company.id),
             ])
-            if not product:
-                return {'error': _('Product cannot be found, or you are not allowed to save it.')}
-
-            values.update({'system': 'escrow', 'broker_id': partner.id, **kwargs})
+            if not ad:
+                return {'error': _('Ad cannot be found, or you are not allowed to save it.')}
             
-            values['name'] = generate_product_name()
-            item = request.env['payment.item'].sudo().search([('product_id', '=', product.id)])
+            ad.write(ad_values)
+            
+            item = request.env['payment.item'].sudo().search([('ad_id', '=', ad.id)])
             if item:
                 item.write({'amount': kwargs.get('price')})
-                values['escrow_payment_item_id'] = item.id
             else:
-                values['escrow_payment_item_id'] = item.create({
-                    'parent_id': product.escrow_owner_id.id,
-                    'product_id': product.id,
+                item = request.env['payment.item'].sudo().create({
+                    'parent_id': ad.owner_id.id,
+                    'ad_id': ad.id,
                     'amount': kwargs.get('price'),
                     'currency_id': company.currency_id.id,
                 })
-
-            if values:
-                product.write(values)
+                ad.payment_item_id = item.id
         else:
-            values.update({
-                'system': 'escrow',
-                'broker_id': partner.id,
-                **kwargs
-            })
-            
-            values['name'] = generate_product_name()
-
-            product = request.env['product.product'].sudo().create(values)
+            ad = request.env['escrow.ad'].sudo().create(ad_values)
             item = request.env['payment.item'].sudo().create({
-                'parent_id': product.escrow_owner_id.id,
-                'product_id': product.id,
+                'parent_id': ad.owner_id.id,
+                'ad_id': ad.id,
                 'amount': kwargs.get('price'),
                 'currency_id': company.currency_id.id,
             })
-            product.escrow_payment_item_id = item.id
+            ad.payment_item_id = item.id
+        
+        if kwargs.get('attributes'):
+            ad.attribute_value_ids.unlink()
+            for attr_data in kwargs.get('attributes', []):
+                attr_id = attr_data.get('attribute_id')
+                if not attr_id:
+                    continue
                 
+                attribute = request.env['escrow.ad.attribute'].sudo().browse(int(attr_id))
+                if not attribute.exists():
+                    continue
+                
+                value_data = {
+                    'ad_id': ad.id,
+                    'attribute_id': attribute.id,
+                }
+                
+                if attribute.attribute_type == 'char':
+                    value_data['value_char'] = attr_data.get('value', '')
+                elif attribute.attribute_type == 'text':
+                    value_data['value_text'] = attr_data.get('value', '')
+                elif attribute.attribute_type == 'integer':
+                    value_data['value_integer'] = int(attr_data.get('value', 0))
+                elif attribute.attribute_type == 'float':
+                    value_data['value_float'] = float(attr_data.get('value', 0.0))
+                elif attribute.attribute_type == 'boolean':
+                    value_data['value_boolean'] = bool(attr_data.get('value', False))
+                elif attribute.attribute_type == 'date':
+                    value_data['value_date'] = attr_data.get('value')
+                elif attribute.attribute_type == 'datetime':
+                    value_data['value_datetime'] = attr_data.get('value')
+                elif attribute.attribute_type == 'selection':
+                    value_data['value_selection'] = attr_data.get('value', '')
+                elif attribute.attribute_type == 'many2one' and attr_data.get('value'):
+                    many2one_id = int(attr_data.get('value'))
+                    value_data['value_many2one'] = many2one_id
+                elif attribute.attribute_type == 'binary' and attr_data.get('value'):
+                    binary_value = attr_data.get('value')
+                    if isinstance(binary_value, str) and 'base64,' in binary_value:
+                        binary_value = binary_value.split('base64,')[1]
+                    
+                    value_data['value_binary'] = binary_value
+                    value_data['value_binary_filename'] = attr_data.get('filename', 'image.jpg')
+                    
+                    if attribute.is_primary_image:
+                        ad.write({'image_1920': binary_value})
+                
+                request.env['escrow.ad.attribute.value'].sudo().create(value_data)
+        
         return {
-            'id': product.id,
+            'id': ad.id,
             'item_id': item.id
         }
     
@@ -1534,18 +1713,18 @@ class PayloxSystemEscrowController(Controller):
                 partner = request.env['res.partner'].sudo().create(partner_data)
             else:
                 partner.write(partner_data)
-
             product_id = kwargs.get('product_id')
             if product_id:
                 try:
-                    product = request.env['product.product'].sudo().browse(int(product_id))
+                    product = request.env['escrow.ad'].sudo().browse(int(product_id))
+                    _logger.error(f"Associating customer {partner.id} with product {product.id}")
                     if product.exists():
-                        for customer in product.escrow_customer_ids:
+                        for customer in product.customer_ids:
                             if not customer.id == partner.id:
                                 customer.write({'is_escrow_customer': False})
-                        product.write({'escrow_customer_ids': [(4, partner.id)]})
-                except:
-                    pass 
+                        product.write({'customer_ids': [(4, partner.id)]})
+                except Exception as e:
+                    _logger.error(f"Error associating customer with product: {str(e)}")
             
             return {
                 'success': True,

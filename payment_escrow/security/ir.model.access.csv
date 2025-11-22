@@ -1,4 +1,26 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_escrow_ad_user,escrow.ad user,model_escrow_ad,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_ad_manager,escrow.ad manager,model_escrow_ad,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_ad_platform_owner,escrow.ad platform owner,model_escrow_ad,payment_escrow.group_escrow_platform_owner,1,1,1,1
+
+access_escrow_ad_category_user,escrow.ad.category user,model_escrow_ad_category,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_ad_category_manager,escrow.ad.category manager,model_escrow_ad_category,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_attribute_user,escrow.ad.attribute user,model_escrow_ad_attribute,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_ad_attribute_manager,escrow.ad.attribute manager,model_escrow_ad_attribute,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_attribute_option_user,escrow.ad.attribute.option user,model_escrow_ad_attribute_option,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_ad_attribute_option_manager,escrow.ad.attribute.option manager,model_escrow_ad_attribute_option,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_attribute_value_user,escrow.ad.attribute.value user,model_escrow_ad_attribute_value,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_ad_attribute_value_manager,escrow.ad.attribute.value manager,model_escrow_ad_attribute_value,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_image_user,escrow.ad.image user,model_escrow_ad_image,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_ad_image_manager,escrow.ad.image manager,model_escrow_ad_image,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_favorite_user,escrow.ad.favorite user,model_escrow_ad_favorite,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_ad_favorite_manager,escrow.ad.favorite manager,model_escrow_ad_favorite,payment_escrow.group_escrow_manager,1,1,1,1
+
 access_escrow_car_brand_user,escrow.car.brand user,model_escrow_car_brand,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_car_brand_manager,escrow.car.brand manager,model_escrow_car_brand,payment_escrow.group_escrow_manager,1,1,1,1
 access_escrow_car_model_user,escrow.car.model user,model_escrow_car_model,payment_escrow.group_escrow_user,1,0,0,0

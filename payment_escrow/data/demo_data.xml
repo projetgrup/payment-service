@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="category_vehicles" model="escrow.ad.category">
+            <field name="name">Araç | 2.El</field>
+            <field name="category_type">vehicle</field>
+            <field name="sequence">10</field>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>

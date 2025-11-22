@@ -3,6 +3,8 @@ from . import http
 from . import company
 from . import menu
 from . import partner
+from . import ad
+from . import ad_category
 from . import product
 from . import transaction
 from . import transaction_basket

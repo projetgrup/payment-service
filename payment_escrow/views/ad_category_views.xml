@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_escrow_ad_category_tree" model="ir.ui.view">
+        <field name="name">escrow.ad.category.tree</field>
+        <field name="model">escrow.ad.category</field>
+        <field name="arch" type="xml">
+            <tree string="Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="complete_name"/>
+                <field name="category_type"/>
+                <field name="ad_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_escrow_ad_category_form" model="ir.ui.view">
+        <field name="name">escrow.ad.category.form</field>
+        <field name="model">escrow.ad.category</field>
+        <field name="arch" type="xml">
+            <form string="Category">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Category Name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="parent_id"/>
+                            <field name="category_type"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                            <field name="ad_count"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Attributes">
+                            <field name="attribute_ids">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="technical_name"/>
+                                    <field name="attribute_type"/>
+                                    <field name="required"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Child Categories">
+                            <field name="child_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="category_type"/>
+                                    <field name="ad_count"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_escrow_ad_category" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="res_model">escrow.ad.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_escrow_ad_attribute_tree" model="ir.ui.view">
+        <field name="name">escrow.ad.attribute.tree</field>
+        <field name="model">escrow.ad.attribute</field>
+        <field name="arch" type="xml">
+            <tree string="Attributes">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="technical_name"/>
+                <field name="attribute_type"/>
+                <field name="required"/>
+                <field name="is_primary_image"/>
+                <field name="is_name_part"/>
+                <field name="name_sequence"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_escrow_ad_attribute_form" model="ir.ui.view">
+        <field name="name">escrow.ad.attribute.form</field>
+        <field name="model">escrow.ad.attribute</field>
+        <field name="arch" type="xml">
+            <form string="Attribute">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Attribute Name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="technical_name"/>
+                            <field name="attribute_type"/>
+                            <field name="relation_model" attrs="{'invisible': [('attribute_type', '!=', 'many2one')], 'required': [('attribute_type', '=', 'many2one')]}"/>
+                            <field name="mask" attrs="{'invisible': [('attribute_type', 'in', ['binary', 'boolean', 'selection', 'many2one'])]}"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="required"/>
+                            <field name="is_primary_image" attrs="{'invisible': [('attribute_type', '!=', 'binary')]}"/>
+                            <field name="is_name_part"/>
+                            <field name="name_sequence" attrs="{'invisible': [('is_name_part', '=', False)]}"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="help_text"/>
+                    </group>
+                    <notebook>
+                        <page string="Selection Options" attrs="{'invisible': [('attribute_type', '!=', 'selection')]}">
+                            <field name="selection_option_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="value"/>
+                                    <field name="active"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Categories">
+                            <field name="category_ids">
+                                <tree>
+                                    <field name="complete_name"/>
+                                    <field name="category_type"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_escrow_ad_attribute" model="ir.actions.act_window">
+        <field name="name">Attributes</field>
+        <field name="res_model">escrow.ad.attribute</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Attribute Value Views -->
+    <record id="view_escrow_ad_attribute_value_tree" model="ir.ui.view">
+        <field name="name">escrow.ad.attribute.value.tree</field>
+        <field name="model">escrow.ad.attribute.value</field>
+        <field name="arch" type="xml">
+            <tree string="Attribute Values">
+                <field name="ad_id"/>
+                <field name="attribute_id"/>
+                <field name="attribute_type"/>
+                <field name="display_value"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_escrow_ad_attribute_value_form" model="ir.ui.view">
+        <field name="name">escrow.ad.attribute.value.form</field>
+        <field name="model">escrow.ad.attribute.value</field>
+        <field name="arch" type="xml">
+            <form string="Attribute Value">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="attribute_id" class="oe_edit_only"/>
+                        <h1><field name="attribute_id" placeholder="Select Attribute"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="ad_id"/>
+                            <field name="attribute_type"/>
+                        </group>
+                        <group>
+                            <field name="display_value"/>
+                        </group>
+                    </group>
+                    <group string="Value">
+                        <field name="value_char" attrs="{'invisible': [('attribute_type', '!=', 'char')], 'required': [('attribute_type', '=', 'char')]}"/>
+                        <field name="value_integer" attrs="{'invisible': [('attribute_type', '!=', 'integer')], 'required': [('attribute_type', '=', 'integer')]}"/>
+                        <field name="value_float" attrs="{'invisible': [('attribute_type', '!=', 'float')], 'required': [('attribute_type', '=', 'float')]}"/>
+                        <field name="value_boolean" attrs="{'invisible': [('attribute_type', '!=', 'boolean')]}"/>
+                        <field name="value_date" attrs="{'invisible': [('attribute_type', '!=', 'date')], 'required': [('attribute_type', '=', 'date')]}"/>
+                        <field name="value_datetime" attrs="{'invisible': [('attribute_type', '!=', 'datetime')], 'required': [('attribute_type', '=', 'datetime')]}"/>
+                        <field name="value_selection" attrs="{'invisible': [('attribute_type', '!=', 'selection')], 'required': [('attribute_type', '=', 'selection')]}"/>
+                        <field name="value_many2one" attrs="{'invisible': [('attribute_type', '!=', 'many2one')], 'required': [('attribute_type', '=', 'many2one')]}"/>
+                        <field name="value_reference" attrs="{'invisible': [('attribute_type', '!=', 'reference')], 'required': [('attribute_type', '=', 'reference')]}"/>
+                        <field name="value_text" attrs="{'invisible': [('attribute_type', '!=', 'text')], 'required': [('attribute_type', '=', 'text')]}"/>
+                        <group attrs="{'invisible': [('attribute_type', '!=', 'binary')]}">
+                            <field name="value_binary" widget="image" attrs="{'required': [('attribute_type', '=', 'binary')]}"/>
+                            <field name="value_binary_filename"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_escrow_ad_attribute_value" model="ir.actions.act_window">
+        <field name="name">Attribute Values</field>
+        <field name="res_model">escrow.ad.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

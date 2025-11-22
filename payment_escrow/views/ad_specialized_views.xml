@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_escrow_ad_vehicle_form" model="ir.ui.view">
+        <field name="name">escrow.ad.vehicle.form</field>
+        <field name="model">escrow.ad.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle Details">
+                <sheet>
+                    <group>
+                        <group string="Vehicle Information">
+                            <field name="car_brand_id"/>
+                            <field name="car_model_id"/>
+                            <field name="model_year"/>
+                            <field name="color"/>
+                            <field name="body_type"/>
+                        </group>
+                        <group string="Documents">
+                            <field name="vin"/>
+                            <field name="plate"/>
+                            <field name="license_serial_no"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Engine and Performance">
+                            <field name="mileage"/>
+                            <field name="engine_size"/>
+                            <field name="engine_power"/>
+                            <field name="fuel_type"/>
+                            <field name="transmission"/>
+                        </group>
+                        <group string="Condition">
+                            <field name="damage_status"/>
+                            <field name="damage_description" attrs="{'invisible': [('damage_status', '=', 'no_damage')]}"/>
+                            <field name="from_owner"/>
+                            <field name="swap_available"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_escrow_ad_realestate_form" model="ir.ui.view">
+        <field name="name">escrow.ad.realestate.form</field>
+        <field name="model">escrow.ad.realestate</field>
+        <field name="arch" type="xml">
+            <form string="Real Estate Details">
+                <sheet>
+                    <group>
+                        <group string="Property Information">
+                            <field name="property_type"/>
+                            <field name="listing_type"/>
+                            <field name="net_area"/>
+                            <field name="gross_area"/>
+                            <field name="room_count"/>
+                            <field name="bathroom_count"/>
+                        </group>
+                        <group string="Building Details">
+                            <field name="floor_number"/>
+                            <field name="total_floors"/>
+                            <field name="building_age"/>
+                            <field name="heating_type"/>
+                            <field name="dues_fee"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Features">
+                            <field name="furnished"/>
+                            <field name="balcony"/>
+                            <field name="elevator"/>
+                            <field name="parking"/>
+                            <field name="garage"/>
+                            <field name="security"/>
+                            <field name="has_pool"/>
+                            <field name="garden"/>
+                        </group>
+                        <group string="Legal Status">
+                            <field name="title_deed_status"/>
+                            <field name="deed_type"/>
+                            <field name="zoning_status"/>
+                            <field name="island_number"/>
+                            <field name="parcel_number"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_escrow_ad_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehicle Ads</field>
+        <field name="res_model">escrow.ad.vehicle</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('ad_id.category_type', '=', 'vehicle')]</field>
+    </record>
+
+    <record id="action_escrow_ad_realestate" model="ir.actions.act_window">
+        <field name="name">Real Estate Ads</field>
+        <field name="res_model">escrow.ad.realestate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('ad_id.category_type', '=', 'realestate')]</field>
+    </record>
+</odoo>
