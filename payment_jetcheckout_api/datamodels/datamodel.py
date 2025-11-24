@@ -257,7 +257,7 @@ class PaymentPrepareInput(Datamodel):
     order = NestedModel("payment.order", required=True, metadata={"title": _lt("Order information related to request"), "description": _lt("Order details")})
     html = fields.String(metadata={"title": _lt("Custom HTML"), "description": _lt("Custom code to be viewed bottom of the page"), "example": "<p>Copyright</p>"})
     amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Amount to pay"), "example": 145.3})
-    installmentCount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Installment Count"), "description": _lt("Installment count"), "example": 1, "default": 1})
+    installmentCount = fields.Integer(required=False, allow_none=False, validate=validate.NoneOf([0]), metadata={"title": _lt("Installment Count"), "description": _lt("Installment count"), "example": 1, "default": 1})
     methods = NestedModel("payment.prepare.method", required=True, allow_none=False, metadata={"title": _lt("Method List"), "description": _lt("List of codes of methods. Possible keys are 'virtualPos', 'physicalPos', 'shoppingCredit', 'bankTransfer'.")})
     payNow = fields.Boolean(required=False, allow_none=False, metadata={"title": _lt("Begin Payment Process Now"), "description": _lt("Do not redirect to a payment page and process the transaction immediately"), "example": False})
 

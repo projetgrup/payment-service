@@ -599,7 +599,9 @@ class PaymentAPIService(Component):
             'partner_id': api.partner_id.id,
             'currency_id': company.currency_id.id,
             'jetcheckout_ip_address': params.partner.ip_address,
-            'jetcheckout_installment_count': params.installmentCount,
+            'jetcheckout_installment_count': 1,
+            'jetcheckout_installment_plus': 0,
+            'jetcheckout_installment_description': '0',
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
@@ -609,6 +611,11 @@ class PaymentAPIService(Component):
             'jetcheckout_date_expiration': getattr(params, 'expiration', False) or False,
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
+        if hasattr(params, 'installmentCount') and params.installmentCount > 0:
+            values.update({
+                'jetcheckout_installment_count': params.installmentCount,
+                'jetcheckout_installment_description': str(params.installmentCount),
+            })
 
         methods = getattr(params, 'methods', {})
         if not methods:
