@@ -1007,7 +1007,7 @@ class PayloxSystemEscrowController(Controller):
         campaign = partner.campaign_id.name if partner and partner.campaign_id else ''
         domain = [('company_id', '=', company.id)]
         if user.share:
-            domain.append(('owner_id', '=', partner.id))
+            domain.append(('broker_id', '=', partner.id))
         ads = request.env['escrow.ad'].sudo().search(domain)
 
         try:
