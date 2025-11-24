@@ -40,14 +40,9 @@ class PaymentTransaction(models.Model):
     @api.depends('state')
     def _compute_escrow_success_group(self):
         success_states = {'done'}
-        unsuccessful_states = {'error', 'cancel', 'expired'}
         for tx in self:
             if tx.state in success_states:
                 tx.escrow_success_group = 'successful'
-            elif tx.state in unsuccessful_states:
-                tx.escrow_success_group = 'unsuccessful'
-            else:
-                tx.escrow_success_group = False
 
     def _generate_access_token(self):
         self.ensure_one()
