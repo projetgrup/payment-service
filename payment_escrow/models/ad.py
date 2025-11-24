@@ -189,17 +189,12 @@ class EscrowAd(models.Model):
                  'attribute_value_ids.attribute_id.name_sequence', 'attribute_value_ids.attribute_id.technical_name')
     def _compute_name(self):
         for ad in self:
-            # 1. Check for 'ad_name' attribute (renamed from ad_title for consistency if needed, but keeping ad_title as per user request context or just checking both?)
-            # User said "ad title varsa", so let's check for 'ad_title' or 'ad_name' to be safe, or just 'ad_title' as requested.
-            # Let's stick to 'ad_title' as the attribute technical name for now, but map it to 'name' field.
             title_attr = ad.attribute_value_ids.filtered(lambda v: v.attribute_id.technical_name in ['title', 'name'])
             if title_attr and title_attr[0].display_value:
                 ad.name = title_attr[0].display_value
             else:
-                # 2. Check for is_name_part attributes
                 parts = ad.attribute_value_ids.filtered(lambda v: v.attribute_id.is_name_part).sorted(key=lambda v: v.attribute_id.name_sequence)
                 if parts:
-                    # Filter out empty values
                     valid_parts = parts.filtered(lambda p: p.display_value)
                     if valid_parts:
                         ad.name = ' | '.join(valid_parts.mapped('display_value'))

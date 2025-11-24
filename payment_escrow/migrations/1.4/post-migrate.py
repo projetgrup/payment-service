@@ -96,7 +96,7 @@ def migrate(cr, version):
             'payment_item_id': product.escrow_payment_item_id.id,
             'official_sale_document': product.escrow_ad_official_sale_img,
             'company_id': product.company_id.id or env.company.id,
-            'image_1920': product.image_1920,
+            'image_1920': product.escrow_ad_sale_img,
             'description': product.description_sale,
         }
         
@@ -155,11 +155,11 @@ def migrate(cr, version):
                 'value_char': product.escrow_license_serial_no,
             })
         
-        if product.image_1920:
+        if product.escrow_ad_sale_img:
             AdValue.create({
                 'ad_id': ad.id,
                 'attribute_id': attr_photos.id,
-                'value_binary': product.image_1920,
+                'value_binary': product.escrow_ad_sale_img,
 
             })
 
@@ -188,5 +188,9 @@ def migrate(cr, version):
         """, (ad.id, product.id))
             
         ad._compute_name()
+
+
+    tbi = env['payment.transaction.basket'].sudo().search([])
+    tbi._compute_escrow_fields()
 
     _logger.error("Migration 1.4 completed.")
