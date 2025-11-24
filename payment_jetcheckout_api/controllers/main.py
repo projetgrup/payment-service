@@ -233,6 +233,8 @@ class PayloxApiController(Controller):
             'mode': acquirer._get_paylox_env(),
             #'document_type': 4,
         }
+        if tx.jetcheckout_installment_count and tx.jetcheckout_installment_count > 1:
+            payload.update({'installment_count': str(tx.jetcheckout_installment_count)})
         if tx.paylox_product_ids:
             precision = request.env['decimal.precision'].sudo().precision_get('Product Price')
             payload.update({

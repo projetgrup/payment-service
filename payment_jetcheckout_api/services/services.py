@@ -179,6 +179,8 @@ class PaymentAPIService(Component):
                     'mode': acquirer._get_paylox_env(),
                     #'document_type': 4,
                 }
+                if tx.jetcheckout_installment_count > 1:
+                    payload.update({'installment_count': tx.jetcheckout_installment_count})
                 if tx.paylox_product_ids:
                     precision = self.env['decimal.precision'].sudo().precision_get('Product Price')
                     payload.update({
@@ -597,6 +599,7 @@ class PaymentAPIService(Component):
             'partner_id': api.partner_id.id,
             'currency_id': company.currency_id.id,
             'jetcheckout_ip_address': params.partner.ip_address,
+            'jetcheckout_installment_count': params.installmentCount,
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
