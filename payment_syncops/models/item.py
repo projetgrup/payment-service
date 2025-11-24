@@ -236,7 +236,7 @@ class PaymentItem(models.Model):
                     wizard.unlink()
 
     @api.model
-    def cron_sync_notif(self):
+    def cron_sync_notif(self, force=False):
         self = self.sudo()
         now = datetime.now()
         tz = timezone('Europe/Istanbul')
@@ -252,12 +252,17 @@ class PaymentItem(models.Model):
                 hour = company.syncops_cron_sync_item_notif_hour % 24
                 time = now.replace(hour=hour, minute=0, second=0, microsecond=0)
                 if pre < time <= now:
-                    items = self.env['payment.item'].search([
-                        ('syncops_ok', '=', True),
-                        ('syncops_notif', '=', True),
+                    domain = [
                         ('company_id', '=', company.id),
                         ('system', '=', company.system),
-                    ])
+                    ]
+                    if not force:
+                        domain.extend([
+                            ('syncops_ok', '=', True),
+                            ('syncops_notif', '=', True)
+                        ])
+                    items = self.env['payment.item'].search(domain)
+
                     if items:
                         partners = set()
                         context = self.env.context.copy()

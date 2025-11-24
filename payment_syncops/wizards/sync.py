@@ -350,7 +350,6 @@ class SyncopsSyncWizard(models.TransientModel):
 
                     models['item'].create({
                         'syncops_ok': True,
-                        'syncops_data': line['data'],
                         'syncops_notif': True,
                         'syncops_data': json.dumps(line['data'], default=str),
                         'system': self.system or company.system,
