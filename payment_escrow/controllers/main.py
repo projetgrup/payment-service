@@ -1345,6 +1345,7 @@ class PayloxSystemEscrowController(Controller):
             'price': kwargs.get('price', 0.0),
             'category_id': category_id,
             'owner_id': kwargs.get('owner_id', partner.id),
+            'broker_id': partner.id,
             'company_id': company.id,
         }
         
