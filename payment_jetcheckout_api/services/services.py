@@ -599,7 +599,7 @@ class PaymentAPIService(Component):
             'partner_id': api.partner_id.id,
             'currency_id': company.currency_id.id,
             'jetcheckout_ip_address': params.partner.ip_address,
-            'jetcheckout_installment_count': params.installmentCount,
+            'jetcheckout_installment_count': getattr(params, 'installmentCount', 1) or 1,
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
