@@ -35,17 +35,17 @@ class CustomerPortal(portal.CustomerPortal):
 class PayloxSystemEscrowController(Controller):
 
     @http.route('/payment/escrow/transaction-data', type='json', auth='user', methods=['POST'])
-    def get_transaction_data(self, ad_id=None, status=None, **kwargs):
+    def get_transaction_data(self, product_id=None, status=None, **kwargs):
         try:
             company = request.env.company
-            if not ad_id:
+            if not product_id:
                 return {'error': 'No ad ID provided'}
 
             if status == 'success':
                 status = 'done'
             elif status == 'partial':
                 status = 'done'
-            payment_item = request.env['payment.item'].sudo().search([('ad_id', '=', int(ad_id))], limit=1)
+            payment_item = request.env['payment.item'].sudo().search([('ad_id', '=', int(product_id))], limit=1)
             if not payment_item.exists():
                 return {'error': 'Payment item not found'}
 
