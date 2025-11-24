@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
 from pytz import timezone
-from datetime import timedelta
 from dateutil import parser
 
 from odoo import fields, models, api, _

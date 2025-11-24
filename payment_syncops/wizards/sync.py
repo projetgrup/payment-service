@@ -395,7 +395,7 @@ class SyncopsSyncWizard(models.TransientModel):
             else:
                 lines = self.line_ids
             for line in lines:
-                line._sync_item_invoice_with_delay(
+                line.with_context(skip_queue=True)._sync_item_invoice_with_delay(
                     company=company,
                     vats=vats,
                     refs=refs,
