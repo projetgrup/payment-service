@@ -178,7 +178,7 @@
                                                 <button type="button" class="btn btn-light text-left mb-1 active" data-category="all" field="ad.category.all">
                                                     <i class="fa fa-th-large mr-2 text-primary"/> All Categories
                                                 </button>
-                                                <t t-set="categories" t-value="request.env['escrow.ad.category'].search([('parent_id', '=', False)])"/>
+                                                <t t-set="categories" t-value="request.env['escrow.ad.category'].sudo().search([('parent_id', '=', False)])"/>
                                                 <t t-foreach="categories" t-as="category">
                                                     <button type="button" class="btn btn-light text-left mb-1" t-att-data-category="category.id" t-att-field="'ad.category.' + str(category.id)">
                                                         <t t-if="category.category_type == 'vehicle'">
