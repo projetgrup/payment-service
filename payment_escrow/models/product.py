@@ -106,7 +106,7 @@ class ProductProduct(models.Model):
         txs = self.escrow_payment_item_id.transaction_ids
         action['domain'] = [
             ('transaction_id', 'in', txs.ids),
-            ('transaction_id.state', 'in', ['done'])
+            ('transaction_id.state', 'in', ['done', 'error', 'cancel', 'expired'])
         ]
         action['context'] = {
             'create': False,
