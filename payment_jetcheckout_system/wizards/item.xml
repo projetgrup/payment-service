@@ -15,11 +15,11 @@
                     <group>
                         <field name="line_ids" nolabel="1" colspan="2" context="{'default_parent_id': partner_id}">
                             <tree editable="top">
-                                <field name="campaign_id" options="{'no_create': True, 'no_open': True}"/>
+                                <field name="date" optional="show"/>
+                                <field name="due_date" optional="hide"/>
+                                <field name="campaign_id" options="{'no_create': True, 'no_open': True}" optional="show"/>
                                 <field name="amount"/>
                                 <field name="currency_id" optional="hide" options="{'no_create': True, 'no_open': True}"/>
-                                <field name="date" optional="hide"/>
-                                <field name="due_date" optional="hide"/>
                                 <field name="description" optional="hide"/>
                                 <field name="file" optional="hide"/>
                                 <field name="paid"/>

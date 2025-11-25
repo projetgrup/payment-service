@@ -189,7 +189,7 @@ class SyncopsSyncWizard(models.TransientModel):
         refs = pairs.get('refs')
         tags = pairs.get('tags')
         users = pairs.get('users')
-        models = pairs.get('models')
+        tables = pairs.get('tables')
         company = pairs.get('company')
         campaigns = pairs.get('campaigns')
 
@@ -204,7 +204,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         'company_ids': [(4, company.id)],
                     })
                 elif line['partner_user_email']:
-                    user = models['user'].sudo().search([
+                    user = tables['user'].sudo().search([
                         ('email', '=', line['partner_user_email']),
                     ], limit=1)
                     if user:
@@ -212,7 +212,7 @@ class SyncopsSyncWizard(models.TransientModel):
                             'company_ids': [(4, company.id)],
                         })
                     else:
-                        user = models['user'].with_context(mail_create_nolog=True).create({
+                        user = tables['user'].with_context(mail_create_nolog=True).create({
                             'system': self.system or company.system,
                             'name': line['partner_user_name'],
                             'login': line['partner_user_email'],
@@ -236,7 +236,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     pid = refs[line['partner_ref']]
 
                 if pid:
-                    partner = models['partner'].browse(pid)
+                    partner = tables['partner'].browse(pid)
                     values = {}
                     if line['name'] != partner.name:
                         values['name'] = line['name']
@@ -281,7 +281,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         'company_id': company.id,
                         'is_company': True,
                     }
-                    partner = models['partner'].create(values)
+                    partner = tables['partner'].create(values)
                     if line['partner_vat']:
                         vats.update({line['partner_vat']: partner.id})
                     if line['partner_ref']:
@@ -297,11 +297,11 @@ class SyncopsSyncWizard(models.TransientModel):
         vats = pairs.get('vats')
         refs = pairs.get('refs')
         tags = pairs.get('tags')
-        models = pairs.get('models')
+        tables = pairs.get('tables')
         company = pairs.get('company')
         campaigns = pairs.get('campaigns')
 
-        items = models['item'].search_read([
+        items = tables['item'].search_read([
             ('paid', '=', False),
             ('company_id', '=', company.id),
             ('vat', 'in', self.line_ids.mapped('partner_vat')),
@@ -321,15 +321,15 @@ class SyncopsSyncWizard(models.TransientModel):
                     pid = refs[line['partner_ref']]
 
                 if pid and pid in items:
-                    models['item'].browse(items[pid]).write({
+                    tables['item'].browse(items[pid]).write({
                         'amount': line['partner_balance'],
                         'syncops_notif': True,
                     })
                 else:
                     if pid:
-                        partner = models['partner'].browse(pid)
+                        partner = tables['partner'].browse(pid)
                     else:
-                        partner = models['partner'].create({
+                        partner = tables['partner'].create({
                             'system': self.system or company.system,
                             'name': line['name'],
                             'vat': line['partner_vat'],
@@ -348,7 +348,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         if line['partner_ref']:
                             refs.update({line['partner_ref']: partner.id})
 
-                    models['item'].create({
+                    tables['item'].create({
                         'syncops_ok': True,
                         'syncops_notif': True,
                         'syncops_data': json.dumps(line['data'], default=str),
@@ -369,7 +369,7 @@ class SyncopsSyncWizard(models.TransientModel):
         vats = pairs.get('vats')
         refs = pairs.get('refs')
         tags = pairs.get('tags')
-        models = pairs.get('models')
+        tables = pairs.get('tables')
         company = pairs.get('company')
         campaigns = pairs.get('campaigns')
 
@@ -384,11 +384,11 @@ class SyncopsSyncWizard(models.TransientModel):
                 domain.append(('parent_id', '=', partner_ctx.id))
 
             if company.syncops_sync_item_force:
-                models['item'].search(domain).unlink()
+                tables['item'].search(domain).unlink()
             elif not company.syncops_sync_item_soft:
-                models['item'].search(domain + [('paid', '=', False), ('ref', 'not in', self.line_ids.mapped('invoice_id'))]).unlink()
+                tables['item'].search(domain + [('paid', '=', False), ('ref', 'not in', self.line_ids.mapped('invoice_id'))]).unlink()
 
-            items = models['item'].search_read(domain, ['id', 'ref'])
+            items = tables['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
             if self.env.context.get('ids'):
                 lines = self.env['syncops.sync.wizard.line'].browse(self.env.context.get('ids'))
@@ -401,6 +401,7 @@ class SyncopsSyncWizard(models.TransientModel):
                     refs=refs,
                     tags=tags,
                     items=items,
+                    tables=tables,
                     campaigns=campaigns,
                 )
 
@@ -457,7 +458,7 @@ class SyncopsSyncWizard(models.TransientModel):
                 'users': users,
                 'company': company,
                 'campaigns': campaigns,
-                'models': {
+                'tables': {
                     'partner': partners_model,
                     'user': users_model,
                     'tag': tags_model,
@@ -468,7 +469,7 @@ class SyncopsSyncWizard(models.TransientModel):
                 wizard._sync_partner(**pairs)
 
             elif wizard.type == 'item':
-                pairs['models']['item'] = self.env['payment.item']
+                pairs['tables']['item'] = self.env['payment.item']
                 if wizard.type_item_subtype == 'balance':
                     wizard._sync_item_balance(**pairs)
                 elif wizard.type_item_subtype == 'invoice':
@@ -520,6 +521,7 @@ class SyncopsSyncWizardLine(models.TransientModel):
         refs,
         tags,
         items,
+        tables,
         campaigns
     ):
         pid = 0
@@ -531,17 +533,17 @@ class SyncopsSyncWizardLine(models.TransientModel):
 
         inv = self.invoice_id if pid else None
         if pid and inv in items:
-            item = models['item'].search([('id', '=', items[inv]), ('paid', '=', False)])
+            item = tables['item'].search([('id', '=', items[inv]), ('paid', '=', False)])
             item.write({
                 'amount': self.invoice_amount,
                 'syncops_notif': True,
             })
         else:
             if pid:
-                partner = models['partner'].browse(pid)
+                partner = tables['partner'].browse(pid)
             else:
-                partner = models['partner'].create({
-                    'system': self.system or company.system,
+                partner = tables['partner'].create({
+                    'system': company.system,
                     'name': self.partner_name,
                     'vat': self.partner_vat,
                     'ref': self.partner_ref,
@@ -559,11 +561,11 @@ class SyncopsSyncWizardLine(models.TransientModel):
                 if self.partner_ref:
                     refs.update({self.partner_ref: partner.id})
 
-            item = models['item'].create({
+            item = tables['item'].create({
                 'syncops_ok': True,
                 'syncops_notif': True,
                 'syncops_data': self.data,
-                'system': self.system or company.system,
+                'system': company.system,
                 'amount': self.invoice_amount,
                 'description': self.invoice_name,
                 'invoice_ref': self.invoice_ref,

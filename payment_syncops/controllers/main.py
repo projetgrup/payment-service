@@ -3,6 +3,7 @@ import io
 import json
 import base64
 import pytz
+import logging
 from datetime import datetime
 from urllib.parse import urlparse
 
@@ -13,6 +14,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DT
 from odoo.tools.misc import xlsxwriter, formatLang
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 
+_logger = logging.getLogger(__name__)
 
 class PayloxSyncopsController(Controller):
 
@@ -278,7 +280,7 @@ class PayloxSyncopsController(Controller):
                         wizard.with_context(partner=partner).confirm()
                         wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
                 except:
-                    pass
+                    _logger.error('An error occured when syncing items', exc_info=True)
 
     def _get_tx_values(self, **kwargs):
         vals = super()._get_tx_values(**kwargs)
