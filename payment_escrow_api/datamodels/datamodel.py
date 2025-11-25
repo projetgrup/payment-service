@@ -600,6 +600,7 @@ class EscrowRequestBrokerPaymentLink(Datamodel):
         ordered = True
 
     broker_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Broker ID"), "description": _lt("Broker partner ID"), "example": 123})
+    owner_id = fields.Integer(required=False, allow_none=True, metadata={"title": _lt("Owner ID"), "description": _lt("Optional owner partner ID to pre-select on broker link"), "example": 456})
 
 
 class EscrowResponseBrokerPaymentLink(Datamodel):
@@ -621,7 +622,7 @@ class EscrowRequestBrokerRates(Datamodel):
 
     broker_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Broker ID"), "description": _lt("Broker partner ID"), "example": 123})
     campaign_id = fields.Integer(required=True, allow_none=False, metadata={"title": _lt("Campaign ID"), "description": _lt("Campaign ID to calculate rates"), "example": 1})
-    amount = fields.Float(required=True, allow_none=False, metadata={"title": _lt("Amount"), "description": _lt("Transaction amount"), "example": 10000.0})
+    amount = fields.Float(required=False, allow_none=True, metadata={"title": _lt("Amount"), "description": _lt("Transaction amount"), "example": 10000.0})
 
 
 

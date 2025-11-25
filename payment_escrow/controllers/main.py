@@ -3,10 +3,13 @@ import json
 import base64
 import logging
 import re
+import secrets
+import string
+import traceback
 import time
 import uuid
 from collections import OrderedDict
-from urllib.parse import unquote, urlparse
+from urllib.parse import unquote, urlparse, quote
 
 from datetime import datetime
 from odoo import _, fields
@@ -122,10 +125,6 @@ class PayloxSystemEscrowController(Controller):
             return {'error': str(e)}
 
     def _generate_hash_url(self, step=0, id=0, owner=None, customer=None, status=None):
-        import base64
-        import json
-        from urllib.parse import quote
-        
         values = {
             'i': id,
             's': step,
@@ -137,6 +136,7 @@ class PayloxSystemEscrowController(Controller):
             values['t'] = status
         if customer is not None:
             values['c'] = customer
+        _logger.error(values)
         hash_value = base64.b64encode(json.dumps(values).encode('utf-8')).decode('utf-8')
         return f'/my/ads?={quote(hash_value)}'
 
@@ -932,9 +932,6 @@ class PayloxSystemEscrowController(Controller):
             })
         
         try:
-            import base64
-            from datetime import datetime
-            import logging
             decoded = base64.b64decode(token).decode()
             
             broker_id, expires_timestamp = decoded.split(':')
@@ -957,8 +954,6 @@ class PayloxSystemEscrowController(Controller):
                 })
             
             if not broker.user_ids:
-                import secrets
-                import string
                 alphabet = string.ascii_letters + string.digits
                 password = ''.join(secrets.choice(alphabet) for i in range(16))
                 
@@ -976,8 +971,22 @@ class PayloxSystemEscrowController(Controller):
             request.session.uid = broker_user.id
             request.session.login = broker_user.login
             request.session.session_token = broker_user._compute_session_token(request.session.sid)
-            
-            return request.redirect('/my/ads')
+
+            owner_param = kwargs.get('owner') or kwargs.get('owner_id')
+            customer_param = kwargs.get('customer') or kwargs.get('customer_id')
+
+            try:
+                owner_id = int(owner_param) if owner_param is not None else None
+            except (TypeError, ValueError):
+                owner_id = None
+
+            try:
+                customer_id = int(customer_param) if customer_param is not None else None
+            except (TypeError, ValueError):
+                customer_id = None
+
+            redirect_url = self._generate_hash_url(step=1, owner=owner_id, customer=customer_id)
+            return request.redirect(redirect_url)
             
         except Exception as e:
             return request.render('payment_escrow.broker_link_error', {
@@ -1267,7 +1276,6 @@ class PayloxSystemEscrowController(Controller):
                                 key = attr.technical_name
                                 if attr.attribute_type == 'binary':
                                     if value_rec.value_binary:
-                                        import base64
                                         b64_data = base64.b64encode(value_rec.value_binary).decode('utf-8')
                                         attribute_values[key] = f'data:image/jpeg;base64,{b64_data}'
                                     elif attr.is_primary_image and ad.image_1920:
@@ -1292,7 +1300,6 @@ class PayloxSystemEscrowController(Controller):
                         result['attribute_values'] = attribute_values
                 except Exception as e:
                     _logger.warning(f"Could not load attribute values for ad {ad_id}: {e}")
-                    import traceback
                     _logger.error(traceback.format_exc())
             
             return result

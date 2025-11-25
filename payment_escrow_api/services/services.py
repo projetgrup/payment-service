@@ -5,7 +5,7 @@ import hashlib
 import logging
 import json
 import requests
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 
 
 from odoo import fields, _, _lt
@@ -1015,7 +1015,18 @@ class EscrowAPIService(Component):
         broker_token = base64.b64encode(token_string.encode()).decode()
         
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = f"{base_url}/my/ads/broker?token={broker_token}"
+        query_params = {'token': broker_token}
+
+        owner_id = getattr(params, 'owner_id', None)
+        try:
+            owner_id = int(owner_id) if owner_id is not None else None
+        except (TypeError, ValueError):
+            owner_id = None
+
+        if owner_id:
+            query_params['owner'] = owner_id
+
+        url = f"{base_url}/my/ads/broker?{urlencode(query_params)}"
         
         return {
             'url': url,
@@ -1034,10 +1045,16 @@ class EscrowAPIService(Component):
         
         if not broker:
             raise MissingError(_('Broker not found'))
-        
-        amount = float(params.amount or 0.0)
+
+        raw_amount = getattr(params, 'amount', None)
+        if raw_amount in (None, ''):
+            raise ValidationError(_('Amount is required.'))
+        try:
+            amount = float(raw_amount)
+        except (TypeError, ValueError):
+            raise ValidationError(_('Amount must be a valid number.'))
         if amount <= 0:
-            raise ValidationError(_('Amount must be greater than zero'))
+            raise ValidationError(_('Amount must be greater than zero.'))
         
         campaign = self.env['escrow.broker.campaign'].sudo() \
                    .with_company(token.company_id) \
