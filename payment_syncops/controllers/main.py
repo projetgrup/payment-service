@@ -80,7 +80,7 @@ class PayloxSyncopsController(Controller):
                     'commission_amount': '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
                 })
         else:
-            branch = tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=tx.create_uid)
+            branch = tx.acquirer_id._get_branch_line(tx)
             values = {
                 'id': tx.id,
                 'ref': tx.jetcheckout_order_id,
@@ -493,7 +493,7 @@ class PayloxSyncopsController(Controller):
                 ('company_id', 'in', connector.get_company_ids()),
                 ('create_date', '>=', date_start - offset),
                 ('create_date', '<=', date_end - offset),
-                ('jetcheckout_payment_type', 'in', ('virtual_pos', 'transfer')),
+                ('jetcheckout_payment_type', 'in', ('virtualpos', 'transfer')),
             ]
             if 'payment_type' in data:
                 if data['payment_type'] == 'payment':

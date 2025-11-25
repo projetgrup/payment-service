@@ -1159,7 +1159,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
     _checkData: function () {
         let checked = true;
         const type = this.type.selected;
-        if (type === 'virtual_pos') {
+        if (type === 'virtualpos') {
             if (!isNaN(Number(this.card.token.value))) {
                 if (!(this.amount.value > 0)) {
                     this.displayNotification({
@@ -1220,7 +1220,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 });
                 checked = false;
             }
-        } else if (type === 'soft_pos') {
+        } else if (type === 'softpos') {
             if (!this.amount.value) {
                 this.displayNotification({
                     type: 'warning',
@@ -1300,7 +1300,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
 
     _getParams: function () {
         const type = this.type.selected;
-        if (type === 'virtual_pos') {
+        if (type === 'virtualpos') {
             const $input = $('.installment-cell input:checked');
             return {
                 type,
@@ -1333,7 +1333,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                 invoice: this.payment.invoice.value,
                 subscription: this.payment.subscription.value,
             }
-        } else if (type === 'soft_pos') {
+        } else if (type === 'softpos') {
             return {
                 type,
                 amount: this.amount.value,
@@ -1577,6 +1577,7 @@ publicWidget.registry.payloxPage = publicWidget.Widget.extend({
                     if (result.reload) {
                         window.location.reload();
                     }
+                    this._enableButton();
                     //window.history.pushState({}, '', href);
                     framework.hideLoading();
                 }

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_payment_transaction_basket_tree" model="ir.ui.view">
+        <field name="name">payment.transaction.basket.tree</field>
+        <field name="model">payment.transaction.basket</field>
+        <field name="arch" type="xml">
+            <tree string="Transaction Baskets" create="false" edit="false">
+                <header>
+                    <button name="action_approve_payment" 
+                        string="Approve Payment" 
+                        type="object"
+                        class="btn-primary"/>
+                        
+                    <button name="action_disapprove" 
+                        string="Disapprove Payment" 
+                        type="object"
+                        class="btn-primary"/>
+                </header>
+                <field name="currency_id" invisible="1"/>
+                <field name="transaction_id" string="Transaction"/>
+                <field name="ad_number" string="Ad Number"/>
+                <field name="ad_info" string="Advertisement"/>
+                <field name="acquirer_id" string="Payment Provider"/>
+                <field name="vpos_name" string="Virtual POS"/>
+                <field name="transaction_date" string="Transaction Date"/>
+                <field name="ad_state" string="Ad Status"/>
+                <field name="paylox_escrow_type" string="Transfer Category"/>
+                <field name="transfer_account" string="Transfer Account"/>
+                <field name="name" string="Name"/>
+                <field name="api_charged_amount" string="API Charged Amount" widget="monetary" optional="hide"/>
+                <field name="transfer_amount" string="Transfer Amount" widget="monetary"/>
+                <field name="transfer_status" string="Transfer Status" widget="badge"
+                       decoration-info="transfer_status == 'can_approve'"
+                       decoration-warning="transfer_status == 'waiting_invoice'"
+                       decoration-success="transfer_status == 'approved'"/>
+                <field name="approval_state" string="Approval Status" widget="badge" 
+                       decoration-success="approval_state == '+'"
+                       decoration-warning="approval_state == '-'"
+                       decoration-danger="approval_state == '0'"/>
+                <field name="broker_invoice_id" string="Invoice" optional="show"/>
+                <field name="broker_invoice_upload_date" string="Invoice Upload Date" optional="hide"/>
+                <field name="broker_submitted_for_approval" string="Submitted" widget="boolean" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_payment_transaction_basket_form" model="ir.ui.view">
+        <field name="name">payment.transaction.basket.form</field>
+        <field name="model">payment.transaction.basket</field>
+        <field name="arch" type="xml">
+            <form string="Transaction Basket" create="false">
+            <header>
+                    <!--<button name="action_recompute_fields" 
+                            string="Recompute Fields" 
+                            type="object"
+                            class="btn-primary"/>-->
+                    <button name="action_disapprove" 
+                        string="Disapprove Payment" 
+                        type="object"
+                        attrs="{'invisible': [('transfer_status', '!=', 'approved')]}"
+                        class="btn-primary"/>
+                    <button name="action_approve_payment" 
+                        string="Approve Payment" 
+                        type="object"
+                        attrs="{'invisible': [('transfer_status', '=', 'approved')]}"
+                        class="btn-primary"/>
+                </header>
+                <sheet>
+                    <field name="currency_id" invisible="1"/>
+                    <group>
+                        <group string="Ad Information">
+                            <field name="ad_number"/>
+                            <field name="ad_id" readonly="1"/>
+                            <field name="ad_info"/>
+                            <field name="ad_state"/>
+                        </group>
+                        <group string="Transaction Information">
+                            <field name="transaction_id"/>
+                            <field name="acquirer_id"/>
+                            <field name="transaction_date"/>
+                            <field name="approval_state"/>
+                            <field name="transfer_status"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Transfer Information">
+                            <field name="paylox_escrow_type"/>
+                            <field name="transfer_account"/>
+                            <field name="submerchant_external_id"/>
+                            <field name="approval_state_message"/>
+                        </group>
+                        <group string="Amount Information">
+                            <field name="api_charged_amount" widget="monetary"/>
+                            <field name="submerchant_price" widget="monetary"/>
+                            <field name="transfer_amount" widget="monetary"/>
+                            <field name="amount" widget="monetary"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Broker Invoice Information">
+                        <group>
+                            <field name="broker_invoice_id" invisible="1" filename="broker_invoice_filename"/>
+                            <field name="broker_invoice_upload_id" readonly="1" filename="broker_invoice_filename"/>
+                            <field name="broker_invoice_filename" invisible="1"/>
+                            <field name="broker_invoice_upload_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="broker_submitted_for_approval" readonly="1"/>
+                            <field name="broker_submit_date" readonly="1" attrs="{'invisible': [('broker_submitted_for_approval', '=', False)]}"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Other Information">
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="description"/>
+                            <field name="category"/>
+                            <field name="qty"/>
+                            <field name="physical"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_payment_transaction_basket_search" model="ir.ui.view">
+        <field name="name">payment.transaction.basket.search</field>
+        <field name="model">payment.transaction.basket</field>
+        <field name="arch" type="xml">
+            <search string="Search Transaction Baskets">
+                <field name="ad_number" string="Ad Number"/>
+                <field name="ad_info" string="Vehicle"/>
+                <field name="paylox_escrow_type" string="Category"/>
+                <field name="acquirer_id" string="Payment Provider"/>
+                <field name="transaction_id" string="Transaction"/>
+                
+                <separator/>
+                <filter string="Transfer Can Be Approved" name="can_approve_transfer" 
+                        domain="[('transfer_status', '=', 'can_approve')]"/>
+                <filter string="Waiting for Invoice" name="waiting_invoice" 
+                        domain="[('transfer_status', '=', 'waiting_invoice')]"/>
+                <filter string="Transfer Approved" name="transfer_approved" 
+                        domain="[('transfer_status', '=', 'approved')]"/>
+                
+                <separator/>
+                <filter string="Waiting Approval" name="waiting_approval" 
+                        domain="[('approval_state', '=', '-')]"/>
+                <filter string="Approved" name="approved" 
+                        domain="[('approval_state', '=', '+')]"/>
+                <filter string="Rejected" name="rejected" 
+                        domain="[('approval_state', '=', '0')]"/>
+                
+                <separator/>
+                <filter string="Waiting Official Sale Image" name="waiting_official_sale" 
+                        domain="[('ad_state', '=', 'waiting_official_sale_img')]"/>
+                <filter string="Waiting Transfer Approval" name="waiting_transfer" 
+                        domain="[('ad_state', '=', 'waiting_transfer_approval')]"/>
+                <filter string="Transferred" name="transferred" 
+                        domain="[('ad_state', '=', 'transferred')]"/>
+                
+                <separator/>
+                <filter string="Broker Transactions" name="broker_only" 
+                        domain="[('paylox_escrow_type', '=', 'broker')]"/>
+                <filter string="Has Invoice" name="has_invoice" 
+                        domain="[('broker_invoice_id', '!=', False)]"/>
+                <filter string="Submitted for Approval" name="submitted_approval" 
+                        domain="[('broker_submitted_for_approval', '=', True)]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle Info" name="group_ad_info" 
+                            context="{'group_by': 'ad_info'}"/>
+                    <filter string="Transfer Status" name="group_transfer_status" 
+                            context="{'group_by': 'transfer_status'}"/>
+                    <filter string="Transaction" name="group_transaction" 
+                            context="{'group_by': 'transaction_id'}"/>
+                    <filter string="Payment Provider" name="group_acquirer" 
+                            context="{'group_by': 'acquirer_id'}"/>
+                    <filter string="Ad Status" name="group_ad_state" 
+                            context="{'group_by': 'ad_state'}"/>
+                    <filter string="Approval Status" name="group_approval" 
+                            context="{'group_by': 'approval_state'}"/>
+                    <filter string="Transfer Category" name="group_category" 
+                            context="{'group_by': 'paylox_escrow_type'}"/>
+                    <filter string="Transaction Date" name="group_transaction_date" 
+                            context="{'group_by': 'transaction_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payment_transaction_basket" model="ir.actions.act_window">
+        <field name="name">Transfer Basket</field>
+        <field name="res_model">payment.transaction.basket</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_payment_transaction_basket_search"/>
+        <field name="domain">[('transaction_id.state', '=', 'done')]</field>
+        <field name="context">{
+            'search_default_can_approve_transfer': 1,
+            'search_default_group_ad_info': 1,
+            'search_default_group_transfer_status': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No transfer basket records found
+            </p>
+            <p>
+                Escrow system transfer operations are listed here.
+            </p>
+        </field>
+    </record>
+
+    <menuitem 
+        id="menu_payment_transaction_basket"
+        name="Transfer Basket"
+        parent="menu_main"
+        action="action_payment_transaction_basket"
+        sequence="25"/>
+</odoo>

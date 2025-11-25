@@ -16,6 +16,7 @@
         'sms_api',
         'sec_dlp',
         'sec_audit',
+        'queue_job',
         'payment_jetcheckout',
         'web_multitenant',
         'auth_multitenant',

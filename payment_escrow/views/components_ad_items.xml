@@ -3,51 +3,46 @@
     <template id="ad_list_item" name="Ad List Item">
         <div class="escrow-ad-list-item escrow-item" 
             t-att-data-id="ad.id" 
-            t-att-data-state="ad.escrow_state"
-            t-att-data-price="ad.list_price or 0"
+            t-att-data-state="ad.state"
+            t-att-data-price="ad.price or 0"
             t-att-data-name="ad.name"
             t-att-data-date="ad.create_date"
             t-att-data-value="json.dumps({
                 'id': ad.id,
                 'product_id': ad.id,
-                'item_id': ad.escrow_payment_item_id.id,
-                'amount': ad.escrow_payment_item_id.amount,
-                'residual_amount': ad.escrow_payment_item_id.residual_amount,
-                'paid_amount': ad.escrow_payment_item_id.paid_amount,
-                'name': ad.name,
-                'amount': ad.list_price or 0,
-                'quantity': 1,
-                'description': ad.name,
-                'vin': ad.escrow_car_vin or '',
-                'plate': ad.escrow_car_plate or '',
-                'brand_id': ad.escrow_car_brand_id.id,
-                'brand_name': ad.escrow_car_brand_id.name or '',
-                'category_name': ad.categ_id.name or '',
-                'model_id': ad.escrow_car_model_id.id,
-                'model_name': ad.escrow_car_model_id.name or '',
-                'owner_id': ad.escrow_owner_id.id,
-                'year': ad.escrow_car_model_year,
-                'categ': ad.categ_id.id,
-                'partner': ad.escrow_owner_id.name,
-                'vat': ad.escrow_owner_id.vat,
-                'state': ad.escrow_state,
-                'iban': ad.escrow_owner_id.bank_ids and ad.escrow_owner_id.bank_ids[0]['acc_number'] or '',
-            })" field="ad.item" t-att-data-item-id="ad.escrow_payment_item_id.id" t-att-data-product-id="ad.id">
+                'item_id': ad.payment_item_id.id if ad.payment_item_id else 0,
+                'owner_id': ad.owner_id.id if ad.owner_id else 0,
+                'categ': ad.category_id.id if ad.category_id else 0,
+                'category_name': ad.category_id.name or '',
+                'partner': ad.owner_id.name if ad.owner_id else '',
+                'vat': ad.owner_id.vat if ad.owner_id else '',
+                'state': ad.sale_state or ad.state,
+                'raw_state': ad.state,
+                'sale_state': ad.sale_state,
+                'iban': ad.owner_id.bank_ids and ad.owner_id.bank_ids[0].acc_number or '' if ad.owner_id else '',
+                'attributes': [{'name': v.attribute_id.name, 'value': v.display_value} for v in ad.attribute_value_ids],
+            })" field="ad.item" t-att-data-item-id="ad.payment_item_id.id if ad.payment_item_id else 0" t-att-data-product-id="ad.id">
             <div class="escrow-ad-item-info">
                 <div class="escrow-ad-item-image">
                     <img t-attf-src="data:image/png;base64,#{ad.image_1920}" alt="" name="img"/>
                 </div>
                 <span class="escrow-ad-item-name" t-esc="ad.name" name="name" field="ad.input.name"/>
             </div>
-            <div class="escrow-ad-item-categ" t-esc="ad.categ_id.name" t-att-data-id="ad.categ_id.id" name="categ"/>
-            <div class="escrow-ad-item-price" t-esc="ad.escrow_payment_item_id.amount" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-data-value="ad.price" name="price"/>
-            <div class="escrow-ad-item-state" t-att-data-value="ad.escrow_state">
-                <span t-if="ad.escrow_state == 'new'" class="success">New</span>
-                <span t-elif="ad.escrow_state == 'waiting'" class="warning">Waiting</span>
-                <span t-elif="ad.escrow_state == 'waiting_official_sale_img'" class="info">Pending Sale</span>
-                <span t-elif="ad.escrow_state == 'waiting_transfer_approval'" class="info">Pending Transfer Approval</span>
-                <span t-elif="ad.escrow_state == 'transferred'" class="primary">Transferred</span>
-                <span t-else="" class="secondary">Unknown</span>
+            <div class="escrow-ad-item-categ" t-esc="ad.category_id.name" t-att-data-id="ad.category_id.id" name="categ"/>
+            <div class="escrow-ad-item-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" t-att-data-value="ad.price" name="price"/>
+            <div class="escrow-ad-item-state" t-att-data-value="ad.sale_state or ad.state">
+                <!-- Main States -->
+                <span t-if="ad.state == 'draft'" class="secondary">Draft</span>
+                <span t-elif="ad.state == 'waiting'" class="warning">Waiting Approval</span>
+                <span t-elif="ad.state == 'new' and not ad.sale_state" class="success">Published</span>
+                <span t-elif="ad.state == 'sold'" class="dark">Sold</span>
+                <span t-elif="ad.state == 'cancelled'" class="danger">Cancelled</span>
+                
+                <!-- Sale States -->
+                <span t-elif="ad.sale_state == 'waiting_payment'" class="info">Waiting Payment</span>
+                <span t-elif="ad.sale_state == 'waiting_official_doc'" class="info">Waiting Official Doc</span>
+                <span t-elif="ad.sale_state == 'waiting_transfer'" class="primary">Waiting Transfer</span>
+                <span t-elif="ad.sale_state == 'transferred'" class="success">Transferred</span>
             </div>
             <div class="escrow-ad-item-arrow">
                 <i class="fa fa-chevron-right"/>
@@ -58,8 +53,8 @@
     <template id="ad_grid_item" name="Ad Grid Item">
         <div class="escrow-ad-grid-item escrow-item" 
             t-att-data-id="ad.id" 
-            t-att-data-state="ad.escrow_state"
-            t-att-data-price="ad.list_price or 0"
+            t-att-data-state="ad.sale_state or ad.state"
+            t-att-data-price="ad.price or 0"
             t-att-data-name="ad.name"
             t-att-data-date="ad.create_date"
             field="ad.item">
@@ -70,15 +65,21 @@
                 <span t-esc="ad.name" name="name"/>
             </div>
             <div class="escrow-ad-grid-item-body">
-                <div class="escrow-ad-grid-item-categ" t-esc="ad.categ_id.name" name="categ"/>
+                <div class="escrow-ad-grid-item-categ" t-esc="ad.category_id.name" name="categ"/>
                 <div class="escrow-ad-grid-item-price" t-esc="ad.price" t-options="{'widget': 'monetary', 'display_currency': ad.currency_id}" name="price"/>
                 <div class="escrow-ad-grid-item-status">
-                    <span t-if="ad.escrow_state == 'new'" class="badge badge-success">New</span>
-                    <span t-elif="ad.escrow_state == 'waiting'" class="badge badge-warning">Waiting</span>
-                    <span t-elif="ad.escrow_state == 'waiting_official_sale_img'" class="badge badge-info">Pending Sale</span>
-                    <span t-elif="ad.escrow_state == 'waiting_transfer_approval'" class="badge badge-info">Pending Transfer Approval</span>
-                    <span t-elif="ad.escrow_state == 'transferred'" class="badge badge-primary">Transferred</span>
-                    <span t-else="" class="badge badge-secondary">Unknown</span>
+                    <!-- Main States -->
+                    <span t-if="ad.state == 'draft'" class="badge badge-secondary">Draft</span>
+                    <span t-elif="ad.state == 'waiting'" class="badge badge-warning">Waiting Approval</span>
+                    <span t-elif="ad.state == 'new' and not ad.sale_state" class="badge badge-success">Published</span>
+                    <span t-elif="ad.state == 'sold'" class="badge badge-dark">Sold</span>
+                    <span t-elif="ad.state == 'cancelled'" class="badge badge-danger">Cancelled</span>
+                    
+                    <!-- Sale States -->
+                    <span t-elif="ad.sale_state == 'waiting_payment'" class="badge badge-info">Waiting Payment</span>
+                    <span t-elif="ad.sale_state == 'waiting_official_doc'" class="badge badge-info">Waiting Official Doc</span>
+                    <span t-elif="ad.sale_state == 'waiting_transfer'" class="badge badge-primary">Waiting Transfer</span>
+                    <span t-elif="ad.sale_state == 'transferred'" class="badge badge-success">Transferred</span>
                 </div>
             </div>
         </div>

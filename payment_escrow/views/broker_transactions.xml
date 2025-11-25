@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="broker_transactions_page" name="Broker Transactions">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="s2s" t-value="True"/>
+            <t t-set="class" t-value="True"/>
+            <t t-set="title" t-value="website.name"/>
+            <t t-set="body_classname" t-value="'payment-page payment-escrow broker-transactions'"/>
+            <t t-set="language" t-value="request.env['res.lang']._lang_get(request.env.lang)"/>
+            <t t-set="currency" t-value="request.env.company.currency_id"/>
+            <t t-set="x_icon" t-value="'/web/image?model=website&amp;id=%s&amp;field=favicon' % website.id"/>
+            <t t-call="payment_jetcheckout.payment_loading"/>
+            <t t-call="payment_escrow.background_animation"/>
+            
+            <div class="escrow-ad-wrapper broker-transactions-page">
+                <t t-call="payment_escrow.header">
+                    <t t-set="variant" t-value="'ads'"/>
+                    <t t-set="company" t-value="request.env.company"/>
+                </t>
+                
+                <div class="escrow-ad-container">
+                    <div class="col-12 col-lg-10 mx-auto p-2 escrow-ad-dashboard">
+                        <div class="col-12">
+                            <div class="escrow-ad-nav">
+                                <h3 class="escrow-ad-nav-title">My Transactions</h3>
+                                <div class="escrow-ad-nav-control">
+                                    <button type="button" 
+                                            class="btn escrow-ad-nav-button-primary mr-2" 
+                                            data-toggle="modal" 
+                                            data-target="#invoiceInfoModal">
+                                        <i class="fa fa-file-invoice mr-2"/>
+                                        Invoice Information
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" 
+                                 id="invoiceInfoModal" 
+                                 tabindex="-1" 
+                                 role="dialog" 
+                                 aria-labelledby="invoiceInfoModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                    <div class="modal-content border-0 shadow-lg" style="border-radius: 16px; overflow: hidden;">
+                                        <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 24px 32px;">
+                                            <h5 class="modal-title font-weight-bold text-white m-0" style="font-size: 20px;">
+                                                <i class="fa fa-file-invoice mr-2"></i>
+                                                Invoice Information
+                                            </h5>
+                                            <button type="button" class="close text-white" data-dismiss="modal" style="opacity: 1;">
+                                                <span style="font-size: 28px;">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body" style="padding: 32px; background-color: #f8f9fa;">
+                                            <div class="mb-4 p-4 bg-white shadow-sm" style="border-radius: 12px; border-left: 4px solid #667eea;">
+                                                <h6 class="font-weight-bold mb-3" style="color: #667eea; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                    <i class="fa fa-briefcase mr-2"></i>Company Information
+                                                </h6>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-building text-primary"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Company Name</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;" t-esc="request.env.company.name"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-hashtag text-success"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Tax/VAT Number</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;" t-esc="request.env.company.vat or '-'"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-home text-info"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Tax Office</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;" t-esc="request.env.company.tax_office or '-'"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-3">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-phone text-warning"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Phone</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;" t-esc="request.env.company.phone or '-'"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 40px; height: 40px; min-width: 40px;">
+                                                                <i class="fa fa-map-o text-danger"></i>
+                                                            </div>
+                                                            <div class="flex-grow-1">
+                                                                <small class="text-muted d-block mb-1" style="font-size: 11px; font-weight: 600; text-transform: uppercase;">Address</small>
+                                                                <div class="font-weight-bold text-dark" style="font-size: 15px;">
+                                                                    <t t-if="request.env.company.street">
+                                                                        <span t-esc="request.env.company.street"/>
+                                                                        <t t-if="request.env.company.city">, <span t-esc="request.env.company.city"/></t>
+                                                                        <t t-if="request.env.company.state_id">/ <span t-esc="request.env.company.state_id.name"/></t>
+                                                                    </t>
+                                                                    <t t-else="">-</t>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0" style="padding: 20px 32px; background-color: #f8f9fa;">
+                                            <button type="button" class="btn btn-secondary px-4 py-2" data-dismiss="modal" style="border-radius: 8px; font-weight: 600;">
+                                                <i class="fa fa-times mr-1"></i>Close
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mb-4">
+                                <div class="card border-0 shadow-sm filter-card" style="border-radius: 12px;">
+                                    <div class="card-body py-3 px-4">
+                                        <div class="row align-items-center">
+                                            <div class="col-12">
+                                                <div class="d-flex align-items-center flex-wrap">
+                                                    <span class="mr-3 font-weight-600 text-dark" style="font-size: 14px;">Filter by Status:</span>
+                                                    <div class="btn-group btn-group-toggle" role="group">
+                                                        <button type="button" class="btn btn-secondary filter-btn active" data-status="all">
+                                                            <i class="fa fa-list mr-1"></i>All
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-info filter-btn" data-status="can_approve">
+                                                            <i class="fa fa-check-circle mr-1"></i>Can Approve
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-warning filter-btn" data-status="waiting_invoice">
+                                                            <i class="fa fa-file-invoice mr-1"></i>Waiting Invoice
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-success filter-btn" data-status="approved">
+                                                            <i class="fa fa-check mr-1"></i>Approved
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="escrow-ad-list list-view">
+                                <div class="escrow-ad-list-header">
+                                    <div>TRANSACTION</div>
+                                    <div>AD NUMBER</div>
+                                    <div>VEHICLE</div>
+                                    <div>AMOUNT</div>
+                                    <div>STATUS</div>
+                                    <div>INVOICE</div>
+                                    <div>ACTIONS</div>
+                                </div>
+                                
+                                <div class="ad-list-container w-100">
+                                    <t t-if="not baskets">
+                                        <div class="text-center py-5 my-5">
+                                            <i class="fa fa-inbox fa-4x text-muted mb-3"></i>
+                                            <h4 class="text-muted">You have no transactions yet</h4>
+                                        </div>
+                                    </t>
+                                    
+                                    <input type="hidden" t-att-data-decimal="currency.decimal_places" t-att-data-separator="language.decimal_point" t-att-data-thousand="language.thousands_sep" t-att-data-name="currency.name" t-att-data-id="currency.id" t-att-data-position="currency.position" t-att-data-symbol="currency.symbol" field="currency"/>
+                                    <t t-foreach="baskets" t-as="basket">
+                                        <div class="escrow-ad-list-item" t-att-data-status="basket.transfer_status">
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-bold" t-esc="basket.transaction_id.reference"/>
+                                                    <br/>
+                                                    <small class="text-muted" t-esc="basket.transaction_date.strftime('%d.%m.%Y %H:%M') if basket.transaction_date else '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-600" t-esc="basket.ad_number or '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-esc="basket.ad_info or '-'"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span class="font-weight-bold text-primary">
+                                                        <t t-esc="'%.2f' % basket.transfer_amount"/>
+                                                        <t t-esc="basket.currency_id.symbol"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-if="basket.transfer_status == 'can_approve'" class="badge badge-info px-3 py-2">
+                                                        <i class="fa fa-check-circle mr-1"></i>Can Approve
+                                                    </span>
+                                                    <span t-elif="basket.transfer_status == 'waiting_invoice'" class="badge badge-warning px-3 py-2">
+                                                        <i class="fa fa-clock mr-1"></i>Waiting Invoice
+                                                    </span>
+                                                    <span t-elif="basket.transfer_status == 'approved'" class="badge badge-success px-3 py-2">
+                                                        <i class="fa fa-check mr-1"></i>Approved
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <span t-if="basket.broker_invoice_id" class="text-success">
+                                                        <i class="fa fa-check-circle mr-1"></i>Uploaded
+                                                        <br/>
+                                                        <small t-esc="basket.broker_invoice_upload_date.strftime('%d.%m.%Y') if basket.broker_invoice_upload_date else ''"/>
+                                                    </span>
+                                                    <span t-else="" class="text-muted">
+                                                        <i class="fa fa-times-circle mr-1"></i>Not uploaded
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="escrow-ad-list-item-info">
+                                                <div class="escrow-ad-list-item-text">
+                                                    <div class="btn-group-vertical btn-group-sm w-100">
+                                                        <button type="button" 
+                                                                class="btn btn-outline-primary mb-1" 
+                                                                t-if="basket.transfer_status == 'waiting_invoice' and not basket.broker_invoice_id"
+                                                                t-att-data-id="basket.id"
+                                                                t-att-data-ad-number="basket.ad_number"
+                                                                t-att-data-transfer-amount="basket.transfer_amount"
+                                                                field="transactions.uploadInvoice">
+                                                            <i class="fa fa-upload mr-1"></i>Upload Invoice
+                                                        </button>
+
+                                                        <form t-att-action="'/my/broker/transaction/%s/submit_for_approval' % basket.id"
+                                                              method="post"
+                                                              t-if="basket.broker_invoice_id and not basket.broker_submitted_for_approval">
+                                                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                                                <i class="fa fa-paper-plane mr-1"></i>Submit for Approval
+                                                            </button>
+                                                        </form>
+                                                        
+                                                        <span t-if="basket.broker_submitted_for_approval" class="badge badge-info py-2">
+                                                            <i class="fa fa-clock mr-1"></i>Waiting for Approval
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="modal fade" 
+                                             t-att-id="'uploadInvoiceModal' + str(basket.id)" 
+                                             tabindex="-1" 
+                                             role="dialog" 
+                                             aria-labelledby="uploadInvoiceModalLabel"
+                                             aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content" style="border-radius: 12px;">
+                                                    <form t-att-action="'/my/broker/transaction/%s/upload_invoice' % basket.id" 
+                                                          method="post" 
+                                                          enctype="multipart/form-data">
+                                                        <div class="modal-header border-0 pb-0">
+                                                            <h5 class="modal-title font-weight-bold">Upload Invoice</h5>
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                <span>×</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body pt-2">
+                                                            <div class="mb-3 p-3 bg-light rounded">
+                                                                <div class="row">
+                                                                    <div class="col-6">
+                                                                        <small class="text-muted d-block">Transaction</small>
+                                                                        <strong t-esc="basket.ad_number"/>
+                                                                    </div>
+                                                                    <div class="col-6 text-right">
+                                                                        <small class="text-muted d-block">Amount</small>
+                                                                        <strong class="text-primary">
+                                                                            <t t-esc="'%.2f' % basket.transfer_amount"/> 
+                                                                            <t t-esc="basket.currency_id.symbol"/>
+                                                                        </strong>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="form__label">Invoice File</label>
+                                                                <div class="pt-1">
+                                                                    <input type="file" 
+                                                                           class="filepond" 
+                                                                           name="invoiceFile"
+                                                                           accept="image/*, application/pdf" 
+                                                                           field="transactions.invoiceFile"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer border-0 pt-0">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                            <button type="button" class="btn btn-primary" field="transactions.submitButton">
+                                                                <i class="fa fa-upload mr-1"></i>Upload
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

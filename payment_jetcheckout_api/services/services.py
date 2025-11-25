@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import uuid
 import time
 import base64
 import hashlib
@@ -9,6 +10,7 @@ import datetime
 import functools
 from urllib.parse import quote
 
+from odoo import fields
 from odoo.http import Response, request
 from odoo.exceptions import AccessError
 from odoo.tools.translate import _, _lt
@@ -155,12 +157,148 @@ class PaymentAPIService(Component):
             if not hash:
                 return Response("Hash is not matched", status=401, mimetype="application/json")
 
-            self._create_transaction(api, hash, params)
+            tx = self._create_transaction(api, hash, params)
 
             ResponseOk = self.env.datamodels["payment.prepare.output"]
-            return ResponseOk(hash=quote(hash), **RESPONSE[200])
+            if tx.jetcheckout_payment_type == 'physicalpos' and getattr(params, 'payNow', False):
+                method = fields.first(tx.paylox_api_method_ids.filtered(lambda m: m.type == 'physicalpos'))
+                status, message = 0, 'Success'
+                acquirer = tx.acquirer_id
+                url = acquirer._get_paylox_api_url()
+                apikey = acquirer.jetcheckout_api_key
+                base_url = acquirer.get_base_url()
+                if base_url.endswith('/'):
+                    base_url = base_url[:-1]
+                payload = {
+                    'application_key': apikey,
+                    'order_id': tx.jetcheckout_order_id,
+                    'amount': int(tx.amount*100),
+                    'currency': tx.company_id.currency_id.name,
+                    'store_code': tx.company_id.payment_method_physical_pos_store_code or '',
+                    'callback_api_url': '%s/payment/callback' % base_url,
+                    'mode': acquirer._get_paylox_env(),
+                    #'document_type': 4,
+                }
+                if tx.jetcheckout_installment_count > 1:
+                    payload.update({'installment_count': tx.jetcheckout_installment_count})
+                if tx.paylox_product_ids:
+                    precision = self.env['decimal.precision'].sudo().precision_get('Product Price')
+                    payload.update({
+                        'sale_items': [{
+                            'name': product.name or '',
+                            'barcode': product.code or '',
+                            'qty': round(product.qty, precision),
+                            'price': round(product.price, precision),
+                            'amount': round(product.qty*product.price, precision),
+                            'tax_rate': 20
+                        } for product in tx.paylox_product_ids]
+                    })
+
+                devices = method.type_physicalpos_ids
+                device_ids = []
+                device_owner = ''
+                device_name = ''
+                if devices:        
+                    device_owner = devices[0].type
+                    if device_owner == 'pavo':
+                        device_name = devices[0].name
+                        device_ids.append(device_name)
+                    else:
+                        device_name = devices[0].name
+                        device_ids.extend(devices.mapped('name'))
+
+                if device_ids:
+                    payload.update({'device_ids': device_ids})
+
+                if device_owner:
+                    payload.update({'device_owner': device_owner})
+
+                request_count = 0
+                status = 0
+                message = ''
+                def init_physical_payment():
+                    nonlocal request_count
+                    nonlocal status
+                    nonlocal message
+                    if request_count == 5:
+                        status, message = 1, _('Request cycle exceeded. Please contact with system administrator.')
+                        tx.write({
+                            'state': 'error',
+                            'state_message': message,
+                            'last_state_change': fields.Datetime.now(),
+                        })
+
+                    request_count += 1
+                    response = requests.post('%s/api/v1/physical/payment' % url, json=payload)
+                    if response.status_code == 200:
+                        result = response.json()
+                        if result['response_code'] == '00158':
+                            response = requests.post('%s/api/v1/physical/pairing' % url, json={
+                                "application_key": apikey,
+                                "device_id": device_name,
+                                "device_owner": device_owner
+                            })
+                            if response.status_code == 200:
+                                result = response.json()
+                                if result['pairing_code']:
+                                    status, message = 0, _('Pairing code is %s') % result['pairing_code']
+                                else:
+                                    status, message = 1, _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                                    tx.write({
+                                        'state': 'error',
+                                        'state_message': message,
+                                        'last_state_change': fields.Datetime.now(),
+                                    })
+                            else:
+                                status, message = 1, _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                                tx.write({
+                                    'state': 'error',
+                                    'state_message': message,
+                                    'last_state_change': fields.Datetime.now(),
+                                })
+
+                        elif result['response_code'] == '00202':
+                            tx.write({
+                                'state': 'pending', 
+                                'last_state_change': fields.Datetime.now(),
+                                'jetcheckout_payment_type': 'physicalpos',
+                                'jetcheckout_transaction_id': result['transaction_id'],
+                                'jetcheckout_payment_type_physicalpos_request_id': result['pos_order_number'],
+                                'jetcheckout_payment_type_physicalpos_serial_id': device_name,
+                            })
+                            status, message = 0, _('Payment #%s is ready. Please check the PoS device.') % result['pos_order_number']
+
+                        elif result['response_code'] == '00122':
+                            order_aux_id = 'x%s' % str(uuid.uuid4())
+                            tx.write({'jetcheckout_order_aux_id': order_aux_id})
+                            payload.update({"order_id": order_aux_id})
+                            init_physical_payment()
+
+                        else:
+                            status, message = 1, _('%s - (Error Code: %s)') % (result['message'], result['response_code'])
+                            tx.write({
+                                'state': 'error',
+                                'state_message': message,
+                                'last_state_change': fields.Datetime.now(),
+                            })
+
+                    else:
+                        status, message = 1, _('%s - (Error Code: %s)') % (response.reason, response.status_code)
+                        tx.write({
+                            'state': 'error',
+                            'state_message': message,
+                            'last_state_change': fields.Datetime.now(),
+                        })
+
+                init_physical_payment()
+                http_status = 400 if status else 200
+                return Response(json.dumps(dict(status=status, message=message)), status=http_status, mimetype="application/json")
+
+            hash = quote(hash)
+            url = 'https://%s/payment?=%s' % (request.httprequest.host, hash)
+            return ResponseOk(hash=hash, url=url, **RESPONSE[200])
         except Exception as e:
-            _logger.error(e)
+            _logger.error(e, exc_info=True)
             return Response("Server Error", status=500, mimetype="application/json")
     payment_prepare.__doc__ = _lt("Prepare Payment")
 
@@ -446,25 +584,13 @@ class PaymentAPIService(Component):
         else:
             state = False
 
-        type = getattr(params, 'type', False) or 'virtual_pos'
-        codes = hasattr(params, 'methods') and params.methods or []
-        method = ''
-        providers = []
-        for code in codes:
-            if not type and code == 'bank':
-                providers.append('transfer')
-            else:
-                providers.append('jetcheckout')
-        if len(codes) == 1:
-            method = codes[0]
-
         company = api.company_id
         if hasattr(params, 'company'):
             company = self.env['res.company'].sudo().search([('vat', '=', params.company.vat), ('parent_id', '=', company.id)])
             if not company:
                 raise Exception('Company cannot be found')
 
-        acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=providers, limit=1)
+        acquirer = self.env['payment.acquirer']._get_acquirer(company=company, providers=['jetcheckout'], limit=1)
         values = {
             'state': 'draft',
             'amount': params.amount,
@@ -473,72 +599,94 @@ class PaymentAPIService(Component):
             'partner_id': api.partner_id.id,
             'currency_id': company.currency_id.id,
             'jetcheckout_ip_address': params.partner.ip_address,
-            'jetcheckout_payment_type': type,
+            'jetcheckout_installment_count': 1,
+            'jetcheckout_installment_plus': 0,
+            'jetcheckout_installment_description': '0',
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
-            'jetcheckout_api_method': method,
             'jetcheckout_api_order': params.order.name,
             'jetcheckout_api_html': getattr(params, 'html', False) or False,
             'jetcheckout_api_contact': getattr(params.partner, 'contact', False) or False,
             'jetcheckout_date_expiration': getattr(params, 'expiration', False) or False,
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
+        if hasattr(params, 'installmentCount') and params.installmentCount > 0:
+            values.update({
+                'jetcheckout_installment_count': params.installmentCount,
+                'jetcheckout_installment_description': str(params.installmentCount),
+            })
 
-        if getattr(params.url, 'card', None):
-            values.update({'jetcheckout_api_card_result_url': params.url.card.result})
+        methods = getattr(params, 'methods', {})
+        if not methods:
+            raise Exception('Methods cannot be empty')
 
-        if getattr(params.url, 'bank', None):
-            values.update({'jetcheckout_api_bank_result_url': params.url.bank.result})
-            if getattr(params.url.bank, 'webhook', None):
-                values.update({'jetcheckout_api_bank_webhook_url': params.url.bank.webhook})
+        method_ids = []
+        method_type = False
+        method_types = {
+            'virtualPos': 'virtualpos',
+            'physicalPos': 'physicalpos',
+            'shoppingCredit': 'credit',
+            'bankTransfer': 'transfer',
+        }
+        for method_name, method_value in methods.dump().items():
+            if method_name in method_types:
+                method_type = method_types[method_name]
+                method_values = {
+                    'type': method_type,
+                    'redirect_url': method_value.get('redirect', False),
+                    'webhook_url': method_value.get('webhook', False),
+                }
+                if method_type == 'physicalpos':
+                    physical_pos_ids = company.payment_method_physical_pos_ids
+                    physical_pos = self.env['payment.method.physicalpos']
+                    for i in method_value.get('ids', []):
+                        pos = fields.first(physical_pos_ids.filtered(lambda p: p.name == i))
+                        if not pos:
+                            raise Exception('There is a PoS ID which has not been defined: %s' % i)
+                        physical_pos |= pos
 
-        if getattr(params.url, 'credit', None):
-            values.update({'jetcheckout_api_credit_result_url': params.url.credit.result})
+                    method_values.update({
+                        'type_physicalpos_ids': [(6, 0, physical_pos.ids)]
+                    })
+
+                method_ids.append((0, 0, method_values))
+        
+            values.update({'jetcheckout_payment_type': method_type})
+        if len(method_ids) == 1:
+            values.update({'jetcheckout_payment_type': method_type})
+        values.update({'paylox_api_method_ids': method_ids})
 
         products = getattr(params.order, 'products', [])
         if products:
-            will_create_product = values['jetcheckout_payment_type'] == 'virtual_pos'
             product_ids = []
-            if will_create_product:
-                prods = self.env['product.product'].sudo()
-                for product in products:
-                    prod = prods.search([
-                        #('type', '=', 'product'),
-                        ('type', '=', 'consu'),
-                        ('default_code', '=', product),
-                        '|', ('company_id', '=', company.id),
-                            ('company_id', '=', False)
-                    ])
-                    if not prod:
-                        prod = prods.create({
-                            #'type': 'product',
-                            'type': 'consu',
-                            'name': product.name,
-                            'default_code': product.code,
-                        })
-                    product_ids.append((0, 0, {
-                        'product_id': prod.id,
-                        'qty': product.qty,
+            prods = self.env['product.product'].sudo()
+            for product in products:
+                prod = prods.search([
+                    #('type', '=', 'product'),
+                    ('type', '=', 'consu'),
+                    ('default_code', '=', product),
+                    '|', ('company_id', '=', company.id),
+                        ('company_id', '=', False)
+                ])
+                if not prod:
+                    prod = prods.create({
+                        #'type': 'product',
+                        'type': 'consu',
                         'name': product.name,
-                        'code': product.code,
-                        'price': product.price,
-                        'categ': getattr(product, 'categ', False) or False,
-                        'brand': getattr(product, 'brand', False) or False,
-                    }))
-            else:
-                for product in products:
-                    product_ids.append((0, 0, {
-                        'qty': product.qty,
-                        'name': product.name,
-                        'code': product.code,
-                        'price': product.price,
-                        'categ': getattr(product, 'categ', False) or False,
-                        'brand': getattr(product, 'brand', False) or False,
-                    }))
+                        'default_code': product.code,
+                    })
+                product_ids.append((0, 0, {
+                    'product_id': prod.id,
+                    'qty': product.qty,
+                    'name': product.name,
+                    'code': product.code,
+                    'price': product.price,
+                    'categ': getattr(product, 'categ', False) or False,
+                    'brand': getattr(product, 'brand', False) or False,
+                }))
 
             values.update({'paylox_product_ids': product_ids})
-            #values.update({'paylox_product_ids': ','.join(list(map(lambda x: x.name, products)))})
 
         tx = self.env['payment.transaction'].sudo().create(values)
         tx.write({
@@ -552,6 +700,7 @@ class PaymentAPIService(Component):
             'partner_country_id': country and country.id or False,
             'partner_state_id': state and state.id or False,
         })
+        return tx
 
     def _initialize_transaction(self, api, hash, params):
         if hasattr(params.partner, 'country'):
@@ -614,10 +763,10 @@ class PaymentAPIService(Component):
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.id,
-            'jetcheckout_payment_type': 'virtual_pos',
+            'jetcheckout_payment_type': 'virtualpos',
             'jetcheckout_ip_address': params.partner.ip_address,
-            'jetcheckout_api_success_url': params.url_success,
-            'jetcheckout_api_fail_url': params.url_fail,
+            'jetcheckout_api_success_url': params.successUrl,
+            'jetcheckout_api_fail_url': params.failUrl,
             'jetcheckout_campaign_name': getattr(params, 'campaign', False) or False,
         }
         tx = self.env['payment.transaction'].sudo().create(values)
@@ -654,7 +803,7 @@ class PaymentAPIService(Component):
             "campaign_name": params.campaign,
             "amount": amount_string,
             "currency": tx.currency_id.name,
-            "installment_count": params.installment_count,
+            "installment_count": params.installmentCount,
             "hash_data": hash,
             "language": "tr",
             "card_number": params.card.number,

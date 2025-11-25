@@ -50,6 +50,7 @@ class PaymentPayloxStatus(models.TransientModel):
     postauth = fields.Boolean(readonly=True, string='Post-Authorization')
     threed = fields.Boolean(readonly=True)
     amount = fields.Monetary(readonly=True)
+    installment_count = fields.Integer(readonly=True)
     commission_amount = fields.Monetary(readonly=True)
     commission_rate = fields.Float(readonly=True)
     customer_amount = fields.Monetary(readonly=True, string='Customer Commission Amount')
@@ -66,6 +67,8 @@ class PaymentPayloxStatus(models.TransientModel):
     transaction_id = fields.Many2one('payment.transaction', readonly=True)
     transaction_link = fields.Boolean(string='Transaction Link', readonly=True)
     transaction_ref = fields.Char(string='Transaction Reference', readonly=True)
+    bank_name = fields.Char(string='Bank Name', readonly=True)
+    bank_ref = fields.Char(string='Bank Reference', readonly=True)
 
     @api.model
     def create(self, values):
@@ -455,7 +458,7 @@ class PaymentAcquirer(models.Model):
         currency = kwargs['currency']
 
         payment_type = kwargs.get('type', '')
-        if payment_type == 'virtual_pos':
+        if payment_type == 'virtualpos':
             rows = kwargs['installment']['rows']
             installment = kwargs['installment']['id']
             campaign = kwargs.get('campaign') or self.jetcheckout_campaign_id.name or ''

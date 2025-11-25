@@ -7,7 +7,7 @@
     <field name="arch" type="xml">
         <xpath expr="//div[@data-key='general_settings']" position="after">
             <div class="app_settings_block" data-string="Escrows" string="Escrows" data-key="payment_escrow" invisible="context.get('active_system') != 'escrow'">
-                <h2>Escrows</h2>
+                <h2><i class="fa fa-check-circle mr8"/>Options</h2>
                 <div class="row mt16 o_settings_container">
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
@@ -31,8 +31,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row mt16 o_settings_container">
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
                             <field name="payment_page_amount_editable"/>
@@ -61,8 +59,6 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="col-12 col-lg-6 o_setting_box">
                         <div class="o_setting_left_pane">
                             <field name="conveyance_show_link"/>
@@ -71,6 +67,85 @@
                             <label for="conveyance_show_link" string="Conveyance Document"/>
                             <div class="text-muted">
                                 Show Conveyance Document
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="broker_registration_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="broker_registration_enabled" string="Broker Registration"/>
+                            <div class="text-muted">
+                                Enable Broker Registration
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="dealer_registration_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="dealer_registration_enabled" string="Dealer Registration"/>
+                            <div class="text-muted">
+                                Enable Dealer Registration
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="escrow_insurance_quote_enabled"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="escrow_insurance_quote_enabled" string="Escrow Insurance Quote"/>
+                            <div class="text-muted">
+                                Enable Escrow Insurance Quote
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="escrow_broker_link_validity" string="Broker Login Validity"/>
+                            <div class="text-muted">
+                                Set the validity duration for broker login tokens in minutes
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="escrow_broker_link_validity" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="escrow_chain_ids" string="Approval Chains"/>
+                            <div class="text-muted">
+                                Define cascaded escrow approvals and limit who can view dependent transfers.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="escrow_chain_ids" class="w-100" context="{'default_company_id': company_id}" nolabel="1">
+                                        <tree editable="bottom" string="Approval Chains">
+                                            <field name="sequence" optional="hide"/>
+                                            <field name="parent_type"/>
+                                            <field name="child_type"/>
+                                            <field name="viewer_ids" widget="many2many_tags"/>
+                                            <field name="active" optional="hide"/>
+                                        </tree>
+                                        <form string="Approval Chain">
+                                            <sheet>
+                                                <group>
+                                                    <field name="sequence"/>
+                                                    <field name="parent_type"/>
+                                                    <field name="child_type"/>
+                                                    <field name="viewer_ids" widget="many2many_tags"/>
+                                                    <field name="active"/>
+                                                </group>
+                                            </sheet>
+                                        </form>
+                                    </field>
+                                </div>
                             </div>
                         </div>
                     </div>

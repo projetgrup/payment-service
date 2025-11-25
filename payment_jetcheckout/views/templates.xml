@@ -334,7 +334,7 @@
     </template>
 
     <template id="payment_form" name="Paylox Payment Form">
-        <t t-if="not types" t-set="types" t-value="[{'code': 'virtual_pos', 'name': ''}]"/>
+        <t t-if="not types" t-set="types" t-value="[{'code': 'virtualpos', 'name': ''}]"/>
         <t t-call="payment_jetcheckout.payment_loading"/>
         <div t-attf-class="w-100 bg-white my-4 h-fit #{'' if no_border else 'border card'}">
             <t t-call="payment_jetcheckout.payment_smart_button">
@@ -351,7 +351,7 @@
                 </t>
             </div>
             <t t-foreach="types" t-as="ptype">
-                <div t-if="ptype['code'] == 'virtual_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="row justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'virtual_pos' else ''}">
+                <div t-if="ptype['code'] == 'virtualpos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="row justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'virtualpos' else ''}">
                     <div class="payment-table mt-2 p-3 col-md-6">
                         <div t-if="not s2s" class="payment-info">
                             <i class="fa fa-credit-card mr-3" t-translation="off"></i>Card Information
@@ -447,9 +447,9 @@
                     </div>
                     <input type="hidden" t-att-value="s2s" field="payment.s2s"/>
                 </div>
-                <div t-elif="ptype['code'] == 'physical_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physical_pos' else ''}">
+                <div t-elif="ptype['code'] == 'physicalpos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'physicalpos' else ''}">
                 </div>
-                <div t-elif="ptype['code'] == 'soft_pos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'soft_pos' else ''}">
+                <div t-elif="ptype['code'] == 'softpos'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="justify-content-center px-3 #{'d-none' if types and types[0]['code'] != 'softpos' else ''}">
                 </div>
                 <div t-elif="ptype['code'] == 'transfer'" t-attf-id="payment_type_#{ptype['code']}" t-attf-class="payment-type-transfer px-3 #{'d-none' if types and types[0]['code'] != 'transfer' else ''}">
                     <t t-set="transfer_id" t-value="1"/>
@@ -575,18 +575,19 @@
                             <span class="font-italic font-weight-light btn-sm">Transaction is done, but a technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
                             <t t-if="tx.state_message">
                                 <br/>
+                                <br/>
                                 <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
                             </t>
                             <t t-if="tx.jetcheckout_service_message">
                                 <br/>
-                                <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
+                                <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
                                 <t t-if="tx.jetcheckout_service_code">
                                     <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
                                 </t>
                             </t>
-                            <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
+                            <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion not in ('None', 'none')">
                                 <br/>
-                                <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-light btn-sm"/>
+                                <span t-raw="tx.jetcheckout_service_suggestion.capitalize()" class="font-italic font-weight-bold text-danger btn-sm"/>
                             </t>
                         </h4>
                         <h4 t-else="" class="font-weight-bold m-3 p-3 text-center w-100">
@@ -594,18 +595,19 @@
                             <span class="font-italic font-weight-light btn-sm">A technical error occured and we couldn't record your payment. Please contact with us for more information.</span>
                             <t t-if="tx.state_message">
                                 <br/>
+                                <br/>
                                 <span t-esc="tx.state_message.capitalize()" class="font-italic font-weight-light btn-sm"/>
                             </t>
                             <t t-if="tx.jetcheckout_service_message">
                                 <br/>
-                                <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-light btn-sm px-0"/>
+                                <span t-esc="tx.jetcheckout_service_message.capitalize()" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
                                 <t t-if="tx.jetcheckout_service_code">
-                                    <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-light btn-sm px-0"/>
+                                    <span t-esc="'(%s)' % tx.jetcheckout_service_code" class="font-italic font-weight-bold text-danger btn-sm px-0"/>
                                 </t>
                             </t>
-                            <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion != 'None'">
+                            <t t-if="tx.jetcheckout_service_suggestion and tx.jetcheckout_service_suggestion not in ('None', 'none')">
                                 <br/>
-                                <span t-raw="tx.jetcheckout_service_suggestion" class="font-italic font-weight-light btn-sm"/>
+                                <span t-raw="tx.jetcheckout_service_suggestion" class="font-italic font-weight-bold text-danger btn-sm"/>
                             </t>
                         </h4>
                     </div>

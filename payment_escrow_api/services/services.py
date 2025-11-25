@@ -3,7 +3,10 @@ import uuid
 import base64
 import hashlib
 import logging
+import json
+import requests
 from urllib.parse import quote
+
 
 from odoo import fields, _, _lt
 from odoo.http import request, Response
@@ -11,6 +14,7 @@ from odoo.addons.base_rest import restapi
 from odoo.addons.base_rest_datamodel.restapi import Datamodel
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DTF
 from odoo.addons.component.core import Component
+from odoo.tools.float_utils import float_round
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.addons.payment_jetcheckout_api.services.services import auth
 from odoo.exceptions import AccessError, UserError, ValidationError, MissingError
@@ -114,6 +118,97 @@ class EscrowAPIService(Component):
         return dict(ads=ads, **RESPONSE[200])
 
     @restapi.method(
+        [(["/brokers/create"], "POST")],
+        input_param=Datamodel("escrow.request.brokers.create"),
+        output_param=Datamodel("escrow.response.brokers.create"),
+        auth="public",
+        tags=[_lt("Broker Operations")],
+        name=_lt("Create Brokers")
+    )
+    def brokers_create(self, params):
+        token = auth(self.env)
+        brokers = self._brokers_create(token, params)
+        return dict(brokers=brokers, **RESPONSE[200])
+
+    @restapi.method(
+        [(["/brokers/read"], "GET")],
+        input_param=Datamodel("escrow.request.brokers.read"),
+        output_param=Datamodel("escrow.response.brokers.read"),
+        auth="public",
+        tags=[_lt("Broker Operations")],
+        name=_lt("Read Brokers")
+    )
+    def brokers_read(self, params):
+        token = auth(self.env)
+        brokers, page = self._brokers_read(token, params)
+        return dict(brokers=brokers, page=page, **RESPONSE[200])
+
+    @restapi.method(
+        [(["/brokers/update"], "PATCH")],
+        input_param=Datamodel("escrow.request.brokers.update"),
+        output_param=Datamodel("escrow.response.brokers.update"),
+        auth="public",
+        tags=[_lt("Broker Operations")],
+        name=_lt("Update Brokers")
+    )
+    def brokers_update(self, params):
+        token = auth(self.env)
+        brokers = self._brokers_update(token, params)
+        return dict(brokers=brokers, **RESPONSE[200])
+
+    @restapi.method(
+        [(["/brokers/delete"], "DELETE")],
+        input_param=Datamodel("escrow.request.brokers.delete"),
+        output_param=Datamodel("escrow.response.brokers.delete"),
+        auth="public",
+        tags=[_lt("Broker Operations")],
+        name=_lt("Delete Brokers")
+    )
+    def brokers_delete(self, params):
+        token = auth(self.env)
+        brokers = self._brokers_delete(token, params)
+        return dict(brokers=brokers, **RESPONSE[200])
+
+    @restapi.method(
+        [(["/brokers/payment-link"], "POST")],
+        input_param=Datamodel("escrow.request.broker.payment.link"),
+        output_param=Datamodel("escrow.response.broker.payment.link"),
+        auth="public",
+        tags=[_lt("Broker Operations")],
+        name=_lt("Generate Broker Payment Link")
+    )
+    def brokers_payment_link(self, params):
+        token = auth(self.env)
+        link_data = self._brokers_payment_link(token, params)
+        return dict(**link_data, **RESPONSE[200])
+
+    @restapi.method(
+        [(["/brokers/rates"], "POST")],
+        input_param=Datamodel("escrow.request.broker.rates"),
+        output_param=Datamodel("escrow.response.broker.rates"),
+        auth="public",
+        tags=[_lt("Broker Operations")],
+        name=_lt("Get Broker Commission Rates")
+    )
+    def brokers_rates(self, params):
+        token = auth(self.env)
+        rates_data = self._brokers_rates(token, params)
+        return dict(**rates_data, **RESPONSE[200])
+
+    @restapi.method(
+        [(["/campaigns"], "GET")],
+        input_param=Datamodel("escrow.request.campaigns"),
+        output_param=Datamodel("escrow.response.campaigns"),
+        auth="public",
+        tags=[_lt("Campaign Operations")],
+        name=_lt("Get All Campaigns")
+    )
+    def campaigns(self, params):
+        token = auth(self.env)
+        campaigns_data = self._campaigns(token, params)
+        return dict(**campaigns_data, **RESPONSE[200])
+
+    @restapi.method(
         [(["/payment/result"], "GET")],
         input_param=Datamodel("escrow.request.payment.result"),
         output_param=Datamodel("escrow.response.payment.result"),
@@ -213,6 +308,105 @@ class EscrowAPIService(Component):
         tx = self._payment_delete(token, params)
         return dict(**tx, **RESPONSE[200])
 
+
+    @restapi.method(
+        [(["/insurance/callback"], "POST")],
+        input_param=Datamodel("escrow.request.insurance.callback"),
+        output_param=Datamodel("escrow.response.insurance.callback"),
+        auth="public",
+        tags=[_lt("Insurance Operations")],
+        name=_lt("Insurance Sale Callback")
+    )
+    def insurance_callback(self, params):
+        """
+        Webhook endpoint for insurance companies to send sale information
+        When insurance is sold, they will send:
+        - reference: Insurance quote reference number
+        - premium: Insurance premium amount
+        - company: Insurance company name
+        - commission: Commission amount
+        - policyDoc: Policy document in base64 format
+        - policyNumber: Policy number (optional)
+        """
+        token = auth(self.env)
+        try:
+            reference = params.reference
+            if not reference:
+                return {
+                    'status': 1,
+                    'message': 'Reference number is required'
+                }
+            
+            quote = self.env['escrow.insurance.quote'].sudo().search([('reference', '=', reference)], limit=1)
+            if not quote:
+                return {
+                    'status': 2,
+                    'message': 'Insurance quote not found with this reference'
+                }
+            
+            if quote.state == 'sold':
+                return {
+                    'status': 4,
+                    'message': 'This insurance quote has already been marked as sold'
+                }
+            
+            policy_pdf_base64 = params.policyDoc if hasattr(params, 'policyDoc') else None
+            if policy_pdf_base64:
+                try:
+                    policy_pdf = base64.b64decode(policy_pdf_base64)
+                except Exception as e:
+                    _logger.error(f"Failed to decode policy PDF for {reference}: {str(e)}")
+                    return {
+                        'status': 3,
+                        'message': 'Invalid PDF format. Please provide a valid base64 encoded PDF'
+                    }
+            else:
+                policy_pdf = False
+            
+            amount = params.amount if hasattr(params, 'amount') else 0.0
+            if amount <= 0:
+                return {
+                    'status': 5,
+                    'message': 'Amount must be greater than zero'
+                }
+            
+            vals = {
+                'state': 'sold',
+                'quote_amount': amount,
+                'insurance_company': params.company if hasattr(params, 'company') else '',
+                'insurance_commission': params.commission if hasattr(params, 'commission') else 0.0,
+                'policy_pdf': policy_pdf,
+                'policy_pdf_filename': f"policy_{quote.plate}_{getattr(params, 'policyNumber', 'N/A')}.pdf",
+                'policy_number': getattr(params, 'policyNumber', ''),
+                'sale_date': fields.Datetime.now(),
+            }
+            
+            quote.write(vals)
+            
+            quote.message_post(
+                body=_('Insurance sold: %s - Amount: %.2f - Commission: %.2f - Policy: %s') % (
+                    getattr(params, 'company', 'N/A'),
+                    amount,
+                    getattr(params, 'commission', 0.0),
+                    getattr(params, 'policyNumber', 'N/A')
+                ),
+                subject=_('Insurance Sale Callback Received')
+            )
+            
+            _logger.info(f"Insurance callback processed successfully for quote {reference}")
+            
+            return {
+                'status': 0,
+                'message': 'Insurance sale information received successfully'
+            }
+            
+        except Exception as e:
+            _logger.error(f"Unexpected error in insurance callback: {str(e)}", exc_info=True)
+            return {
+                'status': 99,
+                'message': 'An error occurred while processing your request. Please try again or contact support.'
+            }
+
     #
     # PRIVATE METHODS
     #
@@ -282,6 +476,29 @@ class EscrowAPIService(Component):
                         }))
                 if bank_values:
                     value.update({'bank_ids': bank_values})
+            if type == 'broker':
+                bank_values = []
+                for bank in values.banks:
+                    banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', partner.id)])
+                    iban = sanitize_account_number(bank.iban)
+                    ibans.append(bank.iban)
+                    record = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
+                    if record:
+                        bank_value = {}
+                        if record.acc_holder_name != bank.name:
+                            bank_value.update({'acc_holder_name': bank.name})
+                        if record.api_merchant != bank.merchant:
+                            bank_value.update({'api_merchant': bank.merchant})
+                        if bank_value:
+                            bank_values.append((1, record.id, bank_value))
+                    else:
+                        bank_values.append((0, 0, {
+                            'acc_number': bank.iban,
+                            'acc_holder_name': bank.name,
+                            'api_merchant': bank.merchant,
+                        }))
+                if bank_values:
+                    value.update({'bank_ids': bank_values})
             if value:
                 partner.write(value)
             for iban in ibans:
@@ -308,6 +525,17 @@ class EscrowAPIService(Component):
 
             ibans = []
             if type == 'owner':
+                bank_values = []
+                for bank in values.banks:
+                    ibans.append(bank.iban)
+                    bank_values.append((0, 0, {
+                        'acc_number': bank.iban,
+                        'acc_holder_name': bank.name,
+                        'api_merchant': bank.merchant,
+                    }))
+                if bank_values:
+                    value.update({'bank_ids': bank_values})
+            if type == 'broker':
                 bank_values = []
                 for bank in values.banks:
                     ibans.append(bank.iban)
@@ -514,12 +742,11 @@ class EscrowAPIService(Component):
             'partner_id': customer.id,
             'acquirer_id': acquirer.id,
             'currency_id': company.currency_id.id,
-            'jetcheckout_payment_type': 'virtual_pos',
+            'jetcheckout_payment_type': 'virtualpos',
             'jetcheckout_order_id': uid,
             'jetcheckout_api_ok': True,
             'jetcheckout_api_hash': hash,
             'jetcheckout_api_id': params.reference,
-            'jetcheckout_api_method': 'card',
             'jetcheckout_api_card_redirect_url': params.redirectUrl,
             'jetcheckout_api_card_result_url': 'https://%s/payment/card/result' % request.httprequest.host,
             'paylox_product_ids': ads,
@@ -591,4 +818,345 @@ class EscrowAPIService(Component):
                     },
                 },
             }
+        }
+
+    def _payment_cancel(self, token, params):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
+        if not tx:
+            raise MissingError(_('Transaction cannot be found'))
+
+        tx._send_void_request()
+        return dict()
+
+    def _payment_refund(self, token, params):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
+        if not tx:
+            raise MissingError(_('Transaction cannot be found'))
+
+        tx.with_context(amount=params.amount)._send_refund_request()
+        return dict()
+
+    def _payment_expire(self, token, params):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
+        if not tx:
+            raise MissingError(_('Transaction cannot be found'))
+
+        tx.state = 'cancel'
+        return dict()
+
+    def _payment_delete(self, token, params):
+        tx = request.env['payment.transaction'].sudo().paylox_get_transaction(str(params.id))
+        if not tx:
+            raise MissingError(_('Transaction cannot be found'))
+
+        tx.unlink()
+        return dict()
+
+    def _brokers_create(self, token, params):
+        values = []
+        for broker in params.brokers:
+            partner = self._get_partner('broker', token.company_id, broker)
+            values.append(dict(id=str(partner.id), vat=partner.vat))
+        return values
+
+    def _brokers_read_broker(self, broker):
+        return {
+            'id': str(broker.id),
+            'name': broker.name or '',
+            'vat': broker.vat or '',
+            'taxOffice': broker.paylox_tax_office or '',
+            'email': broker.email or '',
+            'phone': broker.phone or '',
+            'country': broker.country_id.code or '',
+            'state': broker.state_id.code or '',
+            'city': broker.city or '',
+            'address': broker.street or '',
+            'zip': broker.zip or '',
+            'banks': [{
+                'name': bank.acc_holder_name or '',
+                'iban': bank.acc_number or '',
+                'merchant': bank.api_merchant or '',
+            } for bank in broker.bank_ids],
+        }
+
+    def _brokers_read(self, token, params):
+        domain = [
+            ('company_id', '=', token.company_id.id),
+            ('paylox_escrow_type', '=', 'broker'),
+        ]
+        if getattr(params, 'brokers', None):
+            domain.append(('id', 'in', list(map(int, params.brokers))))
+
+        limit = params.page.size
+        offset = (params.page.number - 1) * limit
+        brokers = self.env['res.partner'].sudo() \
+                  .with_company(token.company_id) \
+                  .with_context(system=token.company_id.system) \
+                  .search(domain, limit=limit, offset=offset)
+        
+        brokers = [self._brokers_read_broker(broker) for broker in brokers]
+        page = dict(
+            size=params.page.size,
+            number=params.page.number,
+            count=len(brokers),
+        )
+        return brokers, page
+
+    def _brokers_update(self, token, params):
+        brokers = []
+        for broker in params.brokers:
+            _broker = self.env['res.partner'].sudo() \
+                     .with_company(token.company_id) \
+                     .with_context(system=token.company_id.system) \
+                     .search([
+                         ('id', '=', int(broker.id)),
+                         ('paylox_escrow_type', '=', 'broker'),
+                     ], limit=1)
+            if not _broker:
+                raise MissingError(_('Broker %s cannot be found') % str(broker.id))
+
+            values = {}
+            if getattr(broker, 'name', None) and _broker.name != broker.name:
+                values.update({'name': broker.name})
+            if getattr(broker, 'vat', None) and _broker.vat != broker.vat:
+                values.update({'vat': broker.vat})
+            if getattr(broker, 'taxOffice', None) and _broker.paylox_tax_office != broker.taxOffice:
+                values.update({'paylox_tax_office': broker.taxOffice})
+            if getattr(broker, 'email', None) and _broker.email != broker.email:
+                values.update({'email': broker.email})
+            if getattr(broker, 'phone', None) and _broker.phone != broker.phone:
+                values.update({'phone': broker.phone})
+            if hasattr(broker, 'country'):
+                country = self.env['res.country'].sudo().search([('code', '=', broker.country)], limit=1)
+                if not country:
+                    raise MissingError(_('Country %s cannot be found') % broker.country)
+                if _broker.country_id.id != country.id:
+                    values.update({'country_id': country.id})
+            if hasattr(broker, 'state'):
+                country_id = values.get('country_id', _broker.country_id.id)
+                state = self.env['res.country.state'].sudo().search([
+                    ('country_id', '=', country_id),
+                    ('code', '=', broker.state)
+                ], limit=1)
+                if not state:
+                    raise MissingError(_('State %s cannot be found') % broker.state)
+                if _broker.state_id.id != state.id:
+                    values.update({'state_id': state.id})
+            if hasattr(broker, 'city') and _broker.city != broker.city:
+                values.update({'city': broker.city or False})
+            if hasattr(broker, 'address') and _broker.street != broker.address:
+                values.update({'street': broker.address or False})
+            if hasattr(broker, 'zip') and _broker.zip != broker.zip:
+                values.update({'zip': broker.zip or False})
+            
+            if hasattr(broker, 'banks'):
+                values_banks = []
+                for bank in broker.banks:
+                    banks = self.env['res.partner.bank'].sudo().search([('partner_id', '=', _broker.id)])
+                    iban = sanitize_account_number(bank.iban)
+                    _bank = fields.first(banks.filtered(lambda b: b.sanitized_acc_number == iban))
+                    if _bank:
+                        value_bank = {}
+                        if getattr(bank, 'name', None) and _bank.acc_holder_name != bank.name:
+                            value_bank.update({'acc_holder_name': bank.name})
+                        if getattr(bank, 'merchant', None) and _bank.api_merchant != bank.merchant:
+                            value_bank.update({'api_merchant': bank.merchant})
+                        if value_bank:
+                            values_banks.append((1, _bank.id, value_bank))
+                    else:
+                        values_banks.append((0, 0, {
+                            'acc_number': bank.iban,
+                            'acc_holder_name': bank.name,
+                            'api_merchant': bank.merchant,
+                        }))
+                if values_banks:
+                    values.update({'bank_ids': values_banks})
+            
+            if values:
+                _broker.write(values)
+            brokers.append(dict(id=str(_broker.id), vat=_broker.vat))
+        return brokers
+
+    def _brokers_delete(self, token, params):
+        _brokers = self.env['res.partner'].sudo() \
+                  .with_company(token.company_id) \
+                  .with_context(system=token.company_id.system) \
+                  .search([
+                      ('id', 'in', list(map(int, params.brokers))),
+                      ('paylox_escrow_type', '=', 'broker'),
+                  ])
+        if not _brokers:
+            raise MissingError(_('No brokers found'))
+
+        brokers = [dict(id=str(broker.id), vat=broker.vat) for broker in _brokers]
+        _brokers.unlink()
+        return brokers
+
+    def _brokers_payment_link(self, token, params):
+        import base64
+        from datetime import datetime, timedelta
+        
+        broker = self.env['res.partner'].sudo() \
+                 .with_company(token.company_id) \
+                 .with_context(system=token.company_id.system) \
+                 .search([
+                     ('id', '=', params.broker_id),
+                     ('paylox_escrow_type', '=', 'broker'),
+                 ], limit=1)
+        
+        if not broker:
+            raise MissingError(_('Broker not found'))
+        
+        validity_minutes = token.company_id.escrow_broker_link_validity or 15
+        expires_at = datetime.now() + timedelta(minutes=validity_minutes)
+        expires_timestamp = int(expires_at.timestamp())
+        
+        token_string = f"{broker.id}:{expires_timestamp}"
+        broker_token = base64.b64encode(token_string.encode()).decode()
+        
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = f"{base_url}/my/ads/broker?token={broker_token}"
+        
+        return {
+            'url': url,
+            'expires_at': expires_at.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+
+    def _brokers_rates(self, token, params):
+        
+        broker = self.env['res.partner'].sudo() \
+                 .with_company(token.company_id) \
+                 .with_context(system=token.company_id.system) \
+                 .search([
+                     ('id', '=', params.broker_id),
+                     ('paylox_escrow_type', '=', 'broker'),
+                 ], limit=1)
+        
+        if not broker:
+            raise MissingError(_('Broker not found'))
+        
+        amount = float(params.amount or 0.0)
+        if amount <= 0:
+            raise ValidationError(_('Amount must be greater than zero'))
+        
+        campaign = self.env['escrow.broker.campaign'].sudo() \
+                   .with_company(token.company_id) \
+                   .search([('active', '=', True), ('id', '=', params.campaign_id)], limit=1)
+        
+        if not campaign:
+            raise MissingError(_('Campaign not found or inactive'))
+        
+        currency = token.company_id.currency_id
+        precision = currency.decimal_places or 2
+        
+        acquirer = self.env['payment.acquirer'].sudo().search([
+            ('company_id', '=', token.company_id.id),
+            ('provider', '=', 'jetcheckout'),
+            ('state', '=', 'enabled'),
+        ], limit=1)
+        
+        if not acquirer:
+            raise MissingError(_('No active payment provider found'))
+        
+        campaign_name = broker.campaign_id.name if broker.campaign_id else ''
+        path = '/prepayment/installment_options'
+        data = {
+            "application_key": acquirer.jetcheckout_api_key,
+            "mode": acquirer._get_paylox_env(),
+            "currency": currency.name,
+            "language": "tr",
+            "campaign_name": campaign_name,
+        }
+        
+        url = '%s/api/v1%s' % (acquirer._get_paylox_api_url(), path)
+        
+        try:
+            response = requests.post(url, data=json.dumps(data))
+            result = response.json()
+        except Exception as e:
+            _logger.error(f"Error calling installment API: {str(e)}")
+            raise ValidationError(_('Could not retrieve installment information'))
+        
+        if response.status_code != 200 or result.get('response_code') != "00":
+            raise ValidationError(_('Failed to get installment options: %s') % result.get('message', 'Unknown error'))
+        
+        card_families = {}
+        installment_options = result.get('installment_options', [])
+        
+        for option in installment_options:
+            card_family = option.get('card_family', 'Other')
+            
+            if card_family not in card_families:
+                card_families[card_family] = {}
+            
+            for installment in option.get('installments', []):
+                installment_count = str(installment.get('installment_count', 1))
+                crate = float(installment.get('customer_rate', 0.0))
+                corate = float(installment.get('cost_rate', 0.0))
+                
+                card_families[card_family][installment_count] = {
+                    'crate': crate,
+                    'corate': corate,
+                }
+        
+        broker_rates = {
+            line.installment_count: float(line.broker_additional_rate or 0.0)
+            for line in campaign.line_ids
+        }
+        
+        card_family_lines = []
+        for card_family, installments in sorted(card_families.items()):
+            installment_list = []
+            
+            for installment_count, rates in sorted(installments.items(), key=lambda x: int(x[0])):
+                broker_rate = broker_rates.get(installment_count, 0.0)
+                cost_rate = rates['corate']
+                
+                total_rate = round(cost_rate + broker_rate, 4)
+                
+                customer_rate = round(((100 / (1 - (total_rate / 100)) - 100) / 100) * 100, 4) if total_rate < 100 else 0.0
+                
+                total_amount = float_round(amount * (1 + customer_rate / 100), precision_digits=precision)
+                
+                installment_list.append({
+                    'installment_count': installment_count,
+                    'cost_rate': cost_rate,
+                    'broker_rate': broker_rate,
+                    'total_rate': total_rate,
+                    'customer_rate': customer_rate,
+                    'total_amount': total_amount,
+                })
+            
+            card_family_lines.append({
+                'card_family': card_family,
+                'installments': installment_list,
+            })
+        
+        lines = card_family_lines
+        
+        return {
+            'broker_id': broker.id,
+            'broker_name': broker.name,
+            'campaign_id': campaign.id,
+            'campaign_name': campaign.name,
+            'amount': amount,
+            'lines': lines,
+        }
+
+    def _campaigns(self, token, params):
+        campaigns = self.env['escrow.broker.campaign'].sudo() \
+                    .with_company(token.company_id) \
+                    .search([('active', '=', True)], order='sequence, name')
+        
+        campaign_list = []
+        for campaign in campaigns:
+            campaign_list.append({
+                'id': campaign.id,
+                'name': campaign.name,
+                'sequence': campaign.sequence,
+                'active': campaign.active,
+            })
+        
+        return {
+            'campaigns': campaign_list,
         }

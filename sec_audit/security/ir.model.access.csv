@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-security_audit,security_audit,model_security_audit,base.group_user,1,1,0,0
-security_audit_action,security_audit_action,model_security_audit_action,base.group_user,1,0,0,0

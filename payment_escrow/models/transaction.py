@@ -6,8 +6,12 @@ import pytz
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.osv import expression
 from odoo.tools.misc import formatLang
+from odoo.exceptions import AccessError, ValidationError
+
+from .approval_chain import ESCROW_DEFAULT_VISIBLE_TYPES
 
 _logger = logging.getLogger(__name__)
 
@@ -24,7 +28,6 @@ class PaymentTransaction(models.Model):
     conveyance_attachment_id = fields.Many2one('ir.attachment', 'Conveyance Form Attachment', readonly=True, copy=False)
     conveyance_upload_date = fields.Datetime('Conveyance Upload Date', readonly=True, copy=False)
 
-    # Grouping helper for success vs failure in views
     escrow_success_group = fields.Selection(
         selection=[('successful', 'Successful'), ('unsuccessful', 'Unsuccessful')],
         string='Escrow Success Group',
@@ -37,20 +40,12 @@ class PaymentTransaction(models.Model):
     @api.depends('state')
     def _compute_escrow_success_group(self):
         success_states = {'done'}
-        unsuccessful_states = {'error', 'cancel', 'expired'}
         for tx in self:
             if tx.state in success_states:
                 tx.escrow_success_group = 'successful'
-            elif tx.state in unsuccessful_states:
-                tx.escrow_success_group = 'unsuccessful'
-            else:
-                # Leave empty for other transient states (draft, pending, authorized, etc.)
-                tx.escrow_success_group = False
 
     def _generate_access_token(self):
-        """Generate a secure access token for escrow payment URLs"""
         self.ensure_one()
-        # Create token based on transaction ID, reference and current time
         data = f"{self.id}-{self.reference or ''}-{self.create_date}-escrow"
         return hashlib.sha256(data.encode()).hexdigest()[:32]
     
@@ -260,7 +255,13 @@ class PaymentTransaction(models.Model):
                     except Exception as e:
                         _logger.error('Sending daily email for partner %s is failed\n%s' % (context['partner'].name, e))
 
+    def _action_approve(self):
+        if self.paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type == 'broker' and not b.broker_submitted_for_approval):
+            raise ValidationError(_('There are items that are not approved yet. Please check them and try again.'))
+        return super()._action_approve()
+
     #TODO Remove
     @api.model
     def jetcheckout_send_daily_email(self):
         self.paylox_send_daily_email()
+

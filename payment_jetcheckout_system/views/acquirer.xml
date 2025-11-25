@@ -12,6 +12,7 @@
                         <field name="name"/>
                         <field name="journal_id" domain="[('acquirer_id', '=', parent.id)]" options="{'no_create': True, 'no_open': True}"/>
                         <field name="user_ids" domain="[('company_ids', 'in', [company_id]), ('share', '=', False)]" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="method_physicalpos_ids" options="{'no_create': True, 'no_open': True}" domain="[('company_id', '=', company_id)]" widget="many2many_tags"/>
                         <field name="account_code"/>
                         <field name="company_id" invisible="1" options="{'no_create': True, 'no_open': True}" force_save="1"/>
                         <field name="website_id" invisible="1" options="{'no_create': True, 'no_open': True}" force_save="1"/>

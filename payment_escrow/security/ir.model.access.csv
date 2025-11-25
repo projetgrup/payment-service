@@ -1,10 +1,38 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_escrow_ad_user,escrow.ad user,model_escrow_ad,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_ad_manager,escrow.ad manager,model_escrow_ad,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_ad_platform_owner,escrow.ad platform owner,model_escrow_ad,payment_escrow.group_escrow_platform_owner,1,1,1,1
+
+access_escrow_ad_category_user,escrow.ad.category user,model_escrow_ad_category,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_ad_category_manager,escrow.ad.category manager,model_escrow_ad_category,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_attribute_user,escrow.ad.attribute user,model_escrow_ad_attribute,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_ad_attribute_manager,escrow.ad.attribute manager,model_escrow_ad_attribute,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_attribute_option_user,escrow.ad.attribute.option user,model_escrow_ad_attribute_option,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_ad_attribute_option_manager,escrow.ad.attribute.option manager,model_escrow_ad_attribute_option,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_attribute_value_user,escrow.ad.attribute.value user,model_escrow_ad_attribute_value,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_ad_attribute_value_manager,escrow.ad.attribute.value manager,model_escrow_ad_attribute_value,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_image_user,escrow.ad.image user,model_escrow_ad_image,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_ad_image_manager,escrow.ad.image manager,model_escrow_ad_image,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_ad_favorite_user,escrow.ad.favorite user,model_escrow_ad_favorite,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_ad_favorite_manager,escrow.ad.favorite manager,model_escrow_ad_favorite,payment_escrow.group_escrow_manager,1,1,1,1
+
 access_escrow_car_brand_user,escrow.car.brand user,model_escrow_car_brand,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_car_brand_manager,escrow.car.brand manager,model_escrow_car_brand,payment_escrow.group_escrow_manager,1,1,1,1
 access_escrow_car_model_user,escrow.car.model user,model_escrow_car_model,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_car_model_manager,escrow.car.model manager,model_escrow_car_model,payment_escrow.group_escrow_manager,1,1,1,1
 access_escrow_installment_rate_user,escrow.installment.rate user,model_escrow_installment_rate,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_installment_rate_manager,escrow.installment.rate manager,model_escrow_installment_rate,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_broker_campaign_user,escrow.broker.campaign user,model_escrow_broker_campaign,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_broker_campaign_manager,escrow.broker.campaign manager,model_escrow_broker_campaign,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_broker_campaign_line_user,escrow.broker.campaign.line user,model_escrow_broker_campaign_line,payment_escrow.group_escrow_user,1,0,0,0
+access_escrow_broker_campaign_line_manager,escrow.broker.campaign.line manager,model_escrow_broker_campaign_line,payment_escrow.group_escrow_manager,1,1,1,1
+access_dealer_commission_rate_user,dealer.commission.rate user,model_dealer_commission_rate,payment_escrow.group_escrow_user,1,1,1,0
+access_dealer_commission_rate_manager,dealer.commission.rate manager,model_dealer_commission_rate,payment_escrow.group_escrow_manager,1,1,1,1
 
 
 access_escrow_sync_user,escrow.sync user,model_escrow_sync,payment_escrow.group_escrow_user,1,0,0,0
@@ -13,3 +41,13 @@ access_escrow_sync_manager,escrow.sync manager,model_escrow_sync,payment_escrow.
 access_escrow_brand_sync_line_user,escrow.brand.sync.line user,model_escrow_brand_sync_line,payment_escrow.group_escrow_user,1,0,0,0
 access_escrow_brand_sync_line_manager,escrow.brand.sync.line manager,model_escrow_brand_sync_line,payment_escrow.group_escrow_manager,1,1,1,1
 
+access_registration_rejection_wizard_user,registration.rejection.wizard user,model_registration_rejection_wizard,payment_escrow.group_escrow_user,1,0,0,0
+access_registration_rejection_wizard_manager,registration.rejection.wizard manager,model_registration_rejection_wizard,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_payment_transaction_basket_user,payment.transaction.basket user,payment_jetcheckout.model_payment_transaction_basket,payment_escrow.group_escrow_user,1,1,1,1
+access_payment_transaction_basket_manager,payment.transaction.basket manager,payment_jetcheckout.model_payment_transaction_basket,payment_escrow.group_escrow_manager,1,1,1,1
+
+access_escrow_insurance_quote_user,escrow.insurance.quote user,model_escrow_insurance_quote,payment_escrow.group_escrow_user,1,1,1,0
+access_escrow_insurance_quote_manager,escrow.insurance.quote manager,model_escrow_insurance_quote,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_approval_chain_user,escrow.approval.chain user,model_escrow_approval_chain,payment_escrow.group_escrow_user,1,1,1,1
+access_escrow_approval_chain_manager,escrow.approval.chain manager,model_escrow_approval_chain,payment_escrow.group_escrow_manager,1,1,1,1

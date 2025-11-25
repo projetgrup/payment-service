@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
-from odoo import fields, models, api, _
+from odoo import fields, models, api, registry, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.queue_job.models import enqueue
 
 
 class SyncopsSyncWizard(models.TransientModel):
@@ -349,7 +350,6 @@ class SyncopsSyncWizard(models.TransientModel):
 
                     models['item'].create({
                         'syncops_ok': True,
-                        'syncops_data': line['data'],
                         'syncops_notif': True,
                         'syncops_data': json.dumps(line['data'], default=str),
                         'system': self.system or company.system,
@@ -390,63 +390,19 @@ class SyncopsSyncWizard(models.TransientModel):
 
             items = models['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
-            for line in self.line_ids:
-
-                pid = 0
-                partner_field = company._get_payment_partner_unique_field()
-                if partner_field == 'vat' and line['partner_vat'] in vats:
-                    pid = vats[line['partner_vat']]
-                elif partner_field == 'ref' and line['partner_ref'] in refs:
-                    pid = refs[line['partner_ref']]
-
-                inv = line['invoice_id'] if pid else None
-                if pid and inv in items:
-                    item = models['item'].search([('id', '=', items[inv]), ('paid', '=', False)])
-                    item.write({
-                        'amount': line['invoice_amount'],
-                        'syncops_notif': True,
-                    })
-                else:
-                    if pid:
-                        partner = models['partner'].browse(pid)
-                    else:
-                        partner = models['partner'].create({
-                            'system': self.system or company.system,
-                            'name': line['partner_name'],
-                            'vat': line['partner_vat'],
-                            'ref': line['partner_ref'],
-                            'email': line['partner_email'],
-                            'phone': line['partner_phone'],
-                            'street': line['partner_address'],
-                            'mobile': line['partner_mobile'] or line['partner_phone'],
-                            'campaign_id': campaigns.get(line['partner_campaign'], False),
-                            'category_id': [(6, 0, tags.get(line['partner_tag'], []))],
-                            'company_id': company.id,
-                            'is_company': True,
-                        })
-                        if line['partner_vat']:
-                            vats.update({line['partner_vat']: partner.id})
-                        if line['partner_ref']:
-                            refs.update({line['partner_ref']: partner.id})
-
-                    item = models['item'].create({
-                        'syncops_ok': True,
-                        'syncops_notif': True,
-                        'syncops_data': line['data'],
-                        'system': self.system or company.system,
-                        'amount': line['invoice_amount'],
-                        'description': line['invoice_name'],
-                        'invoice_ref': line['invoice_ref'],
-                        'date': line['invoice_date'],
-                        'due_date': line['invoice_due_date'],
-                        'ref': line['invoice_id'],
-                        'tag': line['invoice_tag'],
-                        'parent_id': partner.id,
-                        'company_id': company.id,
-                        'currency_id': line['invoice_currency']['id'] or company.currency_id.id,
-                    })
-
-                line.item_id = item.id
+            if self.env.context.get('ids'):
+                lines = self.env['syncops.sync.wizard.line'].browse(self.env.context.get('ids'))
+            else:
+                lines = self.line_ids
+            for line in lines:
+                line.with_context(skip_queue=True)._sync_item_invoice_with_delay(
+                    company=company,
+                    vats=vats,
+                    refs=refs,
+                    tags=tags,
+                    items=items,
+                    campaigns=campaigns,
+                )
 
         methods = {'sync': method_sync}
         hook = self.env['syncops.connector'].get_hook('payment_get_unreconciled_list', 'post', 'item', 'invoice')
@@ -513,11 +469,17 @@ class SyncopsSyncWizard(models.TransientModel):
 
             elif wizard.type == 'item':
                 pairs['models']['item'] = self.env['payment.item']
-                self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE company_id=%s AND syncops_notif=true' % company.id)
                 if wizard.type_item_subtype == 'balance':
                     wizard._sync_item_balance(**pairs)
                 elif wizard.type_item_subtype == 'invoice':
                     wizard._sync_item_invoice(**pairs)
+
+            dbname = self.env.cr.dbname
+            @self.env.cr.postcommit.add
+            def update_notif():
+                reg = registry(dbname)
+                with reg.cursor() as cr:
+                    cr.execute('UPDATE payment_item SET syncops_notif=false WHERE company_id=%s AND syncops_notif=true' % company.id)
 
         return res
 
@@ -550,3 +512,68 @@ class SyncopsSyncWizardLine(models.TransientModel):
     invoice_due_date = fields.Date(readonly=True)
     invoice_amount = fields.Monetary(readonly=True, currency_field='invoice_currency')
     invoice_currency = fields.Many2one('res.currency', readonly=True)
+
+    @enqueue
+    def _sync_item_invoice_with_delay(self,
+        company,
+        vats,
+        refs,
+        tags,
+        items,
+        campaigns
+    ):
+        pid = 0
+        partner_field = company._get_payment_partner_unique_field()
+        if partner_field == 'vat' and self.partner_vat in vats:
+            pid = vats[self.partner_vat]
+        elif partner_field == 'ref' and self.partner_ref in refs:
+            pid = refs[self.partner_ref]
+
+        inv = self.invoice_id if pid else None
+        if pid and inv in items:
+            item = models['item'].search([('id', '=', items[inv]), ('paid', '=', False)])
+            item.write({
+                'amount': self.invoice_amount,
+                'syncops_notif': True,
+            })
+        else:
+            if pid:
+                partner = models['partner'].browse(pid)
+            else:
+                partner = models['partner'].create({
+                    'system': self.system or company.system,
+                    'name': self.partner_name,
+                    'vat': self.partner_vat,
+                    'ref': self.partner_ref,
+                    'email': self.partner_email,
+                    'phone': self.partner_phone,
+                    'street': self.partner_address,
+                    'mobile': self.partner_mobile or self.partner_phone,
+                    'campaign_id': campaigns.get(self.partner_campaign, False),
+                    'category_id': [(6, 0, tags.get(self.partner_tag, []))],
+                    'company_id': company.id,
+                    'is_company': True,
+                })
+                if self.partner_vat:
+                    vats.update({self.partner_vat: partner.id})
+                if self.partner_ref:
+                    refs.update({self.partner_ref: partner.id})
+
+            item = models['item'].create({
+                'syncops_ok': True,
+                'syncops_notif': True,
+                'syncops_data': self.data,
+                'system': self.system or company.system,
+                'amount': self.invoice_amount,
+                'description': self.invoice_name,
+                'invoice_ref': self.invoice_ref,
+                'date': self.invoice_date,
+                'due_date': self.invoice_due_date,
+                'ref': self.invoice_id,
+                'tag': self.invoice_tag,
+                'parent_id': partner.id,
+                'company_id': company.id,
+                'currency_id': self.invoice_currency.id or company.currency_id.id,
+            })
+
+        self.item_id = item.id

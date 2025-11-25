@@ -160,7 +160,7 @@
             <field name="nextcall" eval="(DateTime.now() + relativedelta(days=1)).strftime('%Y-%m-%d 03:00:00')" />
         </record>
 
-        <record id="cron_sync_item_notif" model="ir.cron">
+        <record id="cron_export_txt" model="ir.cron">
             <field name="name">Payment Transaction: Export TXT</field>
             <field name="model_id" ref="payment.model_payment_transaction"/>
             <field name="state">code</field>

@@ -296,7 +296,7 @@ class PayloxController(http.Controller):
             elif ptype['code'] == 'wallet':
                 wallets = self._prepare_wallet(acquirer=acquirer)
             elif ptype['code'] == 'transfer':
-                transfers = self._prepare_wiretransfer(acquirer=acquirer)
+                transfers = self._prepare_transfer(acquirer=acquirer)
         card_family = self._get_card_family(acquirer=acquirer, campaign=campaign)
         currencies = acquirer.currency_ids
         if currencies and currency not in currencies:
@@ -365,21 +365,21 @@ class PayloxController(http.Controller):
                     if payment_type == 'Virtual':
                         types.insert(0, {
                             'name': _('Pay with Credit Card'),
-                            'code': 'virtual_pos',
+                            'code': 'virtualpos',
                             'id': 1,
                         })
-                    #elif payment_type == 'Physical':
-                    #    types.append({
-                    #        'name': _('Pay with Physical PoS'),
-                    #        'code': 'physical_pos',
-                    #        'id': 2,
-                    #    })
-                    #elif payment_type == 'SoftPOS':
-                    #    types.append({
-                    #        'name': _('Pay with Soft PoS'),
-                    #        'code': 'soft_pos',
-                    #        'id': 3,
-                    #    })
+                    elif payment_type == 'Physical':
+                        types.append({
+                            'name': _('Pay with Physical PoS'),
+                            'code': 'physicalpos',
+                            'id': 2,
+                        })
+                    elif payment_type == 'SoftPOS':
+                        types.append({
+                            'name': _('Pay with Soft PoS'),
+                            'code': 'softpos',
+                            'id': 3,
+                        })
                     elif payment_type == 'WireTransfer':
                         types.append({
                             'name': _('Pay with Wire Transfer'),
@@ -552,7 +552,7 @@ class PayloxController(http.Controller):
                     index += 1
         return wallets
 
-    def _prepare_wiretransfer(self, acquirer=None):
+    def _prepare_transfer(self, acquirer=None):
         acquirer = self._get_acquirer(acquirer=acquirer)
         url = '%s/api/v1/prepayment/wiretransfer_options' % acquirer._get_paylox_api_url()
         data = {
@@ -1316,7 +1316,7 @@ class PayloxController(http.Controller):
         order_id = str(uuid.uuid4())
 
         payment_type = kwargs.get('type', '')
-        if payment_type == 'virtual_pos':
+        if payment_type == 'virtualpos':
             rows = kwargs['installment']['rows']
             installment = kwargs['installment']['id']
             campaign = kwargs.get('campaign') or acquirer.jetcheckout_campaign_id.name or ''
@@ -1567,18 +1567,24 @@ class PayloxController(http.Controller):
 
             data.update(self._get_data_values(data, tx, **kwargs))
             if 'customer_basket' in data:
-                tx.write({'paylox_basket_ids': [(0, 0, {
-                    'uid': basket.get('id'),
-                    'name': basket.get('name'),
-                    'description': basket.get('description'),
-                    'qty': basket.get('qty'),
-                    'amount': basket.get('amount'),
-                    'physical': basket.get('is_physical'),
-                    'category': basket.get('category'),
-                    'submerchant_external_id': basket.get('submerchant_external_id'),
-                    'submerchant_price': basket.get('submerchant_price'),
-                }) for basket in data['customer_basket']]})
-
+                basket_ids = []
+                for basket in data['customer_basket']:
+                    basket_ids.append((0, 0, {
+                        'uid': basket.get('id'),
+                        'name': basket.get('name'),
+                        'description': basket.get('description'),
+                        'qty': basket.get('qty'),
+                        'amount': basket.get('amount'),
+                        'physical': basket.get('is_physical'),
+                        'category': basket.get('category'),
+                        'submerchant_external_id': basket.get('submerchant_external_id'),
+                        'submerchant_price': basket.get('submerchant_price'),
+                        'partner_id': basket.get('partner_id'),
+                    }))
+                    if 'partner_id' in basket:
+                        del basket['partner_id']
+                tx.write({'paylox_basket_ids': basket_ids})
+                    
             response = requests.post(url, data=json.dumps(data))
             result = None
 
@@ -1672,7 +1678,7 @@ class PayloxController(http.Controller):
                 return {'error': message}
             return {}
 
-        elif payment_type == 'soft_pos':
+        elif payment_type == 'softpos':
             installment_count = 1
             campaign = kwargs.get('campaign', '')
 

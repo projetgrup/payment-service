@@ -56,7 +56,6 @@
             </div>
         </div>
 
-
         <div class="transaction-summary mb-4">
             <div class="card">
                 <div class="card-body">
@@ -115,7 +114,7 @@
                                                             <path d="M26.2502 32.3737C25.8032 32.3737 25.3561 32.2014 25.0116 31.861L21.0002 27.8497L16.9889 31.861C16.3081 32.5459 15.1965 32.5459 14.5157 31.861C13.8307 31.176 13.8307 30.0686 14.5157 29.3877L19.7657 24.1377C20.4465 23.4528 21.5581 23.4528 22.2389 24.1377L27.4889 29.3877C28.1739 30.0727 28.1739 31.1801 27.4889 31.861C27.1444 32.2055 26.6973 32.3737 26.2502 32.3737Z" fill="#2414D8"/>
                                                             <path d="M21.0004 39.375C20.0324 39.375 19.249 38.5916 19.249 37.6236V25.3764C19.249 24.4084 20.0324 23.625 21.0004 23.625C21.9684 23.625 22.7518 24.4084 22.7518 25.3764V37.6277C22.7518 38.5916 21.9684 39.375 21.0004 39.375Z" fill="#2414D8"/>
                                                         </svg>
-                                                        <a t-attf-href="/payment/card/report/conveyance/#{payment.order_id}" class="d-block download__link" target="_blank" rel="noopener noreferrer">Temlikname Formunu İndir</a>
+                                                        <a t-attf-href="/payment/card/report/conveyance/#{payment.order_id}" class="d-block download__link" target="_blank" rel="noopener noreferrer">Conveyance Document Download</a>
                                                     </div>
                                                 </div>
                                                 <div t-if="payment.status == 'done'" class="col-12 mt-2">
@@ -149,5 +148,223 @@
             </div>
         </div>
     </t>
-</templates>
 
+    <t t-name="paylox.escrow.transaction.uploadInvoice">
+        <main>
+            <div class="mb-3 p-3 bg-light rounded">
+                <div class="row">
+                    <div class="col-6">
+                        <small class="text-muted d-block">Transaction</small>
+                        <strong t-esc="adNumber"/>
+                    </div>
+                    <div class="col-6 text-right">
+                        <small class="text-muted d-block">Amount</small>
+                        <strong class="text-primary text-nowrap">
+                            <t t-esc="format.currency(transferAmount, currency.position, currency.symbol, currency.decimal)"/>
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mt-1">
+                <label class="form__label">Invoice File</label>
+                <div class="pt-1">
+                    <input type="file" 
+                            class="filepond" 
+                            name="invoiceFile"
+                            accept="image/*, application/pdf"/>
+                </div>
+            </div>
+        </main>
+    </t>
+
+    <t t-name="paylox.broker.rates.table">
+        <div class="broker-family-card card border-0 shadow-sm">
+            <div class="card-header bg-transparent border-0">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <img t-if="family.logo" t-att-src="family.logo" t-att-alt="family.name" class="broker-card-logo mr-3"/>
+                        <h5 class="font-weight-700 mb-0" t-esc="family.name"/>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0 broker-rates-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" width="13%">Installment Count</th>
+                            <th class="text-right" width="13%">Your Cost Rate</th>
+                            <th t-if="detailedMode" class="text-right" width="14%">Customer Impact</th>
+                            <th t-if="detailedMode" class="text-right" width="12%">Your Profit Rate</th>
+                            <th class="text-right" width="14%">Customer Impact</th>
+                            <th class="text-right" width="16%">To Be Collected From Customer</th>
+                            <th t-if="detailedMode" class="text-right" width="18%">Profit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-if="!family.lines || family.lines.length === 0">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-5">
+                                    <i class="fa fa-info-circle mr-2"/>
+                                    <span>Installment information not found.</span>
+                                </td>
+                            </tr>
+                        </t>
+                        <t t-else="">
+                            <t t-foreach="family.lines" t-as="line">
+                                <t t-set="lineProfit" t-value="Number(line.profit) || 0"/>
+                                <t t-set="profitRate" t-value="Number(line.profit_rate) || 0"/>
+                                <t t-set="isBest" t-value="line.is_best_profit || false"/>
+                            <t t-set="combinedRate" t-value="(Number(line.bank_commission_rate) || 0) + (Number(line.broker_rate) || 0)"/>
+                                <tr>
+                                    <td class="text-center">
+                                        <div class="font-weight-semibold" t-esc="line.installment_label || line.installment_count || '-'"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-attf-class="font-weight-600 {{detailedMode ? '' : 'text-primary font-weight-bold'}}" t-esc="format.percentage(detailedMode ? line.bank_commission_rate : combinedRate)"/>
+                                    </td>
+                                    <td t-if="detailedMode" class="text-right">
+                                        <div class="font-weight-600" t-esc="format.percentage(line.customer_rate)"/>
+                                    </td>
+                                    <td t-if="detailedMode" class="text-right">
+                                        <span class="font-weight-bold text-primary" t-esc="format.percentage(line.broker_rate)"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="font-weight-600" t-esc="format.percentage(line.broker_impact_rate)"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span class="font-weight-bold" t-esc="format.currency(line.total_amount, position, symbol, decimal)"/>
+                                    </td>
+                                    <td t-if="detailedMode" t-attf-class="text-right {{lineProfit >= 0 ? 'text-success' : 'text-danger'}}">
+                                        <div class="font-weight-bold" t-esc="format.currency(lineProfit, position, symbol, decimal)"/>
+                                        <div class="small" t-esc="format.percentage(profitRate)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+
+    <!-- Dinamik Form Field Template -->
+    <t t-name="escrow.form.field">
+        <div class="form__group">
+            <label t-if="field_type !== 'boolean'" class="form__label" t-attf-for="{{field_id}}">
+                <t t-esc="field_label"/>
+                <span t-if="field_required" class="text-danger">*</span>
+            </label>
+            
+            <small t-if="field_help" class="form-text text-muted" t-esc="field_help"/>
+            
+            <!-- Text Input -->
+            <input t-if="field_type === 'char'" 
+                   type="text" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   t-att-required="field_required"/>
+            
+            <!-- Textarea -->
+            <textarea t-if="field_type === 'text'" 
+                      class="form__control" 
+                      t-attf-id="{{field_id}}"
+                      t-attf-name="{{field_name}}"
+                      rows="3"
+                      t-att-required="field_required"/>
+            
+            <!-- Number Input -->
+            <input t-if="field_type === 'integer'" 
+                   type="number" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   step="1"
+                   t-att-required="field_required"/>
+            
+            <!-- Decimal Input -->
+            <input t-if="field_type === 'float'" 
+                   type="number" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   step="0.01"
+                   t-att-required="field_required"/>
+            
+            <!-- Checkbox -->
+            <div t-if="field_type === 'boolean'" class="form-check">
+                <input type="checkbox" 
+                       class="form-check-input" 
+                       t-attf-id="{{field_id}}"
+                       t-attf-name="{{field_name}}"/>
+                <label class="form-check-label" t-attf-for="{{field_id}}">
+                    <t t-esc="field_label"/>
+                </label>
+            </div>
+            
+            <!-- Date Input -->
+            <input t-if="field_type === 'date'" 
+                   type="date" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   t-att-required="field_required"/>
+            
+            <!-- DateTime Input -->
+            <input t-if="field_type === 'datetime'" 
+                   type="datetime-local" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   t-att-required="field_required"/>
+            
+            <!-- Selection Input -->
+            <select t-if="field_type === 'selection'" 
+                    class="form__control" 
+                    t-attf-id="{{field_id}}"
+                    t-attf-name="{{field_name}}"
+                    t-att-required="field_required">
+                <option value="">-- Seçiniz --</option>
+                <t t-foreach="field_options || []" t-as="option">
+                    <option t-att-value="option.value" t-esc="option.name"/>
+                </t>
+            </select>
+            
+            <!-- Many2one Input (same as selection) -->
+            <select t-if="field_type === 'many2one'" 
+                    class="form__control" 
+                    t-attf-id="{{field_id}}"
+                    t-attf-name="{{field_name}}"
+                    t-att-required="field_required">
+                <option value="">-- Seçiniz --</option>
+                <t t-foreach="field_options || []" t-as="option">
+                    <option t-att-value="option.value" t-esc="option.name"/>
+                </t>
+            </select>
+            
+            <!-- Binary/File Input -->
+            <input t-if="field_type === 'binary'" 
+                   type="file" 
+                   class="form__control" 
+                   t-attf-id="{{field_id}}"
+                   t-attf-name="{{field_name}}"
+                   accept="image/*"
+                   t-att-required="field_required"/>
+        </div>
+    </t>
+
+    <!-- Dinamik Attribute Fields Container -->
+    <t t-name="escrow.dynamic.attributes">
+        <t t-foreach="attributes" t-as="attr">
+            <t t-call="escrow.form.field">
+                <t t-set="field_id" t-value="'attr_' + attr.technical_name"/>
+                <t t-set="field_name" t-value="attr.technical_name"/>
+                <t t-set="field_label" t-value="attr.name"/>
+                <t t-set="field_type" t-value="attr.attribute_type"/>
+                <t t-set="field_required" t-value="attr.required"/>
+                <t t-set="field_help" t-value="attr.help_text"/>
+                <t t-set="field_options" t-value="attr.options"/>
+            </t>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_escrow_ads_root" name="Ads" sequence="5" web_icon="payment_escrow,static/description/icon.png"/>
+    
+    <menuitem id="menu_escrow_ads" name="Advertisements" parent="menu_escrow_ads_root" sequence="10" action="action_escrow_ad"/>
+    
+    <menuitem id="menu_escrow_configuration" name="Configuration" parent="menu_escrow_ads_root" sequence="100" groups="payment_escrow.group_escrow_manager"/>
+    
+    <menuitem id="menu_escrow_categories" name="Categories" parent="menu_escrow_configuration" sequence="10" action="action_escrow_ad_category"/>
+    
+    <menuitem id="menu_escrow_attributes" name="Attributes" parent="menu_escrow_configuration" sequence="20" action="action_escrow_ad_attribute"/>
+</odoo>

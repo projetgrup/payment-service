@@ -170,6 +170,11 @@ class file extends fields {
         return file ? file.getFileEncodeBase64String() : false;
     }
 
+    get filename() {
+        const file = this._.getFile();
+        return file ? file.filename : false;
+    }
+
     set value(v) {
         this._.addFile(v);
     }
@@ -226,7 +231,12 @@ class selection extends fields {
 
     get value() {
         let value = this.$.val();
-        if ($.isNumeric(value)) return parseInt(value);
+        if (typeof value === 'string' && /^0\d+/.test(value)) {
+            return value;
+        }
+        if ($.isNumeric(value)) {
+            return Number(value);
+        }
         return value;
     }
 

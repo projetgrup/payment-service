@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+        <record id="seq_escrow_ad" model="ir.sequence">
+            <field name="name">Escrow Advertisement</field>
+            <field name="code">escrow.ad</field>
+            <field name="prefix">AD/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_escrow_insurance_quote" model="ir.sequence">
+            <field name="name">Insurance Quote</field>
+            <field name="code">escrow.insurance.quote</field>
+            <field name="prefix">INS/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
         <record id="escrow_mail" model="mail.template">
             <field name="name">Escrow Payment Email</field>
             <field name="model_id" ref="base.model_res_partner"/>

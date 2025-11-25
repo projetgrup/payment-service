@@ -3,7 +3,7 @@
 import base64
 
 from odoo.http import request
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError
 from odoo.addons.payment_jetcheckout_system.controllers.main import PayloxSystemController as Controller
 from odoo.addons.sec_audit.controllers.main import AuditController
 
@@ -55,7 +55,8 @@ class PayloxSystemApiController(Controller):
                 })
                 return template.view_id.id
             if path.startswith('/payment'):
-                if path.startswith('/payment/card'):
-                    return 'payment_jetcheckout_api.page_card'
-                return 'payment_jetcheckout_api.payment_page'
+                method = ''
+                if values.get('method'):
+                    method = f'_{values["method"]["type"]}'
+                return 'payment_jetcheckout_api.page_payment%s' % method
         return super()._get_template(path, values)

@@ -34,7 +34,7 @@ class PaymentTransaction(models.Model):
                 installment = int(desc)
                 if installment == 0:
                     desc_long = ''
-                elif installment == 1 and tx.jetcheckout_payment_type in ('virtual_pos', 'physical_pos', 'soft_pos'):
+                elif installment == 1 and tx.jetcheckout_payment_type in ('virtualpos', 'physicalpos', 'softpos'):
                     desc_long = _('Single payment')
                 else:
                     desc_long = _('%s installment') % desc
@@ -76,28 +76,38 @@ class PaymentTransaction(models.Model):
     jetcheckout_vpos_name = fields.Char('Virtual PoS', readonly=True, copy=False)
     jetcheckout_vpos_ref = fields.Char('Virtual PoS Reference', readonly=True, copy=False)
     jetcheckout_vpos_code = fields.Char('Virtual PoS Code', readonly=True, copy=False)
-    jetcheckout_order_id = fields.Char('Order', readonly=True, copy=False)
+    jetcheckout_order_id = fields.Char('Order ID', readonly=True, copy=False)
     jetcheckout_order_aux_id = fields.Char('Auxiliary Order', readonly=True, copy=False)
     jetcheckout_link = fields.Boolean('Paylox Link', readonly=True, copy=False)
     jetcheckout_ip_address = fields.Char('IP Address', readonly=True, copy=False)
     jetcheckout_url_address = fields.Char('URL Address', readonly=True, copy=False)
-    jetcheckout_transaction_id = fields.Char('Transaction', readonly=True, copy=False)
+    jetcheckout_transaction_id = fields.Char('Transaction ID', readonly=True, copy=False)
+    jetcheckout_transaction_date = fields.Datetime('Transaction Date', readonly=True, copy=False)
     jetcheckout_preauth = fields.Boolean('Pre-Authorization', readonly=True, copy=False)
     jetcheckout_postauth = fields.Boolean('Post-Authorization', readonly=True, copy=False)
     jetcheckout_postauth_amount = fields.Monetary('Post-Authorization Amount', readonly=True, copy=False)
 
     jetcheckout_payment_type = fields.Selection(selection=[
-        ('virtual_pos', 'Virtual PoS'),
-        ('physical_pos', 'Physical PoS'),
-        ('soft_pos', 'Soft PoS'),
-        ('transfer', 'Wire Transfer'),
+        ('virtualpos', 'Virtual PoS'),
+        ('physicalpos', 'Physical PoS'),
+        ('softpos', 'Soft PoS'),
+        ('transfer', 'Bank Transfer'),
         ('wallet', 'Wallet'),
         ('credit', 'Shopping Credit'),
-    ], string='Paylox Payment Type', default='virtual_pos', readonly=True, copy=False)
+    ], string='Paylox Payment Type', default='virtualpos', readonly=True, copy=False)
     jetcheckout_payment_type_transfer_service_name = fields.Char('Paylox Payment Type Transfer Service Name', readonly=True, copy=False)
     jetcheckout_payment_type_wallet_service_name = fields.Char('Paylox Payment Type Wallet Service Name', readonly=True, copy=False)
     jetcheckout_payment_type_wallet_id = fields.Integer('Paylox Payment Type Wallet ID', readonly=True, copy=False)
     jetcheckout_payment_type_credit_bank_code = fields.Char('Paylox Payment Type Credit Bank Code', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_serial_id = fields.Char('Paylox Payment Type Physical PoS Serial ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_merchant_id = fields.Char('Paylox Payment Type Physical PoS Merchant ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_terminal_id = fields.Char('Paylox Payment Type Physical PoS Terminal ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_request_id = fields.Char('Paylox Payment Type Physical PoS Request ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_transaction_id = fields.Char('Paylox Payment Type Physical PoS Transaction ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_batch_id = fields.Char('Paylox Payment Type Physical PoS Batch ID', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_auth_code = fields.Char('Paylox Payment Type Physical PoS Authorization Code', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_acquirer_name = fields.Char('Paylox Payment Type Physical PoS Acquirer Name', readonly=True, copy=False)
+    jetcheckout_payment_type_physicalpos_acquirer_ref = fields.Char('Paylox Payment Type Physical PoS Acquirer Reference', readonly=True, copy=False)
     jetcheckout_payment_ok = fields.Boolean('Payment Required', readonly=True, copy=False, default=True)
     jetcheckout_payment_amount = fields.Monetary('Amount to Pay', readonly=True, copy=False)
     jetcheckout_payment_paid = fields.Monetary('Amount Paid', compute='_compute_amounts', readonly=True, copy=False, store=True)
@@ -388,7 +398,8 @@ class PaymentTransaction(models.Model):
         if self.provider != 'jetcheckout':
             return
 
-        return self._paylox_api_postauth(self.amount)
+        amount = self.env.context.get('amount', 0)
+        return self._paylox_api_postauth(amount)
 
     def _paylox_api_postauth(self, amount):
         url = '%s/api/v1/payment/postauth' % self.acquirer_id._get_paylox_api_url()
@@ -466,6 +477,11 @@ class PaymentTransaction(models.Model):
 
         if self.state != 'done':
             self.jetcheckout_approval_state_message = _('Only paid transactions can be approved')
+            return
+
+        if self.paylox_basket_ids:
+            for basket in self.paylox_basket_ids:
+                basket._action_approve()
             return
 
         url = '%s/api/v1/payment/submerchant/approve' % self.acquirer_id._get_paylox_api_url()
@@ -558,6 +574,10 @@ class PaymentTransaction(models.Model):
         if not self.state == 'cancel':
             if self.jetcheckout_approval_auto:
                 self._action_disapprove()
+            if self.paylox_basket_ids:
+                for basket in self.paylox_basket_ids:
+                    if basket.transfer_status == 'approved':
+                        basket._action_disapprove()
             self.write(self._paylox_cancel_postprocess_values())
         if self.payment_id:
             self.payment_id.action_draft()
@@ -586,7 +606,6 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         if not self.env.user.has_group('payment_jetcheckout.group_transaction_cancel'):
             raise AccessError(_('You do not have any permission to cancel this transaction'))
- 
         self._paylox_cancel()
 
     def _paylox_refund(self, amount):
@@ -636,6 +655,16 @@ class PaymentTransaction(models.Model):
             'jetcheckout_card_number': self.token_id and self.token_id.jetcheckout_number or self.jetcheckout_card_number or '%sXXXXXXXXXX' % (values.get('bin_code', '') or '',),
             'jetcheckout_payment_amount': self.jetcheckout_payment_amount or amount - self.jetcheckout_customer_amount,
         }
+        if self.jetcheckout_payment_type == 'physicalpos':
+            vals.update({
+                'jetcheckout_payment_type_physicalpos_auth_code': values.get('auth_code', False),
+                'jetcheckout_payment_type_physicalpos_acquirer_name': values.get('bank_name', False),
+                'jetcheckout_payment_type_physicalpos_acquirer_ref': values.get('bank_ref', False),
+            })
+        if values.get('installment_count'):
+            vals.update({
+                'jetcheckout_installment_count': values['installment_count'],
+            })
         if values.get('transaction_ref'):
             vals.update({
                 'jetcheckout_transaction_id': values['transaction_ref'],
@@ -736,6 +765,7 @@ class PaymentTransaction(models.Model):
                 'vpos_id': result['virtual_pos_id'],
                 'vpos_name': result['virtual_pos_name'],
                 'vpos_ref': result['pos_bank_eft_code'] or result['card_bank_eft_code'],
+                'installment_count': result['inst_period'],
                 'vpos_code': result['auth_code'],
                 'successful': result['successful'],
                 'completed': result['completed'],
@@ -749,6 +779,7 @@ class PaymentTransaction(models.Model):
                 'card_family': result['card_family'] or '',
                 'card_type': result['card_type'] or '',
                 'card_program': result['card_program'] or '',
+                'bank_name': result['pos_bank_name'] or '',
                 'bin_code': result['bin_code'],
                 'service_ref_id': result['service_ref_id'],
                 'transaction_ref': result['transaction_id'],
@@ -817,7 +848,7 @@ class PaymentTransaction(models.Model):
         domain = [
             ('state', '=', 'pending'),
             ('source_transaction_id', '=', False),
-            ('jetcheckout_payment_type', '=', 'virtual_pos'),
+            ('jetcheckout_payment_type', '=', 'virtualpos'),
             ('acquirer_id.provider', '=', 'jetcheckout'),
             ('create_date', '<=', date)
         ]
@@ -947,3 +978,104 @@ class PaymentTransactionBasket(models.Model):
     category = fields.Char('Category')
     submerchant_external_id = fields.Char('Submerchant External ID')
     submerchant_price = fields.Float('Submerchant External Price')
+    approval_state = fields.Selection([('+', 'Approved'), ('-', 'Rejected')], string='Approval State')
+    approval_state_message = fields.Text('Approval Message')
+
+    def action_approve(self):
+        for basket in self:
+            basket.with_context(skip_escrow_visibility_domain=False)._action_approve()
+
+    def _action_approve(self):
+        for basket in self:
+            if basket.approval_state == '+':
+                continue
+
+            tx = basket.transaction_id
+            if tx.state != 'done':
+                basket.approval_state_message = _('Only paid transactions can be approved')
+                continue
+
+            url = '%s/api/v1/payment/submerchant/approve' % tx.acquirer_id._get_paylox_api_url()
+            data = {
+                "application_key": tx.acquirer_id.jetcheckout_api_key,
+                "transaction_id": tx.jetcheckout_transaction_id,
+                "item_id": basket.uid,
+                "language": "tr",
+            }
+
+            response = requests.post(url, data=json.dumps(data))
+            try:
+                if response.status_code == 200:
+                    result = response.json()
+                    if result['response_code'] == "00":
+                        basket.with_context(skip_escrow_check_access_rule=True).sudo().write({
+                            'approval_state': '+',
+                            'approval_state_message': _('Approved'),
+                        })
+                    else:
+                        basket.with_context(skip_escrow_check_access_rule=True).sudo().write({
+                            'approval_state_message': _('%s (Error Code: %s)') % (result['message'], result['response_code']),
+                        })
+                else:
+                    basket.with_context(skip_escrow_check_access_rule=True).sudo().write({
+                        'approval_state_message': _('%s (Error Code: %s)') % (response.reason, response.status_code),
+                    })
+                self.env.cr.commit()
+            except Exception as e:
+                _logger.error("CRITICAL ERROR during approval of basket %s: %s", basket.id, str(e))
+                self.env.cr.rollback()
+
+    def action_disapprove(self):
+        for basket in self:
+            basket._action_disapprove()
+
+    def _action_disapprove(self):
+        for basket in self:
+            if basket.approval_state == '-':
+                continue
+
+            tx = basket.transaction_id
+            url = '%s/api/v1/payment/submerchant/disapprove' % tx.acquirer_id._get_paylox_api_url()
+            data = {
+                "application_key": tx.acquirer_id.jetcheckout_api_key,
+                "transaction_id": tx.jetcheckout_transaction_id,
+                "item_id": self.env.user.id,
+                "language": "tr",
+            }
+
+            response = requests.post(url, data=json.dumps(data))
+            try:
+                if response.status_code == 200:
+                    result = response.json()
+                    if result['response_code'] == "00":
+                        basket.approval_state = '-'
+                        basket.approval_state_message = _('Disapproved')
+                    else:
+                        basket.approval_state_message = _('%s (Error Code: %s)') % (result['message'], result['response_code'])
+                else:
+                    basket.approval_state_message = _('%s (Error Code: %s)') % (response.reason, response.status_code)
+                self.env.cr.commit()
+            except:
+                self.env.cr.rollback()
+
+    def write(self, values):
+        res = super().write(values)
+        if 'approval_state' in values:
+            for tx in self.mapped('transaction_id'):
+                if all(t.approval_state == '+' for t in tx.with_context(skip_escrow_visibility_domain=False).paylox_basket_ids):
+                    tx.write({
+                        'jetcheckout_approval_state': '+',
+                        'jetcheckout_approval_state_message': _('Approved'),
+                    })
+                elif all(t.approval_state == '-' for t in tx.with_context(skip_escrow_visibility_domain=False).paylox_basket_ids):
+                    tx.write({
+                        'jetcheckout_approval_state': '-',
+                        'jetcheckout_approval_state_message': _('Disapproved'),
+                    })
+                else:
+                    tx.with_context(skip_escrow_visibility_domain=False).write({
+                        'jetcheckout_approval_state': False,
+                        'jetcheckout_approval_state_message': False,
+                    })
+        
+        return res

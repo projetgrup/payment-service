@@ -75,7 +75,7 @@ publicWidget.registry.payloxTokenVerify = payloxPage.extend({
         const rows = this.installment.rows || [];
         rows.forEach(i => i.idesc = _t('Card Verification'));
         return {
-            type: 'virtual_pos',
+            type: 'virtualpos',
             verify: true,
             card: {
                 type: this.card.type || '',

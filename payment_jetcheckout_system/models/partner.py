@@ -13,6 +13,7 @@ from odoo import _, api, fields, models
 from odoo.tools import email_normalize
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.auth_signup.models.res_users import SignupError
+from odoo.addons.queue_job.models import enqueue
 
 from .constants import PRIMEFACTOR
 
@@ -657,10 +658,12 @@ class Partner(models.Model):
 
             user = user.sudo()
             if not user.active or user.has_group('base.group_public'):
-                user.write({'active': True})
-                group_user.write({'users': [(3, user.id)]})
-                group_public.write({'users': [(3, user.id)]})
-                group_portal.write({'users': [(4, user.id)]})
+                user.sudo().write({'groups_id': [(3, group_user.id), (3, group_public.id), (4, group_portal.id)], 'active': True})
+                #TODO remove following commented lines, if they are unnecessary
+                #user.write({'active': True})
+                #group_user.write({'users': [(3, user.id)]})
+                #group_public.write({'users': [(3, user.id)]})
+                #group_portal.write({'users': [(4, user.id)]})
                 partner_sudo.signup_prepare()
 
             partner_sudo.with_context(active_test=True)._send_portal_email()
@@ -832,7 +835,7 @@ class Partner(models.Model):
         portal_url = self.with_context(signup_force_type_in_url='', lang=lang)._get_signup_url_for_action()[self.id]
         self.signup_prepare()
 
-        template.with_context(dbname=self._cr.dbname, portal_url=portal_url, lang=lang).send_mail(self.id, force_send=True)
+        template.with_context(dbname=self._cr.dbname, portal_url=portal_url, skip_queue=True, lang=lang).send_mail(self.id, force_send=True)
         return True
 
     @api.model
@@ -1131,6 +1134,84 @@ class Partner(models.Model):
                 return {'error': _('SMS could not be sent.')}
 
         return {'error': _('Unknown sending method')}
+
+    @enqueue
+    def _send_from_wizard_with_delay(self,
+            mail_server,
+            mail_template,
+            mail_type_comment,
+            mail_type_note,
+            mail_reply_to,
+            mail_from,
+            sms_template,
+            sms_provider,
+        ):
+        sent_values = {}
+        now = fields.Datetime.now()
+        if mail_template:
+            values = mail_template.with_context(template_preview_lang=self.lang).generate_email(self.id, ['subject', 'body_html', 'email_from', 'reply_to', 'email_to', 'scheduled_date'])
+            mail_values = {
+                'message_type': 'comment',
+                'subtype_id': mail_type_comment,
+                'res_id': values['res_id'],
+                'recipient_ids': [(6, 0, (values['res_id'],))],
+                #'partner_ids': [(6, 0, (values['res_id'],))],
+                'subject': values['subject'],
+                'email_from': mail_from or values['email_from'],
+                'email_to': values['email_to'],
+                'body': values['body'],
+                'body_html': values['body'],
+                'model': values['model'],
+                'mail_server_id': mail_server.id or values['mail_server_id'],
+                'auto_delete': values['auto_delete'],
+                'scheduled_date': values['scheduled_date'],
+                'reply_to': mail_reply_to or values['reply_to'],
+                'state': 'outgoing',
+                'is_notification': True,
+                'notification_ids': [(0, 0, {
+                    'res_partner_id': values['res_id'],
+                    'notification_type': 'email',
+                })]
+            }
+            sendings = self.env['mail.mail'].create(mail_values)
+            for sending in sendings:
+                sending.notification_ids.write({'mail_mail_id': sending.id})
+            self.env.ref('mail.ir_cron_mail_scheduler_action')._trigger()
+            sent_values['date_email_sent'] = now
+
+        if sms_template:
+            body = sms_template._render_field('body', [self.id], set_lang=self.lang)[self.id]
+            sms_values = {
+                'state': 'outgoing',
+                'body': body,
+                'number': self.mobile,
+                'partner_id': self.id,
+                'provider_id': sms_provider.id,
+            }
+            sendings = self.env['sms.sms'].create(sms_values)
+            messages = []
+            for sending in sendings:
+                messages.append({
+                    'res_id': sending.partner_id.id,
+                    'model': 'res.partner',
+                    'message_type': 'sms',
+                    'subtype_id': mail_type_note,
+                    'body': sending.body,
+                    'notification_ids': [(0, 0, {
+                        'res_partner_id': sending.partner_id.id,
+                        'sms_number': sending.number,
+                        'notification_type': 'sms',
+                        'sms_id': sending.id,
+                        'is_read': True,
+                        'notification_status': 'ready',
+                        'failure_type': '',
+                    })]
+                })
+            self.env['mail.message'].create(messages)
+            self.env.ref('sms.ir_cron_sms_scheduler_action')._trigger()
+            sent_values['date_sms_sent'] = now
+
+        self.write(sent_values)
 
 
 class PartnerBankToken(models.Model):

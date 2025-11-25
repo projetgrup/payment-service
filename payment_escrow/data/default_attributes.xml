@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <record id="attr_title" model="escrow.ad.attribute">
+            <field name="name">Ad Title</field>
+            <field name="technical_name">title</field>
+            <field name="sequence">1</field>
+            <field name="attribute_type">char</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Enter a descriptive title for your ad</field>
+        </record>
+
+        <record id="attr_photo" model="escrow.ad.attribute">
+            <field name="name">Ad Photo</field>
+            <field name="technical_name">photo</field>
+            <field name="sequence">2</field>
+            <field name="attribute_type">binary</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Upload a photo for your ad</field>
+        </record>
+        
+        <record id="attr_description" model="escrow.ad.attribute">
+            <field name="name">Description</field>
+            <field name="technical_name">description</field>
+            <field name="sequence">2</field>
+            <field name="attribute_type">text</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Provide detailed information about the item</field>
+        </record>
+        
+        <record id="attr_city" model="escrow.ad.attribute">
+            <field name="name">City</field>
+            <field name="technical_name">city</field>
+            <field name="sequence">3</field>
+            <field name="attribute_type">char</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">City where the item is located</field>
+        </record>
+        
+        <record id="attr_district" model="escrow.ad.attribute">
+            <field name="name">District</field>
+            <field name="technical_name">district</field>
+            <field name="sequence">4</field>
+            <field name="attribute_type">char</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">District where the item is located</field>
+        </record>
+        
+        <record id="attr_brand" model="escrow.ad.attribute">
+            <field name="name">Brand</field>
+            <field name="technical_name">brand_id</field>
+            <field name="is_name_part" eval="True"/>
+            <field name="name_sequence">1</field>
+            <field name="sequence">10</field>
+            <field name="attribute_type">many2one</field>
+            <field name="relation_model">escrow.car.brand</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Vehicle brand/manufacturer</field>
+        </record>
+
+        <record id="attr_model" model="escrow.ad.attribute">
+            <field name="name">Model</field>
+            <field name="technical_name">model_id</field>
+            <field name="is_name_part" eval="True"/>
+            <field name="name_sequence">2</field>
+            <field name="sequence">11</field>
+            <field name="attribute_type">many2one</field>
+            <field name="relation_model">escrow.car.model</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Vehicle model</field>
+        </record>
+        
+        <record id="attr_year" model="escrow.ad.attribute">
+            <field name="name">Year</field>
+            <field name="technical_name">year</field>
+            <field name="is_name_part" eval="True"/>
+            <field name="name_sequence">3</field>
+            <field name="sequence">12</field>
+            <field name="attribute_type">integer</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Model year</field>
+        </record>
+        
+        <record id="attr_vin" model="escrow.ad.attribute">
+            <field name="name">Chassis Number (VIN)</field>
+            <field name="technical_name">vin</field>
+            <field name="sequence">13</field>
+            <field name="attribute_type">char</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">17-character vehicle identification number</field>
+        </record>
+        
+        <record id="attr_plate" model="escrow.ad.attribute">
+            <field name="name">License Plate</field>
+            <field name="technical_name">plate</field>
+            <field name="sequence">14</field>
+            <field name="attribute_type">char</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Vehicle license plate number</field>
+        </record>
+
+        <record id="attr_license_serial_no" model="escrow.ad.attribute">
+            <field name="name">License Serial No</field>
+            <field name="technical_name">license_serial_no</field>
+            <field name="sequence">15</field>
+            <field name="attribute_type">char</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Vehicle license serial number</field>
+        </record>
+        
+        <record id="attr_mileage" model="escrow.ad.attribute">
+            <field name="name">Mileage (km)</field>
+            <field name="technical_name">mileage</field>
+            <field name="sequence">15</field>
+            <field name="attribute_type">integer</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">Vehicle mileage in kilometers</field>
+        </record>
+
+        <record id="attr_color" model="escrow.ad.attribute">
+            <field name="name">Color</field>
+            <field name="technical_name">color</field>
+            <field name="sequence">16</field>
+            <field name="attribute_type">char</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">Vehicle color</field>
+        </record>
+
+        <record id="attr_fuel_type" model="escrow.ad.attribute">
+            <field name="name">Fuel Type</field>
+            <field name="technical_name">fuel_type</field>
+            <field name="sequence">17</field>
+            <field name="attribute_type">selection</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">Type of fuel used</field>
+        </record>
+
+        <record id="fuel_option_gasoline" model="escrow.ad.attribute.option">
+            <field name="attribute_id" ref="attr_fuel_type"/>
+            <field name="name">Gasoline</field>
+            <field name="value">gasoline</field>
+            <field name="sequence">1</field>
+        </record>
+        
+        <record id="fuel_option_diesel" model="escrow.ad.attribute.option">
+            <field name="attribute_id" ref="attr_fuel_type"/>
+            <field name="name">Diesel</field>
+            <field name="value">diesel</field>
+            <field name="sequence">2</field>
+        </record>
+        
+        <record id="fuel_option_electric" model="escrow.ad.attribute.option">
+            <field name="attribute_id" ref="attr_fuel_type"/>
+            <field name="name">Electric</field>
+            <field name="value">electric</field>
+            <field name="sequence">3</field>
+        </record>
+        
+        <record id="fuel_option_hybrid" model="escrow.ad.attribute.option">
+            <field name="attribute_id" ref="attr_fuel_type"/>
+            <field name="name">Hybrid</field>
+            <field name="value">hybrid</field>
+            <field name="sequence">4</field>
+        </record>
+        
+        <record id="fuel_option_lpg" model="escrow.ad.attribute.option">
+            <field name="attribute_id" ref="attr_fuel_type"/>
+            <field name="name">LPG</field>
+            <field name="value">lpg</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="attr_transmission" model="escrow.ad.attribute">
+            <field name="name">Transmission</field>
+            <field name="technical_name">transmission</field>
+            <field name="sequence">18</field>
+            <field name="attribute_type">selection</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">Transmission type</field>
+        </record>
+
+        <record id="trans_option_manual" model="escrow.ad.attribute.option">
+            <field name="attribute_id" ref="attr_transmission"/>
+            <field name="name">Manual</field>
+            <field name="value">manual</field>
+            <field name="sequence">1</field>
+        </record>
+        
+        <record id="trans_option_automatic" model="escrow.ad.attribute.option">
+            <field name="attribute_id" ref="attr_transmission"/>
+            <field name="name">Automatic</field>
+            <field name="value">automatic</field>
+            <field name="sequence">2</field>
+        </record>
+        
+        <record id="trans_option_semi_automatic" model="escrow.ad.attribute.option">
+            <field name="attribute_id" ref="attr_transmission"/>
+            <field name="name">Semi-Automatic</field>
+            <field name="value">semi_automatic</field>
+            <field name="sequence">3</field>
+        </record>
+        
+        <record id="attr_area" model="escrow.ad.attribute">
+            <field name="name">Area (m²)</field>
+            <field name="technical_name">area</field>
+            <field name="sequence">20</field>
+            <field name="attribute_type">float</field>
+            <field name="required" eval="True"/>
+            <field name="help_text">Total area in square meters</field>
+        </record>
+        
+        <record id="attr_rooms" model="escrow.ad.attribute">
+            <field name="name">Number of Rooms</field>
+            <field name="technical_name">rooms</field>
+            <field name="sequence">21</field>
+            <field name="attribute_type">char</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">e.g., 3+1, 2+1</field>
+        </record>
+        
+        <record id="attr_building_age" model="escrow.ad.attribute">
+            <field name="name">Building Age</field>
+            <field name="technical_name">building_age</field>
+            <field name="sequence">22</field>
+            <field name="attribute_type">integer</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">Age of the building in years</field>
+        </record>
+        
+        <record id="attr_floor" model="escrow.ad.attribute">
+            <field name="name">Floor</field>
+            <field name="technical_name">floor</field>
+            <field name="sequence">23</field>
+            <field name="attribute_type">integer</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">Floor number</field>
+        </record>
+        
+        <record id="attr_has_pool" model="escrow.ad.attribute">
+            <field name="name">Has Pool</field>
+            <field name="technical_name">has_pool</field>
+            <field name="sequence">24</field>
+            <field name="attribute_type">boolean</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">Does the property have a swimming pool?</field>
+        </record>
+
+        <record id="attr_has_balcony" model="escrow.ad.attribute">
+            <field name="name">Has Balcony</field>
+            <field name="technical_name">has_balcony</field>
+            <field name="sequence">25</field>
+            <field name="attribute_type">boolean</field>
+            <field name="required" eval="False"/>
+            <field name="help_text">Does the property have a balcony?</field>
+        </record>
+        
+    </data>
+</odoo>

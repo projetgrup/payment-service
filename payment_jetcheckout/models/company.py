@@ -24,3 +24,21 @@ class Company(models.Model):
     payment_token_ok = fields.Boolean(string='Enable Payment Credit Card Tokens')
     payment_point_ok = fields.Boolean(string='Enable Payment Credit Card Points')
     payment_log_ok = fields.Boolean(string='Enable Logging for Payment Requests')
+    payment_method_physical_pos_store_code = fields.Char(string='Payment Method Physical PoS Store Code')
+    payment_method_physical_pos_ids = fields.One2many('payment.method.physicalpos', 'company_id', string='Payment Method Physical PoS List')
+
+
+class PaymentMethodPhysicalpos(models.Model):
+    _name = 'payment.method.physicalpos'
+    _description = 'Payment Method Physical PoS'
+
+    company_id = fields.Many2one('res.company')
+    name = fields.Char(required=True)
+    type = fields.Selection([
+        ('pavo', 'Pavo'),
+        ('hugin', 'Hugin'),
+    ])
+
+#TODO to be deleted
+class CompanyPaymentMethodPhysicalpos(models.Model):
+    _name = 'res.company.payment.method.physicalpos'
