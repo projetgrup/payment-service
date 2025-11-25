@@ -1653,6 +1653,108 @@
         }
     }
 
+    .escrow-glass-action-bar {
+        gap: 0.75rem;
+        border-radius: 999px;
+        background: transparent;
+        position: relative;
+    }
+
+    @media (max-width: 1199.98px) {
+        .escrow-ad-container {
+            padding-bottom: 160px;
+        }
+
+        .escrow-ad-nav-title {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 1rem !important;
+        }
+
+        .escrow-glass-action-bar {
+            position: fixed;
+            left: 50%;
+            bottom: 32px;
+            transform: translateX(-50%);
+            width: auto;
+            min-width: 280px;
+            border-radius: 24px;
+            
+            /* Liquid Glass Effect - Light */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 0 rgba(255, 255, 255, 1),
+                inset 0 -1px 0 0 rgba(200, 200, 200, 0.2);
+            
+            padding: 6px;
+            gap: 8px;
+            z-index: 1050;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Top Shine */
+        .escrow-glass-action-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+            opacity: 0.8;
+        }
+
+        .escrow-glass-action-bar > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .escrow-glass-action-bar .escrow-ad-nav-button-primary {
+            flex: 0 0 50px;
+            width: 50px;
+            height: 50px;
+            margin: 0;
+            border-radius: 16px;
+            padding: 0;
+            font-size: 0 !important; /* Hide text */
+            line-height: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center !important;
+            
+            /* Glassy Button Style - Light Theme */
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            box-shadow: none;
+            color: var(--primary);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .escrow-glass-action-bar .escrow-ad-nav-button-primary:active {
+            transform: scale(0.92);
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .escrow-glass-action-bar .escrow-ad-nav-button-primary i {
+            margin: 0 !important; /* Force remove margins */
+            font-size: 1.4rem; /* Larger icons */
+            line-height: 1;
+            opacity: 1;
+        }
+
+        .escrow-glass-action-bar .btn + .btn {
+            margin-left: 0;
+        }
+    }
+
     .escrow-ad-list {
         font-size: 0.9em;
         display: flex;
@@ -1966,7 +2068,7 @@
         }
     }
 
-    .filepond {
+    .filepond--root {
         margin: 0 !important;
 
         .filepond--drop-label {
@@ -2001,6 +2103,16 @@
             pointer-events: initial;
             cursor: wait;
         }
+    }
+
+    .modal:has(.o_payment_escrow_upload_invoice) {
+        main {
+            margin: 0 !important;
+        }
+        footer {
+            justify-content: center;
+        }
+
     }
 }
 

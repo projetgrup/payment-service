@@ -80,7 +80,7 @@ class PayloxSyncopsController(Controller):
                     'commission_amount': '%0.2f' % (tx.jetcheckout_commission_amount * rate,),
                 })
         else:
-            branch = tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=tx.create_uid)
+            branch = tx.acquirer_id._get_branch_line(tx)
             values = {
                 'id': tx.id,
                 'ref': tx.jetcheckout_order_id,

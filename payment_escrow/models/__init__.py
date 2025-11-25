@@ -3,6 +3,8 @@ from . import http
 from . import company
 from . import menu
 from . import partner
+from . import ad
+from . import ad_category
 from . import product
 from . import transaction
 from . import transaction_basket
@@ -15,3 +17,5 @@ from . import broker_campaign
 from . import dealer_commission_rate
 from . import settings
 from . import insurance_quote
+from . import approval_chain
+from . import user

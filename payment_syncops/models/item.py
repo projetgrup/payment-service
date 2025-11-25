@@ -140,7 +140,7 @@ class PaymentItem(models.Model):
                 self.write(values)
                 self.flush()
             else:
-                line = tx and tx.acquirer_id._get_branch_line(name=tx.jetcheckout_vpos_name, user=self.create_uid)
+                line = tx and tx.acquirer_id._get_branch_line(tx)
                 result, message = self.env['syncops.connector'].sudo()._execute('payment_post_partner_collection', reference=str(self.id), params={
                     'id': self.id,
                     'collection_id': self.id,
@@ -236,7 +236,7 @@ class PaymentItem(models.Model):
                     wizard.unlink()
 
     @api.model
-    def cron_sync_notif(self):
+    def cron_sync_notif(self, force=False):
         self = self.sudo()
         now = datetime.now()
         tz = timezone('Europe/Istanbul')
@@ -252,12 +252,17 @@ class PaymentItem(models.Model):
                 hour = company.syncops_cron_sync_item_notif_hour % 24
                 time = now.replace(hour=hour, minute=0, second=0, microsecond=0)
                 if pre < time <= now:
-                    items = self.env['payment.item'].search([
-                        ('syncops_ok', '=', True),
-                        ('syncops_notif', '=', True),
+                    domain = [
                         ('company_id', '=', company.id),
                         ('system', '=', company.system),
-                    ])
+                    ]
+                    if not force:
+                        domain.extend([
+                            ('syncops_ok', '=', True),
+                            ('syncops_notif', '=', True)
+                        ])
+                    items = self.env['payment.item'].search(domain)
+
                     if items:
                         partners = set()
                         context = self.env.context.copy()
@@ -287,12 +292,14 @@ class PaymentItem(models.Model):
 
                             tag_ids = company.syncops_cron_sync_item_notif_tag_ids.ids
                             if company.syncops_cron_sync_item_notif_tag_ok:
-                                if not any(tag_id not in partner.category_id.ids for tag_id in tag_ids):
+                                if all(tag_id not in partner.category_id.ids for tag_id in tag_ids):
                                     self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
+                                    partners.add(partner.id)
                                     continue
                             else:
                                 if any(tag_id in partner.category_id.ids for tag_id in tag_ids):
                                     self.env.cr.execute('UPDATE payment_item SET syncops_notif=false WHERE id=%s' % item.id)
+                                    partners.add(partner.id)
                                     continue
 
                             user_ids = company.syncops_cron_sync_item_notif_user_ids.ids

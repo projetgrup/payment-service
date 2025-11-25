@@ -7,9 +7,9 @@ from odoo.exceptions import UserError
 class PaymentTransactionBasket(models.Model):
     _inherit = 'payment.transaction.basket'
 
-    product_id = fields.Many2one('product.product', string='Product (Ad)', compute='_compute_escrow_fields', store=True)
+    ad_id = fields.Many2one('escrow.ad', string='Advertisement', compute='_compute_escrow_fields', store=True)
     ad_number = fields.Char(string='Ad Number', compute='_compute_escrow_fields', store=True)
-    vehicle_info = fields.Char(string='Vehicle Info', compute='_compute_escrow_fields', store=True)
+    ad_info = fields.Char(string='Ad Info', compute='_compute_escrow_fields', store=True)
     
     acquirer_id = fields.Many2one('payment.acquirer', string='Payment Provider', related='transaction_id.acquirer_id', store=True, readonly=True)
     vpos_name = fields.Char(string='Virtual POS Name', related='transaction_id.jetcheckout_vpos_name', store=True, readonly=True)
@@ -17,10 +17,14 @@ class PaymentTransactionBasket(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', related='transaction_id.currency_id', store=True, readonly=True)
     
     ad_state = fields.Selection([
-        ('waiting', 'Waiting'),
-        ('new', 'New'),
-        ('waiting_official_sale_img', 'Waiting Official Sale Image'),
-        ('waiting_transfer_approval', 'Waiting Transfer Approval'),
+        ('draft', 'Draft'),
+        ('waiting', 'Waiting Approval'),
+        ('new', 'Published'),
+        ('sold', 'Sold'),
+        ('cancelled', 'Cancelled'),
+        ('waiting_payment', 'Waiting Payment'),
+        ('waiting_official_doc', 'Waiting Official Document'),
+        ('waiting_transfer', 'Waiting Transfer Approval'),
         ('transferred', 'Transferred'),
     ], string='Ad Status', compute='_compute_escrow_fields', store=True)
     
@@ -65,14 +69,13 @@ class PaymentTransactionBasket(models.Model):
         for record in self:
             record.broker_invoice_filename = record.broker_invoice_id.name if record.broker_invoice_id else False
 
-    @api.depends('transaction_id', 'transaction_id.jetcheckout_item_ids', 'transaction_id.paylox_product_ids', 'submerchant_external_id')
+    @api.depends('transaction_id', 'transaction_id.jetcheckout_item_ids', 'submerchant_external_id')
     def _compute_escrow_fields(self):
         for basket in self:
-            product = False
+            ad = False
             ad_number = ''
-            vehicle_info = ''
+            ad_info = ''
             ad_state = False
-            approval_state = basket.transaction_id.jetcheckout_approval_state if basket.transaction_id else False
             
             if basket.submerchant_external_id:
                 partner_bank = self.env['res.partner.bank'].sudo().search([
@@ -86,32 +89,17 @@ class PaymentTransactionBasket(models.Model):
             if basket.transaction_id:
                 if basket.transaction_id.jetcheckout_item_ids:
                     item = basket.transaction_id.jetcheckout_item_ids[0]
-                    if item.product_id:
-                        product = item.product_id
-                
-                elif basket.transaction_id.paylox_product_ids:
-                    product_line = basket.transaction_id.paylox_product_ids[0]
-                    if product_line.product_id:
-                        product = product_line.product_id
+                    if item.ad_id:
+                        ad = item.ad_id
 
-            if product:
-                ad_number = product.default_code or str(product.id)
-                ad_state = product.escrow_state
-                
-                parts = []
-                if product.escrow_car_brand_id:
-                    parts.append(product.escrow_car_brand_id.name)
-                if product.escrow_car_model_id:
-                    parts.append(product.escrow_car_model_id.name)
-                if product.escrow_car_model_year:
-                    parts.append(str(product.escrow_car_model_year))
-                if product.escrow_car_plate:
-                    parts.append(product.escrow_car_plate)
-                vehicle_info = ' / '.join(parts) if parts else product.name
+            if ad:
+                ad_number = ad.reference or str(ad.id)
+                ad_state = ad.sale_state or ad.state
+                ad_info = ad.name or ''
             
-            basket.product_id = product.id if product else False
+            basket.ad_id = ad.id if ad else False
             basket.ad_number = ad_number
-            basket.vehicle_info = vehicle_info
+            basket.ad_info = ad_info
             basket.ad_state = ad_state
             basket.transfer_amount = basket.submerchant_price or 0.0
 
@@ -124,9 +112,9 @@ class PaymentTransactionBasket(models.Model):
                 transfer_status = 'approved'
             elif basket.approval_state == '-':
                 if basket.paylox_escrow_type == 'broker':
-                    if basket.ad_state == 'waiting_official_sale_img':
+                    if basket.ad_state == 'waiting_official_doc':
                         transfer_status = 'waiting_invoice'
-                    elif basket.ad_state in ['waiting_transfer_approval', 'transferred']:
+                    elif basket.ad_state in ['waiting_transfer', 'transferred']:
                         transfer_status = 'can_approve'
                     else:
                         transfer_status = 'waiting_invoice'
@@ -172,6 +160,12 @@ class PaymentTransactionBasket(models.Model):
             raise UserError(_('This payment basket is not eligible for approval.'))
         self.action_approve()
 
+    def _action_approve(self):
+        for basket in self:
+            super(PaymentTransactionBasket, basket)._action_approve()
+            basket._escrow_trigger_auto_approval()
+        return True
+
     def write(self, values):
         res = super().write(values)
         if values.get('broker_submitted_for_approval'):
@@ -189,3 +183,90 @@ class PaymentTransactionBasket(models.Model):
                         email_layout_xmlid='mail.mail_notification_light',
                     )
         return res
+
+    def _escrow_trigger_auto_approval(self):
+        stack = set(self.env.context.get('escrow_auto_chain_stack', []))
+        for basket in self:
+            company = basket.transaction_id.company_id
+            if (not basket.transaction_id or company.system != 'escrow' or
+                    basket.approval_state != '+' or not basket.paylox_escrow_type):
+                continue
+
+            if basket.paylox_escrow_type in stack:
+                continue
+
+            child_types = company._get_escrow_chain_children(basket.paylox_escrow_type)
+            if not child_types:
+                continue
+            dependents = basket.transaction_id.paylox_basket_ids.filtered(lambda b: b.paylox_escrow_type in child_types and b.approval_state != '+')
+            if not dependents:
+                continue
+
+            new_stack = list(stack | {basket.paylox_escrow_type})
+            try:
+                dependents.with_context(escrow_auto_chain_stack=new_stack).sudo()._action_approve()
+            except Exception as err:  # pragma: no cover - logging safeguard
+                _logger.exception('Failed to auto-approve cascaded escrow basket(s): %s', err)
+
+    def _escrow_visibility_domain(self):
+        user = self.env.user
+        if not user._is_restricted_escrow_user():
+            return []
+
+        company_map = user._get_escrow_allowed_type_map()
+        domain_parts = []
+        for company_id, types in company_map.items():
+            if not types:
+                continue
+            domain_parts.append([
+                ('transaction_id.company_id', '=', company_id),
+                ('paylox_escrow_type', 'in', list(types)),
+            ])
+
+        if not domain_parts:
+            domain_parts.append([
+                ('paylox_escrow_type', 'in', list(ESCROW_DEFAULT_VISIBLE_TYPES)),
+            ])
+
+        visibility_domain = expression.OR(domain_parts)
+        return expression.OR([
+            [('transaction_id.company_id.system', '!=', 'escrow')],
+            visibility_domain,
+        ])
+
+    @api.model
+    def _apply_escrow_visibility_domain(self, domain):
+        base_domain = domain or []
+        visibility_domain = self._escrow_visibility_domain()
+
+        if base_domain and visibility_domain:
+            return expression.AND([base_domain, visibility_domain])
+        if base_domain:
+            return base_domain
+        if visibility_domain:
+            return visibility_domain
+        return []
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        if self.env.context.get('skip_escrow_visibility_domain'):
+            args = self._apply_escrow_visibility_domain(args)
+        return super().search(args, offset=offset, limit=limit, order=order, count=count)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        domain = self._apply_escrow_visibility_domain(domain)
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+    # def check_access_rule(self, operation):
+    #     if self.env.context.get('skip_escrow_check_access_rule'):
+    #         return
+    #     super().check_access_rule(operation)
+    #     user = self.env.user
+    #     if not user._is_restricted_escrow_user():
+    #         return
+
+    #     company_map = user._get_escrow_allowed_type_map()
+    #     restricted = self.filtered(lambda b: b.transaction_id and b.transaction_id.company_id.system == 'escrow' and b.paylox_escrow_type not in company_map.get(b.transaction_id.company_id.id, b.transaction_id.company_id._get_escrow_allowed_types_for_user(user)))
+    #     if restricted:
+    #         raise AccessError(_('You do not have the required rights to access these escrow transfers.'))

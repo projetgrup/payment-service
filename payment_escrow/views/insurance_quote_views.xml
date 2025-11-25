@@ -9,7 +9,6 @@
                 <field name="reference" string="Reference"/>
                 <field name="create_date" string="Request Date"/>
                 <field name="plate" string="License Plate"/>
-                <field name="model" string="Vehicle Model"/>
                 <field name="year" string="Year"/>
                 <field name="vat" string="TC ID"/>
                 <field name="mobile" string="Mobile"/>
@@ -64,9 +63,12 @@
                             <field name="plate"/>
                             <field name="license_no"/>
                             <field name="chassis_no"/>
+                            <field name="model_name"/>
+                            <field name="brand_name"/>
+                            <field name="brand_id" invisible="1"/>
+                            <field name="model_id" invisible="1"/>
                             <!-- <field name="engine_no"/>
                             <field name="registration_date"/> -->
-                            <field name="model"/>
                             <field name="year"/>
                         </group>
                     </group>
@@ -118,7 +120,6 @@
                 <field name="vat" string="TC ID"/>
                 <field name="email" string="Email"/>
                 <field name="mobile" string="Mobile"/>
-                <field name="model" string="Model"/>
                 <field name="chassis_no" string="Chassis"/>
                 <field name="policy_number" string="Policy Number"/>
                 <field name="insurance_company" string="Insurance Company"/>
@@ -135,7 +136,6 @@
                 <group expand="0" string="Group By">
                     <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
                     <filter name="group_by_insurance_company" string="Insurance Company" context="{'group_by': 'insurance_company'}"/>
-                    <filter name="group_by_model" string="Vehicle Model" context="{'group_by': 'model'}"/>
                     <filter name="group_by_year" string="Year" context="{'group_by': 'year'}"/>
                     <filter name="group_by_company" string="Company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </group>

@@ -154,136 +154,271 @@
                     <t t-set="company" t-value="company"/>
                 </t>
                 <div class="escrow-ad-container">
-                    <div class="col-12 col-lg-8 mx-auto p-2 escrow-ad-dashboard" style="display:none" field="seller.ads">
-                        <div class="col-12">
-                            <div class="escrow-ad-nav">
-                                <h3 class="escrow-ad-nav-title">My Ads</h3>
-                                <div class="escrow-ad-nav-control">
-                                    <button type="button" 
-                                            class="btn escrow-ad-nav-button-primary mr-1"
-                                            data-toggle="modal" 
-                                            data-target="#insuranceQuoteModal"
-                                            t-if="request.env.company.escrow_insurance_quote_enabled"
-                                            field="insurance.button.open">
-                                        <i class="fa fa-shield-alt mr8"/>
-                                        Request Insurance Quote
-                                    </button>
-                                    <a class="btn escrow-ad-nav-button-primary mr-1" t-if="request.env.user.payment_preview_ok" data-view="form" target="_blank" href="/my/broker/rates">
-                                        <i class="fa fa-plus mr8"/>
-                                        Calculation Module
-                                    </a>
-                                    <button class="btn escrow-ad-nav-button-primary" data-view="form" field="ad.button.create">
-                                        <i class="fa fa-plus mr8"/>
-                                        Receive Payment
-                                    </button>
-                                    <div class="escrow-ad-nav-buttons">
-                                        <button class="btn escrow-ad-nav-button-secondary active" data-view="list" field="ad.button.list">List</button>
-                                        <button class="btn escrow-ad-nav-button-secondary" data-view="grid" field="ad.button.grid">Grid</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Filters and Sorting -->
-                            <div class="col-12 mb-4">
-                                <div class="card border-0 shadow-sm" style="border-radius: 12px;">
-                                    <div class="card-body py-3 px-4">
-                                        <div class="row align-items-center">
-                                            <!-- State Filter Tags -->
-                                            <div class="col-lg-8 mb-2 mb-lg-0">
-                                                <div class="d-flex align-items-center flex-wrap">
-                                                    <span class="mr-3 font-weight-600 text-dark" style="font-size: 14px;">Filter by Status:</span>
-                                                    <div class="btn-group btn-group-toggle" role="group" field="ad.state.filter">
-                                                        <button type="button" class="btn btn-secondary filter-btn active" data-state="all" field="ad.state.all">
-                                                            <i class="fa fa-list mr-1"></i>All
-                                                        </button>
-                                                        <button type="button" class="btn btn-outline-success filter-btn" data-state="new" field="ad.state.new">
-                                                            <i class="fa fa-plus-circle mr-1"></i>New
-                                                        </button>
-                                                        <button type="button" class="btn btn-outline-warning filter-btn" data-state="waiting" field="ad.state.waiting">
-                                                            <i class="fa fa-clock-o mr-1"></i>Waiting
-                                                        </button>
-                                                        <button type="button" class="btn btn-outline-info filter-btn" data-state="waiting_official_sale_img" field="ad.state.waiting_sale">
-                                                            <i class="fa fa-image mr-1"></i>Pending Sale
-                                                        </button>
-                                                        <button type="button" class="btn btn-outline-info filter-btn" data-state="waiting_transfer_approval" field="ad.state.waiting_transfer_approval">
-                                                            <i class="fa fa-check-circle mr-1"></i>Pending Transfer Approval
-                                                        </button>
-                                                        <button type="button" class="btn filter-btn" data-state="transferred" field="ad.state.transferred">
-                                                            <i class="fa fa-check-circle mr-1"></i>Transferred
-                                                        </button>
-                                                    </div>
+                    <div class="col-12 col-lg-11 mx-auto p-2" style="display:none" field="seller.ads">
+                        <div class="row">
+                            <!-- Sidebar Filters -->
+                            <div class="col-lg-3 mb-4">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body p-4">
+                                        <!-- Search -->
+                                        <div class="mb-4">
+                                            <label class="text-muted small font-weight-bold mb-2 text-uppercase">Search</label>
+                                            <div class="input-group">
+                                                <input type="search" class="form-control" placeholder="Search ads..." field="ad.search"/>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text bg-white border-left-0"><i class="fa fa-search text-muted"/></span>
                                                 </div>
                                             </div>
-                                            
-                                            <!-- Sorting -->
-                                            <!-- <div class="col-lg-4">
-                                                <div class="d-flex align-items-center justify-content-lg-end">
-                                                    <span class="mr-2 font-weight-600 text-dark" style="font-size: 14px;">Sort:</span>
-                                                    <select class="form-control" style="width: 200px; border-radius: 8px;" field="ad.sort">
-                                                        <option value="date_desc">📅 Newest First</option>
-                                                        <option value="date_asc">📅 Oldest First</option>
-                                                        <option value="price_asc">💰 Price: Low to High</option>
-                                                        <option value="price_desc">💰 Price: High to Low</option>
-                                                        <option value="name_asc">🔤 Name: A to Z</option>
-                                                        <option value="name_desc">🔤 Name: Z to A</option>
-                                                    </select>
+                                        </div>
+
+                                        <!-- Categories -->
+                                        <div class="mb-4">
+                                            <label class="text-muted small font-weight-bold mb-2 text-uppercase">Categories</label>
+                                            <div class="d-flex flex-column" field="ad.category.filter">
+                                                <button type="button" class="btn btn-light text-left mb-1 active" data-category="all" field="ad.category.all">
+                                                    <i class="fa fa-th-large mr-2 text-primary"/> All Categories
+                                                </button>
+                                                <t t-set="categories" t-value="request.env['escrow.ad.category'].sudo().search([('parent_id', '=', False)])"/>
+                                                <t t-foreach="categories" t-as="category">
+                                                    <button type="button" class="btn btn-light text-left mb-1" t-att-data-category="category.id" t-att-field="'ad.category.' + str(category.id)">
+                                                        <t t-if="category.category_type == 'vehicle'">
+                                                            <i class="fa fa-car mr-2 text-muted"/>
+                                                        </t>
+                                                        <t t-elif="category.category_type == 'realestate'">
+                                                            <i class="fa fa-building mr-2 text-muted"/>
+                                                        </t>
+                                                        <t t-elif="category.category_type == 'electronics'">
+                                                            <i class="fa fa-laptop mr-2 text-muted"/>
+                                                        </t>
+                                                        <t t-elif="category.category_type == 'clothing'">
+                                                            <i class="fa fa-shopping-bag mr-2 text-muted"/>
+                                                        </t>
+                                                        <t t-elif="category.category_type == 'home'">
+                                                            <i class="fa fa-leaf mr-2 text-muted"/>
+                                                        </t>
+                                                        <t t-elif="category.category_type == 'services'">
+                                                            <i class="fa fa-wrench mr-2 text-muted"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <i class="fa fa-ellipsis-h mr-2 text-muted"/>
+                                                        </t>
+                                                        <span t-esc="category.name"/>
+                                                    </button>
+                                                </t>
+                                            </div>
+                                        </div>
+
+                                        <!-- Price Range -->
+                                        <div class="mb-4">
+                                            <label class="text-muted small font-weight-bold mb-2 text-uppercase">Price Range</label>
+                                            <div class="price-range-wrapper">
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <div class="input-group input-group-sm">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text bg-white border-right-0">₺</span>
+                                                        </div>
+                                                        <input type="number" class="form-control border-left-0 pl-1" id="price-min" placeholder="Min" field="ad.price.min"/>
+                                                    </div>
+                                                    <span class="mx-2 text-muted">-</span>
+                                                    <div class="input-group input-group-sm">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text bg-white border-right-0">₺</span>
+                                                        </div>
+                                                        <input type="number" class="form-control border-left-0 pl-1" id="price-max" placeholder="Max" field="ad.price.max"/>
+                                                    </div>
                                                 </div>
-                                            </div> -->
+                                                <input type="range" class="custom-range" id="price-range" min="0" max="1000000" step="1000" field="ad.price.range"/>
+                                            </div>
+                                        </div>
+
+                                        <!-- Status Filter -->
+                                        <div class="mb-4">
+                                            <label class="text-muted small font-weight-bold mb-2 text-uppercase">Status</label>
+                                            <div class="d-flex flex-column" role="group" field="ad.state.filter">
+                                                <button type="button" class="btn btn-light text-left mb-1 active" data-state="all" field="ad.state.all">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>All Ads</span>
+                                                        <i class="fa fa-list text-muted"/>
+                                                    </div>
+                                                </button>
+                                                
+                                                <!-- Main States -->
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="new" field="ad.state.new">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Published</span>
+                                                        <i class="fa fa-check-circle text-success"/>
+                                                    </div>
+                                                </button>
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="waiting" field="ad.state.waiting">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Waiting Approval</span>
+                                                        <i class="fa fa-clock-o text-warning"/>
+                                                    </div>
+                                                </button>
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="draft" field="ad.state.draft">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Draft</span>
+                                                        <i class="fa fa-pencil text-secondary"/>
+                                                    </div>
+                                                </button>
+                                                
+                                                <!-- Sale Process -->
+                                                <div class="dropdown-divider my-2"></div>
+                                                <label class="text-muted small font-weight-bold mb-2 text-uppercase pl-1">Sale Process</label>
+                                                
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="waiting_payment" field="ad.state.waiting_payment">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Waiting Payment</span>
+                                                        <i class="fa fa-credit-card text-info"/>
+                                                    </div>
+                                                </button>
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="waiting_official_doc" field="ad.state.waiting_official_doc">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Waiting Official Doc</span>
+                                                        <i class="fa fa-file-text-o text-info"/>
+                                                    </div>
+                                                </button>
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="waiting_transfer" field="ad.state.waiting_transfer">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Waiting Transfer</span>
+                                                        <i class="fa fa-exchange text-primary"/>
+                                                    </div>
+                                                </button>
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="transferred" field="ad.state.transferred">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Transferred</span>
+                                                        <i class="fa fa-check-square-o text-success"/>
+                                                    </div>
+                                                </button>
+                                                
+                                                <!-- End States -->
+                                                <div class="dropdown-divider my-2"></div>
+                                                
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="sold" field="ad.state.sold">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Sold</span>
+                                                        <i class="fa fa-handshake-o text-dark"/>
+                                                    </div>
+                                                </button>
+                                                <button type="button" class="btn btn-light text-left mb-1" data-state="cancelled" field="ad.state.cancelled">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <span>Cancelled</span>
+                                                        <i class="fa fa-ban text-danger"/>
+                                                    </div>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="escrow-ad-list list-view" field="ad.view.list">
-                                <div class="escrow-ad-list-header">
-                                    <div>AD NAME</div>
-                                    <div>CATEGORY</div>
-                                    <div>PRICE</div>
-                                    <div>STATE</div>
-                                    <div/>
+
+                            <!-- Main Content -->
+                            <div class="col-lg-9">
+                                <!-- Header / Actions Row -->
+                                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+                                    <h3 class="escrow-ad-nav-title mb-3 mb-md-0">My Ads</h3>
+                                    <div class="escrow-ad-nav-control escrow-glass-action-bar d-flex align-items-center flex-wrap justify-content-center">
+                                        <button type="button" 
+                                                class="btn escrow-ad-nav-button-primary mr-1"
+                                                data-toggle="modal" 
+                                                data-target="#insuranceQuoteModal"
+                                                t-if="request.env.company.escrow_insurance_quote_enabled"
+                                                field="insurance.button.open">
+                                            <i class="fa fa-shield mr8"/>
+                                            Request Insurance Quote
+                                        </button>
+                                        <a class="btn escrow-ad-nav-button-primary mr-1" t-if="request.env.user.payment_preview_ok" data-view="form" target="_blank" href="/my/broker/rates">
+                                            <i class="fa fa-calculator mr8"/>
+                                            Calculation Module
+                                        </a>
+                                        <button class="btn escrow-ad-nav-button-primary mr-1" field="ad.button.tour.start">
+                                            <i class="fa fa-play-circle mr8"/>
+                                            Start Tour
+                                        </button>
+                                        <button class="btn escrow-ad-nav-button-primary" data-view="form" field="ad.button.create">
+                                            <i class="fa fa-plus mr8"/>
+                                            Receive Payment
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="ad-list-container w-100" field="ad.list.container">
-                                    <t t-foreach="ads" t-as="ad">
-                                        <t t-call="payment_escrow.ad_list_item"/>
-                                    </t>
+
+                                <!-- Toolbar -->
+                                <div class="card border-0 shadow-sm mb-4">
+                                    <div class="card-body p-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <span class="text-muted mr-2">Sort by:</span>
+                                                <select class="custom-select custom-select-sm border-0 bg-light" style="width: auto;" field="ad.sort">
+                                                    <option value="date_desc">Newest First</option>
+                                                    <option value="date_asc">Oldest First</option>
+                                                    <option value="price_desc">Price: High to Low</option>
+                                                    <option value="price_asc">Price: Low to High</option>
+                                                    <option value="name_asc">Name: A to Z</option>
+                                                    <option value="name_desc">Name: Z to A</option>
+                                                </select>
+                                            </div>
+                                            <div class="btn-group">
+                                                <button class="btn btn-light btn-sm active" data-view="list" field="ad.button.list"><i class="fa fa-list"/></button>
+                                                <button class="btn btn-light btn-sm" data-view="grid" field="ad.button.grid"><i class="fa fa-th-large"/></button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="escrow-ad-grid grid-view" field="ad.view.grid">
-                                <div class="escrow-ad-grid-container" field="ad.grid.container">
-                                    <t t-foreach="ads" t-as="ad">
-                                        <t t-call="payment_escrow.ad_grid_item"/>
-                                    </t>
+
+                                <!-- List View -->
+                                <div class="escrow-ad-list list-view" field="ad.view.list">
+                                    <div class="escrow-ad-list-header">
+                                        <div>AD NAME</div>
+                                        <div>CATEGORY</div>
+                                        <div>PRICE</div>
+                                        <div>STATE</div>
+                                        <div/>
+                                    </div>
+                                    <div class="ad-list-container w-100" field="ad.list.container">
+                                        <t t-foreach="ads" t-as="ad">
+                                            <t t-call="payment_escrow.ad_list_item"/>
+                                        </t>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <!-- Pagination Controls -->
-                            <div class="d-flex justify-content-between align-items-center mt-4 mb-3" field="ad.pagination.container">
-                                <div class="pagination-info">
-                                    <span class="text-muted">Showing <span field="ad.pagination.showing">1-10</span> of <span field="ad.pagination.total">0</span> ads</span>
+
+                                <!-- Grid View -->
+                                <div class="escrow-ad-grid grid-view" field="ad.view.grid">
+                                    <div class="escrow-ad-grid-container" field="ad.grid.container">
+                                        <t t-foreach="ads" t-as="ad">
+                                            <t t-call="payment_escrow.ad_grid_item"/>
+                                        </t>
+                                    </div>
                                 </div>
-                                <nav aria-label="Pagination Navigation">
-                                    <ul class="pagination pagination-sm mb-0">
-                                        <li class="page-item" field="ad.pagination.prev">
-                                            <a class="page-link" href="#" aria-label="Previous">
-                                                <i class="fa fa-chevron-left"></i>
-                                            </a>
-                                        </li>
-                                        <li class="page-item active">
-                                            <span class="page-link" field="ad.pagination.current">1</span>
-                                        </li>
-                                        <li class="page-item" field="ad.pagination.next">
-                                            <a class="page-link" href="#" aria-label="Next">
-                                                <i class="fa fa-chevron-right"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                                <div class="pagination-size">
-                                    <select class="form-select form-select-sm" field="ad.pagination.size" style="width: auto;">
-                                        <option value="10">10 per page</option>
-                                        <option value="20">20 per page</option>
-                                        <option value="50">50 per page</option>
-                                    </select>
+
+                                <!-- Pagination -->
+                                <div class="d-flex justify-content-between align-items-center mt-4 mb-3" field="ad.pagination.container">
+                                    <div class="pagination-info">
+                                        <span class="text-muted">Showing <span field="ad.pagination.showing">1-10</span> of <span field="ad.pagination.total">0</span> ads</span>
+                                    </div>
+                                    <nav aria-label="Pagination Navigation">
+                                        <ul class="pagination pagination-sm mb-0">
+                                            <li class="page-item" field="ad.pagination.prev">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </a>
+                                            </li>
+                                            <li class="page-item active">
+                                                <span class="page-link" field="ad.pagination.current">1</span>
+                                            </li>
+                                            <li class="page-item" field="ad.pagination.next">
+                                                <a class="page-link" href="#" aria-label="Next">
+                                                    <i class="fa fa-chevron-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                    <div class="pagination-size">
+                                        <select class="form-select form-select-sm" field="ad.pagination.size" style="width: auto;">
+                                            <option value="10">10 per page</option>
+                                            <option value="20">20 per page</option>
+                                            <option value="50">50 per page</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -407,8 +542,8 @@
 
                     <div class="info-card vehicle-info-card" data-action="edit-vehicle" field="edit.vehicle.holder">
                         <div class="info-card-header">
-                            <i class="fa fa-car"></i>
-                            <h4>Licencing Information</h4>
+                            <i class="fa fa-info-circle"></i>
+                            <h4>Ad Details</h4>
                             <div class="info-badge escrow-ad-item-state"></div>
                         </div>
                         <div class="info-card-content">
@@ -417,17 +552,10 @@
                                 <span class="escrow-ad-item-name"></span>
                             </div>
                             <div class="info-item">
-                                <span class="info-label">Year:</span>
-                                <span class="info-value escrow-ad-item-year"></span>
+                                <span class="info-label">Category:</span>
+                                <span class="escrow-ad-item-categ"></span>
                             </div>
-                            <div class="info-item">
-                                <span class="info-label">Plate:</span>
-                                <span class="info-value escrow-ad-item-plate"></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">VIN:</span>
-                                <span class="info-value escrow-ad-item-vin"></span>
-                            </div>
+                            <div class="escrow-ad-attributes-container"></div>
                             <div class="info-item">
                                 <span class="info-label">Price:</span>
                                 <span class="info-value escrow-ad-item-price"></span>

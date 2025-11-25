@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Insurance Quote Sequence -->
+        <record id="seq_escrow_ad" model="ir.sequence">
+            <field name="name">Escrow Advertisement</field>
+            <field name="code">escrow.ad</field>
+            <field name="prefix">AD/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
         <record id="seq_escrow_insurance_quote" model="ir.sequence">
             <field name="name">Insurance Quote</field>
             <field name="code">escrow.insurance.quote</field>

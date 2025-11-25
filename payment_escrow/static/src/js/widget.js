@@ -207,7 +207,6 @@ publicWidget.registry.payloxSystemEscrowBrokerRates = publicWidget.Widget.extend
     },
 
     _onSettingsSave: function () {
-        console.log('Saving broker settings...');
         const campaignId = parseInt(this.settings.campaign.$.val(), 10) || null;
         const signName = this.settings.signName.$.val().trim();
         const authorizedPerson = this.settings.authorizedPerson.$.val().trim();

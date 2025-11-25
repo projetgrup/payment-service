@@ -103,6 +103,52 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="escrow_broker_link_validity" string="Broker Login Validity"/>
+                            <div class="text-muted">
+                                Set the validity duration for broker login tokens in minutes
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="escrow_broker_link_validity" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 o_setting_box">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="escrow_chain_ids" string="Approval Chains"/>
+                            <div class="text-muted">
+                                Define cascaded escrow approvals and limit who can view dependent transfers.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="escrow_chain_ids" class="w-100" context="{'default_company_id': company_id}" nolabel="1">
+                                        <tree editable="bottom" string="Approval Chains">
+                                            <field name="sequence" optional="hide"/>
+                                            <field name="parent_type"/>
+                                            <field name="child_type"/>
+                                            <field name="viewer_ids" widget="many2many_tags"/>
+                                            <field name="active" optional="hide"/>
+                                        </tree>
+                                        <form string="Approval Chain">
+                                            <sheet>
+                                                <group>
+                                                    <field name="sequence"/>
+                                                    <field name="parent_type"/>
+                                                    <field name="child_type"/>
+                                                    <field name="viewer_ids" widget="many2many_tags"/>
+                                                    <field name="active"/>
+                                                </group>
+                                            </sheet>
+                                        </form>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </xpath>

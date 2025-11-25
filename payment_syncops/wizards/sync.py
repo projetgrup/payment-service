@@ -350,7 +350,6 @@ class SyncopsSyncWizard(models.TransientModel):
 
                     models['item'].create({
                         'syncops_ok': True,
-                        'syncops_data': line['data'],
                         'syncops_notif': True,
                         'syncops_data': json.dumps(line['data'], default=str),
                         'system': self.system or company.system,
@@ -396,7 +395,7 @@ class SyncopsSyncWizard(models.TransientModel):
             else:
                 lines = self.line_ids
             for line in lines:
-                line._sync_item_invoice_with_delay(
+                line.with_context(skip_queue=True)._sync_item_invoice_with_delay(
                     company=company,
                     vats=vats,
                     refs=refs,

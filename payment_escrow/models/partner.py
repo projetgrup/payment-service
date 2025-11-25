@@ -93,13 +93,13 @@ class Partner(models.Model):
     @api.depends()
     def _compute_escrow_counts(self):
         for partner in self:
-            partner.escrow_owner_ad_count = self.env['product.product'].search_count([
-                ('escrow_owner_id', '=', partner.id),
+            partner.escrow_owner_ad_count = self.env['escrow.ad'].search_count([
+                ('owner_id', '=', partner.id),
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
             
-            partner.escrow_customer_ad_count = self.env['product.product'].search_count([
-                ('escrow_customer_ids', '=', partner.id),
+            partner.escrow_customer_ad_count = self.env['escrow.ad'].search_count([
+                ('customer_ids', '=', partner.id),
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
             
@@ -115,27 +115,21 @@ class Partner(models.Model):
                 ('company_id', '=', partner.company_id.id or self.env.company.id)
             ])
 
-            partner.escrow_pending_ad_count = self.env['product.product'].search_count([
+            partner.escrow_pending_ad_count = self.env['escrow.ad'].search_count([
                 ('company_id', '=', partner.company_id.id or self.env.company.id),
-                ('system', '=', 'escrow'),
-                ('escrow_state', '=', 'waiting'),
+                ('state', '=', 'waiting'),
             ]) if partner.paylox_escrow_type == 'platform_owner' else 0
 
     def action_view_owner_ads(self):
         return {
             'name': _('My Ads'),
             'type': 'ir.actions.act_window',
-            'res_model': 'product.product',
+            'res_model': 'escrow.ad',
             'view_mode': 'tree,kanban,form',
-            'views': [
-                (self.env.ref('payment_escrow.tree_ad').id, 'tree'),
-                (self.env.ref('payment_escrow.kanban_ad').id, 'kanban'),
-                (self.env.ref('payment_escrow.form_ad').id, 'form'),
-            ],
-            'domain': [('escrow_owner_id', '=', self.id)],
+            'domain': [('owner_id', '=', self.id)],
             'context': {
-                'default_escrow_owner_id': self.id,
-                'create': False,
+                'default_owner_id': self.id,
+                'create': True,
             }
         }
     
@@ -160,16 +154,11 @@ class Partner(models.Model):
         return {
             'name': _('Registered Ads'),
             'type': 'ir.actions.act_window',
-            'res_model': 'product.product',
+            'res_model': 'escrow.ad',
             'view_mode': 'tree,kanban,form',
-            'views': [
-                (self.env.ref('payment_escrow.tree_ad').id, 'tree'),
-                (self.env.ref('payment_escrow.kanban_ad').id, 'kanban'),
-                (self.env.ref('payment_escrow.form_ad').id, 'form'),
-            ],
-            'domain': [('escrow_customer_ids', '=', self.id)],
+            'domain': [('customer_ids', '=', self.id)],
             'context': {
-                'default_escrow_customer_ids': self.id,
+                'default_customer_ids': self.id,
                 'create': False,
             }
         }
@@ -211,17 +200,11 @@ class Partner(models.Model):
         return {
             'name': _('Ads Pending Approval'),
             'type': 'ir.actions.act_window',
-            'res_model': 'product.product',
+            'res_model': 'escrow.ad',
             'view_mode': 'tree,kanban,form',
-            'views': [
-                (self.env.ref('payment_escrow.tree_ad').id, 'tree'),
-                (self.env.ref('payment_escrow.kanban_ad').id, 'kanban'),
-                (self.env.ref('payment_escrow.form_ad').id, 'form'),
-            ],
             'domain': [
                 ('company_id', '=', self.company_id.id or self.env.company.id),
-                ('system', '=', 'escrow'),
-                ('escrow_state', '=', 'waiting'),
+                ('state', '=', 'waiting'),
             ],
             'context': {
                 'create': False,

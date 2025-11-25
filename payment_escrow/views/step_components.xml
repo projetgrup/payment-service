@@ -187,10 +187,10 @@
         <div class="section">
             <form action="#" id="productInfo" class="form">
                 <div class="form__group -mt-lg">
-                    <label class="form__label" for="wizard_category">Sale Category</label>
+                    <label class="form__label" for="wizard_category">Advertisement Category</label>
                     <select id="wizard_category" class="form__control" name="category" field="ad.input.category" placeholder="Select a category">
-                        <t t-foreach="company.env['product.category'].sudo().with_context(system='escrow').search([('company_id', '=', company.id)])" t-as="categ">
-                            <option t-att-value="categ.id" t-esc="categ.name"/>
+                        <t t-foreach="company.env['escrow.ad.category'].sudo().search([('company_id', '=', company.id)])" t-as="categ">
+                            <option t-att-value="categ.id" t-esc="categ.complete_name"/>
                         </t>
                     </select>
                 </div>
@@ -198,73 +198,19 @@
                     <label class="form__label" for="wizard_price">Sale Price</label>
                     <input id="adInputPrice" type="text" inputmode="decimal" required="required" field="ad.input.price" t-att-placeholder="language.format('%.{0}f'.format(currency.decimal_places), 0, grouping=True, monetary=True)" class="form__control"/>
                 </div>
-                <div class="panel mt-3">
+                
+                <!-- Dinamik Attribute Container -->
+                <div class="panel mt-3" id="dynamicAttributesPanel" style="display:none;">
                     <div class="panel__header">
-                        <h3>License Information</h3>
+                        <h3>Additional Information</h3>
                     </div>
                     <div class="panel__body">
-                        <div id="carInfo">
-                            <div class="form__group">
-                                <label class="form__label" for="wizard_vin">Chassis Number</label>
-                                <input id="wizard_vin" class="form__control" type="text" name="vin" maxlength="17" placeholder="Chassis Number (17 characters)" field="ad.input.vin"/>
-                                <i class="fa fa-check text-success state-check d-none"></i>
-                            </div>
-                            <div class="form__group position-relative">
-                                <label class="form__label" for="wizard_license_serial_no">
-                                    License Serial No
-                                    <i class="fa fa-search-plus ml-2 text-info license-serial-helper" 
-                                       style="font-size: 14px; cursor: pointer;"
-                                       title="Click to see where to find it on the registration document" field="ad.button.license_serial_no_helper"/>
-                                </label>
-                                <input id="wizard_license_serial_no" class="form__control" type="text" name="license_serial_no" maxlength="10" placeholder="License Serial No (10 characters)" field="ad.input.license_serial_no"/>
-                                <i class="fa fa-check text-success state-check d-none"></i>
-                                
-                                <div class="license-serial-tooltip" style="display: none; position: absolute; z-index: 1000; background: white; border: 2px solid #17a2b8; border-radius: 8px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); max-width: 400px; top: 100%; left: 0; margin-top: 5px;">
-                                    <div>
-                                        <div class="text-center mb-3">
-                                            <img src="/payment_escrow/static/src/img/license_serial_help.png" 
-                                                 alt="License Serial Number Location" 
-                                                 style="max-width: 300px; border-radius: 4px; border: 1px solid #dee2e6;"/>
-                                        </div>
-                                        <div>
-                                            <h6 class="text-info mb-2 text-center">
-                                                <i class="fa fa-info-circle mr-1"></i>
-                                                where to find the License Serial Number
-                                            </h6>
-                                            <p class="small mb-0 text-muted text-center">
-                                                The License Serial Number is located on the front side of your vehicle's registration document, usually at the top. 
-                                                It is a 10-character alphanumeric code.
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="wizard_plate">License Plate</label>
-                                <input id="wizard_plate" class="form__control" type="text" name="numberplate" placeholder="License Plate (e.g., 34 ABC 123)" field="ad.input.plate"/>
-                                <i class="fa fa-check text-success state-check d-none"></i>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="wizard_brand">Brand</label>
-                                <select id="wizard_brand" class="form__control" name="brand" field="ad.input.brand" placeholder="Select a brand">
-                                    <t t-foreach="company.env['escrow.car.brand'].sudo().search([])" t-as="brand">
-                                        <option t-att-value="brand.id" t-esc="brand.name"/>
-                                    </t>
-                                </select>
-                            </div>
-                            <div class="form__group">
-                                <label class="form__label" for="wizard_year">Year</label>
-                                <input id="wizard_year" class="form__control" type="text" name="year" placeholder="Model Year" field="ad.input.year"/>
-                            </div>
-                            <div class="form__group -mb-0">
-                                <div class="form__label">Upload License Photo</div>
-                                <div class="pt-1">
-                                    <input type="file" class="filepond" name="fileLicence" accept="image/png, image/jpeg, image/gif" field="ad.input.fileLicence"/>
-                                </div>
-                            </div>
+                        <div id="dynamicAttributesContainer">
+                            <!-- Attribute'lar JavaScript ile buraya eklenecek -->
                         </div>
                     </div>
                 </div>
+                
                 <div class="form__group mt-3 d-flex justify-content-between">
                     <button type="button" class="button button__dark button__medium" data-wizard-action="next" field="wizard.button.next">
                         Continue

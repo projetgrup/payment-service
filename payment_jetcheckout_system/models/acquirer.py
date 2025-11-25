@@ -15,6 +15,7 @@ class PaymentPayloxBranch(models.Model):
     account_code = fields.Char(string='Account Code', required=True)
     company_id = fields.Many2one('res.company', ondelete='cascade', readonly=True)
     website_id = fields.Many2one('website', ondelete='cascade', readonly=True)
+    method_physicalpos_ids = fields.Many2many('payment.method.physicalpos', 'payment_branch_method_physicalpos_rel', 'branch_id', 'pos_id', string='Physical PoS IDs')
 
 
 class PaymentAcquirer(models.Model):
@@ -35,11 +36,16 @@ class PaymentAcquirer(models.Model):
     paylox_branch_ids = fields.One2many('payment.acquirer.jetcheckout.branch', 'acquirer_id', groups='base.group_user')
     jetcheckout_no_dashboard_button = fields.Boolean('Hide Dashboard Payment Button', groups='base.group_user')
 
-    def _get_branch_line(self, name, user):
-        line = self._get_journal_line(name)
-        if line:
-            domain = [('acquirer_id', '=', self.id), ('journal_id', '=', line.id)]
+    def _get_branch_line_domain(self, line, tx):
+        return [('acquirer_id', '=', self.id), ('journal_id', '=', line.id)]
 
+    def _get_branch_line(self, tx, user=None):
+        if not user:
+            user = tx.create_uid
+
+        line = self._get_journal_line(tx.jetcheckout_vpos_name)
+        if line:
+            domain = self._get_branch_line_domain(line, tx)
             branch = self.env['payment.acquirer.jetcheckout.branch'].search(domain + [('user_ids', 'in', [user.id])], limit=1)
             if branch:
                 return branch

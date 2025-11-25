@@ -162,7 +162,7 @@
                                                        required="required"/>
                                             </div>
                                         </div> -->
-                                        <!-- <div class="col-md-6">
+                                        <div class="col-md-6">
                                             <div class="form__group -mb-0">
                                                 <label class="form__label" for="insurance_model_year">Model Year</label>
                                                 <input type="text" 
@@ -174,7 +174,35 @@
                                                        field="insurance.input.year"
                                                        required="required"/>
                                             </div>
-                                        </div> -->
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group -mb-0">
+                                                <label class="form__label" for="insurance_vehicle_brand">Vehicle Brand</label>
+                                                <select class="form__control" 
+                                                        id="insurance_vehicle_brand" 
+                                                        name="brand"
+                                                        field="insurance.input.brand"
+                                                        placeholder="Select vehicle brand"
+                                                        required="required"
+                                                        disabled="disabled">
+                                                    <option value="">Select vehicle brand</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form__group -mb-0">
+                                                <label class="form__label" for="insurance_vehicle_model">Vehicle Model</label>
+                                                <select class="form__control" 
+                                                        id="insurance_vehicle_model" 
+                                                        name="model"
+                                                        field="insurance.input.model"
+                                                        placeholder="Select vehicle model"
+                                                        required="required"
+                                                        disabled="disabled">
+                                                    <option value="">Select vehicle model</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </form>
                             </div>

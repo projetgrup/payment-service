@@ -44,6 +44,8 @@ class PaymentTransaction(models.Model):
                     requests.post(method.webhook_url, data=json.dumps({
                         'success': True,
                         'id': self.jetcheckout_api_id or None,
+                        'ref': self.jetcheckout_transaction_id or None,
+                        'amount': self.amount or None,
                     }), timeout=15)
                 except:
                     _logger.error('An error occured when triggering physical PoS webhook.', exc_info=True)
@@ -97,3 +99,4 @@ class PaymentTransactionPayloxApiMethod(models.Model):
     icon = fields.Char(compute='_compute_icon')
     redirect_url = fields.Char(string='Redirect URL')
     webhook_url = fields.Char(string='Webhook URL')
+    type_physicalpos_ids = fields.Many2many('payment.method.physicalpos', 'payment_transaction_api_method_physicalpos_rel', 'method_id', 'pos_id', string='Physical PoS IDs')
