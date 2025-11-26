@@ -201,6 +201,11 @@ class PayloxSystemEscrowController(Controller):
                 'jetcheckout_item_ids': [(6, 0, payment_items.ids)],
                 'jetcheckout_approval_ok': True,
             })
+            res.update({
+                'paylox_product_ids': [(0, 0, {
+                    'ad_id': product['pid'],
+                    'qty': product['qty'],
+                }) for product in products]})
         return res
 
     def _prepare_broker_installment_lines(self, partner, amount, currency, campaign=None):
