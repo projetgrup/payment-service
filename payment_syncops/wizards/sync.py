@@ -383,17 +383,19 @@ class SyncopsSyncWizard(models.TransientModel):
             if partner_ctx:
                 domain.append(('parent_id', '=', partner_ctx.id))
 
-            if company.syncops_sync_item_force:
-                tables['item'].search(domain).unlink()
-            elif not company.syncops_sync_item_soft:
-                tables['item'].search(domain + [('paid', '=', False), ('ref', 'not in', self.line_ids.mapped('invoice_id'))]).unlink()
+            item_ids = self.env.context.get('ids')
+            if item_ids:
+                lines = self.env['syncops.sync.wizard.line'].browse(item_ids)
+            else:
+                if company.syncops_sync_item_force:
+                    tables['item'].search(domain).unlink()
+                elif not company.syncops_sync_item_soft:
+                    tables['item'].search(domain + [('paid', '=', False), ('ref', 'not in', self.line_ids.mapped('invoice_id'))]).unlink()
+                lines = self.line_ids
 
             items = tables['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
-            if self.env.context.get('ids'):
-                lines = self.env['syncops.sync.wizard.line'].browse(self.env.context.get('ids'))
-            else:
-                lines = self.line_ids
+
             for line in lines:
                 line.with_context(skip_queue=True)._sync_item_invoice_with_delay(
                     company=company,
@@ -414,7 +416,7 @@ class SyncopsSyncWizard(models.TransientModel):
     def sync(self):
         res = super().sync()
         self = self.sudo()
-        wizard = self.browse(self.env.context.get('wizard_id', 0))
+        wizard = self.browse(self.env.context.get('id', 0))
         if wizard:
             company = self.env.company
             users_model = self.env['res.users']
@@ -475,12 +477,13 @@ class SyncopsSyncWizard(models.TransientModel):
                 elif wizard.type_item_subtype == 'invoice':
                     wizard._sync_item_invoice(**pairs)
 
-            dbname = self.env.cr.dbname
-            @self.env.cr.postcommit.add
-            def update_notif():
-                reg = registry(dbname)
-                with reg.cursor() as cr:
-                    cr.execute('UPDATE payment_item SET syncops_notif=false WHERE company_id=%s AND syncops_notif=true' % company.id)
+        #TODO this code maybe unnecessary
+        #dbname = self.env.cr.dbname
+        #@self.env.cr.postcommit.add
+        #def update_notif():
+        #    reg = registry(dbname)
+        #    with reg.cursor() as cr:
+        #        cr.execute('UPDATE payment_item SET syncops_notif=false WHERE company_id=%s AND syncops_notif=true' % company.id)
 
         return res
 
