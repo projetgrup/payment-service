@@ -508,6 +508,7 @@ class PayloxSystemEscrowController(Controller):
             customer_basket = []
 
             product_line = transaction.paylox_product_ids[0]
+            raise Exception(str(product_line))
             partner = product_line.ad_id.owner_id
             customers = product_line.ad_id.customer_ids
             customer = customers.filtered(lambda c: c.is_escrow_customer)[:1]
