@@ -507,9 +507,9 @@ class PayloxSystemEscrowController(Controller):
         if transaction and transaction.system == 'escrow':
             customer_basket = []
 
-            product_line = transaction.paylox_product_ids[0]
-            partner = product_line.product.owner_id
-            customers = product_line.ad_id.customer_ids
+            ad = transaction.paylox_product_ids[0].ad_id
+            partner = ad.owner_id
+            customers = ad.customer_ids
             customer = customers.filtered(lambda c: c.is_escrow_customer)[:1]
             
             if not customer:
@@ -570,10 +570,10 @@ class PayloxSystemEscrowController(Controller):
             customer_basket.append({
                 "id": 24,
                 "name": partner.name or '',
-                "description": product_line.name or 'Owner commission',
+                "description": ad.name or 'Owner commission',
                 "qty": 1,
                 "amount": seller_amount,
-                "category": product_line.ad_id.category_id.name if product_line.ad_id.category_id else '',
+                "category": ad.category_id.name if ad.category_id else '',
                 "is_physical": False,
                 "submerchant_external_id": reference_seller,
                 "partner_id": partner.id,
