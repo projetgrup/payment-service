@@ -717,15 +717,16 @@ class EscrowAPIService(Component):
         amount = 0
         ads = []
         for ad in params.ads:
-            _ad = self.env['product.product'].sudo() \
+            _ad = self.env['escrow.ad'].sudo() \
                   .with_company(token.company_id) \
                   .with_context(system=token.company_id.system) \
-                  .search([('uid', '=', str(ad.id))], limit=1)
+                  .search([('id', '=', int(ad.id))], limit=1)
             if not _ad:
                 raise MissingError(_('Ad %s cannot be found') % str(ad.id))
             price = getattr(ad, 'price', _ad.price)
             ads.append((0, 0, {
-                'product_id': _ad.id,
+                'ad_id': _ad.id,
+                'name': _ad.name,
                 'price': price,
                 'qty': 1,
             }))
