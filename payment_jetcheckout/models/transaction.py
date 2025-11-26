@@ -955,6 +955,7 @@ class PaymentTransactionProduct(models.Model):
 
     transaction_id = fields.Many2one('payment.transaction', ondelete='cascade')
     product_id = fields.Many2one('product.product')
+    ad_id = fields.Many2one('escrow.ad')
     uom = fields.Char(related='product_id.uom_id.name')
     name = fields.Char()
     code = fields.Char()
