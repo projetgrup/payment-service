@@ -113,6 +113,7 @@ payloxPage.include({
 
         //const buttons = $('button:not(:disabled)');
         this.agreement.locked = true;
+        
         rpc.query({
             route: '/my/agreement',
             params: {

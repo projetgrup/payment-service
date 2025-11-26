@@ -1683,7 +1683,7 @@ class PayloxSystemEscrowController(Controller):
                             'api_merchant': bank.api_merchant,
                             'api_state': bank.api_state,
                             'api_message': bank.api_message,
-                        } for bank in partner.bank_ids if bank.api_state]
+                        } for bank in partner.bank_ids]
                     }
                 }
             else:
