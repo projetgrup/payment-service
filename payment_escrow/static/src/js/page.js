@@ -209,7 +209,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_individual: new fields.string({
-                    // events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc)]],
+                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -220,11 +220,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
                                 valid = false;
+                            } else if (!this._isIbanValid(field._.masked.value)) {
+                                message = _t('IBAN is not valid');
+                                valid = false;
                             }
-                            // } else if (!this._isIbanValid(field._.masked.value)) {
-                            //     message = _t('IBAN is not valid');
-                            //     valid = false;
-                            // }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
