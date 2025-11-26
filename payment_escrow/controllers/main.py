@@ -185,7 +185,6 @@ class PayloxSystemEscrowController(Controller):
                 partner = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('different_holder', {}).get('vat', '')), ('paylox_escrow_type', '=', 'card_holder')], limit=1)
             products = kwargs.get('products', [])
             payment_items = request.env['payment.item'].sudo().search([('ad_id', 'in', products and [p['pid'] for p in products] or [])])
-            raise Exception(payment_items)
             res.update({
                 'paylox_transaction_item_ids':[(0, 0, {
                         'item_id': rec.id,
@@ -508,20 +507,9 @@ class PayloxSystemEscrowController(Controller):
         if transaction and transaction.system == 'escrow':
             customer_basket = []
 
-            ad = None
-            if transaction.paylox_product_ids:
-                product_line = transaction.paylox_product_ids[0]
-                ad = product_line.ad_id
-            elif transaction.paylox_transaction_item_ids:
-                first_item = transaction.paylox_transaction_item_ids[0]
-                if first_item.item_id and first_item.item_id.ad_id:
-                    ad = first_item.item_id.ad_id
-            
-            if not ad:
-                raise ValidationError(_('No ad found for this transaction.'))
-
-            partner = ad.owner_id
-            customers = ad.customer_ids
+            product_line = transaction.paylox_product_ids[0]
+            partner = product_line.ad_id.owner_id
+            customers = product_line.ad_id.customer_ids
             customer = customers.filtered(lambda c: c.is_escrow_customer)[:1]
             
             if not customer:
@@ -582,10 +570,10 @@ class PayloxSystemEscrowController(Controller):
             customer_basket.append({
                 "id": 24,
                 "name": partner.name or '',
-                "description": ad.name or 'Owner commission',
+                "description": product_line.name or 'Owner commission',
                 "qty": 1,
                 "amount": seller_amount,
-                "category": ad.category_id.name if ad.category_id else '',
+                "category": product_line.ad_id.category_id.name if product_line.ad_id.category_id else '',
                 "is_physical": False,
                 "submerchant_external_id": reference_seller,
                 "partner_id": partner.id,
