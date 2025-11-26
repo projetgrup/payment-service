@@ -68,8 +68,22 @@ class PartnerBank(models.Model):
         if response.status_code == 200:
             result = response.json()
             if result['response_code'] == "00":
-                state = True
-                message = _('Success')
+                externals = result.get('externals')
+                if externals:
+                    unapproved = []
+                    for ext in externals:
+                        if ext.get('external_status') != 'Active':
+                            unapproved.append('%s: %s' % (ext.get('payment_org'), ext.get('external_status')))
+                    
+                    if unapproved:
+                        state = False
+                        message = ', '.join(unapproved)
+                    else:
+                        state = True
+                        message = _('Success')
+                else:
+                    state = True
+                    message = _('Success')
             elif method == 'post' and result['response_code'] == "00183":
                 return self._paylox_api_save(acquirer, 'put', data)
             else:
@@ -228,6 +242,25 @@ class PartnerBank(models.Model):
             if response.status_code == 200:
                 result = response.json()
                 if result['response_code'] == "00":
+                    externals = result.get('externals')
+                    if externals:
+                        unapproved = []
+                        for ext in externals:
+                            if ext.get('external_status') != 'Active':
+                                unapproved.append('%s: %s' % (ext.get('payment_org'), ext.get('external_status')))
+                        
+                        if unapproved:
+                            state = False
+                            message = ', '.join(unapproved)
+                        else:
+                            state = True
+                            message = _('Success')
+                    
+                        self.write({
+                            'api_state': state,
+                            'api_message': message
+                        })
+
                     values = {'ok': True, **result['detail']}
                 else:
                     raise UserError(result['message'])

@@ -674,7 +674,6 @@ class PayloxSystemEscrowController(Controller):
                 }
             })
             transaction.partner_id = customer.id
-
         return values
 
     @http.route(['/payment/escrow/get_items'], type='json', auth='user', methods=['POST'], website=True)

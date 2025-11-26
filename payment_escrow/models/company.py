@@ -18,6 +18,7 @@ class ResCompany(models.Model):
         default=15,
         help='Duration in minutes for which broker payment links remain valid. Default is 15 minutes.'
     )
+    paylox_escrow_split_ok = fields.Boolean('Split Escrow Items', default=False)
 
     def _get_escrow_chain_children(self, parent_type):
         self.ensure_one()

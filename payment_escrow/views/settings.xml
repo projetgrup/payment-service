@@ -116,6 +116,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="paylox_escrow_split_ok" string="Broker Login Validity"/>
+                            <div class="text-muted">
+                                Enable splitting of escrow items in payments
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="paylox_escrow_split_ok"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 o_setting_box">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">

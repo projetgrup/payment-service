@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
+import logging
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
+from .approval_chain import ESCROW_DEFAULT_VISIBLE_TYPES
 
+
+_logger = logging.getLogger(__name__)
 
 class PaymentTransactionBasket(models.Model):
     _inherit = 'payment.transaction.basket'

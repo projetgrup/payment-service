@@ -1581,9 +1581,40 @@ class PayloxController(http.Controller):
                         'submerchant_price': basket.get('submerchant_price'),
                         'partner_id': basket.get('partner_id'),
                     }))
-                    if 'partner_id' in basket:
-                        del basket['partner_id']
                 tx.write({'paylox_basket_ids': basket_ids})
+
+                if not getattr(tx.company_id, 'paylox_escrow_split_ok', True):
+                    new_basket = []
+                    platform_total = 0.0
+                    platform_owner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'platform_owner')], limit=1)
+
+                    for basket in data['customer_basket']:
+                        pid = basket.get('partner_id')
+                        partner = request.env['res.partner'].sudo().browse(pid) if pid else None
+
+                        if partner and partner.paylox_escrow_type == 'owner':
+                            if 'partner_id' in basket:
+                                del basket['partner_id']
+                            new_basket.append(basket)
+
+                        elif partner and partner.paylox_escrow_type == 'platform_owner':
+                            if 'partner_id' in basket:
+                                basket['platform_owner'] = True
+                                del basket['partner_id']
+                            new_basket.append(basket)
+                        else:
+                            platform_total += basket.get('amount', 0.0)
+                    if platform_total > 0.0 and platform_owner:
+                        for b in new_basket:
+                            if b.get('platform_owner'):
+                                b['amount'] += platform_total
+                                del b['platform_owner']
+                                break
+                    data['customer_basket'] = new_basket
+                else:
+                    for basket in data['customer_basket']:
+                        if 'partner_id' in basket:
+                            del basket['partner_id']
                     
             response = requests.post(url, data=json.dumps(data))
             result = None

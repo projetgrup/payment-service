@@ -19,3 +19,4 @@ class PaymentSettings(models.TransientModel):
         readonly=False,
         help='Duration in minutes for which broker payment links remain valid. Default is 15 minutes.'
     )
+    paylox_escrow_split_ok = fields.Boolean('Split Escrow Items', related='company_id.paylox_escrow_split_ok', readonly=False)
