@@ -249,3 +249,8 @@ class EscrowAdFavorite(models.Model):
     _sql_constraints = [
         ('unique_ad_partner', 'unique(ad_id, partner_id)', 'This ad is already in favorites!')
     ]
+
+class PaymentTransactionProduct(models.Model):
+    _inherit = 'payment.transaction.product'
+
+    ad_id = fields.Many2one('escrow.ad')
