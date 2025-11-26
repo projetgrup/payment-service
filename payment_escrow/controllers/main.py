@@ -515,9 +515,20 @@ class PayloxSystemEscrowController(Controller):
         if transaction and transaction.system == 'escrow':
             customer_basket = []
 
-            product_line = transaction.paylox_product_ids[0]
-            partner = product_line.ad_id.owner_id
-            customers = product_line.ad_id.customer_ids
+            ad = None
+            if transaction.paylox_product_ids:
+                product_line = transaction.paylox_product_ids[0]
+                ad = product_line.ad_id
+            elif transaction.paylox_transaction_item_ids:
+                first_item = transaction.paylox_transaction_item_ids[0]
+                if first_item.item_id and first_item.item_id.ad_id:
+                    ad = first_item.item_id.ad_id
+            
+            if not ad:
+                raise ValidationError(_('No ad found for this transaction.'))
+
+            partner = ad.owner_id
+            customers = ad.customer_ids
             customer = customers.filtered(lambda c: c.is_escrow_customer)[:1]
             
             if not customer:
@@ -578,10 +589,10 @@ class PayloxSystemEscrowController(Controller):
             customer_basket.append({
                 "id": 24,
                 "name": partner.name or '',
-                "description": product_line.name or 'Owner commission',
+                "description": ad.name or 'Owner commission',
                 "qty": 1,
                 "amount": seller_amount,
-                "category": product_line.ad_id.category_id.name if product_line.ad_id.category_id else '',
+                "category": ad.category_id.name if ad.category_id else '',
                 "is_physical": False,
                 "submerchant_external_id": reference_seller,
                 "partner_id": partner.id,
