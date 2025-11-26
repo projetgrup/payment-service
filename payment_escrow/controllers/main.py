@@ -185,6 +185,7 @@ class PayloxSystemEscrowController(Controller):
                 partner = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('different_holder', {}).get('vat', '')), ('paylox_escrow_type', '=', 'card_holder')], limit=1)
             products = kwargs.get('products', [])
             payment_items = request.env['payment.item'].sudo().search([('ad_id', 'in', products and [p['pid'] for p in products] or [])])
+            raise Exception(payment_items)
             res.update({
                 'paylox_transaction_item_ids':[(0, 0, {
                         'item_id': rec.id,
