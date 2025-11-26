@@ -1586,6 +1586,7 @@ class PayloxController(http.Controller):
                 if not getattr(tx.company_id, 'paylox_escrow_split_ok', True):
                     new_basket = []
                     platform_total = 0.0
+                    submerchant_total = 0.0
                     platform_owner = request.env['res.partner'].sudo().search([('paylox_escrow_type', '=', 'platform_owner')], limit=1)
 
                     for basket in data['customer_basket']:
@@ -1604,10 +1605,12 @@ class PayloxController(http.Controller):
                             new_basket.append(basket)
                         else:
                             platform_total += basket.get('amount', 0.0)
+                            submerchant_total += basket.get('submerchant_price', 0.0)
                     if platform_total > 0.0 and platform_owner:
                         for b in new_basket:
                             if b.get('platform_owner'):
                                 b['amount'] += platform_total
+                                b['submerchant_price'] += submerchant_total
                                 del b['platform_owner']
                                 break
                     data['customer_basket'] = new_basket
