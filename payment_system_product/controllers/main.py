@@ -164,7 +164,7 @@ class PaymentSystemProductController(SystemController):
         if products:
             vals.update({
                 'paylox_product_ids': [(0, 0, {
-                    'product_id': product['pid'],
+                    'ad_id': product['pid'],
                     'qty': product['qty'],
                 }) for product in products]})
         return vals
