@@ -184,6 +184,7 @@ class PayloxSystemEscrowController(Controller):
             if different:
                 partner = request.env['res.partner'].sudo().search([('vat', '=', kwargs.get('different_holder', {}).get('vat', '')), ('paylox_escrow_type', '=', 'card_holder')], limit=1)
             ads = kwargs.get('ads', [])
+            raise Exception(ads)
             payment_items = request.env['payment.item'].sudo().search([('ad_id', 'in', ads and [a['aid'] for a in ads] or [])])
             raise Exception(payment_items)
             res.update({
