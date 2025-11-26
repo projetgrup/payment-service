@@ -367,4 +367,47 @@
             </t>
         </t>
     </t>
+
+    <t t-name="paylox.escrow.approval.waiting">
+        <div class="approval-waiting-msg text-center p-5">
+            <i class="fa fa-clock-o fa-spin fa-4x text-warning mb-4"></i>
+            <h4 class="text-dark mb-2">Waiting for Approval</h4>
+            <p class="text-muted">Seller has been sent for approval. Approval has not been received yet, we are waiting for approval.</p>
+        </div>
+    </t>
+
+    <t t-name="paylox.escrow.otp.modal">
+        <div class="otp-modal" id="otpModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:1050;">
+            <div class="otp-modal-content" style="background:#fff;border-radius:12px;padding:32px 24px;max-width:420px;width:90%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.15);">
+                <div class="otp-header mb-3">
+                    <i class="fa fa-mobile text-primary" style="font-size:48px;"></i>
+                </div>
+                <h4 class="mb-2">Phone Verification</h4>
+                <p class="text-muted mb-4">Please enter the 4-digit verification code sent to your mobile phone.</p>
+
+                <div class="otp-inputs d-flex justify-content-center gap-2 mb-3" style="gap:8px;">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-inp form__control text-center" style="width:56px;height:56px;font-size:24px;font-weight:600;border:2px solid #DDD;border-radius:8px;" />
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-inp form__control text-center" style="width:56px;height:56px;font-size:24px;font-weight:600;border:2px solid #DDD;border-radius:8px;" />
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-inp form__control text-center" style="width:56px;height:56px;font-size:24px;font-weight:600;border:2px solid #DDD;border-radius:8px;" />
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-inp form__control text-center" style="width:56px;height:56px;font-size:24px;font-weight:600;border:2px solid #DDD;border-radius:8px;" />
+                </div>
+
+                <div class="otp-timer mb-4" style="color:#666;font-size:14px;">
+                    Time remaining: <span class="font-weight-bold text-danger" id="otpTimer">120</span> seconds
+                </div>
+
+                <div class="otp-actions d-flex gap-2 justify-content-center" style="gap:8px;">
+                    <button type="button" class="button button__dark button__medium" id="otpSubmit">
+                        <i class="fa fa-check mr-1"></i>Verify
+                    </button>
+                    <button type="button" class="button button__secondary button__medium" id="otpResend" style="display:none;">
+                        <i class="fa fa-refresh mr-1"></i>Resend
+                    </button>
+                    <button type="button" class="button button__light button__medium" id="otpCancel">
+                        <i class="fa fa-times mr-1"></i>Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
 </templates>

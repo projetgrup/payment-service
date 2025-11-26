@@ -1625,6 +1625,11 @@ class PayloxSystemEscrowController(Controller):
                     ('company_id', '=', request.env.company.id),
                     ('sanitized_acc_number', '=', iban_sanitized),
                 ], limit=1)
+                return {
+                    'success': True,
+                    'partner_id': partner.id,
+                    'message': 'Seller information has been successfully saved.'
+                }
                 if existing:
                     existing.write(bank_vals)
                 if not existing:

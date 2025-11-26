@@ -112,6 +112,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         this.partner = new fields.integer({
             default: 0,
         });
+        this.$otpModal = null;
+        this.otpTimer = null;
+        this.shouldAdvanceStep = false;
+        this.currentOtpPartnerId = 0;
         this.seller = {
             wizard: new fields.element(),
             ads: new fields.element(),
@@ -205,7 +209,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 iban_individual: new fields.string({
-                    events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc)]],
+                    // events: [['input', () => this._isIbanVerified(this.seller.input.iban_individual, this.seller.input.tc)]],
                     mask: 'TR00 0000 0000 0000 0000 0000 00',
                     validate: async () => {
                         const mod = $('input[name="userType"]:checked').val();
@@ -216,10 +220,11 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                             if (!field._.masked.isComplete) {
                                 message = _t('IBAN is required');
                                 valid = false;
-                            } else if (!this._isIbanValid(field._.masked.value)) {
-                                message = _t('IBAN is not valid');
-                                valid = false;
                             }
+                            // } else if (!this._isIbanValid(field._.masked.value)) {
+                            //     message = _t('IBAN is not valid');
+                            //     valid = false;
+                            // }
                         }
                         this._onFieldValid(field, valid, message);
                         return valid;
@@ -966,6 +971,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }),
                 category: new fields.selection({
+                    events: [['change', this._onCategoryChange]],
                     validate: () => {
                         const field = this.ad.input.category;
                         let message = null;
@@ -2059,8 +2065,15 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _onClickButtonCreate: function (ev) {
-        Object.assign(this.state, { id: 0, owner: 0, customer: 0 });
+        Object.assign(this.state, { id: 0, owner: 0, customer: 0, item_id: 0 });
+        this._resetDynamicAttributes();
         this._onChangeStep(1);
+    },
+
+    _resetDynamicAttributes: function() {
+        if (!this.state.id) {
+            this._clearDynamicAttributes();
+        }
     },
 
     _closeSidebar: function() {
@@ -2676,11 +2689,19 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     });
 
                 } else {
-                    this.displayNotification({
-                        type: 'danger',
-                        title: 'Error',
-                        message: result.message || 'An error occurred while saving seller information.',
-                    });
+                    if (result.state === false) {
+                        const $step1 = $('.wizard-step-1');
+                        $step1.children().addClass('d-none');
+                        if ($step1.find('.approval-waiting-msg').length === 0) {
+                            $step1.append(qweb.render('paylox.escrow.approval.waiting'));
+                        }
+                    } else {
+                        this.displayNotification({
+                            type: 'danger',
+                            title: 'Error',
+                            message: result.message || 'An error occurred while saving seller information.',
+                        });
+                    }
                 }
             }).catch((error) => {
                 this.displayNotification({
@@ -2695,6 +2716,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (this.wizard.currentStep === 2) {
+            this.ad.input.category.$.trigger('change');
             for (const input of Object.values(this.ad.input)) {
                 let valid = await input.validate();
                 if (!valid) {
@@ -2852,6 +2874,19 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     });
                 }
             });
+        } else {
+            const categoryField = this.ad.input.category;
+            if (!categoryField) {
+                return;
+            }
+
+            const selectedValue = categoryField.$ && categoryField.$.length ? categoryField.$.val() : categoryField.value;
+            if (selectedValue) {
+                categoryField.value = selectedValue;
+                this._onCategoryChange();
+            } else {
+                this._clearDynamicAttributes();
+            }
         }
     },
 
@@ -2869,6 +2904,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _getProductData: function() {
         const self = this;
+        console.log('Loading product data for ad id:', self.state);
         return this._rpc({
             route: '/get/ad',
             params: { ad_id: self.state.id },
@@ -3030,6 +3066,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _startOtp: function(partnerId){
+        this.currentOtpPartnerId = partnerId;
         return this._rpc({ route: '/my/otp/start', params: { partner_id: partnerId } });
     },
 
@@ -3038,83 +3075,172 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     },
 
     _showOtpModal: function(expiresOrOpts, shouldAdvanceStep = false){
-        const self = this;
         const isObj = typeof expiresOrOpts === 'object' && expiresOrOpts !== null;
         const ttl = isObj ? (expiresOrOpts.expiresIn || expiresOrOpts.ttl || 120) : (typeof expiresOrOpts === 'number' ? expiresOrOpts : 120);
-        const modalHtml = `
-            <div class="otp-modal" id="otpModal" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:1050;">
-              <div style="background:#fff;border-radius:12px;padding:24px;max-width:420px;width:90%;text-align:center;">
-                <h4 style="margin-bottom:12px;">Cep Telefonu Doğrulama</h4>
-                <p style="margin-bottom:16px;">Lütfen cep telefonunuza gelen 4 haneli doğrulama kodunu giriniz.</p>
-                <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;">
-                  <input type="text" inputmode="numeric" maxlength="1" class="otp-inp form__control" style="width:48px;height:48px;text-align:center;font-size:20px;border:1px solid #DDD;border-radius:8px;" />
-                  <input type="text" inputmode="numeric" maxlength="1" class="otp-inp form__control" style="width:48px;height:48px;text-align:center;font-size:20px;border:1px solid #DDD;border-radius:8px;" />
-                  <input type="text" inputmode="numeric" maxlength="1" class="otp-inp form__control" style="width:48px;height:48px;text-align:center;font-size:20px;border:1px solid #DDD;border-radius:8px;" />
-                  <input type="text" inputmode="numeric" maxlength="1" class="otp-inp form__control" style="width:48px;height:48px;text-align:center;font-size:20px;border:1px solid #DDD;border-radius:8px;" />
-                </div>
-                <div class="otp-timer" style="margin-bottom:16px;color:#666;">Kalan süre: <span id="otpTimer">${ttl}</span> saniye</div>
-                <div style="display:flex;gap:8px;justify-content:center;">
-                  <button id="otpSubmit" class="button button__dark button__medium">Doğrula</button>
-                  <button id="otpCancel" class="button button__light button__medium">İptal</button>
-                </div>
-              </div>
-            </div>`;
+        this.shouldAdvanceStep = shouldAdvanceStep;
 
-        $('body').append(modalHtml);
-
-        const $modal = $('#otpModal');
-        const $inputs = $modal.find('.otp-inp');
+        const $modal = this._ensureOtpModal();
         const $timer = $modal.find('#otpTimer');
-        let secs = ttl;
+        const $inputs = $modal.find('.otp-inp');
+        const $submitBtn = $modal.find('#otpSubmit');
+        const $resendBtn = $modal.find('#otpResend');
 
-        $inputs.on('input', function(){
-            this.value = this.value.replace(/\D/g,'').slice(0,1);
-            if (this.value && this.nextElementSibling) this.nextElementSibling.focus();
-        });
+        let seconds = ttl;
+
+        $modal.css('display', 'flex');
+        $timer.text(seconds);
+        $submitBtn.prop('disabled', false).removeClass('disabled');
+        $resendBtn.hide();
+        $inputs.val('');
         $inputs.first().focus();
 
-        const interval = setInterval(() => {
-            secs -= 1;
-            if (secs < 0) secs = 0;
-            $timer.text(secs);
-            if (secs === 0) {
-                clearInterval(interval);
-                $('#otpSubmit').prop('disabled', true).addClass('disabled');
-            }
-        }, 1000);
-
-        function closeModal(){
-            clearInterval(interval);
-            $modal.remove();
+        if (this.otpTimer) {
+            clearInterval(this.otpTimer);
         }
 
-        $modal.on('click', '#otpCancel', function(e){ e.preventDefault(); closeModal(); });
+        this.otpTimer = setInterval(() => {
+            seconds -= 1;
+            if (seconds < 0) {
+                seconds = 0;
+            }
+            $timer.text(seconds);
+            if (seconds === 0) {
+                clearInterval(this.otpTimer);
+                $submitBtn.prop('disabled', true).addClass('disabled');
+                $resendBtn.show();
+            }
+        }, 1000);
+    },
+
+    _ensureOtpModal: function() {
+        if (!this.$otpModal || !this.$otpModal.length) {
+            $('body').append(qweb.render('paylox.escrow.otp.modal'));
+            this.$otpModal = $('#otpModal');
+            this._bindOtpModalEvents();
+        }
+        return this.$otpModal;
+    },
+
+    _bindOtpModalEvents: function() {
+        const self = this;
+        const $modal = this.$otpModal;
+        const $inputs = $modal.find('.otp-inp');
+
+        $inputs.off('input.otp keydown.otp paste.otp');
+        $inputs.on('input.otp', function(){
+            this.value = this.value.replace(/\D/g,'').slice(0,1);
+            if (this.value && this.nextElementSibling) {
+                this.nextElementSibling.focus();
+            }
+            const code = $inputs.map((i, el) => el.value).get().join('');
+            if (code.length === 4) {
+                setTimeout(() => {
+                    self._onClickOtpSubmit();
+                }, 200);
+            }
+        });
+
+        $inputs.on('keydown.otp', function(e){
+            if (e.key === 'Backspace' && !this.value && this.previousElementSibling) {
+                this.previousElementSibling.focus();
+            }
+        });
+
+        $inputs.on('paste.otp', function(e){
+            e.preventDefault();
+            const pastedData = e.originalEvent.clipboardData.getData('text');
+            const digits = pastedData.replace(/\D/g, '').slice(0, 4);
+            digits.split('').forEach((digit, index) => {
+                if ($inputs[index]) {
+                    $inputs[index].value = digit;
+                }
+            });
+            if (digits.length) {
+                const targetIndex = Math.min(digits.length - 1, 3);
+                $inputs[targetIndex].focus();
+                if (digits.length === 4) {
+                    self._onClickOtpSubmit();
+                }
+            }
+        });
+
+        $modal.off('click', '#otpCancel');
+        $modal.on('click', '#otpCancel', function(e){
+            e.preventDefault();
+            self._closeOtpModal();
+        });
+
+        $modal.off('click', '#otpSubmit');
         $modal.on('click', '#otpSubmit', function(e){
             e.preventDefault();
-            const code = Array.from($inputs).map(i=>i.value).join('');
-            if (code.length !== 4) {
-                self.displayNotification({type:'warning', title:'OTP', message:'Lütfen 4 haneli kodu giriniz.'});
-                return;
-            }
-            const verifyFn = self._verifyOtp.bind(self);
-            verifyFn(code).then(res=>{
-                if (res && res.success) {
-                    closeModal();
-                    self.displayNotification({ 
-                        type: 'success', 
-                        title: 'OTP', 
-                        message: 'Phone number verified successfully' 
-                    });
-                    if (shouldAdvanceStep) {
-                    self._markStepCompleted(self.wizard.currentStep);
-                    self._onChangeStep(self.wizard.currentStep + 1);
-                    }
-                } else {
-                    self.displayNotification({ type:'danger', title:'OTP', message: (res && res.message) || 'Doğrulama başarısız' });
+            self._onClickOtpSubmit();
+        });
+
+        $modal.off('click', '#otpResend');
+        $modal.on('click', '#otpResend', function(e){
+            e.preventDefault();
+            self._onClickOtpResend();
+        });
+    },
+
+    _closeOtpModal: function() {
+        if (this.otpTimer) {
+            clearInterval(this.otpTimer);
+            this.otpTimer = null;
+        }
+        if (this.$otpModal && this.$otpModal.length) {
+            this.$otpModal.hide();
+            this.$otpModal.find('.otp-inp').val('');
+        }
+    },
+
+    _onClickOtpSubmit: function() {
+        const $modal = this._ensureOtpModal();
+        const $inputs = $modal.find('.otp-inp');
+        const code = $inputs.map((i, el) => el.value).get().join('');
+
+        if (code.length !== 4) {
+            this.displayNotification({type:'warning', title:'OTP', message:'Lütfen 4 haneli kodu giriniz.'});
+            return;
+        }
+
+        this._verifyOtp(code).then(res => {
+            if (res && res.success) {
+                this._closeOtpModal();
+                this.displayNotification({
+                    type: 'success',
+                    title: 'OTP',
+                    message: 'Phone number verified successfully'
+                });
+                if (this.shouldAdvanceStep) {
+                    this._markStepCompleted(this.wizard.currentStep);
+                    this._onChangeStep(this.wizard.currentStep + 1);
                 }
-            }).catch(()=>{
-                self.displayNotification({ type:'danger', title:'OTP', message:'Doğrulama sırasında hata oluştu' });
-            });
+            } else {
+                this.displayNotification({ type:'danger', title:'OTP', message: (res && res.message) || 'Doğrulama başarısız' });
+                $inputs.val('');
+                $inputs.first().focus();
+            }
+        }).catch(() => {
+            this.displayNotification({ type:'danger', title:'OTP', message:'Doğrulama sırasında hata oluştu' });
+        });
+    },
+
+    _onClickOtpResend: function() {
+        if (!this.currentOtpPartnerId) {
+            this.displayNotification({ type:'warning', title:'OTP', message:'Partner information not found.' });
+            return;
+        }
+        this._startOtp(this.currentOtpPartnerId).then(res => {
+            if (res && res.success) {
+                this.wizard.otpId = res.otp_id;
+                this._showOtpModal(res.expires_in || 120, this.shouldAdvanceStep);
+                this.displayNotification({ type:'success', title:'OTP', message:'Verification code has been resent.' });
+            } else {
+                this.displayNotification({ type:'danger', title:'OTP', message: (res && res.message) || 'OTP could not be resent.' });
+            }
+        }).catch(() => {
+            this.displayNotification({ type:'danger', title:'OTP', message:'An unexpected error occurred while resending OTP.' });
         });
     },
 
