@@ -186,6 +186,14 @@ class PayloxSystemEscrowController(Controller):
             ads = kwargs.get('ads', [])
             payment_items = request.env['payment.item'].sudo().search([('ad_id', 'in', ads and [a['aid'] for a in ads] or [])])
             res.update({
+                'paylox_product_ids': [(0, 0, {
+                        'ad_id': rec.ad_id.id,
+                        'name': rec.ad_id.name,
+                        'price': rec.amount,
+                        'qty': 1,
+                    })
+                    for rec in payment_items if rec.ad_id
+                ],
                 'paylox_transaction_item_ids':[(0, 0, {
                         'item_id': rec.id,
                         'amount': kwargs.get('amount', 0.0),
