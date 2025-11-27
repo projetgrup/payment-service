@@ -45,13 +45,13 @@ class ProductProduct(models.Model):
     escrow_unapproved_transfer_count = fields.Integer(string='Unapproved Transfers', compute='_compute_escrow_transfer_count')
     escrow_approved_transfer_count = fields.Integer(string='Approved Transfers', compute='_compute_escrow_transfer_count')
     escrow_transfer_count_display = fields.Char(string='Transfers', compute='_compute_escrow_transfer_count')
-    escrow_state = fields.Selection([
-        ('waiting', 'Waiting'),
-        ('new', 'New'),
-        ('waiting_official_sale_img', 'Waiting Official Sale Image'),
-        ('waiting_transfer_approval', 'Waiting Transfer Approval'),
+    sale_state = fields.Selection([
+        ('waiting_payment', 'Waiting Payment'),
+        ('waiting_official_doc', 'Waiting Official Document'),
+        ('waiting_transfer', 'Waiting Transfer Approval'),
         ('transferred', 'Transferred'),
-    ], string='State', default='waiting', index=True, tracking=True)
+        ('sold', 'Sold'),
+    ], string='State', default='waiting_payment', index=True, tracking=True, copy=False)
     escrow_license_serial_no = fields.Char(string='License Serial No')
 
     def action_get_customer(self):
@@ -97,7 +97,7 @@ class ProductProduct(models.Model):
             
             if not rec.escrow_ad_sale_img:
                 raise UserError(_('Sale image is required to approve this ad.'))
-            rec.escrow_state = 'new'
+            rec.sale_state = 'waiting_payment'
         return True
 
     def action_view_basket_items(self):

@@ -66,7 +66,7 @@ def migrate(cr, version):
         state_map = {
             'waiting': 'waiting',
             'new': 'new',
-            'sold': 'sold',
+            'transferred': 'sold',
             'cancel': 'cancelled',
         }
         ad_state = state_map.get(product.escrow_state, 'draft')
@@ -79,6 +79,17 @@ def migrate(cr, version):
                  sale_state = 'waiting_payment'
         elif ad_state == 'sold':
             sale_state = 'transferred'
+        elif product.escrow_state == 'waiting_official_sale_img':
+            ad_state = 'new'
+            sale_state = 'waiting_official_doc'
+        elif product.escrow_state == 'waiting_transfer_approval':
+            ad_state = 'new'
+            sale_state = 'waiting_transfer'
+        elif product.escrow_state == 'transferred':
+            ad_state = 'sold'
+            sale_state = 'transferred'
+        else:
+            sale_state = 'waiting_payment'
 
         owner_id = product.escrow_owner_id.id
         broker_id = product.broker_id.id

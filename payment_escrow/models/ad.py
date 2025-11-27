@@ -208,6 +208,8 @@ class EscrowAd(models.Model):
         attr_value = self.attribute_value_ids.filtered(lambda v: v.attribute_id.technical_name == technical_name)
         return attr_value and attr_value[0].display_value or ''
 
+class EscrowBrandSyncJob(models.Model):
+    _name = 'escrow.brand.sync.job'
 
 class EscrowAdImage(models.Model):
     _name = 'escrow.ad.image'
