@@ -113,15 +113,25 @@ payloxPage.include({
 
         //const buttons = $('button:not(:disabled)');
         this.agreement.locked = true;
+
+        const params = {
+            agreement_id,
+            partner_id: this.partner.value,
+            currency_id: this.currency.id,
+            amount: this.amount.value,
+        };
+
+        const agreementHash = new URLSearchParams(window.location.search).get('');
+        if (agreementHash) {
+            try {
+                const state = JSON.parse(atob(agreementHash));
+                Object.assign(params, state);
+            } catch {}
+        }
         
         rpc.query({
             route: '/my/agreement',
-            params: {
-                agreement_id,
-                partner_id: this.partner.value,
-                currency_id: this.currency.id,
-                amount: this.amount.value,
-            }
+            params: params
         }).then((a) => {
             if (!a) {
                 this.displayNotification({

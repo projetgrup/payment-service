@@ -71,7 +71,7 @@ class PayloxAgreementController(Controller):
         return res
 
     @route(['/my/agreement'], type='json', auth='public', website=True, csrf=False)
-    def page_system_agreement(self, agreement_id=None, product_id=None, **values):
+    def page_system_agreement(self, agreement_id=None, product_id=None, o=None, c=None, i=None, **values):
         agreement = self._get_agreements(agreement_id, product_id)
         if not agreement:
             return False
@@ -80,11 +80,14 @@ class PayloxAgreementController(Controller):
             return [{'id': a.id, 'text': a.text} for a in agreement]
 
         partner = request.env['res.partner'].sudo().browse(values.get('partner_id', 0))
+        owner = request.env['res.partner'].sudo().browse(o or 0)
+        customer = request.env['res.partner'].sudo().browse(c or 0)
+        product = request.env['escrow.ad'].sudo().browse(i or 0)
         currency = request.env['res.currency'].sudo().browse(values.get('currency_id', 0))
         return {
             'id': agreement.id,
             'name': agreement.name,
-            'body': agreement.render(partner=partner, currency=currency, **values),
+            'body': agreement.render(partner=partner, currency=currency, owner=owner, customer=customer, product=product, **values),
         }
 
     @route(['/my/agreement/<uuid>'], type='http', methods=['GET'], auth='public', website=True, csrf=False)
