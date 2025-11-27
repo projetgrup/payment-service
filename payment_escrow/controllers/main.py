@@ -607,7 +607,7 @@ class PayloxSystemEscrowController(Controller):
                 customer_basket.append({
                     "id": 26,
                     "name": platform_owner.name or '',
-                    "description": _(f"Platform commission (%{platform_commission})"),
+                    "description": _(f"Platform commission"),
                     "qty": 1,
                     "amount": platform_amount,
                     "category": "Commission",
