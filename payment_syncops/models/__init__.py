@@ -9,3 +9,4 @@ from . import item
 from . import plan
 from . import http
 from . import user
+from . import progress_mixin

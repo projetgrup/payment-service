@@ -12,7 +12,8 @@
     'category': 'Accounting/Payment Acquirers',
     'depends': [
         'payment_jetcheckout_system',
-        'connector_syncops'
+        'connector_syncops',
+        'queue_job',
     ],
     'data': [
         'data/data.xml',
@@ -32,6 +33,10 @@
     'assets': {
         'web.assets_backend': [
             'payment_syncops/static/src/js/button.js',
+            'payment_syncops/static/src/js/view.js',
+        ],
+        'web.assets_qweb': [
+            'payment_syncops/static/src/xml/view.xml',
         ],
         'web.assets_frontend': [
             'payment_syncops/static/src/xml/connector.xml',
