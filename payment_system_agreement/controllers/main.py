@@ -87,7 +87,7 @@ class PayloxAgreementController(Controller):
         return {
             'id': agreement.id,
             'name': agreement.name,
-            'body': agreement.render(partner=partner, currency=currency, owner=owner, customer=customer, product=product, **values),
+            'body': agreement.render(partner=partner, currency=currency, seller=owner, customer=customer, product=product, **values),
         }
 
     @route(['/my/agreement/<uuid>'], type='http', methods=['GET'], auth='public', website=True, csrf=False)
