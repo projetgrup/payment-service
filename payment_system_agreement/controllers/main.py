@@ -71,7 +71,7 @@ class PayloxAgreementController(Controller):
         return res
 
     @route(['/my/agreement'], type='json', auth='public', website=True, csrf=False)
-    def page_system_agreement(self, agreement_id=None, product_id=None, o=None, c=None, i=None, **values):
+    def page_system_agreement(self, agreement_id=None, product_id=None, o=None, c=None, i=None, d=False, **values):
         agreement = self._get_agreements(agreement_id, product_id)
         if not agreement:
             return False
@@ -87,7 +87,7 @@ class PayloxAgreementController(Controller):
         return {
             'id': agreement.id,
             'name': agreement.name,
-            'body': agreement.render(partner=partner, currency=currency, seller=owner, customer=customer, product=product, **values),
+            'body': agreement.render(partner=partner, currency=currency, seller=owner, customer=customer, product=product, different=d, **values),
         }
 
     @route(['/my/agreement/<uuid>'], type='http', methods=['GET'], auth='public', website=True, csrf=False)

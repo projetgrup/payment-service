@@ -3421,6 +3421,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             },
         }).then((result) => {
             if (result && result.success) {
+                this._setState({ customer: result.partner.id });
                 return this._startOtp(result.partner.id).then((otpRes) => {
                     if (otpRes && otpRes.success) {
                         this.wizard.otpId = otpRes.otp_id;
@@ -3436,7 +3437,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     }
                 }).finally(() => {
                     this._enableWizard();
-        const $card = $('.payment-info-card');
+                const $card = $('.payment-info-card');
                     $card.find('[field="payment.different.info.display.tc"]').text(result.partner.vat || '-');
                     $card.find('[field="payment.different.info.display.name"]').text(result.partner.name || '-');
                     $card.find('[field="payment.different.info.display.phone"]').text(result.partner.phone || '-');
