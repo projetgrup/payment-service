@@ -84,10 +84,13 @@ class PayloxAgreementController(Controller):
         customer = request.env['res.partner'].sudo().browse(c or 0)
         product = request.env['escrow.ad'].sudo().browse(i or 0)
         currency = request.env['res.currency'].sudo().browse(values.get('currency_id', 0))
+        
+        vin = product.get_attribute_value('vin') if product else ''
+        
         return {
             'id': agreement.id,
             'name': agreement.name,
-            'body': agreement.render(partner=partner, currency=currency, seller=owner, customer=customer, product=product, different=d, **values),
+            'body': agreement.render(partner=partner, currency=currency, seller=owner, customer=customer, product=product, vin=vin, different=d, **values),
         }
 
     @route(['/my/agreement/<uuid>'], type='http', methods=['GET'], auth='public', website=True, csrf=False)

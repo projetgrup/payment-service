@@ -203,6 +203,11 @@ class EscrowAd(models.Model):
                 elif not ad.name:
                     ad.name = _('New Advertisement')
 
+    def get_attribute_value(self, technical_name):
+        self.ensure_one()
+        attr_value = self.attribute_value_ids.filtered(lambda v: v.attribute_id.technical_name == technical_name)
+        return attr_value and attr_value[0].display_value or ''
+
 
 class EscrowAdImage(models.Model):
     _name = 'escrow.ad.image'
