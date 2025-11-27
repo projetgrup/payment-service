@@ -278,7 +278,7 @@ class PayloxSyncopsController(Controller):
                             'type_item_subtype': company.syncops_sync_item_subtype,
                         })
                         wizard.with_context(partner=partner).confirm()
-                        wizard.with_context(wizard_id=wizard.id, partner=partner).sync()
+                        wizard.with_context(id=wizard.id, partner=partner, skip_queue=True).sync()
                 except:
                     _logger.error('An error occured when syncing items', exc_info=True)
 
