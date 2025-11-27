@@ -204,6 +204,7 @@ class PartnerBank(models.Model):
                     "gsm_number": mobile,
                     "tax_office": self.partner_id.paylox_tax_office or '',
                     "email": self.partner_id.email or '',
+                    "city": self.partner_id.state_id and self.partner_id.state_id.name or '',
                     "address": re.sub(r'\s+', ' ', address),
                     "contact_name": contact_name,
                     "contact_surname": contact_surname,

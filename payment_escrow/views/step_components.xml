@@ -119,6 +119,15 @@
                             <input class="form__control -letter" id="corporate_title" name="corporatetitle" type="text" placeholder="Company Title" field="seller.input.corporate_title"/>
                         </div>
                         <div class="form__group">
+                            <label class="form__label" for="city_corporate">City</label>
+                            <select id="city_corporate" class="form__control" name="city" field="seller.input.city_corporate">
+                                <option value="">Select City</option>
+                                <t t-foreach="company.env['res.country.state'].sudo().search([('country_id.code', '=', 'TR')], order='name')" t-as="state">
+                                    <option t-att-value="state.id" t-esc="state.name"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="form__group">
                             <label class="form__label -between" for="wizard_iban_corp">
                                 <span>Transfer IBAN</span>
                             </label>
@@ -151,6 +160,15 @@
                         <div class="form__group">
                             <label class="form__label" for="namesurname">Name Surname</label>
                             <input class="form__control -letter" id="namesurname" name="namesurname" type="text" placeholder="Name Surname" field="seller.input.name"/>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label" for="city_individual">City</label>
+                            <select id="city_individual" class="form__control" name="city" field="seller.input.city_individual">
+                                <option value="">Select City</option>
+                                <t t-foreach="company.env['res.country.state'].sudo().search([('country_id.code', '=', 'TR')], order='name')" t-as="state">
+                                    <option t-att-value="state.id" t-esc="state.name"/>
+                                </t>
+                            </select>
                         </div>
                         <div class="form__group">
                             <label class="form__label" for="phone_individual">Mobile Phone</label>

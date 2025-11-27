@@ -1589,6 +1589,9 @@ class PayloxSystemEscrowController(Controller):
                 else:
                     partner_data['comment'] = iban_info
 
+            if kwargs.get('seller_city'):
+                partner_data['state_id'] = int(kwargs.get('seller_city'))
+
             partner_field = company._get_payment_partner_unique_field()
             partner = request.env['res.partner'].sudo().search([(partner_field, '=', partner_data[partner_field]), ('company_id', '=', company.id), ('paylox_escrow_type', '=', 'owner')], limit=1)
             if not partner:

@@ -128,7 +128,7 @@ payloxPage.include({
                 Object.assign(params, state);
             } catch {}
         }
-        
+
         rpc.query({
             route: '/my/agreement',
             params: params

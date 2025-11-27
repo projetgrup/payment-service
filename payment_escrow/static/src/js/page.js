@@ -144,6 +144,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         return valid;
                     }
                 }),
+                city_individual: new fields.string({
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.city_individual;
+                        let message = null;
+                        let valid = true;
+                        if (mod === 'individual') {
+                            if (!field.value) {
+                                message = _t('City is required');
+                                valid = false;
+                            }
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
                 tc: new fields.float({
                     events: [['input', () => {
                         const sellerType = $('input[name="userType"]:checked').val();
@@ -263,6 +279,22 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                 valid = false;
                             } else if (!field._.masked.isComplete) {
                                 message = _t('Corporate title is not correct');
+                                valid = false;
+                            }
+                        }
+                        this._onFieldValid(field, valid, message);
+                        return valid;
+                    }
+                }),
+                city_corporate: new fields.string({
+                    validate: () => {
+                        const mod = $('input[name="userType"]:checked').val();
+                        const field = this.seller.input.city_corporate;
+                        let message = null;
+                        let valid = true;
+                        if (mod === 'corporate') {
+                            if (!field.value) {
+                                message = _t('City is required');
                                 valid = false;
                             }
                         }
@@ -2183,6 +2215,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
                 self.values.ads[adId].seller_name = owner.name || 'Not Specified';
                 self.values.ads[adId].seller_tc = owner.vat || 'Not Specified';
+                self.values.ads[adId].seller_city = owner.city || 'Not Specified';
 
                 if (owner.bank_ids && owner.bank_ids.length > 0) {
                     const bankAccount = owner.bank_ids[0];
@@ -2194,6 +2227,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 if ($item.length && $('.escrow-ad-button-edit').data('id') == adId) {
                     $item.find('.seller-name').text(self.values.ads[adId].seller_name);
                     $item.find('.seller-tc').text(self.values.ads[adId].seller_tc);
+                    $item.find('.seller-city').text(self.values.ads[adId].seller_city);
                     $item.find('.seller-iban').text(self.values.ads[adId].seller_iban);
                 }
             }
@@ -2314,6 +2348,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-categ').text(value.category_name || value.categ);
             $item.find('.seller-name').text(value.partner || 'Not specified');
             $item.find('.seller-tc').text(value.vat || 'Not specified');
+            $item.find('.seller-city').text(value.city || 'Not specified');
             $item.find('.seller-iban').text(value.iban || 'Not specified');
             
             const $attrContainer = $item.find('.escrow-ad-attributes-container');
@@ -2365,7 +2400,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             $item.find('.escrow-ad-item-state').html(`<span class="badge badge-${stateClass}">${stateLabel}</span>`);
             $item.find('.escrow-ad-item-price').text(format.currency(value.price, this.currency.position, this.currency.symbol, this.currency.decimal));
         } else {
-            $item.find('.seller-name, .seller-tc, .seller-iban').text('Not specified');
+            $item.find('.seller-name, .seller-tc, .seller-iban, .seller-city').text('Not specified');
             $item.find('.escrow-ad-attributes-container').empty();
             $item.find('.escrow-ad-item-price').text('');
             $item.find('.escrow-ad-item-state').html('');
@@ -3046,6 +3081,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 seller_contact_person: this.seller.input.corporate_person.$.val(),
                 seller_iban: this.seller.input.iban_corporate.$.val(),
                 seller_iban_name: this.seller.input.iban_name_corporate.$.val(),
+                seller_city: this.seller.input.city_corporate.$.val(),
             };
         } else {
             formData = {
@@ -3056,6 +3092,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 seller_tc_number: this.seller.input.tc.$.val(),
                 seller_iban: this.seller.input.iban_individual.$.val(),
                 seller_iban_name: this.seller.input.iban_name_individual.$.val(),
+                seller_city: this.seller.input.city_individual.$.val(),
             };
         }
         return this._rpc({
