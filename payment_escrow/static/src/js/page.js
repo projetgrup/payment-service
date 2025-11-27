@@ -1541,9 +1541,21 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                                 const $input = attrMeta.$element;
                                 
                                 if (attrMeta.type === 'binary' && attrMeta.filePond && value) {
-                                    if (value.startsWith('data:image') || value.startsWith('http')) {
-                                        console.log(value)
-                                        attrMeta.filePond.addFile(value).catch(err => {
+                                    let fileSource = value;
+                                    if (fileSource.startsWith('data:')) {
+                                        try {
+                                            const parts = fileSource.split(',');
+                                            if (parts.length === 2) {
+                                                const payload = parts[1];
+                                                const decoded = atob(payload);
+                                                fileSource = 'data:image/png;base64,' + decoded;
+                                            }
+                                        } catch (e) {
+                                            console.warn('Failed to check double encoding:', e);
+                                        }
+                                    }
+                                    if (fileSource.startsWith('data:image') || fileSource.startsWith('http')) {
+                                        attrMeta.filePond.addFile(fileSource).catch(err => {
                                             console.error('Could not load image to FilePond:', err);
                                         });
                                     }
@@ -2098,6 +2110,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _onClickButtonCreate: function (ev) {
         Object.assign(this.state, { id: 0, owner: 0, customer: 0, item_id: 0 });
         this._resetDynamicAttributes();
+        this._resetWaitingWizardForm();
         this._onChangeStep(1);
     },
 
@@ -2105,6 +2118,12 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if (!this.state.id) {
             this._clearDynamicAttributes();
         }
+    },
+
+    _resetWaitingWizardForm: function() {
+        const $step1 = $('.wizard-step-1');
+        $step1.find('.approval-waiting-msg').remove();
+        $step1.children().removeClass('d-none');
     },
 
     _closeSidebar: function() {
@@ -2499,6 +2518,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _handleStepSpecificActions: function(stepNumber) {
         switch(stepNumber) {
             case 1:
+                this._resetWaitingWizardForm();
                 if (!this.state.id && !this.state.owner) {
                     for (const input of Object.values(this.seller.input)) {
                         input.value = null;
@@ -3639,6 +3659,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 inputs.phone_corporate.value = data.phone || '';
                 inputs.email_corporate.value = data.email || '';
                 if (inputs.address_corporate) inputs.address_corporate.value = this._formatAddress(data);
+                if (inputs.city_corporate && data.city) inputs.city_corporate.$.val(data.city);
                 this._isOtpValidate(inputs.phone_corporate);
                 
                 if (data.bank_ids && data.bank_ids.length > 0) {
@@ -3663,6 +3684,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 inputs.tc.value = data.vat || '';
                 inputs.phone_individual.value = data.phone || '';
                 inputs.email_individual.value = data.email || '';
+                if (inputs.city_individual && data.city) inputs.city_individual.$.val(data.city);
                 this._isOtpValidate(inputs.phone_individual);
                 
                 if (data.bank_ids && data.bank_ids.length > 0) {

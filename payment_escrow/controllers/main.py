@@ -1599,6 +1599,9 @@ class PayloxSystemEscrowController(Controller):
             else:
                 partner.write(partner_data)
 
+            return {
+                'state': False
+            }
             iban_verified = self.verify_iban(iban, vat)
             if kwargs.get('seller_iban') and not iban_verified:
                 iban_raw = kwargs.get('seller_iban', '')
@@ -1606,6 +1609,7 @@ class PayloxSystemEscrowController(Controller):
                 bank = request.env['res.partner.bank'].sudo()
                 bank_vals = {
                     'partner_id': partner.id,
+
                     'acc_number': iban_raw.replace(' ', ''),
                     'api_merchant': kwargs.get('seller_iban_name', ''),
                     'currency_id': request.env.company.currency_id.id,
@@ -1620,6 +1624,7 @@ class PayloxSystemEscrowController(Controller):
                     existing.write(bank_vals)
                 if not existing:
                     existing = bank.create(bank_vals)
+                existing.action_api_query()
                 if not existing.api_state:
                     return {
                         'success': False,
@@ -1675,6 +1680,7 @@ class PayloxSystemEscrowController(Controller):
                         'email': partner.email,
                         'phone': partner.mobile or partner.phone,
                         'address': partner.street or '',
+                        'city': partner.state_id.id if partner.state_id else False,
                         'is_otp_verified': partner.is_otp_verified,
                         'tax_office': getattr(partner, 'paylox_tax_office', '') if customer_type == 'corporate' else '',
                         'vat': partner.vat,
