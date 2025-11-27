@@ -636,7 +636,7 @@ class Partner(models.Model):
 
     def _get_payment_url(self, shorten=False):
         self.ensure_one()
-        base_url = self.get_base_url() or ''
+        base_url = self.with_context(company=self.company_id).get_base_url() or ''
         share_url = self._get_share_url() or ''
         url = base_url + share_url
         if shorten:

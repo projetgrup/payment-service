@@ -197,20 +197,26 @@ class SyncopsSyncWizard(models.TransientModel):
             for line in self.line_ids.read():
                 if line['partner_user_email'] in users:
                     user = self.env['res.users'].browse(users[line['partner_user_email']])
-                    user.with_context(mail_create_nolog=True).write({
-                        'name': line['partner_user_name'],
-                        'phone': line['partner_user_phone'],
-                        'mobile': line['partner_user_mobile'] or line['partner_user_phone'],
-                        'company_ids': [(4, company.id)],
-                    })
+                    values = {}
+                    if line['partner_user_name'] != user.name:
+                        values['name'] = line['partner_user_name']
+                    if line['partner_user_phone'] != user.phone:
+                        values['phone'] = line['partner_user_phone']
+                    if line['partner_user_mobile'] != user.mobile:
+                        values['mobile'] = line['partner_user_mobile']
+                    if company.id not in user.company_ids.ids:
+                        values['company_ids'] = [(4, company.id)]
+                    if values:
+                        user.write(values)
                 elif line['partner_user_email']:
                     user = tables['user'].sudo().search([
                         ('email', '=', line['partner_user_email']),
                     ], limit=1)
                     if user:
-                        user.with_context(mail_create_nolog=True).write({
-                            'company_ids': [(4, company.id)],
-                        })
+                        if company.id not in user.company_ids.ids:
+                            user.with_context(mail_create_nolog=True).write({
+                                'company_ids': [(4, company.id)],
+                            })
                     else:
                         user = tables['user'].with_context(mail_create_nolog=True).create({
                             'system': self.system or company.system,
@@ -258,7 +264,7 @@ class SyncopsSyncWizard(models.TransientModel):
                         values['user_id'] = user.id
                     if campaign_id != partner.campaign_id.id:
                         values['campaign_id'] = campaign_id
-                    if not tag_ids or tag_ids[0] not in partner.category_id.ids:
+                    if not tag_ids and partner.category_id or tag_ids and tag_ids[0] not in partner.category_id.ids:
                         values['category_id'] = [(6, 0, tag_ids)]
                     if values:
                         values['syncops_data'] = json.dumps(line['data'], default=str)
@@ -537,10 +543,10 @@ class SyncopsSyncWizardLine(models.TransientModel):
         inv = self.invoice_id if pid else None
         if pid and inv in items:
             item = tables['item'].search([('id', '=', items[inv]), ('paid', '=', False)])
-            item.write({
-                'amount': self.invoice_amount,
-                'syncops_notif': True,
-            })
+            if item.amount != self.invoice_amount:
+                item.write({
+                    'amount': self.invoice_amount,
+                })
         else:
             if pid:
                 partner = tables['partner'].browse(pid)
