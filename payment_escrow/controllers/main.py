@@ -1599,9 +1599,6 @@ class PayloxSystemEscrowController(Controller):
             else:
                 partner.write(partner_data)
 
-            return {
-                'state': False
-            }
             iban_verified = self.verify_iban(iban, vat)
             if kwargs.get('seller_iban') and not iban_verified:
                 iban_raw = kwargs.get('seller_iban', '')
