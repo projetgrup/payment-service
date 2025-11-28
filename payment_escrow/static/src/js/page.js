@@ -3231,7 +3231,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
     _ensureOtpModal: function() {
         if (!this.$otpModal || !this.$otpModal.length) {
-            $('body').append(qweb.render('paylox_escrow_otp_modal'));
+            $('body').append(qweb.render('paylox.escrow.otp.modal'));
             this.$otpModal = $('#otpModal');
             this._bindOtpModalEvents();
         }

@@ -376,7 +376,7 @@
         </div>
     </t>
 
-    <t t-name="paylox_escrow_otp_modal">
+    <t t-name="paylox.escrow.otp.modal">
         <div class="otp-modal" id="otpModal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:1050;">
             <div class="otp-modal-content" style="background:#fff;border-radius:12px;padding:32px 24px;max-width:420px;width:90%;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.15);">
                 <div class="otp-header mb-3">
