@@ -10,6 +10,7 @@
             <field name="vat" string="Vat"/>
             <field name="mobile"/>
             <field name="email"/>
+            <field name="is_partner_bank_verified"/>
             <field name="company_id" groups="base.group_multi_company,base.group_system" options="{'no_create': True, 'no_open': True}"/>
         </tree>
     </field>
@@ -24,6 +25,7 @@
             <field name="name"/>
             <field name="image_128"/>
             <field name="avatar_128"/>
+            <field name="is_partner_bank_verified"/>
             <templates>
                 <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
@@ -34,6 +36,10 @@
                         <div class="oe_kanban_details">
                             <div class="d-flex align-items-center justify-content-between">
                                 <strong><field name="name"/></strong>
+                            </div>
+                            <div>
+                                <span t-if="record.is_partner_bank_verified.raw_value" class="badge badge-success">Bank Verified</span>
+                                <span t-else="" class="badge badge-warning">Bank Not Verified</span>
                             </div>
                             <ul/>
                         </div>
@@ -70,7 +76,7 @@
                 <field name="street" placeholder="Street..." class="o_address_street"/>
                 <!--<field name="street2" placeholder="Street 2..." class="o_address_street"/>-->
                 <field name="city" placeholder="City" class="o_address_city"/>
-                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                <field name="state_id" required="1" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_create': True}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                 <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                 <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}"/>
             </div>
@@ -114,6 +120,7 @@
                         <field name="sequence" widget="handle"/>
                         <field name="acc_number"/>
                         <field name="api_merchant" required="1"/>
+                        <field name="acc_holder_name" required="1"/>
                         <field name="api_result" string=" "/>
                         <field name="api_message" optional="hide"/>
                         <field name="api_state" invisible="1"/>
@@ -220,6 +227,8 @@
             <field name="authorized_person"/>
             <field name="mobile"/>
             <field name="email"/>
+            <field name="payment_page_url" widget="CopyClipboardChar" string="Passwordless Login"/>
+            <field name="payment_link_url" widget="CopyClipboardChar" string="Payment Link"/>
             <field name="city"/>
             <field name="state_id"/>
             <field name="approval_state" decoration-success="approval_state == 'approved'" 

@@ -30,6 +30,11 @@ class Partner(models.Model):
             campaigns_ids = self.env['payment.acquirer.jetcheckout.campaign'].search([('acquirer_id', 'in', partner.acquirer_ids.ids)])
             partner.dealer_campaign_ids = (campaigns_ids - partner.dealer_commission_rate_ids.mapped('campaign_id')).ids
 
+    def _compute_is_partner_bank_verified(self):
+        for partner in self:
+            bank_accounts = self.env['res.partner.bank'].search([('partner_id', '=', partner.id)])
+            partner.is_partner_bank_verified = all(bank.api_state for bank in bank_accounts) if bank_accounts else False
+
     system = fields.Selection(selection_add=[('escrow', 'Escrow Payment System')])
     paylox_escrow_type = fields.Selection([
         ('customer', 'Customer'),
@@ -88,6 +93,7 @@ class Partner(models.Model):
     dealer_broker_count = fields.Integer(string='Broker Count', compute='_compute_dealer_counts')
     dealer_commission_rate_ids = fields.One2many('dealer.commission.rate', 'partner_id', string='Commission Rates')
     dealer_campaign_ids = fields.Many2many('payment.acquirer.jetcheckout.campaign', string='Dealer Campaigns', compute='_compute_dealer_campaigns', readonly=True)
+    is_partner_bank_verified = fields.Boolean(string='Is Partner Bank Verified', compute='_compute_is_partner_bank_verified')
 
 
     @api.depends()

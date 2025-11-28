@@ -996,8 +996,8 @@ class PaymentTransactionBasket(models.Model):
                 basket.approval_state_message = _('Only paid transactions can be approved')
                 continue
 
-            if not getattr(tx.company_id, 'paylox_escrow_split_ok', True):
-                if basket.partner_id.paylox_escrow_type not in ['owner', 'platform_owner']:
+            if not getattr(tx.company_id, 'paylox_escrow_split_ok', True) and getattr(tx.company_id, 'paylox_escrow_use_paid_price', True):
+                if basket.partner_id.paylox_escrow_type not in ['owner']:
                     continue
 
             url = '%s/api/v1/payment/submerchant/approve' % tx.acquirer_id._get_paylox_api_url()
