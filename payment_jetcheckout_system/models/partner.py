@@ -113,23 +113,25 @@ class PartnerBank(models.Model):
         if 'api_merchant' in values:
             values['api_merchant'] = normalize(values['api_merchant'])
         res = super(PartnerBank, self).create(values)
-        res.action_api_save(mode='create')
-        res.action_api_query()
+        if not self.env.context.get('import_file'):
+            res.action_api_save(mode='create')
+            res.action_api_query()
         return res
 
     def write(self, values):
         if 'api_merchant' in values:
             values['api_merchant'] = normalize(values['api_merchant'])
         res = super(PartnerBank, self).write(values)
-        if 'acc_number' in values or 'api_merchant' in values:
-            for bank in self:
-                if bank.api_ref:
-                    bank.action_api_save(mode='update')
-                else:
-                    bank.action_api_save(mode='create')
-            for bank in self:
-                if not bank.api_state:
-                    bank.action_api_save()
+        if not self.env.context.get('import_file'):
+            if 'acc_number' in values or 'api_merchant' in values:
+                for bank in self:
+                    if bank.api_ref:
+                        bank.action_api_save(mode='update')
+                    else:
+                        bank.action_api_save(mode='create')
+                for bank in self:
+                    if not bank.api_state:
+                        bank.action_api_save()
         return res
 
     def action_api_save(self, mode=None):
