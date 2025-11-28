@@ -1,5 +1,5 @@
 
-odoo.define('payment_escrow.ProgressService', function (require) {
+odoo.define('payment_syncops.ProgressService', function (require) {
     "use strict";
 
     const AbstractService = require('web.AbstractService');

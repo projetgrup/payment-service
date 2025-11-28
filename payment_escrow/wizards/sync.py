@@ -81,12 +81,9 @@ class EscrowBrandSyncLine(models.TransientModel):
 
     @track_progress(channel_prefix='brand_sync', description='Brand Sync', queue=True, notification_type='sync_progress_brand')
     def _process_sync_job(self, channel_name, line_ids):
-        import time
-        
         lines = self.browse(line_ids).exists()
         brand_model = self.env['escrow.car.brand'].sudo()
         for line in self.track_iterator(lines, channel_name, description='Processing brands', notification_type='sync_progress_brand'):
-            time.sleep(10)
             
             existing_brand = brand_model.search([
                 ('name', '=', line.escrow_car_brand_name)

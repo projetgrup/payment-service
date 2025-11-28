@@ -4,10 +4,12 @@ from odoo import fields, models, api, registry, _
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.queue_job.models import enqueue
+from odoo.addons.payment_syncops.models.progress_mixin import track_progress
 
 
 class SyncopsSyncWizard(models.TransientModel):
-    _inherit = 'syncops.sync.wizard'
+    _name = 'syncops.sync.wizard'
+    _inherit = ['syncops.sync.wizard', 'progress.mixin']
 
     @api.onchange('type')
     def _compute_type_item_subtype_ok(self):
@@ -184,7 +186,8 @@ class SyncopsSyncWizard(models.TransientModel):
 
         return res
 
-    def _sync_partner(self, **pairs):
+    @track_progress(channel_prefix='partner_sync', description='Partner Sync', queue=True, notification_type='sync_progress_partner')
+    def _sync_partner(self, channel_name=None, **pairs):
         vats = pairs.get('vats')
         refs = pairs.get('refs')
         tags = pairs.get('tags')
@@ -194,7 +197,7 @@ class SyncopsSyncWizard(models.TransientModel):
         campaigns = pairs.get('campaigns')
 
         def method_sync():
-            for line in self.line_ids.read():
+            for line in self.track_iterator(self.line_ids.read(), channel_name, description='Processing partners', notification_type='sync_progress_partner'):
                 if line['partner_user_email'] in users:
                     user = self.env['res.users'].browse(users[line['partner_user_email']])
                     values = {}
@@ -371,7 +374,8 @@ class SyncopsSyncWizard(models.TransientModel):
             hook.run(wizard=self, methods=methods, items=items, **pairs)
         methods['sync']()
 
-    def _sync_item_invoice(self, **pairs):
+    @track_progress(channel_prefix='item_invoice_sync', description='Item Invoice Sync', queue=True, notification_type='sync_progress_item_invoice')
+    def _sync_item_invoice(self, channel_name=None, **pairs):
         vats = pairs.get('vats')
         refs = pairs.get('refs')
         tags = pairs.get('tags')
@@ -402,8 +406,9 @@ class SyncopsSyncWizard(models.TransientModel):
             items = tables['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
 
-            for line in lines:
-                line.with_context(skip_queue=True)._sync_item_invoice_with_delay(
+            #for line in lines:
+            for line in self.track_iterator(lines, channel_name, description='Processing items', notification_type='sync_progress_brand'):
+                line._sync_item_invoice_with_delay(
                     company=company,
                     vats=vats,
                     refs=refs,
@@ -523,7 +528,7 @@ class SyncopsSyncWizardLine(models.TransientModel):
     invoice_amount = fields.Monetary(readonly=True, currency_field='invoice_currency')
     invoice_currency = fields.Many2one('res.currency', readonly=True)
 
-    @enqueue
+    #@enqueue
     def _sync_item_invoice_with_delay(self,
         company,
         vats,
