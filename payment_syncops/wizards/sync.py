@@ -186,7 +186,7 @@ class SyncopsSyncWizard(models.TransientModel):
 
         return res
 
-    @track_progress(channel_prefix='partner_sync', description='Partner Sync', queue=True, notification_type='sync_progress_partner')
+    #@track_progress(channel_prefix='partner_sync', description='Partner Sync', queue=True, notification_type='sync_progress_partner')
     def _sync_partner(self, channel_name=None, **pairs):
         vats = pairs.get('vats')
         refs = pairs.get('refs')
@@ -197,7 +197,8 @@ class SyncopsSyncWizard(models.TransientModel):
         campaigns = pairs.get('campaigns')
 
         def method_sync():
-            for line in self.track_iterator(self.line_ids.read(), channel_name, description='Processing partners', notification_type='sync_progress_partner'):
+            #for line in self.track_iterator(self.line_ids.read(), channel_name, description='Processing partners', notification_type='sync_progress_partner'):
+            for line in self.line_ids.read():
                 if line['partner_user_email'] in users:
                     user = self.env['res.users'].browse(users[line['partner_user_email']])
                     values = {}
@@ -374,7 +375,7 @@ class SyncopsSyncWizard(models.TransientModel):
             hook.run(wizard=self, methods=methods, items=items, **pairs)
         methods['sync']()
 
-    @track_progress(channel_prefix='item_invoice_sync', description='Item Invoice Sync', queue=True, notification_type='sync_progress_item_invoice')
+    #@track_progress(channel_prefix='item_invoice_sync', description='Item Invoice Sync', queue=True, notification_type='sync_progress_item_invoice')
     def _sync_item_invoice(self, channel_name=None, **pairs):
         vats = pairs.get('vats')
         refs = pairs.get('refs')
@@ -406,8 +407,8 @@ class SyncopsSyncWizard(models.TransientModel):
             items = tables['item'].search_read(domain, ['id', 'ref'])
             items = {item['ref']: item['id'] for item in items if item['ref']}
 
-            #for line in lines:
-            for line in self.track_iterator(lines, channel_name, description='Processing items', notification_type='sync_progress_brand'):
+            #for line in self.track_iterator(lines, channel_name, description='Processing items', notification_type='sync_progress_brand'):
+            for line in lines:
                 line._sync_item_invoice_with_delay(
                     company=company,
                     vats=vats,
