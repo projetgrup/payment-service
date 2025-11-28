@@ -1614,6 +1614,8 @@ class PayloxController(http.Controller):
                                 del b['platform_owner']
                                 break
                         data['customer_basket'] = new_basket
+                    else:
+                        data['customer_basket'] = new_basket
                 else:
                     for basket in data['customer_basket']:
                         if 'partner_id' in basket:
