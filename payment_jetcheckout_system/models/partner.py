@@ -114,6 +114,7 @@ class PartnerBank(models.Model):
             values['api_merchant'] = normalize(values['api_merchant'])
         res = super(PartnerBank, self).create(values)
         res.action_api_save(mode='create')
+        res.action_api_query()
         return res
 
     def write(self, values):
