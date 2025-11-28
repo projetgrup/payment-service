@@ -410,4 +410,19 @@
             </div>
         </div>
     </t>
+
+    <t t-name="paylox.escrow.provision.warning">
+        <div class="provision-warning alert alert-warning d-flex align-items-center justify-content-between" role="alert" style="position: absolute; top: 50px; right: 0; z-index: 20; min-width: 280px; max-width: 360px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-left: 4px solid #856404;">
+            <div class="d-flex align-items-center">
+                <i class="fa fa-exclamation-triangle fa-2x mr-3"></i>
+                <div>
+                    <h5 class="alert-heading mb-1" style="font-size: 1rem; font-weight: bold;">Provisioned Transaction</h5>
+                    <p class="mb-0" style="font-size: 0.9rem;">Seller approval failed but proceeding in provision mode.</p>
+                </div>
+            </div>
+            <button type="button" class="close ml-3" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&#215;</span>
+            </button>
+        </div>
+    </t>
 </templates>

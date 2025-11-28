@@ -141,6 +141,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="escrow_provision_mode"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="escrow_provision_mode" string="Provisioned Transaction Mode"/>
+                            <div class="text-muted">
+                                Allow proceeding with provisioned transactions even if seller verification fails
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 o_setting_box">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">

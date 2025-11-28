@@ -115,6 +115,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="payment_bank_account_allowed_escrow_type_ids" string="Allowed Escrow Types for Bank Account API"/>
+                                    <div class="text-muted">
+                                        Only partners with these escrow types can save bank accounts to API
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16">
+                                            <field name="payment_bank_account_allowed_escrow_type_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <h2><i class="fa fa-user-circle mr8"/>Users</h2>
                         <div class="row mt16 o_settings_container">

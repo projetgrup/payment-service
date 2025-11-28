@@ -131,6 +131,12 @@ class PartnerBank(models.Model):
                     bank.action_api_save()
         return res
 
+    def unlink(self):
+        for bank in self:
+            if bank.api_state:
+                raise UserError(_('You cannot delete a verified bank account.'))
+        return super(PartnerBank, self).unlink()
+
     def action_api_save(self, mode=None):
         if self.partner_id.system:
             acquirer = self.acquirer_id
@@ -143,6 +149,12 @@ class PartnerBank(models.Model):
                 if hasattr(self, 'partner_bank_id'):
                     self.partner_bank_id.api_message = _('No acquirer found')
             else:
+                allowed_types = acquirer.company_id.payment_bank_account_allowed_escrow_type_ids
+                if allowed_types:
+                    escrow_type = getattr(self.partner_id, 'paylox_escrow_type', False)
+                    if not escrow_type or escrow_type not in allowed_types.mapped('code'):
+                        return
+
                 if not mode:
                     if self.api_state:
                         mode = 'update'

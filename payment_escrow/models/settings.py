@@ -21,3 +21,4 @@ class PaymentSettings(models.TransientModel):
     )
     paylox_escrow_split_ok = fields.Boolean('Split Escrow Items', related='company_id.paylox_escrow_split_ok', readonly=False)
     paylox_escrow_use_paid_price = fields.Boolean('Use Paid Price for Seller Amount', related='company_id.paylox_escrow_use_paid_price', readonly=False)
+    escrow_provision_mode = fields.Boolean('Provisioned Transaction Mode', related='company_id.escrow_provision_mode', readonly=False)

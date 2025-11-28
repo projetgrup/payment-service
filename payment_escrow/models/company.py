@@ -20,6 +20,7 @@ class ResCompany(models.Model):
     )
     paylox_escrow_split_ok = fields.Boolean('Split Escrow Items', default=False)
     paylox_escrow_use_paid_price = fields.Boolean('Use Paid Price for Seller Amount', default=True)
+    escrow_provision_mode = fields.Boolean('Provisioned Transaction Mode', default=False, help="If enabled, allows proceeding to next steps even if seller verification fails (provision mode).")
 
     def _get_escrow_chain_children(self, parent_type):
         self.ensure_one()

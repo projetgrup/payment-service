@@ -40,6 +40,7 @@ class Company(models.Model):
 
     payment_einvoice_identifier = fields.Char('E-Invoice Identifier')
     payment_item_bank_token_ok = fields.Boolean('Link Bank Token and Payment Item')
+    payment_bank_account_allowed_escrow_type_ids = fields.Many2many('payment.settings.escrow.type', string='Allowed Escrow Types for Bank Account API')
     payment_dashboard_button_ok = fields.Boolean(string='Dashboard Payment Button', default=True)
     payment_dashboard_button_url = fields.Char(string='Dashboard Payment Button URL')
     payment_dashboard_button_contactless_ok = fields.Boolean(string='Dashboard Contactless Payment Button', default=True)

@@ -206,6 +206,9 @@ class PayloxSystemEscrowController(Controller):
                     'ad_id': product['pid'],
                     'qty': product['qty'],
                 }) for product in products]})
+            
+            if request.env.company.escrow_provision_mode:
+                res['jetcheckout_preauth'] = True
         return res
 
     def _prepare_broker_installment_lines(self, partner, amount, currency, campaign=None):
@@ -1614,6 +1617,13 @@ class PayloxSystemEscrowController(Controller):
                     'currency_id': request.env.company.currency_id.id,
                     'acc_holder_name': kwargs.get('seller_iban_name', ''),
                 }
+                return {
+                        'success': False,
+                        'state': False,
+                        'partner_id': partner.id,
+                        'message': 'Hata',
+                        'provision_mode': request.env.company.escrow_provision_mode,
+                    }
                 existing = bank.search([
                     ('partner_id.vat', '=', vat),
                     ('company_id', '=', request.env.company.id),
@@ -1629,7 +1639,8 @@ class PayloxSystemEscrowController(Controller):
                         'success': False,
                         'state': existing.api_state,
                         'partner_id': partner.id,
-                        'message': existing.api_message
+                        'message': existing.api_message,
+                        'provision_mode': request.env.company.escrow_provision_mode,
                     }
             if kwargs.get('ad_id'):
                 ad = request.env['escrow.ad'].sudo().with_context(system='escrow').search([('id', '=', int(kwargs.get('ad_id'))), ('company_id', '=', company.id)], limit=1)
@@ -1665,9 +1676,9 @@ class PayloxSystemEscrowController(Controller):
             search_field = 'vat'
             partner = request.env['res.partner'].sudo().search([
                 (search_field, '=', identity),
-                ('company_id', '=', company.id),
-                ('paylox_escrow_type', '=', lookup_type),
-                ('is_company', '=', customer_type == 'corporate')
+                # ('company_id', '=', company.id),
+                # ('paylox_escrow_type', '=', lookup_type),
+                # ('is_company', '=', customer_type == 'corporate')
             ], limit=1)
             
             if partner:
@@ -1841,7 +1852,7 @@ class PayloxSystemEscrowController(Controller):
                 'mobile': partner.mobile,
                 'street': partner.street,
                 'street2': partner.street2,
-                'city': partner.city,
+                'city': partner.state_id.id if partner.state_id else False,
                 'zip': partner.zip,
                 'vat': partner.vat,
                 'is_otp_verified': partner.is_otp_verified,

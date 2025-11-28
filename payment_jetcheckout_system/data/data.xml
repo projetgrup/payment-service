@@ -5,6 +5,41 @@
             <field name="name">Authorized</field>
         </record>
 
+        <record id="escrow_type_customer" model="payment.settings.escrow.type">
+            <field name="name">Customer</field>
+            <field name="code">customer</field>
+        </record>
+
+        <record id="escrow_type_broker" model="payment.settings.escrow.type">
+            <field name="name">Broker</field>
+            <field name="code">broker</field>
+        </record>
+
+        <record id="escrow_type_dealer" model="payment.settings.escrow.type">
+            <field name="name">Dealer</field>
+            <field name="code">dealer</field>
+        </record>
+
+        <record id="escrow_type_owner" model="payment.settings.escrow.type">
+            <field name="name">Owner</field>
+            <field name="code">owner</field>
+        </record>
+
+        <record id="escrow_type_platform_owner" model="payment.settings.escrow.type">
+            <field name="name">Platform Owner</field>
+            <field name="code">platform_owner</field>
+        </record>
+
+        <record id="escrow_type_infrastructure_provider" model="payment.settings.escrow.type">
+            <field name="name">Infrastructure Provider</field>
+            <field name="code">infrastructure_provider</field>
+        </record>
+
+        <record id="escrow_type_card_holder" model="payment.settings.escrow.type">
+            <field name="name">Card Holder</field>
+            <field name="code">card_holder</field>
+        </record>
+
     	<record id="send_type_email" model="payment.acquirer.jetcheckout.send.type">
             <field name="name">Email</field>
             <field name="code">email</field>

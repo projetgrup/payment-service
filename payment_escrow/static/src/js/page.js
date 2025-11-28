@@ -1229,7 +1229,8 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                     status: state.t,
                     customer: state.c,
                     different: state.d,
-                    filterState: state.f
+                    filterState: state.f,
+                    provision_mode: state.p
                 });
             } catch {
                 window.history.replaceState(null, '', window.location.pathname);
@@ -2187,6 +2188,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.corporate_title.value = owner.name || '';
                         this.seller.input.tax_number.value = owner.vat || '';
                         this.seller.input.corporate_person.value = owner.name || '';
+                        this.seller.input.city_corporate.value = owner.city || '';
                         this.seller.input.phone_corporate.value = owner.phone || '';
                         this.seller.input.email_corporate.value = owner.email || '';
                         this._isOtpValidate(this.seller.input.phone_corporate);
@@ -2203,6 +2205,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                         this.seller.input.tc.value = owner.vat || '';
                         this.seller.input.phone_individual.value = owner.phone || '';
                         this.seller.input.email_individual.value = owner.email || '';
+                        this.seller.input.city_individual.value = owner.city || '';
                         this._isOtpValidate(this.seller.input.phone_individual);
                         if (owner.bank_ids && owner.bank_ids.length > 0) {
                             const bankAccount = owner.bank_ids[0];
@@ -2448,6 +2451,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         if (step === 0) {
+            this._resetProvisionWarning();
             Object.assign(this.state, { id: 0, owner: 0 });
             this.seller.wizard.$.fadeOut(200, () => {
                 $('.header').removeClass('header__steps');
@@ -2461,6 +2465,10 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             this._updateStepHeaders(step, options);
             this._showStepContent(step);
             this._handleStepSpecificActions(step, options);
+
+            if (this.state.provision_mode) {
+                this._showProvisionWarning();
+            }
         }
 
         if (this.ad.sidebar.$.hasClass('show')) {
@@ -2468,6 +2476,36 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         }
 
         this._setState({ step });
+    },
+
+    _showProvisionWarning: function() {
+        const $headerSteps = $('.escrow-wizard-header:visible');
+        const $wizardSteps = $('.escrow-wizard .steps:visible');
+        const $fallbackSteps = $('.header .steps:visible').first();
+        const $target = $headerSteps.length ? $headerSteps : ($wizardSteps.length ? $wizardSteps : $fallbackSteps);
+
+        if (!$target.length) {
+            return;
+        }
+
+        if ($target.css('position') === 'static') {
+            $target.css('position', 'relative');
+        }
+
+        if ($target.find('.provision-warning').length === 0) {
+            $target.append(qweb.render('paylox.escrow.provision.warning'));
+        }
+    },
+
+    _hideProvisionWarning: function() {
+        $('.provision-warning').remove();
+    },
+
+    _resetProvisionWarning: function() {
+        this._hideProvisionWarning();
+        if (this.state.provision_mode) {
+            this._setState({ provision_mode: false });
+        }
     },
 
     _ensureWizardVisible: function() {
@@ -2518,6 +2556,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
     _handleStepSpecificActions: function(stepNumber) {
         switch(stepNumber) {
             case 1:
+                this._resetProvisionWarning();
                 this._resetWaitingWizardForm();
                 if (!this.state.id && !this.state.owner) {
                     for (const input of Object.values(this.seller.input)) {
@@ -2686,6 +2725,9 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
         if ('filterState' in value) {
             this.state.filterState = value.filterState;
         }
+        if ('provision_mode' in value) {
+            this.state.provision_mode = value.provision_mode;
+        }
 
         let values = {
             i: this.state.id,
@@ -2695,6 +2737,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
             c: this.state.customer,
             d: this.state.different,
             f: this.state.filterState,
+            p: this.state.provision_mode,
         }
         let hash = btoa(JSON.stringify(values));
         let url = new URL(window.location); url.searchParams.set('', hash);
@@ -2744,6 +2787,24 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
 
                 } else {
                     if (result.state === false) {
+                        if (result.provision_mode) {
+                            this.state.provision_mode = true;
+                            this._showProvisionWarning();
+                            this.state.owner = result.partner_id;
+                            return this._startOtp(result.partner_id).then((otpRes) => {
+                                if (otpRes && otpRes.success) {
+                                    this.wizard.otpId = otpRes.otp_id;
+                                    this._showOtpModal(otpRes.expires_in || 120, true);
+                                } else if (otpRes && otpRes.is_otp_verified) {
+                                    this._markStepCompleted(this.wizard.currentStep);
+                                    this._onChangeStep(this.wizard.currentStep + 1);
+                                } else {
+                                    this.displayNotification({ type: 'warning', title: 'OTP', message: (otpRes && otpRes.message) || 'OTP could not be started' });
+                                }
+                            }).finally(() => {
+                                this._enableWizard();
+                            });
+                        }
                         const $step1 = $('.wizard-step-1');
                         $step1.children().addClass('d-none');
                         if ($step1.find('.approval-waiting-msg').length === 0) {
@@ -3665,7 +3726,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 if (data.bank_ids && data.bank_ids.length > 0) {
                     const bankAccount = data.bank_ids[0];
                     inputs.iban_corporate.value = this._formatIbanDisplay(bankAccount.acc_number);
-                    inputs.iban_name_corporate.value = bankAccount.api_merchant || data.name;
+                    inputs.iban_name_corporate.value = bankAccount.acc_holder_name || data.name;
                     this._isIbanVerified(inputs.iban_corporate, inputs.tax_number);
                 }
             } else {
@@ -3690,7 +3751,7 @@ publicWidget.registry.payloxSystemEscrow = publicWidget.Widget.extend({
                 if (data.bank_ids && data.bank_ids.length > 0) {
                     const bankAccount = data.bank_ids[0];
                     inputs.iban_individual.value = this._formatIbanDisplay(bankAccount.acc_number);
-                    inputs.iban_name_individual.value = bankAccount.api_merchant || data.name;
+                    inputs.iban_name_individual.value = bankAccount.acc_holder_name || data.name;
                     this._isIbanVerified(inputs.iban_individual, inputs.tc);
                 }
             } else {

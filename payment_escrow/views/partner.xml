@@ -227,8 +227,8 @@
             <field name="authorized_person"/>
             <field name="mobile"/>
             <field name="email"/>
-            <field name="payment_page_url" widget="CopyClipboardChar" string="Passwordless Login"/>
-            <field name="payment_link_url" widget="CopyClipboardChar" string="Payment Link"/>
+            <button name="action_redirect_payment_page" type="object" string="Passwordless Login" icon="fa-sign-in"/>
+            <button name="action_redirect_payment_link" type="object" string="Payment Link" icon="fa-link"/>
             <field name="city"/>
             <field name="state_id"/>
             <field name="approval_state" decoration-success="approval_state == 'approved'" 

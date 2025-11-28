@@ -13,6 +13,14 @@ class PaymentSettingsDay(models.Model):
     code = fields.Char(required=True)
 
 
+class PaymentSettingsEscrowType(models.Model):
+    _name = 'payment.settings.escrow.type'
+    _description = 'Payment Settings Escrow Type'
+
+    name = fields.Char(translate=True, required=True)
+    code = fields.Char(required=True)
+
+
 class PaymentSettings(models.TransientModel):
     _name = 'payment.settings'
     _description = 'Payment Settings'
@@ -89,6 +97,7 @@ class PaymentSettings(models.TransientModel):
     sec_audit_webservice_filter = fields.Text(related='company_id.sec_audit_webservice_filter', readonly=False)
 
     payment_item_bank_token_ok = fields.Boolean(related='company_id.payment_item_bank_token_ok', readonly=False)
+    payment_bank_account_allowed_escrow_type_ids = fields.Many2many(related='company_id.payment_bank_account_allowed_escrow_type_ids', readonly=False)
     payment_dashboard_button_ok = fields.Boolean(related='company_id.payment_dashboard_button_ok', readonly=False)
     payment_dashboard_button_url = fields.Char(related='company_id.payment_dashboard_button_url', readonly=False)
     payment_dashboard_button_contactless_ok = fields.Boolean(related='company_id.payment_dashboard_button_contactless_ok', readonly=False)
