@@ -129,6 +129,18 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="paylox_escrow_use_paid_price"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="paylox_escrow_use_paid_price" string="Use Paid Price for Seller Amount"/>
+                            <div class="text-muted">
+                                Enable Use Paid Price for Seller Amount
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-12 o_setting_box">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">

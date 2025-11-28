@@ -1597,15 +1597,15 @@ class PayloxController(http.Controller):
                             if 'partner_id' in basket:
                                 del basket['partner_id']
                             new_basket.append(basket)
-
-                        elif partner and partner.paylox_escrow_type == 'platform_owner':
-                            if 'partner_id' in basket:
-                                basket['platform_owner'] = True
-                                del basket['partner_id']
-                            new_basket.append(basket)
-                        else:
-                            platform_total += basket.get('amount', 0.0)
-                            submerchant_total += basket.get('submerchant_price', 0.0)
+                        if not getattr(tx.company_id, 'paylox_escrow_use_paid_price', True):
+                            if partner and partner.paylox_escrow_type == 'platform_owner':
+                                if 'partner_id' in basket:
+                                    basket['platform_owner'] = True
+                                    del basket['partner_id']
+                                new_basket.append(basket)
+                            else:
+                                platform_total += basket.get('amount', 0.0)
+                                submerchant_total += basket.get('submerchant_price', 0.0)
                     if platform_total > 0.0 and platform_owner:
                         for b in new_basket:
                             if b.get('platform_owner'):
@@ -1613,7 +1613,7 @@ class PayloxController(http.Controller):
                                 b['submerchant_price'] += submerchant_total
                                 del b['platform_owner']
                                 break
-                    data['customer_basket'] = new_basket
+                        data['customer_basket'] = new_basket
                 else:
                     for basket in data['customer_basket']:
                         if 'partner_id' in basket:

@@ -572,6 +572,8 @@ class PayloxSystemEscrowController(Controller):
             total_paid = seller_net + infra_commission + platform_commission + broker_commission + dealer_commission
 
             seller_amount = paid * seller_net / total_paid
+            if transaction.company_id.paylox_escrow_use_paid_price:
+                seller_amount = transaction.jetcheckout_payment_paid
             customer_basket.append({
                 "id": 24,
                 "name": partner.name or '',
