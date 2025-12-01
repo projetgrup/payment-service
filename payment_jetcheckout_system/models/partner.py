@@ -131,11 +131,11 @@ class PartnerBank(models.Model):
                     bank.action_api_save()
         return res
 
-    def unlink(self):
-        for bank in self:
-            if bank.api_state:
-                raise UserError(_('You cannot delete a verified bank account.'))
-        return super(PartnerBank, self).unlink()
+    # def unlink(self):
+    #     for bank in self:
+    #         if bank.api_state:
+    #             raise UserError(_('You cannot delete a verified bank account.'))
+    #     return super(PartnerBank, self).unlink()
 
     def action_api_save(self, mode=None):
         if self.partner_id.system:
