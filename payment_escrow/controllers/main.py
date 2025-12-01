@@ -900,7 +900,7 @@ class PayloxSystemEscrowController(Controller):
             return {'success': False, 'message': 'You are not allowed to update this ad'}
         try:
             attachment = request.env['ir.attachment'].sudo().create({
-                'name': _('%s - Official Sale Document') % (ad.title,),
+                'name': _('%s - Official Sale Document') % (ad.name,),
                 'res_model': ad._name,
                 'res_id': ad.id,
                 'mimetype': file['mimetype'] or 'application/pdf',
