@@ -14,6 +14,7 @@ odoo.define('payment_syncops.ProgressService', function (require) {
         start: function () {
             this._super.apply(this, arguments);
             this._widget = null;
+            this._userCancelled = false;
             
             const channel = `progress_${session.uid}_${session.db}`;
             
@@ -35,9 +36,10 @@ odoo.define('payment_syncops.ProgressService', function (require) {
             } else if (data.type === 'complete') {
                 this.updateProgress(data);
                 this._notify(data.message || _t('Operation completed successfully!'), 'success');
+                this._userCancelled = false;
             } else if (data.type === 'error') {
-                this._notify(data.message || _t('Operation failed'), 'danger');
-                this.destroyProgress();
+                this.showError(data.message || _t('Operation failed'));
+                this._userCancelled = false;
             }
         },
 
@@ -61,11 +63,53 @@ odoo.define('payment_syncops.ProgressService', function (require) {
                 'opacity': '1'
             });
             
+            $widget.find('.o_sync_cancel').on('click', () => {
+                this._userCancelled = true;
+                const channel = `progress_${session.uid}_${session.db}`;
+                this._rpc({
+                    route: '/syncops/progress/cancel',
+                    params: {
+                        channel: channel,
+                    },
+                });
+                this.destroyProgress();
+            });
+
+            $widget.find('.o_sync_toggle_errors').on('click', () => {
+                $widget.find('.o_sync_errors').slideToggle();
+            });
+
             $widget.appendTo($('body'));
             this._widget = $widget;
         },
 
+        showError: function(message) {
+            if (this._widget) {
+                const $errors = this._widget.find('.o_sync_errors');
+                const $list = $errors.find('ul');
+                const $toggleBtn = this._widget.find('.o_sync_toggle_errors');
+                const $countBadge = $toggleBtn.find('.o_error_count');
+
+                $list.append($('<li>').text(message));
+                
+                // Update count
+                let count = parseInt($countBadge.text()) || 0;
+                count++;
+                $countBadge.text(count);
+                
+                // Show toggle button
+                $toggleBtn.show();
+                
+                this._widget.find('.progress-bar').removeClass('progress-bar-animated').addClass('bg-danger');
+            } else {
+                this._notify(message, 'danger');
+            }
+        },
+
         updateProgress: function(data) {
+            if (this._userCancelled) {
+                return;
+            }
             if (!this._widget || !this._widget.parent().length) {
                 this.showProgress(data.total);
             }

@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from odoo.addons.payment_syncops.models.progress_mixin import track_progress
 import logging
+import time
 
 _logger = logging.getLogger(__name__)
 
@@ -83,16 +84,27 @@ class EscrowBrandSyncLine(models.TransientModel):
     def _process_sync_job(self, channel_name, line_ids):
         lines = self.browse(line_ids).exists()
         brand_model = self.env['escrow.car.brand'].sudo()
+        i = 0
         for line in self.track_iterator(lines, channel_name, description='Processing brands', notification_type='sync_progress_brand'):
-            
-            existing_brand = brand_model.search([
-                ('name', '=', line.escrow_car_brand_name)
-            ], limit=1)
-            
-            if not existing_brand:
-                brand_vals = {
-                    'name': line.escrow_car_brand_name,
-                    'brand_id': line.escrow_car_brand_id,
-                    'active': True,
-                }
-                brand_model.create(brand_vals)
+            time.sleep(10)
+            i += 1
+            try:
+                if i == 2:
+                    raise Exception("Simulated error for testing")
+
+                existing_brand = brand_model.search([
+                    ('name', '=', line.escrow_car_brand_name)
+                ], limit=1)
+                
+                if not existing_brand:
+                    brand_vals = {
+                        'name': line.escrow_car_brand_name,
+                        'brand_id': line.escrow_car_brand_id,
+                        'active': True,
+                    }
+                    brand_model.create(brand_vals)
+            except Exception as e:
+                self._send_progress_notification(channel_name, {
+                    'type': 'error',
+                    'message': f"Error processing brand {line.escrow_car_brand_name}: {str(e)}",
+                }, notification_type='sync_progress_brand')

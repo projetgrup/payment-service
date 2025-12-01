@@ -632,3 +632,9 @@ class PayloxSyncopsController(Controller):
             ('Content-Disposition', content_disposition('Transactions.xlsx'))
         ]
         return request.make_response(xlsx, headers=headers)
+
+    @http.route(['/syncops/progress/cancel'], type='json', auth='user')
+    def syncops_progress_cancel(self, channel):
+        key = f'syncops.cancel.{channel}'
+        request.env['ir.config_parameter'].sudo().set_param(key, 'true')
+        return True

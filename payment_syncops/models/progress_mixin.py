@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import models
+from odoo import models, _
+from odoo.exceptions import UserError
 import logging
 import functools
 
@@ -127,7 +128,24 @@ class ProgressMixin(models.AbstractModel):
         total = len(collection)
         processed = 0
         
+        # Clear any previous cancel signal
+        cancel_key = f'syncops.cancel.{channel_name}'
+        self.env['ir.config_parameter'].sudo().set_param(cancel_key, 'false')
+        
         for item in collection:
+            # Check for cancellation - Bypass ORM cache to ensure worker process sees the update immediately
+            self.env.cr.execute("SELECT value FROM ir_config_parameter WHERE key = %s", (cancel_key,))
+            result = self.env.cr.fetchone()
+            
+            if result and result[0] == 'true':
+                self._send_progress_notification(channel_name, {
+                    'type': 'error',
+                    'message': _('Operation cancelled by user.'),
+                }, notification_type=notification_type)
+                # Clean up
+                self.env['ir.config_parameter'].sudo().set_param(cancel_key, 'false')
+                raise UserError(_('Operation cancelled by user.'))
+
             yield item
             processed += 1
             
