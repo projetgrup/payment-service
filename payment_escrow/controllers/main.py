@@ -896,7 +896,7 @@ class PayloxSystemEscrowController(Controller):
         ad = request.env['escrow.ad'].sudo().search(domain, limit=1)
         if not ad.exists():
             return {'success': False, 'message': 'Ad not found'}
-        if ad.owner_id != partner:
+        if ad.broker_id != partner:
             return {'success': False, 'message': 'You are not allowed to update this ad'}
         try:
             attachment = request.env['ir.attachment'].sudo().create({
