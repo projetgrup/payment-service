@@ -634,7 +634,7 @@ class PayloxSyncopsController(Controller):
         return request.make_response(xlsx, headers=headers)
 
     @http.route(['/syncops/progress/cancel'], type='json', auth='user')
-    def syncops_progress_cancel(self, channel):
-        key = f'syncops.cancel.{channel}'
-        request.env['ir.config_parameter'].sudo().set_param(key, 'true')
+    def syncops_progress_cancel(self, job_id):
+        job = request.env['queue.job'].sudo().browse(job_id)
+        job.set_done()
         return True
