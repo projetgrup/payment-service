@@ -20,7 +20,7 @@
         'views/ad_views.xml',
         'views/ad_category_views.xml',
         # 'views/ad_specialized_views.xml',  # Deprecated: Using dynamic attributes
-        'views/ad_menu.xml',
+        # 'views/ad_menu.xml',
         'views/components_background.xml',
         'views/components_header.xml',
         'views/components_recipient.xml',

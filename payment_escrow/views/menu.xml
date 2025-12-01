@@ -3,6 +3,7 @@
     <menuitem id="menu_main" name="Escrow" web_icon="payment_escrow,static/description/icon.png" sequence="24"/>
     <menuitem id="menu_dashboard" action="payment_jetcheckout_system.action_dashboard" parent="menu_main" sequence="0"/>
     <menuitem id="menu_ad" action="action_ad" parent="menu_main" sequence="1"/>
+    <menuitem id="menu_escrow_ads" name="Advertisements" parent="menu_main" sequence="10" action="action_escrow_ad"/>
     <menuitem id="menu_partners" name="Partners" parent="menu_main" sequence="2"/>
     <menuitem id="menu_customer" action="action_customer" parent="menu_partners" sequence="0"/>
     <menuitem id="menu_broker" action="action_broker" parent="menu_partners" sequence="1"/>
@@ -39,8 +40,12 @@
 
     <menuitem id="menu_agreements" name="Agreement Settings" parent="menu_conf" sequence="5" groups="payment_system_agreement.group_agreement,base.group_system"/>
     <menuitem id="menu_agreement" action="payment_system_agreement.action_agreement" name="Agreements" parent="menu_agreements" sequence="1" groups="payment_system_agreement.group_agreement,base.group_system"/>
+    
+    <menuitem id="menu_escrow_ad_settings" name="Ad Settings" parent="menu_conf" sequence="6"/>
+    <menuitem id="menu_escrow_categories" name="Categories" parent="menu_escrow_ad_settings" sequence="10" action="action_escrow_ad_category"/>
+    <menuitem id="menu_escrow_attributes" name="Attributes" parent="menu_escrow_ad_settings" sequence="20" action="action_escrow_ad_attribute"/>
 
-    <menuitem id="menu_products" name="Product Settings" parent="menu_conf" sequence="6" groups="payment_system_product.group_product"/>
+    <menuitem id="menu_products" name="Product Settings (Old)" parent="menu_conf" sequence="90" groups="payment_system_product.group_product"/>
     <menuitem id="menu_product_attribute" action="payment_system_product.action_product_attribute" name="Attributes" parent="menu_products" sequence="1" groups="payment_system_product.group_product"/>
     <menuitem id="menu_product_category" action="payment_system_product.action_product_category" name="Categories" parent="menu_products" sequence="2" groups="payment_system_product.group_product"/>
 
