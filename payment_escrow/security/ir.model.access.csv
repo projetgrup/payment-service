@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_escrow_ad_user,escrow.ad user,model_escrow_ad,payment_escrow.group_escrow_user,1,1,1,1
-access_escrow_ad_manager,escrow.ad manager,model_escrow_ad,payment_escrow.group_escrow_manager,1,1,1,1
+access_escrow_ad_user,escrow.ad user,model_escrow_ad,payment_escrow.base_group_user,1,1,1,1
+access_escrow_ad_manager,escrow.ad manager,model_escrow_ad,payment_escrow.base_group_user,1,1,1,1
 access_escrow_ad_platform_owner,escrow.ad platform owner,model_escrow_ad,payment_escrow.group_escrow_platform_owner,1,1,1,1
 
 access_escrow_ad_category_user,escrow.ad.category user,model_escrow_ad_category,payment_escrow.group_escrow_user,1,0,0,0
